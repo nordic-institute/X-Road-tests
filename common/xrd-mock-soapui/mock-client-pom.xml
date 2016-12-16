@@ -9,7 +9,7 @@
     <description>SoapUI tests</description>
 
     <properties>
-        <projectFile>${basedir}/common/xrd-mock-soapui/mock-client-soapui-project.xml</projectFile>
+        <projectFile>${basedir}/mock-client-soapui-project.xml</projectFile>
         <testSuite>TestSuite</testSuite>
     </properties>
 

@@ -66,7 +66,26 @@ https://xtee2.ci.kit:8443/xrd-mock
 
 ## Automate mock startup in Ubuntu
 
-TODO!
+In this example it is assumed that you have SOAPUI installed into `/opt/riajenk/SoapUI-5.3.0` and this repository is cloned under `/opt/riajenk/git/testing/`
+
+Create new upstart script `/etc/init/xrd-mock-soapui.conf`
+```
+description "X-Road SOAPUI mock"
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+respawn
+respawn limit 10 5
+setuid riajenk
+setgid riajenk
+console log
+
+script
+  cd /opt/riajenk/git/testing/common/xrd-mock-soapui
+  exec /opt/riajenk/SoapUI-5.3.0/bin/mockservicerunner.sh -s soapui-settings.xml mock-soapui-project.xml
+end script
+```
 
 ## Running SOAPUI GUI with X11 forwarding
 

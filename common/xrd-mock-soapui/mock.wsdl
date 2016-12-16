@@ -397,7 +397,7 @@
     <wsdl:service name="mockService">
         <wsdl:port name="mockPortSoap11"
                 binding="tns:mockPortSoap11">
-            <soap:address location="http://xtee2.ci.kit:8086/xrd-mock/" />
+            <soap:address location="http://xtee2.ci.kit:8086/xrd-mock" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

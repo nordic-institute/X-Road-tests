@@ -89,9 +89,9 @@ script
   cd /opt/riajenk/xrd-soapui-mock
   rsync -a --delete $COMMONDIR/data ./
   rsync -a $COMMONDIR/mock-soapui-project.xml ./
-  rsync -a $EEDIR/soapui-settings.xml ./soapui-settings.xml
+  rsync -a $EEDIR/soapui-settings.xml ./
   rsync -a $EEDIR/RIA-CI-SoapUI.keystore ./
-  exec $SOAPUIDIR/mockservicerunner.sh -s soapui-settings-minimal.xml mock-soapui-project.xml
+  exec $SOAPUIDIR/mockservicerunner.sh -s soapui-settings.xml mock-soapui-project.xml
 end script
 ```
 

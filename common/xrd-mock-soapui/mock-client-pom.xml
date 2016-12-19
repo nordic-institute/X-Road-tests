@@ -11,6 +11,7 @@
     <properties>
         <projectFile>${basedir}/mock-client-soapui-project.xml</projectFile>
         <testSuite>TestSuite</testSuite>
+        <settingsFile>soapui-settings.xml</settingsFile>
     </properties>
 
     <pluginRepositories>
@@ -37,6 +38,7 @@
                 <configuration>
                     <projectFile>${projectFile}</projectFile>
                     <testSuite>${testSuite}</testSuite>
+                    <settingsFile>${settingsFile}</settingsFile>
                     <projectProperties>
                         <value>XRoadInstance=${XRoadInstance}</value>
                         <value>ClientMemberClass=${ClientMemberClass}</value>

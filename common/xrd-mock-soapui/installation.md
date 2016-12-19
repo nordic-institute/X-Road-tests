@@ -66,7 +66,8 @@ https://xtee2.ci.kit:8443/xrd-mock
 
 ## Automate mock startup in Ubuntu
 
-In this example it is assumed that you have SOAPUI installed into `/opt/riajenk/SoapUI-5.3.0` and this repository is cloned under `/opt/riajenk/git/testing/`
+In this example it is assumed that you have SOAPUI installed into `/opt/riajenk/SoapUI-5.3.0`
+this repository is cloned under `/opt/riajenk/git/testing/` and mock is starting in `/opt/riajenk/xrd-soapui-mock` folder.
 
 Create new upstart script `/etc/init/xrd-mock-soapui.conf`
 ```
@@ -82,8 +83,15 @@ setgid riajenk
 console log
 
 script
-  cd /opt/riajenk/git/testing/common/xrd-mock-soapui
-  exec /opt/riajenk/SoapUI-5.3.0/bin/mockservicerunner.sh -s soapui-settings.xml mock-soapui-project.xml
+  COMMONDIR=/opt/riajenk/git/testing/common/xrd-mock-soapui
+  EEDIR=/opt/riajenk/git/testing/EE-national/xrd-mock-soapui
+  SOAPUIDIR=/opt/riajenk/SoapUI-5.3.0/bin
+  cd /opt/riajenk/xrd-soapui-mock
+  rsync -a --delete $COMMONDIR/data ./
+  rsync -a $COMMONDIR/mock-soapui-project.xml ./
+  rsync -a $EEDIR/soapui-settings.xml ./soapui-settings.xml
+  rsync -a $EEDIR/RIA-CI-SoapUI.keystore ./
+  exec $SOAPUIDIR/mockservicerunner.sh -s soapui-settings-minimal.xml mock-soapui-project.xml
 end script
 ```
 

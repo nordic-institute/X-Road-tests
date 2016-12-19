@@ -966,7 +966,7 @@
   </SOAP-ENV:Header>
   <SOAP-ENV:Body>
     <ns1:mock>
-      <desiredResponse></desiredResponse>
+      <desiredResponse>bodyData_10KB</desiredResponse>
     </ns1:mock>
   </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>
@@ -998,7 +998,7 @@
   </SOAP-ENV:Header>
   <SOAP-ENV:Body>
     <ns1:mock>
-      <desiredResponse>bodyXML_10KB</desiredResponse>
+      <desiredResponse>bodyData_10KB</desiredResponse>
     </ns1:mock>
   </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>
@@ -1030,7 +1030,7 @@
   </SOAP-ENV:Header>
   <SOAP-ENV:Body>
     <ns1:mock>
-      <desiredResponse>10KB</desiredResponse>
+      <desiredResponse>bodyData_10KB</desiredResponse>
     </ns1:mock>
   </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>

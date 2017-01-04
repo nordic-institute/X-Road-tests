@@ -11,7 +11,8 @@ SoapUI mock service installation is covered in separate document: [installation.
 [mock-client-pom.xml](mock-client-pom.xml) file can be used to execute SoapUI tests with Maven.
 
 **NB!** you need to have `soapui-settings.xml` and keystore files in the same directory as `mock-client-pom.xml`.
-*Refer to [installation.md](installation.md) for additional information on these files.
+It is possible to use the same soapui settings and keystore files for both mock and testing client.
+Refer to [installation.md](installation.md) for additional information on these files.
 
 Execute test with `mvn clean test -f mock-client-pom.xml` optionally adding maven parameters `-D<param_name>=<param-value>` that override SoapUI test configuration.
 

@@ -64,9 +64,9 @@
             <stringProp name="Argument.value">${__P(wrampup,2)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
-          <elementProp name="XRoadInstance" elementType="Argument">
-            <stringProp name="Argument.name">XRoadInstance</stringProp>
-            <stringProp name="Argument.value">${__P(XRoadInstance,XTEE-CI)}</stringProp>
+          <elementProp name="ClientXRoadInstance" elementType="Argument">
+            <stringProp name="Argument.name">ClientXRoadInstance</stringProp>
+            <stringProp name="Argument.value">${__P(ClientXRoadInstance,XTEE-CI)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="ClientMemberClass" elementType="Argument">
@@ -82,6 +82,11 @@
           <elementProp name="ClientSubsystemCode" elementType="Argument">
             <stringProp name="Argument.name">ClientSubsystemCode</stringProp>
             <stringProp name="Argument.value">${__P(ClientSubsystemCode,MockSystem)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="ServiceXRoadInstance" elementType="Argument">
+            <stringProp name="Argument.name">ServiceXRoadInstance</stringProp>
+            <stringProp name="Argument.value">${__P(ServiceXRoadInstance,XTEE-CI)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="ServiceMemberClass" elementType="Argument">
@@ -145,13 +150,13 @@
     xmlns:id=&quot;http://x-road.eu/xsd/identifiers&quot;&gt;&#xd;
   &lt;SOAP-ENV:Header&gt;&#xd;
     &lt;xrd:client id:objectType=&quot;SUBSYSTEM&quot;&gt;&#xd;
-      &lt;id:xRoadInstance&gt;${XRoadInstance}&lt;/id:xRoadInstance&gt;&#xd;
+      &lt;id:xRoadInstance&gt;${ClientXRoadInstance}&lt;/id:xRoadInstance&gt;&#xd;
       &lt;id:memberClass&gt;${ClientMemberClass}&lt;/id:memberClass&gt;&#xd;
       &lt;id:memberCode&gt;${ClientMemberCode}&lt;/id:memberCode&gt;&#xd;
       &lt;id:subsystemCode&gt;${ClientSubsystemCode}&lt;/id:subsystemCode&gt;&#xd;
     &lt;/xrd:client&gt;&#xd;
     &lt;xrd:service id:objectType=&quot;SERVICE&quot;&gt;&#xd;
-      &lt;id:xRoadInstance&gt;${XRoadInstance}&lt;/id:xRoadInstance&gt;&#xd;
+      &lt;id:xRoadInstance&gt;${ServiceXRoadInstance}&lt;/id:xRoadInstance&gt;&#xd;
       &lt;id:memberClass&gt;${ServiceMemberClass}&lt;/id:memberClass&gt;&#xd;
       &lt;id:memberCode&gt;${ServiceMemberCode}&lt;/id:memberCode&gt;&#xd;
       &lt;id:subsystemCode&gt;${ServiceSubsystemCode}&lt;/id:subsystemCode&gt;&#xd;
@@ -234,13 +239,13 @@
     xmlns:id=&quot;http://x-road.eu/xsd/identifiers&quot;&gt;&#xd;
   &lt;SOAP-ENV:Header&gt;&#xd;
     &lt;xrd:client id:objectType=&quot;SUBSYSTEM&quot;&gt;&#xd;
-      &lt;id:xRoadInstance&gt;${XRoadInstance}&lt;/id:xRoadInstance&gt;&#xd;
+      &lt;id:xRoadInstance&gt;${ClientXRoadInstance}&lt;/id:xRoadInstance&gt;&#xd;
       &lt;id:memberClass&gt;${ClientMemberClass}&lt;/id:memberClass&gt;&#xd;
       &lt;id:memberCode&gt;${ClientMemberCode}&lt;/id:memberCode&gt;&#xd;
       &lt;id:subsystemCode&gt;${ClientSubsystemCode}&lt;/id:subsystemCode&gt;&#xd;
     &lt;/xrd:client&gt;&#xd;
     &lt;xrd:service id:objectType=&quot;SERVICE&quot;&gt;&#xd;
-      &lt;id:xRoadInstance&gt;${XRoadInstance}&lt;/id:xRoadInstance&gt;&#xd;
+      &lt;id:xRoadInstance&gt;${ServiceXRoadInstance}&lt;/id:xRoadInstance&gt;&#xd;
       &lt;id:memberClass&gt;${ServiceMemberClass}&lt;/id:memberClass&gt;&#xd;
       &lt;id:memberCode&gt;${ServiceMemberCode}&lt;/id:memberCode&gt;&#xd;
       &lt;id:subsystemCode&gt;${ServiceSubsystemCode}&lt;/id:subsystemCode&gt;&#xd;

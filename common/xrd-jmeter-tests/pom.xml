@@ -21,10 +21,11 @@
         <wthreads>10</wthreads>
         <wduration>10</wduration>
         <wrampup>2</wrampup>
-        <XRoadInstance>XTEE-CI</XRoadInstance>
+        <ClientXRoadInstance>XTEE-CI</ClientXRoadInstance>
         <ClientMemberClass>COM</ClientMemberClass>
         <ClientMemberCode>00000002</ClientMemberCode>
         <ClientSubsystemCode>MockSystem</ClientSubsystemCode>
+        <ServiceXRoadInstance>XTEE-CI</ServiceXRoadInstance>
         <ServiceMemberClass>COM</ServiceMemberClass>
         <ServiceMemberCode>00000002</ServiceMemberCode>
         <ServiceSubsystemCode>MockSystem</ServiceSubsystemCode>
@@ -90,10 +91,11 @@
                         <wthreads>${wthreads}</wthreads>
                         <wduration>${wduration}</wduration>
                         <wrampup>${wrampup}</wrampup>
-                        <XRoadInstance>${XRoadInstance}</XRoadInstance>
+                        <ClientXRoadInstance>${ClientXRoadInstance}</ClientXRoadInstance>
                         <ClientMemberClass>${ClientMemberClass}</ClientMemberClass>
                         <ClientMemberCode>${ClientMemberCode}</ClientMemberCode>
                         <ClientSubsystemCode>${ClientSubsystemCode}</ClientSubsystemCode>
+                        <ServiceXRoadInstance>${ServiceXRoadInstance}</ServiceXRoadInstance>
                         <ServiceMemberClass>${ServiceMemberClass}</ServiceMemberClass>
                         <ServiceMemberCode>${ServiceMemberCode}</ServiceMemberCode>
                         <ServiceSubsystemCode>${ServiceSubsystemCode}</ServiceSubsystemCode>

@@ -1138,13 +1138,13 @@
     xmlns:id="http://x-road.eu/xsd/identifiers">
   <SOAP-ENV:Header>
     <xrd:client id:objectType="SUBSYSTEM">
-      <id:xRoadInstance>${#Project#XRoadInstance}</id:xRoadInstance>
+      <id:xRoadInstance>${#Project#ClientXRoadInstance}</id:xRoadInstance>
       <id:memberClass>${#Project#ClientMemberClass}</id:memberClass>
       <id:memberCode>${#Project#ClientMemberCode}</id:memberCode>
       <id:subsystemCode>${#Project#ClientSubsystemCode}</id:subsystemCode>
     </xrd:client>
     <xrd:service id:objectType="SERVICE">
-      <id:xRoadInstance>${#Project#XRoadInstance}</id:xRoadInstance>
+      <id:xRoadInstance>${#Project#ServiceXRoadInstance}</id:xRoadInstance>
       <id:memberClass>${#Project#ServiceMemberClass}</id:memberClass>
       <id:memberCode>${#Project#ServiceMemberCode}</id:memberCode>
       <id:subsystemCode>${#Project#ServiceSubsystemCode}</id:subsystemCode>
@@ -1168,13 +1168,13 @@
     xmlns:id="http://x-road.eu/xsd/identifiers">
   <SOAP-ENV:Header>
     <xrd:client id:objectType="SUBSYSTEM">
-      <id:xRoadInstance>${#Project#XRoadInstance}</id:xRoadInstance>
+      <id:xRoadInstance>${#Project#ClientXRoadInstance}</id:xRoadInstance>
       <id:memberClass>${#Project#ClientMemberClass}</id:memberClass>
       <id:memberCode>${#Project#ClientMemberCode}</id:memberCode>
       <id:subsystemCode>${#Project#ClientSubsystemCode}</id:subsystemCode>
     </xrd:client>
     <xrd:service id:objectType="SERVICE">
-      <id:xRoadInstance>${#Project#XRoadInstance}</id:xRoadInstance>
+      <id:xRoadInstance>${#Project#ServiceXRoadInstance}</id:xRoadInstance>
       <id:memberClass>${#Project#ServiceMemberClass}</id:memberClass>
       <id:memberCode>${#Project#ServiceMemberCode}</id:memberCode>
       <id:subsystemCode>${#Project#ServiceSubsystemCode}</id:subsystemCode>
@@ -1200,13 +1200,13 @@
     xmlns:id="http://x-road.eu/xsd/identifiers">
   <SOAP-ENV:Header>
     <xrd:client id:objectType="SUBSYSTEM">
-      <id:xRoadInstance>${#Project#XRoadInstance}</id:xRoadInstance>
+      <id:xRoadInstance>${#Project#ClientXRoadInstance}</id:xRoadInstance>
       <id:memberClass>${#Project#ClientMemberClass}</id:memberClass>
       <id:memberCode>${#Project#ClientMemberCode}</id:memberCode>
       <id:subsystemCode>${#Project#ClientSubsystemCodeTLS}</id:subsystemCode>
     </xrd:client>
     <xrd:service id:objectType="SERVICE">
-      <id:xRoadInstance>${#Project#XRoadInstance}</id:xRoadInstance>
+      <id:xRoadInstance>${#Project#ServiceXRoadInstance}</id:xRoadInstance>
       <id:memberClass>${#Project#ServiceMemberClass}</id:memberClass>
       <id:memberCode>${#Project#ServiceMemberCode}</id:memberCode>
       <id:subsystemCode>${#Project#ServiceSubsystemCodeTLS}</id:subsystemCode>
@@ -1230,13 +1230,13 @@
     xmlns:id="http://x-road.eu/xsd/identifiers">
   <SOAP-ENV:Header>
     <xrd:client id:objectType="SUBSYSTEM">
-      <id:xRoadInstance>${#Project#XRoadInstance}</id:xRoadInstance>
+      <id:xRoadInstance>${#Project#ClientXRoadInstance}</id:xRoadInstance>
       <id:memberClass>${#Project#ClientMemberClass}</id:memberClass>
       <id:memberCode>${#Project#ClientMemberCode}</id:memberCode>
       <id:subsystemCode>${#Project#ClientSubsystemCodeTLS}</id:subsystemCode>
     </xrd:client>
     <xrd:service id:objectType="SERVICE">
-      <id:xRoadInstance>${#Project#XRoadInstance}</id:xRoadInstance>
+      <id:xRoadInstance>${#Project#ServiceXRoadInstance}</id:xRoadInstance>
       <id:memberClass>${#Project#ServiceMemberClass}</id:memberClass>
       <id:memberCode>${#Project#ServiceMemberCode}</id:memberCode>
       <id:subsystemCode>${#Project#ServiceSubsystemCodeTLS}</id:subsystemCode>
@@ -1254,4 +1254,4 @@
     </ns1:mock>
   </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>
-]]></con:request><con:assertion type="SOAP Fault Assertion" id="02ced39f-45e7-4f2a-8747-d4b0b5cbd80f" name="Not SOAP Fault"/><con:assertion type="SOAP Response" id="5f47bf9b-80dc-441c-88a1-fa53f8731270" name="SOAP Response"/><con:assertion type="Response SLA Assertion" id="1be465d6-0e95-4d36-b540-4e3b92818104" name="Response SLA"><con:configuration><SLA>5000</SLA></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mock"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:properties><con:property><con:name>XRoadInstance</con:name><con:value>XTEE-CI</con:value></con:property><con:property><con:name>ClientMemberClass</con:name><con:value>COM</con:value></con:property><con:property><con:name>ClientMemberCode</con:name><con:value>00000002</con:value></con:property><con:property><con:name>ClientSubsystemCode</con:name><con:value>MockSystem</con:value></con:property><con:property><con:name>ClientSubsystemCodeTLS</con:name><con:value>MockSystemTLS</con:value></con:property><con:property><con:name>ServiceMemberClass</con:name><con:value>COM</con:value></con:property><con:property><con:name>ServiceMemberCode</con:name><con:value>00000002</con:value></con:property><con:property><con:name>ServiceSubsystemCode</con:name><con:value>MockSystem</con:value></con:property><con:property><con:name>ServiceSubsystemCodeTLS</con:name><con:value>MockSystemTLS</con:value></con:property><con:property><con:name>ServerUrlHttp</con:name><con:value>http://localhost:8086/xrd-mock</con:value></con:property><con:property><con:name>ServerUrlHttps</con:name><con:value>https://localhost:8443/xrd-mock</con:value></con:property></con:properties><con:wssContainer/><con:oAuth2ProfileContainer/><con:oAuth1ProfileContainer/><con:sensitiveInformation/></con:soapui-project>
+]]></con:request><con:assertion type="SOAP Fault Assertion" id="02ced39f-45e7-4f2a-8747-d4b0b5cbd80f" name="Not SOAP Fault"/><con:assertion type="SOAP Response" id="5f47bf9b-80dc-441c-88a1-fa53f8731270" name="SOAP Response"/><con:assertion type="Response SLA Assertion" id="1be465d6-0e95-4d36-b540-4e3b92818104" name="Response SLA"><con:configuration><SLA>5000</SLA></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mock"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:properties><con:property><con:name>ServerUrlHttp</con:name><con:value>http://localhost:8086/xrd-mock</con:value></con:property><con:property><con:name>ServerUrlHttps</con:name><con:value>https://localhost:8443/xrd-mock</con:value></con:property><con:property><con:name>ClientXRoadInstance</con:name><con:value>XTEE-CI</con:value></con:property><con:property><con:name>ClientMemberClass</con:name><con:value>COM</con:value></con:property><con:property><con:name>ClientMemberCode</con:name><con:value>00000002</con:value></con:property><con:property><con:name>ClientSubsystemCode</con:name><con:value>MockSystem</con:value></con:property><con:property><con:name>ClientSubsystemCodeTLS</con:name><con:value>MockSystemTLS</con:value></con:property><con:property><con:name>ServiceXRoadInstance</con:name><con:value>XTEE-CI</con:value></con:property><con:property><con:name>ServiceMemberClass</con:name><con:value>COM</con:value></con:property><con:property><con:name>ServiceMemberCode</con:name><con:value>00000002</con:value></con:property><con:property><con:name>ServiceSubsystemCode</con:name><con:value>MockSystem</con:value></con:property><con:property><con:name>ServiceSubsystemCodeTLS</con:name><con:value>MockSystemTLS</con:value></con:property></con:properties><con:wssContainer/><con:oAuth2ProfileContainer/><con:oAuth1ProfileContainer/><con:sensitiveInformation/></con:soapui-project>

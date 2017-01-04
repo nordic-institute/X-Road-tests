@@ -12,6 +12,18 @@
         <projectFile>${basedir}/mock-client-soapui-project.xml</projectFile>
         <testSuite>TestSuite</testSuite>
         <settingsFile>soapui-settings.xml</settingsFile>
+        <ServerUrlHttp>http://xtee6.ci.kit/</ServerUrlHttp>
+        <ServerUrlHttps>https://xtee6.ci.kit/</ServerUrlHttps>
+        <ClientXRoadInstance>XTEE-CI</ClientXRoadInstance>
+        <ClientMemberClass>COM</ClientMemberClass>
+        <ClientMemberCode>00000002</ClientMemberCode>
+        <ClientSubsystemCode>MockSystem</ClientSubsystemCode>
+        <ClientSubsystemCodeTLS>MockSystemTLS</ClientSubsystemCodeTLS>
+        <ServiceXRoadInstance>XTEE-CI</ServiceXRoadInstance>
+        <ServiceMemberClass>COM</ServiceMemberClass>
+        <ServiceMemberCode>00000002</ServiceMemberCode>
+        <ServiceSubsystemCode>MockSystem</ServiceSubsystemCode>
+        <ServiceSubsystemCodeTLS>MockSystemTLS</ServiceSubsystemCodeTLS>
     </properties>
 
     <pluginRepositories>
@@ -40,17 +52,18 @@
                     <testSuite>${testSuite}</testSuite>
                     <settingsFile>${settingsFile}</settingsFile>
                     <projectProperties>
-                        <value>XRoadInstance=${XRoadInstance}</value>
+                        <value>ServerUrlHttp=${ServerUrlHttp}</value>
+                        <value>ServerUrlHttps=${ServerUrlHttps}</value>
+                        <value>ClientXRoadInstance=${ClientXRoadInstance}</value>
                         <value>ClientMemberClass=${ClientMemberClass}</value>
                         <value>ClientMemberCode=${ClientMemberCode}</value>
                         <value>ClientSubsystemCode=${ClientSubsystemCode}</value>
                         <value>ClientSubsystemCodeTLS=${ClientSubsystemCodeTLS}</value>
+                        <value>ServiceXRoadInstance=${ServiceXRoadInstance}</value>
                         <value>ServiceMemberClass=${ServiceMemberClass}</value>
                         <value>ServiceMemberCode=${ServiceMemberCode}</value>
                         <value>ServiceSubsystemCode=${ServiceSubsystemCode}</value>
                         <value>ServiceSubsystemCodeTLS=${ServiceSubsystemCodeTLS}</value>
-                        <value>ServerUrlHttp=${ServerUrlHttp}</value>
-                        <value>ServerUrlHttps=${ServerUrlHttps}</value>
                     </projectProperties>
                     <printReport>true</printReport>
                     <outputFolder>${project.build.directory}/surefire-reports</outputFolder>

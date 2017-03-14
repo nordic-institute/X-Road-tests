@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:soapui-project id="7b5f3068-8663-41c0-8cc2-5fcc285326fd" activeEnvironment="Default" name="xrd-mock-client" resourceRoot="${projectDir}" soapui-version="5.3.0" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings><con:setting id="ProjectSettings@hermesConfig">${#System#user.home}\.hermes</con:setting></con:settings><con:interface xsi:type="con:WsdlInterface" id="27b1f8cd-449c-4d7a-82f5-d90af1064374" wsaVersion="NONE" name="mockPortSoap11" type="wsdl" bindingName="{http://producer.x-road.eu}mockPortSoap11" soapVersion="1_1" anonymous="optional" definition="mock.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="file:/C:/_data/GIT/xm/testing/common/xrd-mock-soapui/mock.wsdl"><con:part><con:url>file:/C:/_data/GIT/xm/testing/common/xrd-mock-soapui/mock.wsdl</con:url><con:content><![CDATA[<wsdl:definitions targetNamespace="http://producer.x-road.eu" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://producer.x-road.eu" xmlns:xrd="http://x-road.eu/xsd/xroad.xsd" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:ref="http://ws-i.org/profiles/basic/1.1/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+<con:soapui-project id="7b5f3068-8663-41c0-8cc2-5fcc285326fd" activeEnvironment="Default" name="ci-test" resourceRoot="${projectDir}" soapui-version="5.3.0" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings><con:setting id="ProjectSettings@hermesConfig">${#System#user.home}\.hermes</con:setting></con:settings><con:interface xsi:type="con:WsdlInterface" id="27b1f8cd-449c-4d7a-82f5-d90af1064374" wsaVersion="NONE" name="mockPortSoap11" type="wsdl" bindingName="{http://producer.x-road.eu}mockPortSoap11" soapVersion="1_1" anonymous="optional" definition="mock.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="file:/C:/_data/GIT/xm/testing/common/xrd-mock-soapui/mock.wsdl"><con:part><con:url>file:/C:/_data/GIT/xm/testing/common/xrd-mock-soapui/mock.wsdl</con:url><con:content><![CDATA[<wsdl:definitions targetNamespace="http://producer.x-road.eu" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://producer.x-road.eu" xmlns:xrd="http://x-road.eu/xsd/xroad.xsd" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:ref="http://ws-i.org/profiles/basic/1.1/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
   <wsdl:types>
     <xs:schema targetNamespace="http://producer.x-road.eu">
       <xs:import namespace="http://x-road.eu/xsd/xroad.xsd" schemaLocation="http://x-road.eu/xsd/xroad.xsd"/>
@@ -970,6 +970,38 @@
     </ns1:mock>
   </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>
+]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mock"/><con:wsrmConfig version="1.2"/></con:call><con:call id="285ffbc7-dd73-40ed-a774-e8222a37d1bc" name="remote_http_06"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://xtee6.ci.kit/</con:endpoint><con:request><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope
+    xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:ns1="http://producer.x-road.eu"
+    xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
+    xmlns:id="http://x-road.eu/xsd/identifiers">
+  <SOAP-ENV:Header>
+    <xrd:client id:objectType="SUBSYSTEM">
+      <id:xRoadInstance>XTEE-CI</id:xRoadInstance>
+      <id:memberClass>COM</id:memberClass>
+      <id:memberCode>00000002</id:memberCode>
+      <id:subsystemCode>MockSystem</id:subsystemCode>
+    </xrd:client>
+    <xrd:service id:objectType="SERVICE">
+      <id:xRoadInstance>XTEE-CI</id:xRoadInstance>
+      <id:memberClass>COM</id:memberClass>
+      <id:memberCode>00000002</id:memberCode>
+      <id:subsystemCode>MockSystem</id:subsystemCode>
+      <id:serviceCode>mock</id:serviceCode>
+      <id:serviceVersion>v1</id:serviceVersion>
+    </xrd:service>
+    <xrd:id>${=java.util.UUID.randomUUID()}</xrd:id>
+    <xrd:userId>EE12345678901</xrd:userId>
+    <xrd:issue>12345</xrd:issue>
+    <xrd:protocolVersion>4.0</xrd:protocolVersion>
+  </SOAP-ENV:Header>
+  <SOAP-ENV:Body>
+    <ns1:mock>
+      <desiredResponse>bodyData_10KB</desiredResponse>
+    </ns1:mock>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
 ]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mock"/><con:wsrmConfig version="1.2"/></con:call><con:call id="24215b3f-4efe-42c9-9d4e-a702ec69f079" name="local_https"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>https://localhost:8443/xrd-mock</con:endpoint><con:request><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <SOAP-ENV:Envelope
     xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
@@ -987,6 +1019,358 @@
       <id:xRoadInstance>XTEE-CI</id:xRoadInstance>
       <id:memberClass>COM</id:memberClass>
       <id:memberCode>00000001</id:memberCode>
+      <id:subsystemCode>MockSystemTLS</id:subsystemCode>
+      <id:serviceCode>mock</id:serviceCode>
+      <id:serviceVersion>v1</id:serviceVersion>
+    </xrd:service>
+    <xrd:id>${=java.util.UUID.randomUUID()}</xrd:id>
+    <xrd:userId>EE12345678901</xrd:userId>
+    <xrd:issue>12345</xrd:issue>
+    <xrd:protocolVersion>4.0</xrd:protocolVersion>
+  </SOAP-ENV:Header>
+  <SOAP-ENV:Body>
+    <ns1:mock>
+      <desiredResponse>bodyData_10KB</desiredResponse>
+    </ns1:mock>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mock"/><con:wsrmConfig version="1.2"/></con:call><con:call id="8d50f523-b762-4190-818a-6e25ec31d55e" name="remote_https_06"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>https://xtee6.ci.kit/</con:endpoint><con:request><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope
+    xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:ns1="http://producer.x-road.eu"
+    xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
+    xmlns:id="http://x-road.eu/xsd/identifiers">
+  <SOAP-ENV:Header>
+    <xrd:client id:objectType="SUBSYSTEM">
+      <id:xRoadInstance>XTEE-CI</id:xRoadInstance>
+      <id:memberClass>COM</id:memberClass>
+      <id:memberCode>00000002</id:memberCode>
+      <id:subsystemCode>MockSystemTLS</id:subsystemCode>
+    </xrd:client>
+    <xrd:service id:objectType="SERVICE">
+      <id:xRoadInstance>XTEE-CI</id:xRoadInstance>
+      <id:memberClass>COM</id:memberClass>
+      <id:memberCode>00000002</id:memberCode>
+      <id:subsystemCode>MockSystemTLS</id:subsystemCode>
+      <id:serviceCode>mock</id:serviceCode>
+      <id:serviceVersion>v1</id:serviceVersion>
+    </xrd:service>
+    <xrd:id>${=java.util.UUID.randomUUID()}</xrd:id>
+    <xrd:userId>EE12345678901</xrd:userId>
+    <xrd:issue>12345</xrd:issue>
+    <xrd:protocolVersion>4.0</xrd:protocolVersion>
+  </SOAP-ENV:Header>
+  <SOAP-ENV:Body>
+    <ns1:mock>
+      <desiredResponse>bodyData_10KB</desiredResponse>
+    </ns1:mock>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mock"/><con:wsrmConfig version="1.2"/></con:call><con:call id="1bf29545-c7b3-4880-bf11-1e78f39ece76" name="remote_http_10"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://xtee10.ci.kit/</con:endpoint><con:request><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope
+    xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:ns1="http://producer.x-road.eu"
+    xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
+    xmlns:id="http://x-road.eu/xsd/identifiers">
+  <SOAP-ENV:Header>
+    <xrd:client id:objectType="SUBSYSTEM">
+      <id:xRoadInstance>XTEE-CI-XM</id:xRoadInstance>
+      <id:memberClass>COM</id:memberClass>
+      <id:memberCode>00000002</id:memberCode>
+      <id:subsystemCode>MockSystem</id:subsystemCode>
+    </xrd:client>
+    <xrd:service id:objectType="SERVICE">
+      <id:xRoadInstance>XTEE-CI-XM</id:xRoadInstance>
+      <id:memberClass>COM</id:memberClass>
+      <id:memberCode>00000002</id:memberCode>
+      <id:subsystemCode>MockSystem</id:subsystemCode>
+      <id:serviceCode>mock</id:serviceCode>
+      <id:serviceVersion>v1</id:serviceVersion>
+    </xrd:service>
+    <xrd:id>${=java.util.UUID.randomUUID()}</xrd:id>
+    <xrd:userId>EE12345678901</xrd:userId>
+    <xrd:issue>12345</xrd:issue>
+    <xrd:protocolVersion>4.0</xrd:protocolVersion>
+  </SOAP-ENV:Header>
+  <SOAP-ENV:Body>
+    <ns1:mock>
+      <desiredResponse>bodyData_10KB</desiredResponse>
+    </ns1:mock>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mock"/><con:wsrmConfig version="1.2"/></con:call><con:call id="3c2ff00a-d9de-4338-b732-fa3a629f8870" name="remote_https_10"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>https://xtee10.ci.kit/</con:endpoint><con:request><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope
+    xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:ns1="http://producer.x-road.eu"
+    xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
+    xmlns:id="http://x-road.eu/xsd/identifiers">
+  <SOAP-ENV:Header>
+    <xrd:client id:objectType="SUBSYSTEM">
+      <id:xRoadInstance>XTEE-CI-XM</id:xRoadInstance>
+      <id:memberClass>COM</id:memberClass>
+      <id:memberCode>00000002</id:memberCode>
+      <id:subsystemCode>MockSystemTLS</id:subsystemCode>
+    </xrd:client>
+    <xrd:service id:objectType="SERVICE">
+      <id:xRoadInstance>XTEE-CI-XM</id:xRoadInstance>
+      <id:memberClass>COM</id:memberClass>
+      <id:memberCode>00000002</id:memberCode>
+      <id:subsystemCode>MockSystemTLS</id:subsystemCode>
+      <id:serviceCode>mock</id:serviceCode>
+      <id:serviceVersion>v1</id:serviceVersion>
+    </xrd:service>
+    <xrd:id>${=java.util.UUID.randomUUID()}</xrd:id>
+    <xrd:userId>EE12345678901</xrd:userId>
+    <xrd:issue>12345</xrd:issue>
+    <xrd:protocolVersion>4.0</xrd:protocolVersion>
+  </SOAP-ENV:Header>
+  <SOAP-ENV:Body>
+    <ns1:mock>
+      <desiredResponse>bodyData_10KB</desiredResponse>
+    </ns1:mock>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mock"/><con:wsrmConfig version="1.2"/></con:call><con:call id="8be0f47f-ac49-481f-b07c-cf51c52df56f" name="remote_https_05"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>https://xtee5.ci.kit/</con:endpoint><con:request><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope
+    xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:ns1="http://producer.x-road.eu"
+    xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
+    xmlns:id="http://x-road.eu/xsd/identifiers">
+  <SOAP-ENV:Header>
+    <xrd:client id:objectType="SUBSYSTEM">
+      <id:xRoadInstance>XTEE-CI</id:xRoadInstance>
+      <id:memberClass>GOV</id:memberClass>
+      <id:memberCode>00000001</id:memberCode>
+      <id:subsystemCode>MockSystemTLS</id:subsystemCode>
+    </xrd:client>
+    <xrd:service id:objectType="SERVICE">
+      <id:xRoadInstance>XTEE-CI</id:xRoadInstance>
+      <id:memberClass>GOV</id:memberClass>
+      <id:memberCode>00000001</id:memberCode>
+      <id:subsystemCode>MockSystemTLS</id:subsystemCode>
+      <id:serviceCode>mock</id:serviceCode>
+      <id:serviceVersion>v1</id:serviceVersion>
+    </xrd:service>
+    <xrd:id>${=java.util.UUID.randomUUID()}</xrd:id>
+    <xrd:userId>EE12345678901</xrd:userId>
+    <xrd:issue>12345</xrd:issue>
+    <xrd:protocolVersion>4.0</xrd:protocolVersion>
+  </SOAP-ENV:Header>
+  <SOAP-ENV:Body>
+    <ns1:mock>
+      <desiredResponse>bodyData_10KB</desiredResponse>
+    </ns1:mock>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mock"/><con:wsrmConfig version="1.2"/></con:call><con:call id="fa77cf28-a209-46f9-b24d-8489a1632048" name="remote_https_09"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>https://xtee9.ci.kit/</con:endpoint><con:request><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope
+    xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:ns1="http://producer.x-road.eu"
+    xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
+    xmlns:id="http://x-road.eu/xsd/identifiers">
+  <SOAP-ENV:Header>
+    <xrd:client id:objectType="SUBSYSTEM">
+      <id:xRoadInstance>XTEE-CI-XM</id:xRoadInstance>
+      <id:memberClass>GOV</id:memberClass>
+      <id:memberCode>00000001</id:memberCode>
+      <id:subsystemCode>MockSystemTLS</id:subsystemCode>
+    </xrd:client>
+    <xrd:service id:objectType="SERVICE">
+      <id:xRoadInstance>XTEE-CI-XM</id:xRoadInstance>
+      <id:memberClass>GOV</id:memberClass>
+      <id:memberCode>00000001</id:memberCode>
+      <id:subsystemCode>MockSystemTLS</id:subsystemCode>
+      <id:serviceCode>mock</id:serviceCode>
+      <id:serviceVersion>v1</id:serviceVersion>
+    </xrd:service>
+    <xrd:id>${=java.util.UUID.randomUUID()}</xrd:id>
+    <xrd:userId>EE12345678901</xrd:userId>
+    <xrd:issue>12345</xrd:issue>
+    <xrd:protocolVersion>4.0</xrd:protocolVersion>
+  </SOAP-ENV:Header>
+  <SOAP-ENV:Body>
+    <ns1:mock>
+      <desiredResponse>bodyData_10KB</desiredResponse>
+    </ns1:mock>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mock"/><con:wsrmConfig version="1.2"/></con:call><con:call id="d3b0b140-87a3-4cd2-a993-91b20c0812db" name="remote_http_05"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://xtee5.ci.kit/</con:endpoint><con:request><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope
+    xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:ns1="http://producer.x-road.eu"
+    xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
+    xmlns:id="http://x-road.eu/xsd/identifiers">
+  <SOAP-ENV:Header>
+    <xrd:client id:objectType="SUBSYSTEM">
+      <id:xRoadInstance>XTEE-CI</id:xRoadInstance>
+      <id:memberClass>GOV</id:memberClass>
+      <id:memberCode>00000001</id:memberCode>
+      <id:subsystemCode>MockSystem</id:subsystemCode>
+    </xrd:client>
+    <xrd:service id:objectType="SERVICE">
+      <id:xRoadInstance>XTEE-CI</id:xRoadInstance>
+      <id:memberClass>GOV</id:memberClass>
+      <id:memberCode>00000001</id:memberCode>
+      <id:subsystemCode>MockSystem</id:subsystemCode>
+      <id:serviceCode>mock</id:serviceCode>
+      <id:serviceVersion>v1</id:serviceVersion>
+    </xrd:service>
+    <xrd:id>${=java.util.UUID.randomUUID()}</xrd:id>
+    <xrd:userId>EE12345678901</xrd:userId>
+    <xrd:issue>12345</xrd:issue>
+    <xrd:protocolVersion>4.0</xrd:protocolVersion>
+  </SOAP-ENV:Header>
+  <SOAP-ENV:Body>
+    <ns1:mock>
+      <desiredResponse>bodyData_10KB</desiredResponse>
+    </ns1:mock>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mock"/><con:wsrmConfig version="1.2"/></con:call><con:call id="a83387b6-91f1-4c64-8149-9951520e4e87" name="remote_http_09"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://xtee9.ci.kit/</con:endpoint><con:request><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope
+    xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:ns1="http://producer.x-road.eu"
+    xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
+    xmlns:id="http://x-road.eu/xsd/identifiers">
+  <SOAP-ENV:Header>
+    <xrd:client id:objectType="SUBSYSTEM">
+      <id:xRoadInstance>XTEE-CI-XM</id:xRoadInstance>
+      <id:memberClass>GOV</id:memberClass>
+      <id:memberCode>00000001</id:memberCode>
+      <id:subsystemCode>MockSystem</id:subsystemCode>
+    </xrd:client>
+    <xrd:service id:objectType="SERVICE">
+      <id:xRoadInstance>XTEE-CI-XM</id:xRoadInstance>
+      <id:memberClass>GOV</id:memberClass>
+      <id:memberCode>00000001</id:memberCode>
+      <id:subsystemCode>MockSystem</id:subsystemCode>
+      <id:serviceCode>mock</id:serviceCode>
+      <id:serviceVersion>v1</id:serviceVersion>
+    </xrd:service>
+    <xrd:id>${=java.util.UUID.randomUUID()}</xrd:id>
+    <xrd:userId>EE12345678901</xrd:userId>
+    <xrd:issue>12345</xrd:issue>
+    <xrd:protocolVersion>4.0</xrd:protocolVersion>
+  </SOAP-ENV:Header>
+  <SOAP-ENV:Body>
+    <ns1:mock>
+      <desiredResponse>bodyData_10KB</desiredResponse>
+    </ns1:mock>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mock"/><con:wsrmConfig version="1.2"/></con:call><con:call id="8def99a8-66da-450a-add3-ad1dbedf5d50" name="remote_http_14"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://xtee14.ci.kit/</con:endpoint><con:request><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope
+    xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:ns1="http://producer.x-road.eu"
+    xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
+    xmlns:id="http://x-road.eu/xsd/identifiers">
+  <SOAP-ENV:Header>
+    <xrd:client id:objectType="SUBSYSTEM">
+      <id:xRoadInstance>XTEE-CI-CUST</id:xRoadInstance>
+      <id:memberClass>GOV</id:memberClass>
+      <id:memberCode>00000001</id:memberCode>
+      <id:subsystemCode>MockSystem</id:subsystemCode>
+    </xrd:client>
+    <xrd:service id:objectType="SERVICE">
+      <id:xRoadInstance>XTEE-CI-CUST</id:xRoadInstance>
+      <id:memberClass>GOV</id:memberClass>
+      <id:memberCode>00000001</id:memberCode>
+      <id:subsystemCode>MockSystem</id:subsystemCode>
+      <id:serviceCode>mock</id:serviceCode>
+      <id:serviceVersion>v1</id:serviceVersion>
+    </xrd:service>
+    <xrd:id>${=java.util.UUID.randomUUID()}</xrd:id>
+    <xrd:userId>EE12345678901</xrd:userId>
+    <xrd:issue>12345</xrd:issue>
+    <xrd:protocolVersion>4.0</xrd:protocolVersion>
+  </SOAP-ENV:Header>
+  <SOAP-ENV:Body>
+    <ns1:mock>
+      <desiredResponse>bodyData_10KB</desiredResponse>
+    </ns1:mock>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mock"/><con:wsrmConfig version="1.2"/></con:call><con:call id="527ee2b0-f3ae-4a82-a3ee-8c0548659ec7" name="remote_http_15"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://xtee15.ci.kit/</con:endpoint><con:request><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope
+    xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:ns1="http://producer.x-road.eu"
+    xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
+    xmlns:id="http://x-road.eu/xsd/identifiers">
+  <SOAP-ENV:Header>
+    <xrd:client id:objectType="SUBSYSTEM">
+      <id:xRoadInstance>XTEE-CI-CUST</id:xRoadInstance>
+      <id:memberClass>COM</id:memberClass>
+      <id:memberCode>00000002</id:memberCode>
+      <id:subsystemCode>MockSystem</id:subsystemCode>
+    </xrd:client>
+    <xrd:service id:objectType="SERVICE">
+      <id:xRoadInstance>XTEE-CI-CUST</id:xRoadInstance>
+      <id:memberClass>COM</id:memberClass>
+      <id:memberCode>00000002</id:memberCode>
+      <id:subsystemCode>MockSystem</id:subsystemCode>
+      <id:serviceCode>mock</id:serviceCode>
+      <id:serviceVersion>v1</id:serviceVersion>
+    </xrd:service>
+    <xrd:id>${=java.util.UUID.randomUUID()}</xrd:id>
+    <xrd:userId>EE12345678901</xrd:userId>
+    <xrd:issue>12345</xrd:issue>
+    <xrd:protocolVersion>4.0</xrd:protocolVersion>
+  </SOAP-ENV:Header>
+  <SOAP-ENV:Body>
+    <ns1:mock>
+      <desiredResponse>bodyData_10KB</desiredResponse>
+    </ns1:mock>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mock"/><con:wsrmConfig version="1.2"/></con:call><con:call id="1f1d9372-02d3-48f8-9863-98954a7da7d9" name="remote_https_14"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>https://xtee14.ci.kit/</con:endpoint><con:request><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope
+    xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:ns1="http://producer.x-road.eu"
+    xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
+    xmlns:id="http://x-road.eu/xsd/identifiers">
+  <SOAP-ENV:Header>
+    <xrd:client id:objectType="SUBSYSTEM">
+      <id:xRoadInstance>XTEE-CI-CUST</id:xRoadInstance>
+      <id:memberClass>GOV</id:memberClass>
+      <id:memberCode>00000001</id:memberCode>
+      <id:subsystemCode>MockSystemTLS</id:subsystemCode>
+    </xrd:client>
+    <xrd:service id:objectType="SERVICE">
+      <id:xRoadInstance>XTEE-CI-CUST</id:xRoadInstance>
+      <id:memberClass>GOV</id:memberClass>
+      <id:memberCode>00000001</id:memberCode>
+      <id:subsystemCode>MockSystemTLS</id:subsystemCode>
+      <id:serviceCode>mock</id:serviceCode>
+      <id:serviceVersion>v1</id:serviceVersion>
+    </xrd:service>
+    <xrd:id>${=java.util.UUID.randomUUID()}</xrd:id>
+    <xrd:userId>EE12345678901</xrd:userId>
+    <xrd:issue>12345</xrd:issue>
+    <xrd:protocolVersion>4.0</xrd:protocolVersion>
+  </SOAP-ENV:Header>
+  <SOAP-ENV:Body>
+    <ns1:mock>
+      <desiredResponse>bodyData_10KB</desiredResponse>
+    </ns1:mock>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mock"/><con:wsrmConfig version="1.2"/></con:call><con:call id="5b941395-5284-4958-8a35-9be9e9b8ae4e" name="remote_https_15"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>https://xtee15.ci.kit/</con:endpoint><con:request><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope
+    xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:ns1="http://producer.x-road.eu"
+    xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
+    xmlns:id="http://x-road.eu/xsd/identifiers">
+  <SOAP-ENV:Header>
+    <xrd:client id:objectType="SUBSYSTEM">
+      <id:xRoadInstance>XTEE-CI-CUST</id:xRoadInstance>
+      <id:memberClass>COM</id:memberClass>
+      <id:memberCode>00000002</id:memberCode>
+      <id:subsystemCode>MockSystemTLS</id:subsystemCode>
+    </xrd:client>
+    <xrd:service id:objectType="SERVICE">
+      <id:xRoadInstance>XTEE-CI-CUST</id:xRoadInstance>
+      <id:memberClass>COM</id:memberClass>
+      <id:memberCode>00000002</id:memberCode>
       <id:subsystemCode>MockSystemTLS</id:subsystemCode>
       <id:serviceCode>mock</id:serviceCode>
       <id:serviceVersion>v1</id:serviceVersion>
@@ -1066,384 +1450,4 @@
     </ns1:mockSwaRef>
   </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>
-]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mockSwaRefRequest"/><con:wsrmConfig version="1.2"/></con:call></con:operation></con:interface><con:testSuite id="fe6acb7d-d033-4108-a930-4c4424a8ebe6" name="TestSuite"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase id="d01dcae3-4b10-4b38-86d7-678aac04847d" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="TestCase" searchProperties="true"><con:settings/><con:testStep type="request" id="bf2bc356-3106-456a-8797-0e363265a2dc" name="mock_empty_http_warmup"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>mockPortSoap11</con:interface><con:operation>mock</con:operation><con:request name="mock_empty_http_warmup" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="ddec693f-0561-4ae3-8cc8-88c09eed7273"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting><con:setting id="discardResponse">false</con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#ServerUrlHttp}</con:endpoint><con:request><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<SOAP-ENV:Envelope
-    xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
-    xmlns:ns1="http://producer.x-road.eu"
-    xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
-    xmlns:id="http://x-road.eu/xsd/identifiers">
-  <SOAP-ENV:Header>
-    <xrd:client id:objectType="SUBSYSTEM">
-      <id:xRoadInstance>${#Project#ClientXRoadInstance}</id:xRoadInstance>
-      <id:memberClass>${#Project#ClientMemberClass}</id:memberClass>
-      <id:memberCode>${#Project#ClientMemberCode}</id:memberCode>
-      <id:subsystemCode>${#Project#ClientSubsystemCode}</id:subsystemCode>
-    </xrd:client>
-    <xrd:service id:objectType="SERVICE">
-      <id:xRoadInstance>${#Project#ServiceXRoadInstance}</id:xRoadInstance>
-      <id:memberClass>${#Project#ServiceMemberClass}</id:memberClass>
-      <id:memberCode>${#Project#ServiceMemberCode}</id:memberCode>
-      <id:subsystemCode>${#Project#ServiceSubsystemCode}</id:subsystemCode>
-      <id:serviceCode>mock</id:serviceCode>
-      <id:serviceVersion>v1</id:serviceVersion>
-    </xrd:service>
-    <xrd:id>${=java.util.UUID.randomUUID()}</xrd:id>
-    <xrd:userId>EE12345678901</xrd:userId>
-    <xrd:issue>12345</xrd:issue>
-    <xrd:protocolVersion>4.0</xrd:protocolVersion>
-  </SOAP-ENV:Header>
-  <SOAP-ENV:Body>
-    <ns1:mock/>
-  </SOAP-ENV:Body>
-</SOAP-ENV:Envelope>
-]]></con:request><con:assertion type="SOAP Fault Assertion" id="02ced39f-45e7-4f2a-8747-d4b0b5cbd80f" name="Not SOAP Fault"/><con:assertion type="SOAP Response" id="5f47bf9b-80dc-441c-88a1-fa53f8731270" name="SOAP Response"/><con:assertion type="Response SLA Assertion" id="1be465d6-0e95-4d36-b540-4e3b92818104" name="Response SLA"><con:configuration><SLA>60000</SLA></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mock"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" id="00598958-be6a-453c-80c3-38024bccab5c" name="mock_empty_https_warmup"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>mockPortSoap11</con:interface><con:operation>mock</con:operation><con:request name="mock_empty_https_warmup" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="ddec693f-0561-4ae3-8cc8-88c09eed7273"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting><con:setting id="discardResponse">false</con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#ServerUrlHttps}</con:endpoint><con:request><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<SOAP-ENV:Envelope
-    xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
-    xmlns:ns1="http://producer.x-road.eu"
-    xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
-    xmlns:id="http://x-road.eu/xsd/identifiers">
-  <SOAP-ENV:Header>
-    <xrd:client id:objectType="SUBSYSTEM">
-      <id:xRoadInstance>${#Project#ClientXRoadInstance}</id:xRoadInstance>
-      <id:memberClass>${#Project#ClientMemberClass}</id:memberClass>
-      <id:memberCode>${#Project#ClientMemberCode}</id:memberCode>
-      <id:subsystemCode>${#Project#ClientSubsystemCodeTLS}</id:subsystemCode>
-    </xrd:client>
-    <xrd:service id:objectType="SERVICE">
-      <id:xRoadInstance>${#Project#ServiceXRoadInstance}</id:xRoadInstance>
-      <id:memberClass>${#Project#ServiceMemberClass}</id:memberClass>
-      <id:memberCode>${#Project#ServiceMemberCode}</id:memberCode>
-      <id:subsystemCode>${#Project#ServiceSubsystemCodeTLS}</id:subsystemCode>
-      <id:serviceCode>mock</id:serviceCode>
-      <id:serviceVersion>v1</id:serviceVersion>
-    </xrd:service>
-    <xrd:id>${=java.util.UUID.randomUUID()}</xrd:id>
-    <xrd:userId>EE12345678901</xrd:userId>
-    <xrd:issue>12345</xrd:issue>
-    <xrd:protocolVersion>4.0</xrd:protocolVersion>
-  </SOAP-ENV:Header>
-  <SOAP-ENV:Body>
-    <ns1:mock/>
-  </SOAP-ENV:Body>
-</SOAP-ENV:Envelope>
-]]></con:request><con:assertion type="SOAP Fault Assertion" id="02ced39f-45e7-4f2a-8747-d4b0b5cbd80f" name="Not SOAP Fault"/><con:assertion type="SOAP Response" id="5f47bf9b-80dc-441c-88a1-fa53f8731270" name="SOAP Response"/><con:assertion type="Response SLA Assertion" id="1be465d6-0e95-4d36-b540-4e3b92818104" name="Response SLA"><con:configuration><SLA>60000</SLA></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mock"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" id="f04d5121-e582-495f-a52b-b93ffb1ed19d" name="mock_bodyData_10KB_http"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>mockPortSoap11</con:interface><con:operation>mock</con:operation><con:request name="mock_bodyData_10KB_http" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="ddec693f-0561-4ae3-8cc8-88c09eed7273"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting><con:setting id="discardResponse">false</con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#ServerUrlHttp}</con:endpoint><con:request><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<SOAP-ENV:Envelope
-    xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
-    xmlns:ns1="http://producer.x-road.eu"
-    xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
-    xmlns:id="http://x-road.eu/xsd/identifiers">
-  <SOAP-ENV:Header>
-    <xrd:client id:objectType="SUBSYSTEM">
-      <id:xRoadInstance>${#Project#ClientXRoadInstance}</id:xRoadInstance>
-      <id:memberClass>${#Project#ClientMemberClass}</id:memberClass>
-      <id:memberCode>${#Project#ClientMemberCode}</id:memberCode>
-      <id:subsystemCode>${#Project#ClientSubsystemCode}</id:subsystemCode>
-    </xrd:client>
-    <xrd:service id:objectType="SERVICE">
-      <id:xRoadInstance>${#Project#ServiceXRoadInstance}</id:xRoadInstance>
-      <id:memberClass>${#Project#ServiceMemberClass}</id:memberClass>
-      <id:memberCode>${#Project#ServiceMemberCode}</id:memberCode>
-      <id:subsystemCode>${#Project#ServiceSubsystemCode}</id:subsystemCode>
-      <id:serviceCode>mock</id:serviceCode>
-      <id:serviceVersion>v1</id:serviceVersion>
-    </xrd:service>
-    <xrd:id>${=java.util.UUID.randomUUID()}</xrd:id>
-    <xrd:userId>EE12345678901</xrd:userId>
-    <xrd:issue>12345</xrd:issue>
-    <xrd:protocolVersion>4.0</xrd:protocolVersion>
-  </SOAP-ENV:Header>
-  <SOAP-ENV:Body>
-    <ns1:mock>
-      <desiredResponse>bodyData_10KB</desiredResponse>
-    </ns1:mock>
-  </SOAP-ENV:Body>
-</SOAP-ENV:Envelope>
-]]></con:request><con:assertion type="SOAP Fault Assertion" id="02ced39f-45e7-4f2a-8747-d4b0b5cbd80f" name="Not SOAP Fault"/><con:assertion type="SOAP Response" id="5f47bf9b-80dc-441c-88a1-fa53f8731270" name="SOAP Response"/><con:assertion type="Response SLA Assertion" id="1be465d6-0e95-4d36-b540-4e3b92818104" name="Response SLA"><con:configuration><SLA>5000</SLA></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mock"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" id="afb6912d-e95e-4c99-b064-0b229e29b481" name="mock_bodyData_10KB_https"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>mockPortSoap11</con:interface><con:operation>mock</con:operation><con:request name="mock_bodyData_10KB_https" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="ddec693f-0561-4ae3-8cc8-88c09eed7273"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting><con:setting id="discardResponse">false</con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#ServerUrlHttps}</con:endpoint><con:request><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<SOAP-ENV:Envelope
-    xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
-    xmlns:ns1="http://producer.x-road.eu"
-    xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
-    xmlns:id="http://x-road.eu/xsd/identifiers">
-  <SOAP-ENV:Header>
-    <xrd:client id:objectType="SUBSYSTEM">
-      <id:xRoadInstance>${#Project#ClientXRoadInstance}</id:xRoadInstance>
-      <id:memberClass>${#Project#ClientMemberClass}</id:memberClass>
-      <id:memberCode>${#Project#ClientMemberCode}</id:memberCode>
-      <id:subsystemCode>${#Project#ClientSubsystemCodeTLS}</id:subsystemCode>
-    </xrd:client>
-    <xrd:service id:objectType="SERVICE">
-      <id:xRoadInstance>${#Project#ServiceXRoadInstance}</id:xRoadInstance>
-      <id:memberClass>${#Project#ServiceMemberClass}</id:memberClass>
-      <id:memberCode>${#Project#ServiceMemberCode}</id:memberCode>
-      <id:subsystemCode>${#Project#ServiceSubsystemCodeTLS}</id:subsystemCode>
-      <id:serviceCode>mock</id:serviceCode>
-      <id:serviceVersion>v1</id:serviceVersion>
-    </xrd:service>
-    <xrd:id>${=java.util.UUID.randomUUID()}</xrd:id>
-    <xrd:userId>EE12345678901</xrd:userId>
-    <xrd:issue>12345</xrd:issue>
-    <xrd:protocolVersion>4.0</xrd:protocolVersion>
-  </SOAP-ENV:Header>
-  <SOAP-ENV:Body>
-    <ns1:mock>
-      <desiredResponse>bodyData_10KB</desiredResponse>
-    </ns1:mock>
-  </SOAP-ENV:Body>
-</SOAP-ENV:Envelope>
-]]></con:request><con:assertion type="SOAP Fault Assertion" id="02ced39f-45e7-4f2a-8747-d4b0b5cbd80f" name="Not SOAP Fault"/><con:assertion type="SOAP Response" id="5f47bf9b-80dc-441c-88a1-fa53f8731270" name="SOAP Response"/><con:assertion type="Response SLA Assertion" id="1be465d6-0e95-4d36-b540-4e3b92818104" name="Response SLA"><con:configuration><SLA>5000</SLA></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mock"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" id="a6b233fd-be34-45b7-898b-3128ad27a84c" name="mock_bodyData_1MB_http"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>mockPortSoap11</con:interface><con:operation>mock</con:operation><con:request name="mock_bodyData_1MB_http" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="ddec693f-0561-4ae3-8cc8-88c09eed7273"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting><con:setting id="discardResponse">false</con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#ServerUrlHttp}</con:endpoint><con:request><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<SOAP-ENV:Envelope
-    xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
-    xmlns:ns1="http://producer.x-road.eu"
-    xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
-    xmlns:id="http://x-road.eu/xsd/identifiers">
-  <SOAP-ENV:Header>
-    <xrd:client id:objectType="SUBSYSTEM">
-      <id:xRoadInstance>${#Project#ClientXRoadInstance}</id:xRoadInstance>
-      <id:memberClass>${#Project#ClientMemberClass}</id:memberClass>
-      <id:memberCode>${#Project#ClientMemberCode}</id:memberCode>
-      <id:subsystemCode>${#Project#ClientSubsystemCode}</id:subsystemCode>
-    </xrd:client>
-    <xrd:service id:objectType="SERVICE">
-      <id:xRoadInstance>${#Project#ServiceXRoadInstance}</id:xRoadInstance>
-      <id:memberClass>${#Project#ServiceMemberClass}</id:memberClass>
-      <id:memberCode>${#Project#ServiceMemberCode}</id:memberCode>
-      <id:subsystemCode>${#Project#ServiceSubsystemCode}</id:subsystemCode>
-      <id:serviceCode>mock</id:serviceCode>
-      <id:serviceVersion>v1</id:serviceVersion>
-    </xrd:service>
-    <xrd:id>${=java.util.UUID.randomUUID()}</xrd:id>
-    <xrd:userId>EE12345678901</xrd:userId>
-    <xrd:issue>12345</xrd:issue>
-    <xrd:protocolVersion>4.0</xrd:protocolVersion>
-  </SOAP-ENV:Header>
-  <SOAP-ENV:Body>
-    <ns1:mock>
-      <desiredResponse>bodyData_1MB</desiredResponse>
-    </ns1:mock>
-  </SOAP-ENV:Body>
-</SOAP-ENV:Envelope>
-]]></con:request><con:assertion type="SOAP Fault Assertion" id="02ced39f-45e7-4f2a-8747-d4b0b5cbd80f" name="Not SOAP Fault"/><con:assertion type="SOAP Response" id="5f47bf9b-80dc-441c-88a1-fa53f8731270" name="SOAP Response"/><con:assertion type="Response SLA Assertion" id="1be465d6-0e95-4d36-b540-4e3b92818104" name="Response SLA"><con:configuration><SLA>10000</SLA></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mock"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" id="0cf9a618-6acd-4b55-97ec-b9256714669f" name="mock_bodyData_1MB_https"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>mockPortSoap11</con:interface><con:operation>mock</con:operation><con:request name="mock_bodyData_1MB_https" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="ddec693f-0561-4ae3-8cc8-88c09eed7273"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting><con:setting id="discardResponse">false</con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#ServerUrlHttps}</con:endpoint><con:request><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<SOAP-ENV:Envelope
-    xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
-    xmlns:ns1="http://producer.x-road.eu"
-    xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
-    xmlns:id="http://x-road.eu/xsd/identifiers">
-  <SOAP-ENV:Header>
-    <xrd:client id:objectType="SUBSYSTEM">
-      <id:xRoadInstance>${#Project#ClientXRoadInstance}</id:xRoadInstance>
-      <id:memberClass>${#Project#ClientMemberClass}</id:memberClass>
-      <id:memberCode>${#Project#ClientMemberCode}</id:memberCode>
-      <id:subsystemCode>${#Project#ClientSubsystemCodeTLS}</id:subsystemCode>
-    </xrd:client>
-    <xrd:service id:objectType="SERVICE">
-      <id:xRoadInstance>${#Project#ServiceXRoadInstance}</id:xRoadInstance>
-      <id:memberClass>${#Project#ServiceMemberClass}</id:memberClass>
-      <id:memberCode>${#Project#ServiceMemberCode}</id:memberCode>
-      <id:subsystemCode>${#Project#ServiceSubsystemCodeTLS}</id:subsystemCode>
-      <id:serviceCode>mock</id:serviceCode>
-      <id:serviceVersion>v1</id:serviceVersion>
-    </xrd:service>
-    <xrd:id>${=java.util.UUID.randomUUID()}</xrd:id>
-    <xrd:userId>EE12345678901</xrd:userId>
-    <xrd:issue>12345</xrd:issue>
-    <xrd:protocolVersion>4.0</xrd:protocolVersion>
-  </SOAP-ENV:Header>
-  <SOAP-ENV:Body>
-    <ns1:mock>
-      <desiredResponse>bodyData_1MB</desiredResponse>
-    </ns1:mock>
-  </SOAP-ENV:Body>
-</SOAP-ENV:Envelope>
-]]></con:request><con:assertion type="SOAP Fault Assertion" id="02ced39f-45e7-4f2a-8747-d4b0b5cbd80f" name="Not SOAP Fault"/><con:assertion type="SOAP Response" id="5f47bf9b-80dc-441c-88a1-fa53f8731270" name="SOAP Response"/><con:assertion type="Response SLA Assertion" id="1be465d6-0e95-4d36-b540-4e3b92818104" name="Response SLA"><con:configuration><SLA>10000</SLA></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mock"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" id="77526456-a51d-47ee-afa6-8c4f2179aad6" name="mock_bodyXML_1MB_http"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>mockPortSoap11</con:interface><con:operation>mock</con:operation><con:request name="mock_bodyXML_1MB_http" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="ddec693f-0561-4ae3-8cc8-88c09eed7273"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting><con:setting id="discardResponse">false</con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#ServerUrlHttp}</con:endpoint><con:request><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<SOAP-ENV:Envelope
-    xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
-    xmlns:ns1="http://producer.x-road.eu"
-    xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
-    xmlns:id="http://x-road.eu/xsd/identifiers">
-  <SOAP-ENV:Header>
-    <xrd:client id:objectType="SUBSYSTEM">
-      <id:xRoadInstance>${#Project#ClientXRoadInstance}</id:xRoadInstance>
-      <id:memberClass>${#Project#ClientMemberClass}</id:memberClass>
-      <id:memberCode>${#Project#ClientMemberCode}</id:memberCode>
-      <id:subsystemCode>${#Project#ClientSubsystemCode}</id:subsystemCode>
-    </xrd:client>
-    <xrd:service id:objectType="SERVICE">
-      <id:xRoadInstance>${#Project#ServiceXRoadInstance}</id:xRoadInstance>
-      <id:memberClass>${#Project#ServiceMemberClass}</id:memberClass>
-      <id:memberCode>${#Project#ServiceMemberCode}</id:memberCode>
-      <id:subsystemCode>${#Project#ServiceSubsystemCode}</id:subsystemCode>
-      <id:serviceCode>mock</id:serviceCode>
-      <id:serviceVersion>v1</id:serviceVersion>
-    </xrd:service>
-    <xrd:id>${=java.util.UUID.randomUUID()}</xrd:id>
-    <xrd:userId>EE12345678901</xrd:userId>
-    <xrd:issue>12345</xrd:issue>
-    <xrd:protocolVersion>4.0</xrd:protocolVersion>
-  </SOAP-ENV:Header>
-  <SOAP-ENV:Body>
-    <ns1:mock>
-      <desiredResponse>bodyXML_1MB</desiredResponse>
-    </ns1:mock>
-  </SOAP-ENV:Body>
-</SOAP-ENV:Envelope>
-]]></con:request><con:assertion type="SOAP Fault Assertion" id="02ced39f-45e7-4f2a-8747-d4b0b5cbd80f" name="Not SOAP Fault"/><con:assertion type="SOAP Response" id="5f47bf9b-80dc-441c-88a1-fa53f8731270" name="SOAP Response"/><con:assertion type="Response SLA Assertion" id="1be465d6-0e95-4d36-b540-4e3b92818104" name="Response SLA"><con:configuration><SLA>10000</SLA></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mock"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" id="7f60731b-705c-4a95-bb27-9c20f2fa4ae4" name="mock_bodyXML_1MB_https"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>mockPortSoap11</con:interface><con:operation>mock</con:operation><con:request name="mock_bodyXML_1MB_https" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="ddec693f-0561-4ae3-8cc8-88c09eed7273"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting><con:setting id="discardResponse">false</con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#ServerUrlHttps}</con:endpoint><con:request><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<SOAP-ENV:Envelope
-    xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
-    xmlns:ns1="http://producer.x-road.eu"
-    xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
-    xmlns:id="http://x-road.eu/xsd/identifiers">
-  <SOAP-ENV:Header>
-    <xrd:client id:objectType="SUBSYSTEM">
-      <id:xRoadInstance>${#Project#ClientXRoadInstance}</id:xRoadInstance>
-      <id:memberClass>${#Project#ClientMemberClass}</id:memberClass>
-      <id:memberCode>${#Project#ClientMemberCode}</id:memberCode>
-      <id:subsystemCode>${#Project#ClientSubsystemCodeTLS}</id:subsystemCode>
-    </xrd:client>
-    <xrd:service id:objectType="SERVICE">
-      <id:xRoadInstance>${#Project#ServiceXRoadInstance}</id:xRoadInstance>
-      <id:memberClass>${#Project#ServiceMemberClass}</id:memberClass>
-      <id:memberCode>${#Project#ServiceMemberCode}</id:memberCode>
-      <id:subsystemCode>${#Project#ServiceSubsystemCodeTLS}</id:subsystemCode>
-      <id:serviceCode>mock</id:serviceCode>
-      <id:serviceVersion>v1</id:serviceVersion>
-    </xrd:service>
-    <xrd:id>${=java.util.UUID.randomUUID()}</xrd:id>
-    <xrd:userId>EE12345678901</xrd:userId>
-    <xrd:issue>12345</xrd:issue>
-    <xrd:protocolVersion>4.0</xrd:protocolVersion>
-  </SOAP-ENV:Header>
-  <SOAP-ENV:Body>
-    <ns1:mock>
-      <desiredResponse>bodyXML_1MB</desiredResponse>
-    </ns1:mock>
-  </SOAP-ENV:Body>
-</SOAP-ENV:Envelope>
-]]></con:request><con:assertion type="SOAP Fault Assertion" id="02ced39f-45e7-4f2a-8747-d4b0b5cbd80f" name="Not SOAP Fault"/><con:assertion type="SOAP Response" id="5f47bf9b-80dc-441c-88a1-fa53f8731270" name="SOAP Response"/><con:assertion type="Response SLA Assertion" id="1be465d6-0e95-4d36-b540-4e3b92818104" name="Response SLA"><con:configuration><SLA>10000</SLA></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mock"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" id="eb5c0c6d-a3eb-411c-a22c-3cf8b415e84b" name="mockMtom_1MB_http"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>mockPortSoap11</con:interface><con:operation>mock</con:operation><con:request name="mockMtom_1MB_http" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="ddec693f-0561-4ae3-8cc8-88c09eed7273"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting><con:setting id="discardResponse">false</con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#ServerUrlHttp}</con:endpoint><con:request><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<SOAP-ENV:Envelope
-    xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
-    xmlns:ns1="http://producer.x-road.eu"
-    xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
-    xmlns:id="http://x-road.eu/xsd/identifiers">
-  <SOAP-ENV:Header>
-    <xrd:client id:objectType="SUBSYSTEM">
-      <id:xRoadInstance>${#Project#ClientXRoadInstance}</id:xRoadInstance>
-      <id:memberClass>${#Project#ClientMemberClass}</id:memberClass>
-      <id:memberCode>${#Project#ClientMemberCode}</id:memberCode>
-      <id:subsystemCode>${#Project#ClientSubsystemCode}</id:subsystemCode>
-    </xrd:client>
-    <xrd:service id:objectType="SERVICE">
-      <id:xRoadInstance>${#Project#ServiceXRoadInstance}</id:xRoadInstance>
-      <id:memberClass>${#Project#ServiceMemberClass}</id:memberClass>
-      <id:memberCode>${#Project#ServiceMemberCode}</id:memberCode>
-      <id:subsystemCode>${#Project#ServiceSubsystemCode}</id:subsystemCode>
-      <id:serviceCode>mockMtom</id:serviceCode>
-      <id:serviceVersion>v1</id:serviceVersion>
-    </xrd:service>
-    <xrd:id>${=java.util.UUID.randomUUID()}</xrd:id>
-    <xrd:userId>EE12345678901</xrd:userId>
-    <xrd:issue>12345</xrd:issue>
-    <xrd:protocolVersion>4.0</xrd:protocolVersion>
-  </SOAP-ENV:Header>
-  <SOAP-ENV:Body>
-    <ns1:mockMtom>
-      <desiredResponse>mtom_1MB</desiredResponse>
-    </ns1:mockMtom>
-  </SOAP-ENV:Body>
-</SOAP-ENV:Envelope>
-]]></con:request><con:assertion type="SOAP Fault Assertion" id="02ced39f-45e7-4f2a-8747-d4b0b5cbd80f" name="Not SOAP Fault"/><con:assertion type="SOAP Response" id="5f47bf9b-80dc-441c-88a1-fa53f8731270" name="SOAP Response"/><con:assertion type="Response SLA Assertion" id="1be465d6-0e95-4d36-b540-4e3b92818104" name="Response SLA"><con:configuration><SLA>10000</SLA></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mock"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" id="3d171cd8-8103-448d-846c-0506c4db458f" name="mockMtom_1MB_https"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>mockPortSoap11</con:interface><con:operation>mock</con:operation><con:request name="mockMtom_1MB_https" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="ddec693f-0561-4ae3-8cc8-88c09eed7273"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting><con:setting id="discardResponse">false</con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#ServerUrlHttps}</con:endpoint><con:request><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<SOAP-ENV:Envelope
-    xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
-    xmlns:ns1="http://producer.x-road.eu"
-    xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
-    xmlns:id="http://x-road.eu/xsd/identifiers">
-  <SOAP-ENV:Header>
-    <xrd:client id:objectType="SUBSYSTEM">
-      <id:xRoadInstance>${#Project#ClientXRoadInstance}</id:xRoadInstance>
-      <id:memberClass>${#Project#ClientMemberClass}</id:memberClass>
-      <id:memberCode>${#Project#ClientMemberCode}</id:memberCode>
-      <id:subsystemCode>${#Project#ClientSubsystemCodeTLS}</id:subsystemCode>
-    </xrd:client>
-    <xrd:service id:objectType="SERVICE">
-      <id:xRoadInstance>${#Project#ServiceXRoadInstance}</id:xRoadInstance>
-      <id:memberClass>${#Project#ServiceMemberClass}</id:memberClass>
-      <id:memberCode>${#Project#ServiceMemberCode}</id:memberCode>
-      <id:subsystemCode>${#Project#ServiceSubsystemCodeTLS}</id:subsystemCode>
-      <id:serviceCode>mockMtom</id:serviceCode>
-      <id:serviceVersion>v1</id:serviceVersion>
-    </xrd:service>
-    <xrd:id>${=java.util.UUID.randomUUID()}</xrd:id>
-    <xrd:userId>EE12345678901</xrd:userId>
-    <xrd:issue>12345</xrd:issue>
-    <xrd:protocolVersion>4.0</xrd:protocolVersion>
-  </SOAP-ENV:Header>
-  <SOAP-ENV:Body>
-    <ns1:mockMtom>
-      <desiredResponse>mtom_1MB</desiredResponse>
-    </ns1:mockMtom>
-  </SOAP-ENV:Body>
-</SOAP-ENV:Envelope>
-]]></con:request><con:assertion type="SOAP Fault Assertion" id="02ced39f-45e7-4f2a-8747-d4b0b5cbd80f" name="Not SOAP Fault"/><con:assertion type="SOAP Response" id="5f47bf9b-80dc-441c-88a1-fa53f8731270" name="SOAP Response"/><con:assertion type="Response SLA Assertion" id="1be465d6-0e95-4d36-b540-4e3b92818104" name="Response SLA"><con:configuration><SLA>10000</SLA></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mock"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" id="70d158d7-0ca2-44de-90b0-b0b03613cd71" name="mockSwaRef_1MB_http"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>mockPortSoap11</con:interface><con:operation>mock</con:operation><con:request name="mockSwaRef_1MB_http" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="ddec693f-0561-4ae3-8cc8-88c09eed7273"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting><con:setting id="discardResponse">false</con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#ServerUrlHttp}</con:endpoint><con:request><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<SOAP-ENV:Envelope
-    xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
-    xmlns:ns1="http://producer.x-road.eu"
-    xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
-    xmlns:id="http://x-road.eu/xsd/identifiers">
-  <SOAP-ENV:Header>
-    <xrd:client id:objectType="SUBSYSTEM">
-      <id:xRoadInstance>${#Project#ClientXRoadInstance}</id:xRoadInstance>
-      <id:memberClass>${#Project#ClientMemberClass}</id:memberClass>
-      <id:memberCode>${#Project#ClientMemberCode}</id:memberCode>
-      <id:subsystemCode>${#Project#ClientSubsystemCode}</id:subsystemCode>
-    </xrd:client>
-    <xrd:service id:objectType="SERVICE">
-      <id:xRoadInstance>${#Project#ServiceXRoadInstance}</id:xRoadInstance>
-      <id:memberClass>${#Project#ServiceMemberClass}</id:memberClass>
-      <id:memberCode>${#Project#ServiceMemberCode}</id:memberCode>
-      <id:subsystemCode>${#Project#ServiceSubsystemCode}</id:subsystemCode>
-      <id:serviceCode>mockSwaRef</id:serviceCode>
-      <id:serviceVersion>v1</id:serviceVersion>
-    </xrd:service>
-    <xrd:id>${=java.util.UUID.randomUUID()}</xrd:id>
-    <xrd:userId>EE12345678901</xrd:userId>
-    <xrd:issue>12345</xrd:issue>
-    <xrd:protocolVersion>4.0</xrd:protocolVersion>
-  </SOAP-ENV:Header>
-  <SOAP-ENV:Body>
-    <ns1:mockSwaRef>
-      <desiredResponse>swa_1MB</desiredResponse>
-    </ns1:mockSwaRef>
-  </SOAP-ENV:Body>
-</SOAP-ENV:Envelope>
-]]></con:request><con:assertion type="SOAP Fault Assertion" id="02ced39f-45e7-4f2a-8747-d4b0b5cbd80f" name="Not SOAP Fault"/><con:assertion type="SOAP Response" id="5f47bf9b-80dc-441c-88a1-fa53f8731270" name="SOAP Response"/><con:assertion type="Response SLA Assertion" id="1be465d6-0e95-4d36-b540-4e3b92818104" name="Response SLA"><con:configuration><SLA>10000</SLA></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mock"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" id="6c1e1ee3-f3ea-462e-a863-b7562c04d433" name="mockSwaRef_1MB_https"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>mockPortSoap11</con:interface><con:operation>mock</con:operation><con:request name="mockSwaRef_1MB_https" outgoingWss="" incomingWss="" timeout="" sslKeystore="" useWsAddressing="false" useWsReliableMessaging="false" wssPasswordType="" id="ddec693f-0561-4ae3-8cc8-88c09eed7273"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting><con:setting id="discardResponse">false</con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>${#Project#ServerUrlHttps}</con:endpoint><con:request><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<SOAP-ENV:Envelope
-    xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
-    xmlns:ns1="http://producer.x-road.eu"
-    xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
-    xmlns:id="http://x-road.eu/xsd/identifiers">
-  <SOAP-ENV:Header>
-    <xrd:client id:objectType="SUBSYSTEM">
-      <id:xRoadInstance>${#Project#ClientXRoadInstance}</id:xRoadInstance>
-      <id:memberClass>${#Project#ClientMemberClass}</id:memberClass>
-      <id:memberCode>${#Project#ClientMemberCode}</id:memberCode>
-      <id:subsystemCode>${#Project#ClientSubsystemCodeTLS}</id:subsystemCode>
-    </xrd:client>
-    <xrd:service id:objectType="SERVICE">
-      <id:xRoadInstance>${#Project#ServiceXRoadInstance}</id:xRoadInstance>
-      <id:memberClass>${#Project#ServiceMemberClass}</id:memberClass>
-      <id:memberCode>${#Project#ServiceMemberCode}</id:memberCode>
-      <id:subsystemCode>${#Project#ServiceSubsystemCodeTLS}</id:subsystemCode>
-      <id:serviceCode>mockSwaRef</id:serviceCode>
-      <id:serviceVersion>v1</id:serviceVersion>
-    </xrd:service>
-    <xrd:id>${=java.util.UUID.randomUUID()}</xrd:id>
-    <xrd:userId>EE12345678901</xrd:userId>
-    <xrd:issue>12345</xrd:issue>
-    <xrd:protocolVersion>4.0</xrd:protocolVersion>
-  </SOAP-ENV:Header>
-  <SOAP-ENV:Body>
-    <ns1:mockSwaRef>
-      <desiredResponse>swa_1MB</desiredResponse>
-    </ns1:mockSwaRef>
-  </SOAP-ENV:Body>
-</SOAP-ENV:Envelope>
-]]></con:request><con:assertion type="SOAP Fault Assertion" id="02ced39f-45e7-4f2a-8747-d4b0b5cbd80f" name="Not SOAP Fault"/><con:assertion type="SOAP Response" id="5f47bf9b-80dc-441c-88a1-fa53f8731270" name="SOAP Response"/><con:assertion type="Response SLA Assertion" id="1be465d6-0e95-4d36-b540-4e3b92818104" name="Response SLA"><con:configuration><SLA>10000</SLA></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mock"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:properties><con:property><con:name>ServerUrlHttp</con:name><con:value>http://localhost:8086/xrd-mock</con:value></con:property><con:property><con:name>ServerUrlHttps</con:name><con:value>https://localhost:8443/xrd-mock</con:value></con:property><con:property><con:name>ClientXRoadInstance</con:name><con:value>XTEE-CI</con:value></con:property><con:property><con:name>ClientMemberClass</con:name><con:value>COM</con:value></con:property><con:property><con:name>ClientMemberCode</con:name><con:value>00000002</con:value></con:property><con:property><con:name>ClientSubsystemCode</con:name><con:value>MockSystem</con:value></con:property><con:property><con:name>ClientSubsystemCodeTLS</con:name><con:value>MockSystemTLS</con:value></con:property><con:property><con:name>ServiceXRoadInstance</con:name><con:value>XTEE-CI</con:value></con:property><con:property><con:name>ServiceMemberClass</con:name><con:value>COM</con:value></con:property><con:property><con:name>ServiceMemberCode</con:name><con:value>00000002</con:value></con:property><con:property><con:name>ServiceSubsystemCode</con:name><con:value>MockSystem</con:value></con:property><con:property><con:name>ServiceSubsystemCodeTLS</con:name><con:value>MockSystemTLS</con:value></con:property></con:properties><con:wssContainer/><con:oAuth2ProfileContainer/><con:oAuth1ProfileContainer/><con:sensitiveInformation/></con:soapui-project>
+]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mockSwaRefRequest"/><con:wsrmConfig version="1.2"/></con:call></con:operation></con:interface><con:properties/><con:wssContainer/><con:oAuth2ProfileContainer/><con:oAuth1ProfileContainer/><con:sensitiveInformation/></con:soapui-project>

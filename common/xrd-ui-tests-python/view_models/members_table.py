@@ -1,20 +1,20 @@
 ADD_MEMBER_TEXTS_AND_RESULTS = [['', '', '', True, 'Missing parameter: {0}', 'memberClass', False],
-                                ['ASA_TEST', '', 'TEST_ASA', True, 'Missing parameter: {0}', 'memberClass', False],
-                                ['ASA_TEST', 'GOV', '', True, 'Missing parameter: {0}', 'memberCode', False],
-                                ['', 'GOV', 'ASA_TEST', True, 'Missing parameter: {0}', 'memberName', False],
-                                [256 * 'A', 'GOV', 'ASA_TEST', True, "Parameter '{0}' input exceeds 255 characters", 'memberName', False],
-                                ['ASA_TEST', 'GOV', 256 * 'T', True, "Parameter '{0}' input exceeds 255 characters", 'memberCode', False],
-                                ['ASA_TEST', 'GOV', 'TEST_ASA', False, None, None, False],
+                                ['MEMBER_TEST', '', 'TEST_MEMBER', True, 'Missing parameter: {0}', 'memberClass', False],
+                                ['MEMBER_TEST', 'GOV', '', True, 'Missing parameter: {0}', 'memberCode', False],
+                                ['', 'GOV', 'MEMBER_TEST', True, 'Missing parameter: {0}', 'memberName', False],
+                                [256 * 'A', 'GOV', 'MEMBER_TEST', True, "Parameter '{0}' input exceeds 255 characters", 'memberName', False],
+                                ['MEMBER_TEST', 'GOV', 256 * 'T', True, "Parameter '{0}' input exceeds 255 characters", 'memberCode', False],
+                                ['MEMBER_TEST', 'GOV', 'TEST_MEMBER', False, None, None, False],
                                 [255 * 'A', 'GOV', 255 * 'T', False, None, None, False],
-                                ['   ASA_TEST   ', 'GOV', '   TEST_ASA   ', False, None, None, True]
+                                ['   MEMBER_TEST   ', 'GOV', '   TEST_MEMBER   ', False, None, None, True]
                                 ]
-CS_MEMBER_NAME_CLASS_CODE = ['ASA_TEST', 'GOV', 'TEST_ASA']
+CS_MEMBER_NAME_CLASS_CODE = ['MEMBER_TEST', 'GOV', 'TEST_MEMBER']
 
 CHANGE_MEMBER_TEXTS_AND_RESULTS = [['', True, 'Missing parameter: {0}', 'memberName', False],
                                    [256 * 'A', True, "Parameter '{0}' input exceeds 255 characters", 'memberName', False],
-                                   ['TEST_ASA', False, None, None, False],
+                                   ['TEST_MEMBER', False, None, None, False],
                                    [255 * 'T', False, None, None, False],
-                                   ['   ASA_TEST    ', False, None, None, True]
+                                   ['   MEMBER_TEST    ', False, None, None, True]
                                    ]
 
 ADD_MEMBER_POPUP_XPATH = '//div[@aria-describedby="member_add_dialog"]'

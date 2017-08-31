@@ -235,10 +235,10 @@ def test_enable_wsdl(case, client=None, client_name=None, client_id=None, wsdl_i
         # Get the WSDL URL from wsdl_element text
         if wsdl_url is None:
             wsdl_text = wsdl_element.find_elements_by_tag_name('td')[1].text
-            # print wsdl_text
+
             matches = re.search(popups.CLIENT_DETAILS_POPUP_WSDL_URL_REGEX, wsdl_text)
             wsdl_found_url = matches.group(2)
-            # print wsdl_found_url
+
             self.log('Found WSDL URL: {0}'.format(wsdl_found_url))
         else:
             wsdl_found_url = wsdl_url

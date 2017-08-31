@@ -1,17 +1,19 @@
+import datetime
 import glob
 import os
-import sys
 import time
 import traceback
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
 
+import tests.xroad_parse_users_input_SS_41.parse_user_input_SS_41 as user_input_check
 from helpers import ssh_client, ssh_server_actions, xroad, login
 from view_models import sidebar as sidebar_constants, keys_and_certificates_table as keyscertificates_constants, \
-    popups as popups, certification_services, clients_table_vm, messages
+    popups as popups, certification_services, clients_table_vm, messages, keys_and_certificates_table
 
 
-def test(client_code, client_class):
+def test(client_code, client_class, check_inputs=False):
     def test_case(self):
         '''
         Test 2.1.3 success scenarios. Failure scenarios are tested in another function.
@@ -38,11 +40,12 @@ def test(client_code, client_class):
                 os.remove(fpath)
             except:
                 pass
-
         # TEST PLAN 2.1.3-1 generate key for authentication device, and
         # TEST PLAN 2.1.3-2 generate certificate request for the key and save it to local system
         self.log('2.1.3-1, 2.1.3-2 generate key and certificate request using that key')
-        generate_csr(self, client_code, client_class, server_name)
+        generate_csr(self, client_code, client_class, server_name, check_inputs=check_inputs,
+                     cancel_key_generation=True,
+                     cancel_csr_generation=True)
 
         # Get the certificate request path
         file_path = glob.glob(self.get_download_path('_'.join(['*', server_name, client_class, client_code]) + '.der'))[
@@ -73,7 +76,31 @@ def test(client_code, client_class):
     return test_case
 
 
-def failing_tests():
+def test_configuration(ssh_host, ssh_username, ssh_password, client_code, client_class):
+    def check_configuration(self):
+        # UC SS_29-9 check if the configuration contains information about the generated CSR
+        self.log('SS_29-9 check if the configuration contains information about the generated CSR')
+
+        # Create an SSH connection to the security server
+        client = ssh_client.SSHClient(ssh_host, ssh_username, ssh_password)
+        key_label = keyscertificates_constants.KEY_LABEL_TEXT + '_' + client_code + '_' + client_class
+        filename = keyscertificates_constants.KEY_CONFIG_FILE
+
+        result, error = client.exec_command('cat {0}'.format(filename), True)
+
+        # Check that reading the configuration succeeded
+        self.is_not_none(result, msg='SS_29-9 Failed to read configuration from {0}'.format(filename))
+
+        result = '\n'.join(result)
+
+        # Assertion that checks if there is a label with our CSR information in the config XML
+        self.is_true(('<label>{0}</label>'.format(key_label) in result),
+                     msg='SS_29-9 Configuration does not contain information about the generated CSR')
+
+    return check_configuration
+
+
+def failing_tests(file_client_name, file_client_class, file_client_code, file_client_instance, ca_name):
     def fail_test_case(self):
         """
         Tests all failure scenarios of 2.1.3 (2.1.3.1)
@@ -96,20 +123,24 @@ def failing_tests():
             # TEST PLAN 2.1.3.1-1 certificate is issued by a certification authority that is not in the allow list
             not_valid_ca_error(self, client)
 
-            # TEST PLAN 2.1.3.1-2 certificate is not a signing certificate
+            # TEST PLAN 2.1.3.1-2 certificate is not a signing certificate +
             wrong_cert_type_error(self, client)
 
-            # TEST PLAN 2.1.3.1-3 key used for requesting the certificate is not found
+            # TEST PLAN 2.1.3.1-3 key used for requesting the certificate is not found +
             no_key_error(self, client)
 
             # TEST PLAN 2.1.3.1-4 client set in the certificate is not in the system
             no_client_for_certificate_error(self, client)
 
-            # TEST PLAN 2.1.3.1-5 certificate is in a wrong format (not PEM or DER)
+            # TEST PLAN 2.1.3.1-5 certificate is in a wrong format (not PEM or DER) +
             wrong_format_error(self)
 
-            # TEST PLAN 2.1.3.1-6 certificate is already saved in the system
+            # TEST PLAN 2.1.3.1-6 certificate is already saved in the system +
             already_existing_error(self, client)
+
+            # TEST PLAN UC SS_30 9b import a signing certificate for an authentication key
+            sign_cert_instead_auth_cert(self, file_client_name, file_client_class, file_client_code,
+                                        file_client_instance, ca_name=ca_name)
         except:
             # Exception occured, print traceback
             traceback.print_exc()
@@ -248,7 +279,8 @@ def failing_tests():
 
             # Generate CSR for the client
             self.log('2.1.3.1-1 Generate CSR for the client')
-            generate_csr(self, client['code'], client['class'], ssh_server_actions.get_server_name(self))
+            generate_csr(self, client['code'], client['class'], ssh_server_actions.get_server_name(self),
+                         check_inputs=False)
             file_path = \
                 glob.glob(
                     self.get_download_path('_'.join(['*', server_name, client['class'], client['code']]) + '.der'))[0]
@@ -355,10 +387,10 @@ def failing_tests():
 
                 # Set CA additional information
                 profile_info_area = self.wait_until_visible(type=By.CSS_SELECTOR,
-                                                            element=certification_services.CETIFICATE_PROFILE_INFO_AREA_CSS)
+                                                            element=certification_services.CERTIFICATE_PROFILE_INFO_AREA_CSS)
 
-                self.input(profile_info_area,
-                           'ee.ria.xroad.common.certificateprofile.impl.EjbcaCertificateProfileInfoProvider')
+                ca_profile_class = self.config.get('ca.profile_class')
+                self.input(profile_info_area, ca_profile_class)
 
                 # Save the settings
                 self.wait_until_visible(type=By.ID, element=certification_services.SUBMIT_CA_SETTINGS_BTN_ID).click()
@@ -368,7 +400,7 @@ def failing_tests():
                 self.wait_until_visible(type=By.XPATH, element=certification_services.OCSP_RESPONSE_TAB).click()
 
                 self.log('2.1.3.1-1-del Add OCSP responder')
-                self.wait_until_visible(type=By.ID, element=certification_services.OCSP_RESONDER_ADD_BTN_ID).click()
+                self.wait_until_visible(type=By.ID, element=certification_services.OCSP_RESPONDER_ADD_BTN_ID).click()
 
                 # Import OCSP certificate
                 import_cert_btn = self.wait_until_visible(type=By.ID,
@@ -376,7 +408,8 @@ def failing_tests():
 
                 xroad.fill_upload_input(self, import_cert_btn, target_ocsp_cert_path)
 
-                url_area = self.wait_until_visible(type=By.ID, element=certification_services.OCS_RESPONSE_URL_AREA_ID)
+                url_area = self.wait_until_visible(type=By.ID,
+                                                   element=certification_services.OCSP_RESPONDER_URL_AREA_ID)
 
                 self.input(url_area, self.config.get('ca.ocs_host'))
 
@@ -424,7 +457,8 @@ def failing_tests():
 
         # Generate CSR for the client
         self.log('2.1.3.1-2 generate CSR for the client')
-        generate_csr(self, client['code'], client['class'], ssh_server_actions.get_server_name(self))
+        generate_csr(self, client['code'], client['class'], ssh_server_actions.get_server_name(self),
+                     check_inputs=False)
         file_path = \
             glob.glob(self.get_download_path('_'.join(['*', server_name, client['class'], client['code']]) + '.der'))[0]
 
@@ -475,7 +509,8 @@ def failing_tests():
 
         # Generate CSR
         self.log('2.1.3.1-3 generate CSR for the client')
-        generate_csr(self, client['code'], client['class'], ssh_server_actions.get_server_name(self))
+        generate_csr(self, client['code'], client['class'], ssh_server_actions.get_server_name(self),
+                     check_inputs=False)
         file_path = \
             glob.glob(self.get_download_path('_'.join(['*', server_name, client['class'], client['code']]) + '.der'))[0]
         sshclient = ssh_client.SSHClient(self.config.get('ca.ssh_host'), self.config.get('ca.ssh_user'),
@@ -528,7 +563,8 @@ def failing_tests():
 
         # Generate CSR for the client
         self.log('2.1.3.1-4 generate CSR for the client')
-        generate_csr(self, client['code'], client['class'], ssh_server_actions.get_server_name(self))
+        generate_csr(self, client['code'], client['class'], ssh_server_actions.get_server_name(self),
+                     check_inputs=False)
         file_path = \
             glob.glob(self.get_download_path('_'.join(['*', server_name, client['class'], client['code']]) + '.der'))[0]
 
@@ -624,7 +660,8 @@ def failing_tests():
 
         # Generate CSR for the client
         self.log('2.1.3.1-6 generate CSR for the client')
-        generate_csr(self, client['code'], client['class'], ssh_server_actions.get_server_name(self))
+        generate_csr(self, client['code'], client['class'], ssh_server_actions.get_server_name(self),
+                     check_inputs=False)
         file_path = \
             glob.glob(self.get_download_path('_'.join(['*', server_name, client['class'], client['code']]) + '.der'))[0]
 
@@ -659,7 +696,74 @@ def failing_tests():
         self.log('2.1.3.1-6 removing the test certificate')
         remove_certificate(self, client)
 
-    return fail_test_case
+    def sign_cert_instead_auth_cert(self, file_client_name, file_client_class, file_client_code, file_client_instance,
+                                    ca_name):
+        '''
+        Test that tries to import a wrong type of certificate to the server. This certificate should not be imported.
+        :param self: MainController object
+        :param client: client data
+        :return: None
+        '''
+
+        # TEST PLAN 2.1.3.1-2 certificate is not a signing certificate
+
+        self.log('2.1.3.1-2 test importing a certificate that is not a signing certificate')
+        remote_csr_path = 'temp.der'
+        cert_path = 'temp.pem'
+
+        now_date = datetime.datetime.now()
+        file_name = 'auth_csr_' + now_date.strftime('%Y%m%d') + '_securityserver_{0}_{1}_{2}_{3}.der'. \
+            format(file_client_instance, file_client_class, file_client_code, file_client_name)
+        print(file_name)
+        # Set local path for certificate
+        local_cert_path = self.get_download_path(cert_path)
+
+        # Remove temporary files
+        for fpath in glob.glob(self.get_download_path('*')):
+            os.remove(fpath)
+
+        # Open the keys and certificates tab
+        self.log('Open keys and certificates tab')
+        self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar_constants.KEYSANDCERTIFICATES_BTN_CSS).click()
+
+        # Add new key
+        self.log('Add new key label name - ' + keyscertificates_constants.KEY_LABEL_TEXT)
+        user_input_check.add_key_label(self, keyscertificates_constants.KEY_LABEL_TEXT)
+
+        self.wait_jquery()
+
+        # Generate a authentication certificate
+        generate_auth_csr(self, ca_name=ca_name)
+
+        file_path = \
+            glob.glob(self.get_download_path('_'.join(['*']) + file_name))[0]
+        self.log(file_path)
+        # Create SSH connection to CA
+        sshclient = ssh_client.SSHClient(self.config.get('ca.ssh_host'), self.config.get('ca.ssh_user'),
+                                         self.config.get('ca.ssh_pass'))
+
+        # Get an signing certificate instead of authentication certificate.
+        self.log('2.1.3.1-2 get the signing certificate')
+
+        get_cert(sshclient, 'sign-sign', file_path, local_cert_path, cert_path, remote_csr_path)
+        time.sleep(6)
+
+        # Try to import certificate
+        self.log('2.1.3.1-2 trying to import authentication certificate as signing certificate. Should fail.')
+        import_cert(self, local_cert_path)
+        self.wait_jquery()
+        assert messages.get_error_message(
+            self) == messages.SIGN_CERT_INSTEAD_AUTH_CERT
+
+        self.log('2.1.3.1-2 certificate not accepted, test succeeded')
+
+        self.log('2.1.3.1-2 remove test data')
+        popups.close_all_open_dialogs(self)
+        self.wait_jquery()
+        self.wait_until_visible(type=By.XPATH, element=keyscertificates_constants.get_text(keyscertificates_constants.
+                                                                                           KEY_LABEL_TEXT)).click()
+        # Delete the added key label
+        user_input_check.delete_added_key_label(self)
 
 
 def get_ca_certificate(client, cert, target_path):
@@ -707,36 +811,66 @@ def get_cert(client, service, file_path, local_path, remote_cert_path, remote_cs
     client.close()
 
 
-def generate_csr(self, client_code, client_class, server_name):
-    '''
+def generate_csr(self, client_code, client_class, server_name, check_inputs=False, cancel_key_generation=False,
+                 cancel_csr_generation=False):
+    """
     Generates the CSR (certificate request) for a client.
     :param self: MainController object
     :param client_code: str - client XRoad code
     :param client_class: str - client XRoad class
     :param server_name: str - server name
+    :param check_inputs: bool - parameter for starting checking user inputs or not
     :return:
-    '''
+    """
 
     # Generate XRoad ID for the client
     client = ':'.join([server_name, client_class, client_code, '*'])
 
+    # TEST PLAN SS_28_4 System verifies entered key label
+    if check_inputs:
+        user_input_check.parse_key_label_inputs(self)
+        user_input_check.parse_csr_inputs(self)
+
     # Open the keys and certificates tab
     self.log('Open keys and certificates tab')
     self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar_constants.KEYSANDCERTIFICATES_BTN_CSS).click()
-    time.sleep(5)
     self.wait_jquery()
 
+    keys_before = len(self.by_css(keyscertificates_constants.GENERATED_KEYS_TABLE_ROW_CSS, multiple=True))
     # Generate key from softtoken
     self.log('Click on softtoken row')
     self.wait_until_visible(type=By.XPATH, element=keyscertificates_constants.SOFTTOKEN_TABLE_ROW_XPATH).click()
     self.log('Click on "Generate key" button')
     self.wait_until_visible(type=By.ID, element=keyscertificates_constants.GENERATEKEY_BTN_ID).click()
 
+    # UC SS_28 3a key generation is cancelled
+    self.log('UC SS_28 3a key generation is cancelled')
+    if cancel_key_generation:
+        # Cancel key generation
+        self.log('Click on "Cancel" button')
+        self.wait_until_visible(type=By.XPATH, element=popups.GENERATE_KEY_POPUP_CANCEL_BTN_XPATH).click()
+        self.wait_jquery()
+        # Get number of keys in table after canceling
+        self.wait_until_visible(type=By.CSS_SELECTOR, element=keyscertificates_constants.GENERATED_KEYS_TABLE_ROW_CSS)
+        keys_after_canceling = len(
+            self.by_css(keyscertificates_constants.GENERATED_KEYS_TABLE_ROW_CSS, multiple=True))
+        # Check if number of keys in table is same as before
+        self.is_equal(keys_before, keys_after_canceling,
+                      msg='Number of keys after cancelling {0} not equal to number of keys before {1}'.format(
+                          keys_before, keys_after_canceling))
+
+        # Generate key from softtoken again
+        self.log('Click on softtoken row')
+        self.wait_until_visible(type=By.XPATH, element=keyscertificates_constants.SOFTTOKEN_TABLE_ROW_XPATH).click()
+        self.log('Click on "Generate key" button')
+        self.wait_until_visible(type=By.ID, element=keyscertificates_constants.GENERATEKEY_BTN_ID).click()
+
     # Enter data (key label)
+    key_label = keyscertificates_constants.KEY_LABEL_TEXT + '_' + client_code + '_' + client_class
     self.log(
-        'Insert ' + keyscertificates_constants.KEY_LABEL_TEXT + '_' + client_code + '_' + client_class + ' to "LABEL" area')
+        'Insert ' + key_label + ' to "LABEL" area')
     key_label_input = self.wait_until_visible(type=By.ID, element=popups.GENERATE_KEY_POPUP_KEY_LABEL_AREA_ID)
-    self.input(key_label_input, keyscertificates_constants.KEY_LABEL_TEXT + '_' + client_code + '_' + client_class)
+    self.input(key_label_input, key_label)
 
     # Save the key data
     self.log('Click on "OK" button')
@@ -748,10 +882,48 @@ def generate_csr(self, client_code, client_class, server_name):
     self.wait_until_visible(type=By.XPATH,
                             element=keyscertificates_constants.get_generated_key_row_xpath(client_code,
                                                                                            client_class)).click()
-
+    # Number of csr before generation and cancelling
+    number_of_cert_requests_before = len(
+        self.by_css(keyscertificates_constants.CERT_REQUESTS_TABLE_ROW_CSS,
+                    multiple=True))
     # Generate the CSR from the key.
     self.log('Click on "GENERATE CSR" button')
     self.wait_until_visible(type=By.ID, element=keyscertificates_constants.GENERATECSR_BTN_ID).click()
+
+    # UC SS_29 4b CSR generation is cancelled
+    self.log('UC SS_29 4b CSR generation is cancelled')
+    if cancel_csr_generation:
+        self.log('Select "certification service"')
+        select = Select(self.wait_until_visible(type=By.ID,
+                                                element=keyscertificates_constants.GENERATE_CSR_SIGNING_REQUEST_APPROVED_CA_DROPDOWN_ID))
+        self.wait_jquery()
+
+        options = filter(lambda y: str(y) is not '', map(lambda x: x.text, select.options))
+        # Assertion for 2.1.3-2 check 1
+        assert len(filter(lambda x: self.config.get('ca.ssh_host').upper() in x, options)) == 1
+        self.log('2.1.3-2 check 1 CA can be chosen')
+        filter(lambda x: self.config.get('ca.ssh_host').upper() in x.text, select.options).pop().click()
+
+        self.log('Click on "OK" button')
+        self.wait_until_visible(type=By.XPATH,
+                                element=keyscertificates_constants.GENERATE_CSR_SIGNING_REQUEST_POPUP_OK_BTN_XPATH).click()
+        self.log('Click on "Cancel" button')
+        self.wait_until_visible(type=By.XPATH,
+                                element=keyscertificates_constants.SUBJECT_DISTINGUISHED_NAME_POPUP_CANCEL_BTN_XPATH).click()
+
+        self.log('Click on "Cancel" button')
+        self.wait_until_visible(type=By.XPATH,
+                                element=keyscertificates_constants.GENERATE_CSR_SIGNING_REQUEST_POPUP_CANCEL_BTN_XPATH).click()
+        self.log("Get number of csr after canceling")
+        number_of_cert_requests_after_canceling = len(
+            self.by_css(keyscertificates_constants.CERT_REQUESTS_TABLE_ROW_CSS,
+                        multiple=True))
+        self.is_equal(number_of_cert_requests_before, number_of_cert_requests_after_canceling,
+                      msg='Number of cert requests after cancelling {0} not same as before {1}'.format(
+                          number_of_cert_requests_after_canceling, number_of_cert_requests_before))
+
+        self.log('Click on "GENERATE CSR" button')
+        self.wait_until_visible(type=By.ID, element=keyscertificates_constants.GENERATECSR_BTN_ID).click()
 
     self.log('Change CSR format')
     select = Select(self.wait_until_visible(type=By.ID,
@@ -768,7 +940,7 @@ def generate_csr(self, client_code, client_class, server_name):
     select = Select(self.wait_until_visible(type=By.ID,
                                             element=keyscertificates_constants.GENERATE_CSR_SIGNING_REQUEST_APPROVED_CA_DROPDOWN_ID))
     self.wait_jquery()
-    time.sleep(5)
+
     options = filter(lambda y: str(y) is not '', map(lambda x: x.text, select.options))
     # Assertion for 2.1.3-2 check 1
     assert len(filter(lambda x: self.config.get('ca.ssh_host').upper() in x, options)) == 1
@@ -776,10 +948,12 @@ def generate_csr(self, client_code, client_class, server_name):
     filter(lambda x: self.config.get('ca.ssh_host').upper() in x.text, select.options).pop().click()
 
     # Select client from the list
-    self.log('Select "Client"')
+    self.log('Select "{0}"'.format(client))
     select = Select(self.wait_until_visible(type=By.ID,
                                             element=keyscertificates_constants.GENERATE_CSR_SIGNING_REQUEST_CLIENT_DROPDOWN_ID))
     select.select_by_visible_text(client)
+    self.wait_jquery()
+
     self.log('Click on "OK" button')
     self.wait_until_visible(type=By.XPATH,
                             element=keyscertificates_constants.GENERATE_CSR_SIGNING_REQUEST_POPUP_OK_BTN_XPATH).click()
@@ -812,14 +986,28 @@ def generate_csr(self, client_code, client_class, server_name):
     self.wait_jquery()
 
 
-def delete_added_key(self, client_code, client_class):
+def delete_added_key(self, client_code, client_class, cancel_deletion=False):
     '''
     Delete the CSR from the list.
     :param self: MainController object
     :param client_code: str - client XRoad code
     :param client_class: str - client XRoad class
+    :param cancel_deletion: bool|None - cancel deletion before confirming
     :return: None
     '''
+    # Close all open dialogs
+    popups.close_all_open_dialogs(self)
+
+    # Open the keys and certificates tab
+    self.log('Open keys and certificates tab')
+    self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar_constants.KEYSANDCERTIFICATES_BTN_CSS).click()
+    self.wait_jquery()
+
+    # Wait until keys and certificates table visible
+    self.wait_until_visible(type=By.CSS_SELECTOR, element=keys_and_certificates_table.GENERATED_KEYS_TABLE_ROW_CSS)
+    # Find number of keys in table
+    num_of_keys_before = len(self.by_css(keys_and_certificates_table.GENERATED_KEYS_TABLE_ROW_CSS, multiple=True))
+
     self.log('Delete added CSR')
     self.wait_jquery()
     self.wait_until_visible(type=By.XPATH,
@@ -827,6 +1015,24 @@ def delete_added_key(self, client_code, client_class):
                                                                                            client_class)).click()
     # deleting generated key
     self.wait_until_visible(type=By.ID, element=keyscertificates_constants.DELETE_BTN_ID).click()
+
+    # UC SS_36 3a deletion process is cancelled
+    if cancel_deletion:
+        # cancel key deletion
+        self.wait_until_visible(type=By.XPATH, element=popups.CONFIRM_POPUP_CANCEL_BTN_XPATH).click()
+
+        # Find number of keys after canceling deletion
+        num_of_keys_after_canceling = len(
+            self.by_css(keys_and_certificates_table.GENERATED_KEYS_TABLE_ROW_CSS, multiple=True))
+
+        # Check if the amount of keys is same as before
+        self.is_equal(num_of_keys_before, num_of_keys_after_canceling,
+                      msg='Number of keys after canceling {0} differs, should be {1}'.format(
+                          num_of_keys_after_canceling,
+                          num_of_keys_before))
+        # delete generated key again
+        self.wait_until_visible(type=By.ID, element=keyscertificates_constants.DELETE_BTN_ID).click()
+
     # Confirm
     self.wait_until_visible(type=By.XPATH, element=popups.CONFIRM_POPUP_OK_BTN_XPATH).click()
 
@@ -873,6 +1079,7 @@ def check_import(self, client_class, client_code):
     '''
     # TEST PLAN 2.1.3-4 check if certificate import succeeded
     self.wait_jquery()
+    time.sleep(0.5)
     td = self.wait_until_visible(type=By.XPATH,
                                  element=keyscertificates_constants.get_generated_row_row_by_td_text(
                                      ' : '.join([client_class, client_code])))
@@ -897,3 +1104,47 @@ def added_client_row(self, client):
     table_rows = self.by_css(clients_table_vm.CLIENT_ROW_CSS, multiple=True)
     client_row_index = clients_table_vm.find_row_by_client(table_rows, client_id=self.added_client_id)
     return table_rows[client_row_index]
+
+
+def generate_auth_csr(self, ca_name):
+    """
+    Generates the CSR (certificate request) for a client.
+    :param self: MainController object
+    :param ca_name: str - CA display name
+    :return:
+    """
+
+    # Generate the CSR from the key.
+    self.log('Click on "GENERATE CSR" button')
+    self.wait_until_visible(type=By.ID, element=keyscertificates_constants.GENERATECSR_BTN_ID).click()
+
+    self.wait_jquery()
+    self.log('Change CSR usage')
+    select = Select(self.wait_until_visible(type=By.ID,
+                                            element=keyscertificates_constants.
+                                            GENERATE_CSR_SIGNING_REQUEST_USAGE_DROPDOWN_ID))
+    select.select_by_visible_text('Auth')
+
+    # TEST PLAN 2.1.3-2 check 1: Check that the certification authority can be chosen
+    self.log('Select "certification service"')
+    select = Select(self.wait_until_visible(type=By.ID,
+                                            element=keyscertificates_constants.
+                                            GENERATE_CSR_SIGNING_REQUEST_APPROVED_CA_DROPDOWN_ID))
+    select.select_by_visible_text(ca_name)
+
+    select = Select(self.wait_until_visible(type=By.ID,
+                                            element=keyscertificates_constants.
+                                            GENERATE_CSR_SIGNING_REQUEST_CSR_FORMAT_DROPDOWN_ID))
+    select.select_by_visible_text('DER')
+
+    self.wait_jquery()
+    self.log('Click on "OK" button')
+    self.wait_until_visible(type=By.XPATH,
+                            element=keyscertificates_constants.GENERATE_CSR_SIGNING_REQUEST_POPUP_OK_BTN_XPATH).click()
+
+    self.wait_jquery()
+    self.log('Click on "OK" button')
+    self.wait_until_visible(type=By.XPATH,
+                            element=keyscertificates_constants.SUBJECT_DISTINGUISHED_NAME_POPUP_OK_BTN_XPATH).click()
+
+    self.wait_jquery()

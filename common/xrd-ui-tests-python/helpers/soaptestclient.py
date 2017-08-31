@@ -133,7 +133,7 @@ class SoapTestClient:
         :param str: str - text to be logged
         :return: None
         '''
-        print str
+        print(str)
 
     def query(self, url=None, body=None, params=None, timeout=None):
         '''

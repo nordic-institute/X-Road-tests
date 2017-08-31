@@ -3,7 +3,7 @@
 **Authors** : Sten Luhtoja, Märt Tibar, Arto Vaas
 
 
-![Logo](https://github.com/ria-ee/X-Road/blob/develop/doc/Manuals/img/eu_regional_development_fund_horizontal_div_15.png "EU logo")
+![Logo](https://raw.githubusercontent.com/ria-ee/X-Road/develop/doc/Manuals/img/eu_regional_development_fund_horizontal_div_15.png "EU logo")
 # Tabel of  Contents
 
 - [Introduction](#introduction)

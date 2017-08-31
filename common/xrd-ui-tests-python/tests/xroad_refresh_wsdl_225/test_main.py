@@ -2,8 +2,9 @@
 import unittest
 
 import refresh_wsdl_2_2_5
-from main.maincontroller import MainController
 from helpers import xroad
+from main.maincontroller import MainController
+from tests.xroad_configure_service_222 import configure_service_2_2_2
 
 
 class XroadRefreshWsdl(unittest.TestCase):
@@ -17,6 +18,10 @@ class XroadRefreshWsdl(unittest.TestCase):
         ss_host = main.config.get('ss2.host')
         ss_user = main.config.get('ss2.user')
         ss_pass = main.config.get('ss2.pass')
+
+        ss_ssh_host = main.config.get('ss2.ssh_host')
+        ss_ssh_user = main.config.get('ss2.ssh_user')
+        ss_ssh_pass = main.config.get('ss2.ssh_pass')
 
         ssh_host = main.config.get('wsdl.ssh_host')
         ssh_username = main.config.get('wsdl.ssh_user')
@@ -39,6 +44,9 @@ class XroadRefreshWsdl(unittest.TestCase):
         service_name = main.config.get('services.test_service_2')
         service_2_name = main.config.get('services.test_service')
 
+        new_wsdl = main.config.get('wsdl.service_wsdl_test_service1')
+        new_wsdl_url = wsdl_remote_path.format(new_wsdl)
+
         # Configure the service
         test_refresh_wsdl = refresh_wsdl_2_2_5.test_refresh_wsdl(main, client=client, wsdl_url=wsdl_url,
                                                                  service_name=service_name,
@@ -51,7 +59,9 @@ class XroadRefreshWsdl(unittest.TestCase):
                                                                  wsdl_missing_service=wsdl_missing_service,
                                                                  wsdl_error=wsdl_error, wsdl_warning=wsdl_warning,
                                                                  ssh_host=ssh_host, ssh_username=ssh_username,
-                                                                 ssh_password=ssh_password)
+                                                                 ssh_password=ssh_password, new_wsdl=new_wsdl,
+                                                                 ss_ssh_host=ss_ssh_host, ss_ssh_user=ss_ssh_user,
+                                                                 ss_ssh_pass=ss_ssh_pass)
 
         # Reset the service
         test_reset_wsdl = refresh_wsdl_2_2_5.test_reset_wsdl(main, wsdl_local_path=wsdl_local_path,
@@ -60,6 +70,9 @@ class XroadRefreshWsdl(unittest.TestCase):
                                                              ssh_host=ssh_host, ssh_username=ssh_username,
                                                              ssh_password=ssh_password)
 
+        # Delete the added WSDL
+        delete_service = configure_service_2_2_2.test_delete_service(case=main, client=client,
+                                                                     wsdl_url=new_wsdl_url)
         try:
             main.reload_webdriver(url=ss_host, username=ss_user, password=ss_pass)
             test_refresh_wsdl()
@@ -73,6 +86,13 @@ class XroadRefreshWsdl(unittest.TestCase):
                 main.save_exception_data()
             assert False
         finally:
+            try:
+                # Delete service
+                main.reload_webdriver(url=ss_host, username=ss_user, password=ss_pass)
+                delete_service()
+            except:
+                main.log('XroadDeleteService: Failed to delete service')
+                assert False
             # Test teardown
-            main.tearDown(save_exception=False)
-
+            finally:
+                main.tearDown()

@@ -8,24 +8,22 @@ from helpers import xroad
 import messages
 
 MEMBER_SUBSYSTEM_CODE_AND_RESULTS = [['', '', True, 'Missing parameter: {0}', 'add_member_code', False],
-                                     ['', 'ASA_TEST', True, 'Missing parameter: {0}', 'add_member_code', False],
-                                     ['ASA_TEST', '', True, 'Missing parameter: {0}', 'add_subsystem_code', False],
-                                     [256 * 'A', 'ASA_TEST', True, "Parameter '{0}' input exceeds 255 characters", 'add_member_code', False],
-                                     ['ASA_TEST', 256 * 'A', True, "Parameter '{0}' input exceeds 255 characters", 'add_subsystem_code', False],
+                                     ['', 'SUB_TEST', True, 'Missing parameter: {0}', 'add_member_code', False],
+                                     ['SUB_TEST', '', True, 'Missing parameter: {0}', 'add_subsystem_code', False],
+                                     [256 * 'A', 'SUB_TEST', True, "Parameter '{0}' input exceeds 255 characters", 'add_member_code', False],
+                                     ['SUB_TEST', 256 * 'A', True, "Parameter '{0}' input exceeds 255 characters", 'add_subsystem_code', False],
                                      [256 * 'A', 256 * 'A', True, "Parameter '{0}' input exceeds 255 characters", 'add_member_code', False],
-                                     ['ASA_TEST', 'TEST_ASA', False, None, None, False],
+                                     ['SUB_TEST', 'TEST_SUB', False, None, None, False],
                                      ['Z', 'Y', False, None, None, False],
-                                     ['   ASA_TEST   ', '   TEST_ASA   ', False, None, None, True]
+                                     ['   SUB_TEST   ', '   TEST_SUB   ', False, None, None, True]
                                      ]
 
-ONE_SS_CLIENT = ['ASA_TEST', 'TEST_ASA']
+ONE_SS_CLIENT = ['CL_TEST', 'TEST_CL']
 
-WSDL_URL = 'http://cs.asa/managementservices.wsdl'
-
-WSDL_DATA = [['   http://cs.asa/managementservices.wsdl   ', False, None, None, True],
+WSDL_DATA = [['   {0}   ', False, None, None, True],
              ['', True, 'Missing parameter: {0}', 'wsdl_add_url', None],
-             ['http://cs.asa/' + 237 * 'A' + '.wsdl', True, "Parameter '{0}' input exceeds 255 characters", 'wsdl_add_url', None],
-             ['http://cs.asa/' + 236 * 'T' + '.wsdl', True, "Failed to add WSDL: Downloading WSDL failed. WSDL URL must point to a WSDL file.", None, None],
+             ['http://{1}/' + 237 * 'A' + '.wsdl', True, "Parameter '{0}' input exceeds 255 characters", 'wsdl_add_url', None],
+             ['http://{1}/' + 236 * 'T' + '.wsdl', True, "Failed to add WSDL: Downloading WSDL failed. WSDL URL must point to a WSDL file.", None, None],
              ]
 
 WSDL_DISABLE_NOTICES = [[256 * 'A', True, "Parameter '{0}' input exceeds 255 characters", 'wsdl_disabled_notice'],
@@ -37,10 +35,10 @@ WSDL_DISABLE_NOTICES = [[256 * 'A', True, "Parameter '{0}' input exceeds 255 cha
                         ]
 
 SERVICE_URLS_DATA = [['', True, 'Missing parameter: {0}', 'params_url', False],
-                     ['http://cs.asa:4400' + 219 * '0' + '/managementservice/', True, "Parameter '{0}' input exceeds 255 characters", 'params_url', False],
-                     ['http://cs.asa:4400' + 218 * '0' + '/managementservice/', False, None, None, False],
-                     ['http://cs.asa:4400/managementservice/', False, None, None, False],
-                     ['    http://cs.asa:4400/managementservice/    ', False, None, None, True]
+                     ['{0}' + 219 * '0' + '/managementservice/', True, "Parameter '{0}' input exceeds 255 characters", 'params_url', False],
+                     ['{0}' + 218 * '0' + '/managementservice/', False, None, None, False],
+                     ['{0}managementservice/', False, None, None, False],
+                     ['    {0}managementservice/    ', False, None, None, True]
                      ]
 
 ADD_CLIENT_BTN_ID = 'client_add'
@@ -65,10 +63,10 @@ SELECT_CLIENT_POPUP_OK_BTN_XPATH = SELECT_CLIENT_POPUP_XPATH + '//div[@class="ui
 
 
 def open_acl_subjects_popup(self):
-    print 'Open clients view'
+    print('Open clients view')
     # Wait for the element and click
     self.wait_until_visible(self.by_css(sidebar_vm.CLIENTS_BTN_CSS)).click()
-    print 'Open Service clients dialog'
+    print('Open Service clients dialog')
     self.wait_jquery()
     table_rows = self.by_css(CLIENT_ROW_CSS, multiple=True)
     client_row_index = find_row_by_client(table_rows, client_id='SUBSYSTEM : ee-dev : COM : 11389751 : SUBSYSTEM')
@@ -103,7 +101,7 @@ def find_row_by_client(table_rows, client=None, client_name=None, client_id=None
             # We found our client! Return the row ID.
             return i
 
-    print 'Client not found:', compare_text
+    print('Client not found: {0}'.format(compare_text))
     # Client not found, return none
     return None
 
@@ -150,7 +148,7 @@ def select_subjects_from_table(self, subjects_table, subjects, select_duplicate=
     # Initialize list of selected xroad ids
     selected_ids = []
 
-    print 'Looping over subjects list'
+    print('Looping over subjects list')
 
     # Loop over the subjects list and try to find them in the table
     for subject in subjects:
@@ -183,10 +181,10 @@ def select_subjects_from_table(self, subjects_table, subjects, select_duplicate=
         if xroad_id_text in selected_ids:
             if select_duplicate:
                 # Duplicates allowed
-                print xroad_id_text, 'already found in selected subjects list but selecting anyway'
+                print('{0} already found in selected subjects list but selecting anyway'.format(xroad_id_text))
             else:
                 # Duplicates not allowed, skip
-                print xroad_id_text, 'already found in selected subjects list, ignoring'
+                print('{0} already found in selected subjects list, ignoring'.format(xroad_id_text))
                 continue
 
         # Add the ID to a list for later checking

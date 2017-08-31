@@ -2,10 +2,10 @@
 import unittest
 
 import add_central_service_2_2_8
+from helpers import xroad
+from main.maincontroller import MainController
 from tests.xroad_add_to_acl_218 import add_to_acl_2_1_8
 from tests.xroad_configure_service_222 import configure_service_2_2_2
-from main.maincontroller import MainController
-from helpers import xroad
 
 
 class XroadAddCentralService(unittest.TestCase):
@@ -176,7 +176,8 @@ class XroadDeleteCentralService(unittest.TestCase):
                                                                                        requester=requester,
                                                                                        central_service_name=central_service_name,
                                                                                        sync_max_seconds=sync_max_seconds,
-                                                                                       wait_sync_retry_delay=wait_sync_retry_delay)
+                                                                                       wait_sync_retry_delay=wait_sync_retry_delay,
+                                                                                       cancel_deletion=True)
 
         try:
             try:

@@ -97,7 +97,7 @@ class SSHClient:
         if sudo:
             command = 'echo "' + self.server_password + '" | sudo -S ' + command
         if self.debug:
-            print 'Execute', command
+            print('Execute: {0}'.format(command))
 
         # Execute command, read output (stdout, stderr)
         stdin, stdout, stderr = self.client.exec_command(command)
@@ -113,7 +113,7 @@ class SSHClient:
             self.status = stdout.channel.recv_exit_status()
 
             if self.debug:
-                print 'return stdout'
+                print('Return stdout')
 
             for line in stdout:
                 line = line.strip('\n')  # Remove newline character
@@ -123,7 +123,7 @@ class SSHClient:
                 out_error.append(ln)
 
             if self.debug:
-                print out_clean, out_error
+                print('{0}\n{1}'.format(out_clean, out_error))
         else:
             # Set channel timeout
             stdout.channel.settimeout(timeout)

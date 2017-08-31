@@ -14,12 +14,12 @@ GROUP_DETAILS_BTN_ID = 'group_details'
 DELETE_GROUP_BTN_ID = '//div[not(contains(@style,"display:none")) and contains(@class, "ui-dialog")]//button[@id="group_details_delete_group"]'
 
 GROUP_DATA = [['', '', True, "Missing parameter: {0}", 'code', False],
-              ['', 'ASATEST', True, "Missing parameter: {0}", 'code', False],
-              ['ASATEST', '', True, "Missing parameter: {0}", 'description', False],
-              [256 * 'A', 'TESTASA', True, "Parameter '{0}' input exceeds 255 characters", 'code', False],
-              ['ASATEST', 256 * 'T', True, "Parameter '{0}' input exceeds 255 characters", 'description', False],
-              ['ASATEST', 'TESTASA', False, None, None, False],
-              ['   ASATEST   ', '   TESTASA   ', False, None, None, True],
+              ['', 'GROUPTEST', True, "Missing parameter: {0}", 'code', False],
+              ['GROUPTEST', '', True, "Missing parameter: {0}", 'description', False],
+              [256 * 'A', 'TESTGROUP', True, "Parameter '{0}' input exceeds 255 characters", 'code', False],
+              ['GROUPTEST', 256 * 'T', True, "Parameter '{0}' input exceeds 255 characters", 'description', False],
+              ['GROUPTEST', 'TESTGROUP', False, None, None, False],
+              ['   GROUPTEST   ', '   TESTGROUP   ', False, None, None, True],
               [255 * 'A', 255 * 'T', False, None, None, False]
               ]
 

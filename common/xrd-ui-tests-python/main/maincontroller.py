@@ -34,6 +34,7 @@ class MainController(AssertHelper):
     password = None  # Default password
     url = ''  # Default url
     debug = True  # Show debug messages
+    logdata = [] # Reserved for temporary storage of log entries to be checked later
 
     # MainController path (../ relative from maincontroller.py location)
     main_path = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
@@ -227,6 +228,7 @@ class MainController(AssertHelper):
 
                     self.log('Error in {0} ({1}), data saved to: {2}'.format(test_method_name, self.test_number,
                                                                              text_fullpath))
+                    self.log(exception_data)
 
     def get_path(self, path=''):
         '''
@@ -610,7 +612,7 @@ class MainController(AssertHelper):
         :param message: str - log message
         :return: None
         '''
-        print '{0} {1}'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), message)
+        print('{0} {1}'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), message))
 
     def reset_page(self):
         '''

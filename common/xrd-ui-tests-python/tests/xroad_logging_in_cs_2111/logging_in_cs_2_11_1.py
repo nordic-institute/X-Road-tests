@@ -633,7 +633,7 @@ def check_logs_for(ssh_client, event, user):
     :param user: str - username to look for in the logs
     :return: bool - True if event was logged; False otherwise
     '''
-    print 'Checking logs for {0}'.format(event)
+    print('Checking logs for {0}'.format(event))
     # Wait 15 seconds for sync
     time.sleep(15)
     log = ssh_server_actions.get_log_lines(ssh_client, LOG_FILE_LOCATION, 1)

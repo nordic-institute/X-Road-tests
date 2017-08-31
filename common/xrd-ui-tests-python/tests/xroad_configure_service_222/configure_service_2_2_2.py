@@ -1,11 +1,13 @@
 # coding=utf-8
 
-from view_models import clients_table_vm, popups, messages
-from selenium.webdriver.common.by import By
-import urllib
 import re
 import time
+import urllib
+
+from selenium.webdriver.common.by import By
+
 from helpers import xroad
+from view_models import clients_table_vm, popups, messages, ss_system_parameters
 
 
 def add_wsdl(self,
@@ -164,7 +166,7 @@ def edit_service(self, service_url, service_timeout=None, verify_tls=None):
         service_tls_checkbox = self.wait_until_visible(popups.EDIT_SERVICE_POPUP_TLS_ENABLED_XPATH, By.XPATH)
         checked = service_tls_checkbox.get_attribute('checked')
 
-        if (checked != '' and not verify_tls) or (checked is None and verify_tls):
+        if ((checked != '' and checked is not None) and not verify_tls) or (checked is None and verify_tls):
             service_tls_checkbox.click()
 
     # Find the "OK" button in "Edit WSDL Parameters" dialog
@@ -383,6 +385,20 @@ def test_configure_service(case, client=None, client_name=None, client_id=None, 
         # Select the WSDL by clicking on the row
         wsdl_row.click()
 
+        # UC SERVICE_08 8. check if default disable message is correct
+        # enable and disable WSDL to get disable message popup
+        self.log('UC SERVICE 08 8. check if default disable message is correct')
+        self.by_id(popups.CLIENT_DETAILS_POPUP_ENABLE_WSDL_BTN_ID).click()
+        self.wait_jquery()
+        self.by_id(popups.CLIENT_DETAILS_POPUP_DISABLE_WSDL_BTN_ID).click()
+        self.wait_jquery()
+        disabled_message = self.by_id(popups.DISABLE_WSDL_POPUP_NOTICE_ID).get_attribute('value')
+        # check disable message value
+        self.is_equal(messages.SERVICE_DISABLED_MESSAGE, disabled_message,
+                      msg='Disable message not equal to {0}'.format(messages.SERVICE_DISABLED_MESSAGE))
+        # confirm disable message
+        self.by_xpath(popups.DISABLE_WSDL_POPUP_OK_BTN_XPATH).click()
+
         # Open service parameters by finding the "Edit" button and clicking it.
         edit_wsdl_button = self.by_id(popups.CLIENT_DETAILS_POPUP_EDIT_WSDL_BTN_ID)
 
@@ -439,8 +455,33 @@ def test_configure_service(case, client=None, client_name=None, client_id=None, 
         self.wait_until_visible(type=By.XPATH, element=popups.EDIT_SERVICE_POPUP_XPATH)
 
         # Find the "Service URL" and "Timeout" inputs. Get the service URL and timeout as we need them later.
-        service_url = self.by_id(popups.EDIT_SERVICE_POPUP_URL_ID).get_attribute('value')
+        service_url_input = self.by_id(popups.EDIT_SERVICE_POPUP_URL_ID)
+        service_url = service_url_input.get_attribute('value')
         service_timeout = self.by_id(popups.EDIT_SERVICE_POPUP_TIMEOUT_ID).get_attribute('value')
+
+        # UC SERVICE 08 9. Check if default timeout value is correct and TLS checkbox checked when URL starts with https
+        # Clear service url input
+        self.log(
+            'UC SERVICE 08 9. Check if default timeout value is correct and TLS checkbox checked when URL starts with https')
+        service_url_input.clear()
+        # Replace wsdl url http to https:
+        wsdl_correct_url_https = wsdl_correct_url.replace('http:', 'https:')
+        self.input(service_url_input, wsdl_correct_url_https)
+        # Find TLS enabled checkbox
+        service_tls_checkbox = self.by_xpath(popups.EDIT_SERVICE_POPUP_TLS_ENABLED_XPATH)
+        # Check if checkbox is checked
+        self.is_equal('true', service_tls_checkbox.get_attribute('checked'), msg="TLS checkbox not checked")
+        # Clear service url input
+        service_url_input.clear()
+        # Replace service url back to http
+        self.input(service_url_input, wsdl_correct_url)
+        # Find TLS enabled checkbox
+        service_tls_checkbox = self.by_id(popups.EDIT_SERVICE_POPUP_TLS_ID)
+        # Check if checkbox is disabled
+        self.is_false(service_tls_checkbox.is_enabled())
+        # Check service timeout value
+        self.is_equal(con1=ss_system_parameters.SERVICE_TIMEOUT_VALUE, con2=service_timeout,
+                      msg='Service timeout not {0}'.format(service_timeout))
 
         modified_service_url = service_url
 
@@ -616,17 +657,28 @@ def test_delete_service(case, client=None, client_name=None, client_id=None, wsd
         # Get the WSDL URL from wsdl_element text
         if wsdl_url is None:
             wsdl_text = wsdl_element.find_elements_by_tag_name('td')[1].text
-            # print wsdl_text
+
             matches = re.search(popups.CLIENT_DETAILS_POPUP_WSDL_URL_REGEX, wsdl_text)
             wsdl_found_url = matches.group(2)
-            # print wsdl_found_url
+
             self.log('Found WSDL URL: {0}'.format(wsdl_found_url))
         else:
             wsdl_found_url = wsdl_url
 
-        # Find and click the "Delete" button to enable the WSDL.
+        # Find and click the "Delete" button to delete the WSDL.
         self.by_id(popups.CLIENT_DETAILS_POPUP_DELETE_WSDL_BTN_ID).click()
 
+        # UC SERVICE 15 3a. When terminating deletion, the WSDL service remains
+        # A confirmation dialog should open. Cancel the deletion.
+        self.log("UC SERVICE 15 3a. When terminating deletion, the WSDL service remains")
+        self.wait_until_visible(type=By.XPATH, element=popups.CONFIRM_POPUP_CANCEL_BTN_XPATH).click()
+        # Find the wsdl element again
+        wsdl_element = clients_table_vm.client_services_popup_select_wsdl(self, wsdl_index=wsdl_index,
+                                                                           wsdl_url=wsdl_url)
+        # Select the WSDL again
+        wsdl_element.click()
+        # Click "Delete" button to delete the WSDL
+        self.by_id(popups.CLIENT_DETAILS_POPUP_DELETE_WSDL_BTN_ID).click()
         # A confirmation dialog should open. Confirm the deletion.
         popups.confirm_dialog_click(self)
 

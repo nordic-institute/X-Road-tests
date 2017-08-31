@@ -4,4 +4,4 @@ This folder contains X-Road user interface tests written in Python. It also cont
 
 For further information, refer to [X-Road automated testing documentation](X-road%20automated%20testing%20documentation.md).
 
-![Logo](https://github.com/ria-ee/X-Road/blob/develop/doc/Manuals/img/eu_regional_development_fund_horizontal_div_15.png "EU logo")
+![Logo](https://raw.githubusercontent.com/ria-ee/X-Road/develop/doc/Manuals/img/eu_regional_development_fund_horizontal_div_15.png "EU logo")

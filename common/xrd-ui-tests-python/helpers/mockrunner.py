@@ -63,7 +63,7 @@ class MockRunner:
                 if line:
                     if self.debug:
                         # Print line for logging
-                        print line
+                        print(line)
 
                     # If the line matches the specified regex, mock is running, break the loop.
                     if self.ready_regex.match(line):
@@ -98,7 +98,7 @@ class MockRunner:
         '''
         if self.running:
             if self.debug:
-                print "Mock stopping"
+                print("Mock stopping")
             # Send a stop character and flush it.
             try:
                 self.ssh.write(chr(self.stop_keycode), flush=True)

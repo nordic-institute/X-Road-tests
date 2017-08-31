@@ -1,7 +1,8 @@
-from helpers import soaptestclient
-from view_models import popups, sidebar, messages, central_services
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
+
+from helpers import soaptestclient
+from view_models import popups, sidebar, messages, central_services
 
 # These faults are checked when we need the result to be unsuccessful. Otherwise the checking function returns True.
 faults_unsuccessful = ['Server.ServerProxy.ServiceDisabled', 'Client.InternalError']
@@ -267,7 +268,8 @@ def test_edit_central_service(case, provider, requester, central_service_name, s
     return edit_central_service
 
 
-def test_delete_central_service(case, central_service_name, provider, requester, sync_max_seconds=0, wait_sync_retry_delay=0):
+def test_delete_central_service(case, central_service_name, provider, requester, sync_max_seconds=0,
+                                wait_sync_retry_delay=0, cancel_deletion=False):
     self = case
 
     query_url = self.config.get('ss1.service_path')
@@ -318,6 +320,20 @@ def test_delete_central_service(case, central_service_name, provider, requester,
         # Find and click the "Delete" button to delete the service
         delete_button = self.by_id(central_services.SERVICE_DELETE_BUTTON_ID)
         delete_button.click()
+
+        '''UC SERVICE_43 step 3a cs deletion is canceled'''
+        self.log('UC SERVICE_43 step 3a cs deletion is canceled')
+        if cancel_deletion:
+            '''Cancel the deletion'''
+            self.wait_until_visible(type=By.XPATH, element=popups.CONFIRM_POPUP_CANCEL_BTN_XPATH).click()
+
+            '''Check if cs still exists'''
+            self.wait_jquery()
+            service_row = get_central_service_row(self, central_service_name)
+            self.is_not_none(service_row, msg='Central service not found after canceling: {0}'.format(central_service_name))
+
+            '''Click delete button again'''
+            delete_button.click()
 
         # A confirmation dialog should open. Confirm the deletion.
         popups.confirm_dialog_click(self)

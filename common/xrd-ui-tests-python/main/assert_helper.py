@@ -90,9 +90,9 @@ def log(test_name, err_message, log_message, condition):
     :return: None
     """
     if test_name is not None:
-        print test_name
+        print(test_name)
     if log_message:
         if condition:
-            print log_message, 'SUCCESSFUL'
+            print('{0} {1}'.format(log_message, 'SUCCESSFUL'))
         else:
-            print err_message
+            print(err_message)

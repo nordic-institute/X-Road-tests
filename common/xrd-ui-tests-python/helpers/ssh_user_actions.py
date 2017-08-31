@@ -8,14 +8,14 @@ def add_user(client, username, password, group=None):
     :param group: string (group to add user, empty don't want to add to group)
     """
     command = 'useradd -p $(echo "{0}" | openssl passwd -1 -stdin) {1}'.format(password, username)
-    print command
+    print(command)
     for line in client.exec_command(command=command, sudo=True):
-        print line
+        print(line)
     if group:
         command = 'usermod -a -G {0} {1}'.format(group, username)
-        print command
+        print(command)
         for line in client.exec_command(command=command, sudo=True):
-            print line
+            print(line)
 
 
 def delete_user(client, username):
@@ -26,6 +26,6 @@ def delete_user(client, username):
     :param username: string (username to delete)
     """
     command = 'deluser {0}'.format(username)
-    print command
+    print(command)
     for line in client.exec_command(command=command, sudo=True):
-        print line
+        print(line)

@@ -210,6 +210,10 @@ class AuditChecker:
 
             # "Check for" value is a string, convert it to dict as value "event".
             if isinstance(check_element, basestring):
+                # Allow "whatever" log entries for other actions that are logged but the message does not need to be checked.
+                if check_element == '*':
+                    check_element = data['event']
+
                 check_element = {'event': check_element}
 
             # Check if all values in "check" exist in data

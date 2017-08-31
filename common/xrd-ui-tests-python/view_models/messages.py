@@ -5,6 +5,7 @@ ERROR_MESSAGE_CSS = '.messages .error'
 ERROR_MESSAGE_CLOSE_CSS = '.messages .error i'
 WARNING_MESSAGE_CSS = '#warning'
 NOTICE_MESSAGE_CSS = '.messages .notice'
+SERVICE_DISABLED_MESSAGE = 'Out of order'
 
 # {0} is replaced with WSDL file URL
 WSDL_ERROR_INVALID_URL = 'Failed to add WSDL: Malformed URL. WSDL URL must point to a WSDL file.'
@@ -15,21 +16,35 @@ WSDL_ERROR_VALIDATION_FAILED = 'Failed to add WSDL: WSDL ({0}) validation failed
 
 WSDL_EDIT_ERROR_VALIDATION_FAILED = 'Failed to edit WSDL: WSDL ({0}) validation failed'
 
+WSDL_REFRESH_ERROR_SERVICE_EXISTS = 'Failed to refresh WSDL(s): New service \'{0}\' at {1} also exists at {2}'
 WSDL_REFRESH_ERROR_VALIDATION_FAILED = 'Failed to refresh WSDL(s): WSDL ({0}) validation failed'
 WSDL_REFRESH_WARNING_ADDING_SERVICES = 'Adding services:'
 WSDL_REFRESH_WARNING_DELETING_SERVICES = 'Deleting services:'
 
-# SERVICE_EDIT_INVALID_URL = 'Invalid URL format, must begin with \'http\' or \'https\'' # Specification variant
-SERVICE_EDIT_INVALID_URL = '\'{0}\' is an invalid URL, examples of valid URL-s: \'http://www.example.com\', \'https://www.example.com\'' # Real variant
+# INVALID_URL = 'Invalid URL format, must begin with \'http\' or \'https\'' # Specification variant
+INVALID_URL = '\'{0}\' is an invalid URL, examples of valid URL-s: \'http://www.example.com\', \'https://www.example.com\'' # Real variant
+INPUT_DATA_TOO_LONG = "Parameter '{0}' input exceeds 255 characters"
+MISSING_PARAMETER = "Missing parameter: {0}"
+INVALID_CERTIFICATE_PROFILE = "Certificate profile with name '{0}' does not exist."
+
+SERVICE_EDIT_INVALID_URL = INVALID_URL
 SERVICE_EDIT_INVALID_TIMEOUT = 'Timeout value must be a positive integer.'
 SERVICE_EDIT_INFINITE_TIMEOUT_WARNING = 'A timeout value of zero is interpreted as an infinite timeout.'
+
+INVALID_URL = SERVICE_EDIT_INVALID_URL
+
+CERTIFICATE_IMPORT_SUCCESSFUL = 'Certificate imported successfully'
+CA_ADD_SUCCESSFUL = 'Certification service added successfully'
 
 CERTIFICATE_NOT_SIGNING_KEY = 'Failed to import certificate: Authentication certificate cannot be imported to signing keys'
 NO_KEY_FOR_CERTIFICATE = 'Failed to import certificate: Could not find key corresponding to the certificate'
 NO_CLIENT_FOR_CERTIFICATE = 'Failed to import certificate: Certificate issued to an unknown member'
+SIGN_CERT_INSTEAD_AUTH_CERT = "Failed to import certificate: Cannot read member identifier from signing certificate: IncorrectCertificate: Certificate subject name does not contain organization"
 WRONG_FORMAT_CERTIFICATE = 'Failed to import certificate: Incorrect file format. Only PEM and DER files allowed.'
+WRONG_FORMAT_OCSP_CERTIFICATE = 'Failed to upload OCSP responder certificate: Incorrect file format. Only PEM and DER files allowed.'
 CERTIFICATE_ALREADY_EXISTS = 'Failed to import certificate: Certificate already exists under key'
 CA_NOT_VALID_AS_SERVICE = 'Failed to import certificate: Cannot read member identifier from signing certificate: InternalError: Certificate is not issued by approved certification service provider.'
+WRONG_FORMAT_CA_CERTIFICATE = 'Failed to upload service CA certificate: Incorrect file format. Only PEM and DER files allowed.'
 
 
 def get_error_message(self):

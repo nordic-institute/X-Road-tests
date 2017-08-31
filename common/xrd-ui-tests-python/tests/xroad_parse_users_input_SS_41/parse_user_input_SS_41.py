@@ -11,120 +11,16 @@ from view_models import sidebar as sidebar_constants, clients_table_vm, members_
 
 
 def test_01():
-
     def test_case(self):
-        """
-        SS_28_4 System verifies entered key label
-        :param self: MainController object
-        :return: None
-        """
 
-        # TEST PLAN SS_28_4 System verifies entered key label
-        self.log('*** SS_28_4 / XTKB-18')
-
-        self.log('SS_28_4 System verifies entered key label')
-
-        # Open the keys and certificates tab
-        self.log('Open keys and certificates tab')
-        self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar_constants.KEYSANDCERTIFICATES_BTN_CSS).click()
-        time.sleep(5)
-
-        # Loop through different key label names and expected results
-        counter = 1
-        for key_name in keyscertificates_constants.KEY_LABEL_TEXT_AND_RESULTS:
-            input_text = key_name[0]
-            error = key_name[1]
-            error_message = key_name[2]
-            error_message_label = key_name[3]
-            whitespaces = key_name[4]
-
-            self.log('Test-' + str(counter) + '. key label - "' + input_text + '"')
-
-            # Generate key from softtoken
-            add_key_label(self, input_text)
-
-            # Verify key label
-            parse_user_input(self, error, error_message, error_message_label)
-            if error:
-                self.log('Click on "Cancel" button')
-                self.wait_until_visible(type=By.XPATH, element=popups.GENERATE_KEY_POPUP_CANCEL_BTN_XPATH).click()
-            else:
-                self.log('Find entered key label name')
-                key_label_name = self.wait_until_visible(type=By.XPATH,
-                                                         element=keyscertificates_constants.
-                                                         get_text(input_text.strip()))
-                key_label_name = key_label_name.text
-                if input_text == '':
-                    # Verify that added key label can be empty
-                    self.log('Find generated key label name')
-                    self.wait_jquery()
-                    key_name_hash = self.by_xpath(element='//tr[contains(@class, "unsaved")]')
-                    key_name_hash = key_name_hash.text.encode('utf-8').split()
-                    key_name_hash = key_name_hash[1]
-                    self.log('Generated key label name - ' + key_name_hash)
-                    # Verify that system generates key label name
-                    reg_ex = r'^[A-Z0-9]*'
-                    rex_ex_compare = re.findall(reg_ex, key_name_hash)
-
-                    if len(key_name_hash) == 40 and key_name_hash == rex_ex_compare[0]:
-                        generated_key_name = True
-                    else:
-                        generated_key_name = False
-                    assert generated_key_name is True
-
-                elif whitespaces:
-                    find_text_with_whitespaces(self, input_text, key_label_name)
-                else:
-                    assert input_text in key_label_name
-                # Delete the added key label
-                delete_added_key_label(self)
-            counter += 1
-
-        self.wait_jquery()
+        parse_key_label_inputs(self)
 
     return test_case
 
 
 def test_02():
     def test_case(self):
-        """
-        SS_29_5 System verifies entered CSR
-        :param self: MainController object
-        :return: None
-        """
-
-        # TEST PLAN SS_28_4 System verifies entered CSR
-        self.log('*** SS_29_5 / XTKB-63')
-
-        self.log('SS_29_5 System verifies entered CSR')
-
-        # Open the keys and certificates tab
-        self.log('Open keys and certificates tab')
-        self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar_constants.KEYSANDCERTIFICATES_BTN_CSS).click()
-        time.sleep(5)
-
-        # Generate key from softtoken
-        add_key_label(self, keyscertificates_constants.KEY_LABEL_TEXT)
-
-        self.log('Click on "GENERATE CSR" button')
-        self.wait_jquery()
-        self.wait_until_visible(type=By.ID, element=keyscertificates_constants.GENERATECSR_BTN_ID).click()
-
-        # Verify user selections
-        self.log('Verify Usage: selections')
-        parse_user_selection(self, keyscertificates_constants.GENERATE_CSR_SIGNING_REQUEST_USAGE_DROPDOWN_ID, 1)
-        self.log('Verify Client: selections')
-        parse_user_selection(self, keyscertificates_constants.GENERATE_CSR_SIGNING_REQUEST_CLIENT_DROPDOWN_ID, 1)
-        self.log('Verify Certification Service: selections')
-        parse_user_selection(self, keyscertificates_constants.GENERATE_CSR_SIGNING_REQUEST_APPROVED_CA_DROPDOWN_ID, 2)
-        self.log('Verify SCR Format: selections')
-        parse_user_selection(self, keyscertificates_constants.GENERATE_CSR_SIGNING_REQUEST_CSR_FORMAT_DROPDOWN_ID, 1)
-
-        self.log('Click on "CANCEL" button')
-        self.wait_until_visible(type=By.XPATH, element=keyscertificates_constants.GENERATE_CSR_SIGNING_REQUEST_POPUP_CANCEL_BTN_XPATH).click()
-
-        # Delete the added key label
-        delete_added_key_label(self)
+        parse_csr_inputs(self)
 
     return test_case
 
@@ -217,9 +113,11 @@ def test_04():
                                             get_client_id_by_member_code_subsystem_code(member_code,
                                                                                         subsystem_code))
         counter = 1
+        management_wsdl_url = self.config.get('wsdl.management_service_wsdl_url')
+        cs_host = self.config.get('cs.ssh_host')
         # Loop through wsdl url's
         for wsdl_data in clients_table_vm.WSDL_DATA:
-            wsdl_url = wsdl_data[0]
+            wsdl_url = wsdl_data[0].format(management_wsdl_url, cs_host)
             error = wsdl_data[1]
             error_message = wsdl_data[2]
             error_message_label = wsdl_data[3]
@@ -293,8 +191,7 @@ def test_05():
         # Add wsdl url
         self.log("Open client details")
         self.double_click(client_id)
-
-        add_wsdl_url(self, clients_table_vm.WSDL_URL)
+        add_wsdl_url(self, self.config.get('wsdl.management_service_wsdl_url'))
 
         self.log('Click on WSDL url row')
         self.wait_until_visible(type=By.CSS_SELECTOR, element=popups.CLIENT_DETAILS_POPUP_WSDL_CSS).click()
@@ -331,7 +228,7 @@ def test_05():
                 wsdl_disabled = False
             else:
                 wsdl_disabled = True
-                # TODO: Kus saab 6igeid sisestusi kontrollida
+
         self.wait_jquery()
         self.log('Click on "CLOSE" button')
         self.wait_until_visible(type=By.XPATH, element=popups.CLIENT_DETAILS_POPUP_CLOSE_BTN_XPATH).click()
@@ -378,18 +275,19 @@ def test_06():
         self.log("Open client details")
         self.double_click(client_id)
 
-        add_wsdl_url(self, clients_table_vm.WSDL_URL)
+        add_wsdl_url(self, self.config.get('wsdl.management_service_wsdl_url'))
 
         # Open WSDL URL services
         self.log('Open WSDL URL services, clicking on "+"')
         self.wait_until_visible(type=By.CLASS_NAME, element=popups.CLIENT_DETAILS_POPUP_WSDL_URL_DETAILS_CLASS).click()
 
         counter = 1
+        cs_service_url = self.config.get('cs.service_url')
 
         # Loop through data from the clients_table_vm.py
         for service_url_data in clients_table_vm.SERVICE_URLS_DATA:
             # Set necessary parameters
-            service_url = service_url_data[0]
+            service_url = service_url_data[0].format(cs_service_url)
             error = service_url_data[1]
             error_message = service_url_data[2]
             error_message_label = service_url_data[3]
@@ -1074,6 +972,10 @@ def add_key_label(self, key_label):
     self.wait_jquery()
     self.log('Click on softtoken row')
     self.wait_until_visible(type=By.XPATH, element=keyscertificates_constants.SOFTTOKEN_TABLE_ROW_XPATH).click()
+
+    self.wait_jquery()
+    self.log('Click on softtoken row')
+    self.wait_until_visible(type=By.XPATH, element=keyscertificates_constants.SOFTTOKEN_TABLE_ROW_XPATH).click()
     self.log('Click on "Generate key" button')
     self.wait_until_visible(type=By.ID, element=keyscertificates_constants.GENERATEKEY_BTN_ID).click()
 
@@ -1081,7 +983,7 @@ def add_key_label(self, key_label):
     self.log('Insert "' + key_label + '" to "LABEL" area')
     key_label_input = self.wait_until_visible(type=By.ID, element=popups.GENERATE_KEY_POPUP_KEY_LABEL_AREA_ID)
     self.input(key_label_input, key_label)
-
+    self.wait_jquery()
     # Save the key data
     self.log('Click on "OK" button')
     self.wait_until_visible(type=By.XPATH, element=popups.GENERATE_KEY_POPUP_OK_BTN_XPATH).click()
@@ -1265,15 +1167,19 @@ def delete_added_client(self, client):
     """
     self.log("Open client details")
     self.double_click(client)
-    # self.log('Click on "UNREGISTER" button')
-    # self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_UNREGISTER_BUTTON_ID).click()
-    self.log('Click on "DELETE" button')
-    self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_DELETE_BUTTON_ID).click()
-    self.log('Click on "CONFIRM" button')
-    popups.confirm_dialog_click(self)
-    # self.log('Click on "CONFIRM" button')
-    # popups.confirm_dialog_click(self)
-    # TODO: Muudatus kui kliendid korda saavad
+    try:
+        self.log('Click on "UNREGISTER" button')
+        self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_UNREGISTER_BUTTON_ID).click()
+        self.log('Click on "CONFIRM" button')
+        popups.confirm_dialog_click(self)
+        self.log('Click on "CONFIRM" button')
+        popups.confirm_dialog_click(self)
+    except:
+        self.log('Click on "DELETE" button')
+        self.wait_jquery()
+        self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_DELETE_BUTTON_ID).click()
+        self.log('Click on "CONFIRM" button')
+        popups.confirm_dialog_click(self)
 
 
 def delete_added_key_label(self):
@@ -1289,3 +1195,121 @@ def delete_added_key_label(self):
     self.log('Click on "CONFIRM" button')
     self.wait_until_visible(type=By.XPATH, element=popups.CONFIRM_POPUP_OK_BTN_XPATH).click()
     self.log('Added key is deleted')
+
+
+def parse_key_label_inputs(self):
+    """
+    SS_28_4 System verifies entered key label
+    :param self: MainController object
+    :return: None
+    """
+
+    # TEST PLAN SS_28_4 System verifies entered key label
+    self.log('*** SS_28_4 / XTKB-18')
+
+    self.log('SS_28_4 System verifies entered key label')
+
+    # Open the keys and certificates tab
+    self.log('Open keys and certificates tab')
+    self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar_constants.KEYSANDCERTIFICATES_BTN_CSS).click()
+    time.sleep(5)
+
+    # Loop through different key label names and expected results
+    counter = 1
+    for key_name in keyscertificates_constants.KEY_LABEL_TEXT_AND_RESULTS:
+        input_text = key_name[0]
+        error = key_name[1]
+        error_message = key_name[2]
+        error_message_label = key_name[3]
+        whitespaces = key_name[4]
+
+        self.log('Test-' + str(counter) + '. key label - "' + input_text + '"')
+
+        # Generate key from softtoken
+        add_key_label(self, input_text)
+
+        # Verify key label
+        parse_user_input(self, error, error_message, error_message_label)
+        if error:
+            self.log('Click on "Cancel" button')
+            self.wait_until_visible(type=By.XPATH, element=popups.GENERATE_KEY_POPUP_CANCEL_BTN_XPATH).click()
+        else:
+            self.log('Find entered key label name')
+            key_label_name = self.wait_until_visible(type=By.XPATH,
+                                                     element=keyscertificates_constants.
+                                                     get_text(input_text.strip()))
+            key_label_name = key_label_name.text
+            if input_text == '':
+                # Verify that added key label can be empty
+                self.log('Find generated key label name')
+                self.wait_jquery()
+                unsaved_key_names = self.wait_until_visible(type=By.XPATH, element='//tr[contains(@class, "unsaved")]',
+                                                            multiple=True)
+                generated_key_name = False
+                for key_name_hash in unsaved_key_names:
+                    key_name_hash = key_name_hash.text.encode('utf-8').split()
+                    key_name_hash = key_name_hash[1]
+
+                    self.log('Generated key label name - ' + key_name_hash)
+                    # Verify that system generates key label name
+                    reg_ex = r'^[A-Z0-9]*'
+                    rex_ex_compare = re.findall(reg_ex, key_name_hash)
+                    try:
+                        if len(key_name_hash) == 40 and key_name_hash == rex_ex_compare[0]:
+                            generated_key_name = True
+                            break
+                    except:
+                            pass
+
+                assert generated_key_name is True
+
+            elif whitespaces:
+                find_text_with_whitespaces(self, input_text, key_label_name)
+            else:
+                assert input_text in key_label_name
+            # Delete the added key label
+            delete_added_key_label(self)
+        counter += 1
+
+    self.wait_jquery()
+
+
+def parse_csr_inputs(self):
+    """
+    SS_29_5 System verifies entered CSR
+    :param self: MainController object
+    :return: None
+    """
+
+    # TEST PLAN SS_28_4 System verifies entered CSR
+    self.log('*** SS_29_5 / XTKB-63')
+
+    self.log('SS_29_5 System verifies entered CSR')
+
+    # Open the keys and certificates tab
+    self.log('Open keys and certificates tab')
+    self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar_constants.KEYSANDCERTIFICATES_BTN_CSS).click()
+    time.sleep(5)
+
+    # Generate key from softtoken
+    add_key_label(self, keyscertificates_constants.KEY_LABEL_TEXT)
+
+    self.log('Click on "GENERATE CSR" button')
+    self.wait_jquery()
+    self.wait_until_visible(type=By.ID, element=keyscertificates_constants.GENERATECSR_BTN_ID).click()
+
+    # Verify user selections
+    self.log('Verify Usage: selections')
+    parse_user_selection(self, keyscertificates_constants.GENERATE_CSR_SIGNING_REQUEST_USAGE_DROPDOWN_ID, 1)
+    self.log('Verify Client: selections')
+    parse_user_selection(self, keyscertificates_constants.GENERATE_CSR_SIGNING_REQUEST_CLIENT_DROPDOWN_ID, 1)
+    self.log('Verify Certification Service: selections')
+    parse_user_selection(self, keyscertificates_constants.GENERATE_CSR_SIGNING_REQUEST_APPROVED_CA_DROPDOWN_ID, 2)
+    self.log('Verify SCR Format: selections')
+    parse_user_selection(self, keyscertificates_constants.GENERATE_CSR_SIGNING_REQUEST_CSR_FORMAT_DROPDOWN_ID, 1)
+
+    self.log('Click on "CANCEL" button')
+    self.wait_until_visible(type=By.XPATH, element=keyscertificates_constants.GENERATE_CSR_SIGNING_REQUEST_POPUP_CANCEL_BTN_XPATH).click()
+
+    # Delete the added key label
+    delete_added_key_label(self)

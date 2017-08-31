@@ -55,7 +55,6 @@ CLIENT_DETAILS_POPUP_CLOSE_BTN_XPATH = '//div[@class="ui-dialog-buttonset"]//but
 CLIENT_DETAILS_POPUP_WSDL_URL_DETAILS_CLASS = 'closed'
 CLIENT_DETAILS_POPUP_WSDL_SERVICES_AUTHCERTDELETION_XPATH = '//table[@id="services"]//td[text()="authCertDeletion (0)"]'
 
-
 CENTRAL_SERVICE_POPUP = '//div[@aria-describedby="central_service_details_dialog"]'
 CENTRAL_SERVICE_POPUP_CENTRAL_SERVICE_CODE_ID = 'central_service_details_service_code'
 CENTRAL_SERVICE_POPUP_TARGET_CODE_ID = 'central_service_details_target_code'
@@ -166,14 +165,14 @@ def no_dialog_click(self):
 
 
 def open_client_search_list_from_acl_subjects_popup(self):
-    print 'Open add new services to subjects dialog'
+    print('Open add new services to subjects dialog')
     # Wait for the element and click
     self.wait_until_visible(type=By.ID, element=CLIENT_DETAILS_POPUP_ACL_SUBJECTS_ADD_BTN_ID).click()
     self.wait_jquery()
-    print 'Click on search'
+    print('Click on search')
     # Wait for the element and click
     self.wait_until_visible(type=By.CSS_SELECTOR, element=ACL_SUBJECTS_SEARCH_POPUP_SEARCH_BTN_CSS).click()
-    print 'Waiting on clients table to load'
+    print('Waiting on clients table to load')
     # Waiting for searched list to appear
     self.wait_jquery()
     table = self.wait_until_visible(type=By.CSS_SELECTOR,
@@ -256,6 +255,3 @@ def close_all_open_dialogs(self):
         # Find the close button ("X") and click it.
         close_button = dialog.find_element_by_css_selector(POPUP_HEADER_CLOSE_BUTTON_CSS)
         close_button.click()
-
-
-

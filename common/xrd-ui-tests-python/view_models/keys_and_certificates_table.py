@@ -1,4 +1,6 @@
-KEY_LABEL_TEXT = "certificate_keys"
+KEY_LABEL_TEXT = "test_certificate_keys"
+
+KEY_CONFIG_FILE = '/etc/xroad/signer/keyconf.xml'
 
 KEY_LABEL_TEXT_AND_RESULTS = [[256 * 'S', True, "Parameter '{0}' input exceeds 255 characters", 'label', False],
                               ['   ' + KEY_LABEL_TEXT + '   ', False, None, None, True],
@@ -23,6 +25,8 @@ FILEPATH_FORM_INPUT_ID = 'file_upload'
 
 KEYS_AND_CERTIFICATES_TABLE_ID = 'keys'
 
+GENERATED_KEYS_TABLE_ROW_CSS = '.key'
+CERT_REQUESTS_TABLE_ROW_CSS = ".cert-request"
 GENERATED_KEY_TABLE_ROW_XPATH = '//table[contains(@id, "keys")]//tr[contains(@class, "key")]//td[contains(text(), \"' + KEY_LABEL_TEXT + '\")]'
 SOFTTOKEN_TABLE_ROW_XPATH = '//table[contains(@id, "keys")]//tr[contains(@class, "token")]/td[div="Token: softToken-0"]'
 
@@ -41,6 +45,7 @@ SUBJECT_DISTINGUISHED_NAME_POPUP_C_XPATH = '//input[@name="C"]'
 SUBJECT_DISTINGUISHED_NAME_POPUP_O_XPATH = '//input[@name="O"]'
 SUBJECT_DISTINGUISHED_NAME_POPUP_CN_XPATH = '//input[@name="CN"]'
 SUBJECT_DISTINGUISHED_NAME_POPUP_OK_BTN_XPATH = SUBJECT_DISTINGUISHED_NAME_POPUP_XPATH + '//button[@data-name="ok"]'
+SUBJECT_DISTINGUISHED_NAME_POPUP_CANCEL_BTN_XPATH = SUBJECT_DISTINGUISHED_NAME_POPUP_XPATH + '//button[@data-name="cancel"]'
 
 
 def get_generated_row_row_by_td_text(text):

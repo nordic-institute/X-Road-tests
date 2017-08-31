@@ -62,7 +62,7 @@ def get_firefox(download_dir='', log_dir=''):
 
     # Set download dir and don't ask for confirmation
     profile.set_preference("browser.download.folderList", 2)
-    # print download_dir
+
     profile.set_preference("browser.download.dir", download_dir)
     profile.set_preference('browser.helperApps.neverAsk.saveToDisk', 'application/octet-stream')
 

@@ -15,9 +15,9 @@ class UserInputParse(unittest.TestCase):
         main.test_name = self.__class__.__name__
 
         main.log('TEST: PARSE USER INPUT')
-        main.url = main.config.get('ss1.host')
-        main.username = main.config.get('ss1.user')
-        main.password = main.config.get('ss1.pass')
+        main.url = main.config.get('ss2.host')
+        main.username = main.config.get('ss2.user')
+        main.password = main.config.get('ss2.pass')
         main.reset_webdriver(main.url, main.username, main.password)
 
         test_func = parse_user_input_SS_41.test_01()

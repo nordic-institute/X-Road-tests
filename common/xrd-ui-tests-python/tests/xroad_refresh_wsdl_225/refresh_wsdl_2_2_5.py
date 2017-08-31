@@ -1,10 +1,12 @@
 # coding=utf-8
-
-from view_models import clients_table_vm, popups, messages
-from selenium.webdriver.common.by import By
-from helpers import ssh_client, xroad, soaptestclient
 import time
+
+from selenium.webdriver.common.by import By
+
+from helpers import ssh_client, xroad, soaptestclient, auditchecker
 from tests.xroad_add_to_acl_218 import add_to_acl_2_1_8
+from tests.xroad_configure_service_222 import configure_service_2_2_2
+from view_models import clients_table_vm, popups, messages
 
 # These faults are checked when we need the result to be unsuccessful. Otherwise the checking function returns True.
 faults_unsuccessful = ['Server.ServerProxy.AccessDenied', 'Server.ServerProxy.UnknownService']
@@ -44,7 +46,8 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
                       requester=None, service_name=None,
                       service_name_2=None, wsdl_path=None,
                       wsdl_local_path=None, wsdl_filename=None, wsdl_correct=None, wsdl_missing_service=None,
-                      wsdl_error=None, wsdl_warning=None, ssh_host=None, ssh_username=None, ssh_password=None):
+                      wsdl_error=None, wsdl_warning=None, ssh_host=None, ssh_username=None, ssh_password=None,
+                      new_wsdl=None, ss_ssh_host=None, ss_ssh_user=None, ss_ssh_pass=None):
     '''
     MainController test function. Refreshes WSDL and checks for error scenarios.
     :return:
@@ -207,6 +210,30 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
         self.wait_until_visible(type=By.XPATH, element=popups.WARNING_POPUP_CANCEL_XPATH).click()
         self.wait_jquery()
 
+        # UC SERVICE 14 3c2. Refreshing process continues with WSDL, which gives warnings
+        # Refresh WSDL again with WSDL, which gives warnings(WSDL contains no services)
+        self.log('UC SERVICE 14 3c2. Refreshing process continues with WSDL, which gives warnings')
+        refresh_wsdl()
+        self.wait_jquery()
+
+        # Wait until service deletion confirmation dialogs popup and confirm them
+        self.wait_until_visible(type=By.XPATH, element=popups.WARNING_POPUP_CONTINUE_XPATH).click()
+        self.wait_jquery()
+        self.wait_until_visible(type=By.XPATH, element=popups.WARNING_POPUP_CONTINUE_XPATH).click()
+        self.wait_jquery()
+
+        self.log('WSDL without services, queries should fail')
+        case.is_true(testclient_http.check_fail(faults=True), msg='Test query passed, WSDL without services')
+        case.is_true(testclient_http_2.check_fail(faults=True), msg='Test query passed, WSDL without services')
+
+        # Replace WSDL with correct WSDL and restore its services
+        webserver_set_wsdl(self, wsdl_source_filename=wsdl_local_path.format(wsdl_correct),
+                           wsdl_target_filename=wsdl_local_path.format(wsdl_filename))
+        refresh_wsdl()
+        # Confirm adding service popup
+        self.wait_until_visible(type=By.XPATH, element=popups.WARNING_POPUP_CONTINUE_XPATH).click()
+        self.wait_jquery()
+
         # TEST PLAN 2.2.5-2 - replace WSDL with a correct file that doesn't include bodyMassIndex service.
         # In the test plan, there are two variants of how to delete the service (v1 and v2). One of them is commenting
         # out bodyMassIndex service and the second is to replace the WSDL with one that only contains service
@@ -249,7 +276,8 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
 
         # TEST PLAN 2.2.5-3 test query from TS1 client CLIENT1:sub to service bodyMassIndex. Query should fail.
         self.log('2.2.5-3 test query {0} to service bodyMassIndex. Query should fail.'.format(query_filename))
-        case.is_true(testclient_http.check_fail(), msg='2.2.5-3 test query succeeded')
+
+        case.is_true(testclient_http.check_fail(faults=True), msg='2.2.5-3 test query succeeded')
 
         # TEST PLAN 2.2.5-4 add service bodyMassIndex to service WSDL and refresh the service. UI should notify about
         # an added service. NB! Service settings must not change.
@@ -314,7 +342,13 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
                                                      service_name=service_name, service_subjects=[requester_id],
                                                      remove_data=False,
                                                      allow_remove_all=False)
+
+        add_acl1 = add_to_acl_2_1_8.test_add_subjects(self, client=client, client_id=client_id, wsdl_url=wsdl_url,
+                                                      service_name=service_name_2, service_subjects=[requester_id],
+                                                      remove_data=False,
+                                                      allow_remove_all=False)
         add_acl()
+        add_acl1()
 
         # TEST PLAN 2.2.5-6 test queries from TS1 client CLIENT1:sub to services bodyMassIndex and xroadGetRandom.
         # Both queries should succeed.
@@ -323,6 +357,54 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
 
         self.log('2.2.5-6 test query 2 {0} to service xroadGetRandom. Query should succeed.'.format(query_2_filename))
         case.is_true(testclient_http_2.check_success(), msg='2.2.5-6 test query 2 failed')
+
+        # UC SERVICE 14 4a. Service read from WSDL file already exists in another WSDL
+        # Open client services tab
+        clients_table_vm.open_client_popup_services(self, client_name=client_name, client_id=client_id)
+
+        # Find the table that lists all WSDL files and services
+        services_table = self.by_id(popups.CLIENT_DETAILS_POPUP_SERVICES_TABLE_ID)
+        # Wait until that table is visible (opened in a popup)
+        self.wait_until_visible(services_table)
+
+        # Replace new WSDL file to be without services WSDL
+        webserver_set_wsdl(self, wsdl_source_filename=wsdl_local_path.format(wsdl_warning),
+                           wsdl_target_filename=wsdl_local_path.format(new_wsdl))
+        # Get new WSDL service url
+        new_wsdl_url = wsdl_path.format(new_wsdl)
+        # Add new WSDL
+        configure_service_2_2_2.add_wsdl(self, new_wsdl_url)
+
+        # Confirm WSDL adding
+        self.wait_until_visible(type=By.XPATH, element=popups.WARNING_POPUP_CONTINUE_XPATH).click()
+
+        # Replace new WSDL with WSDL, which contains only xroadgetrandom
+        webserver_set_wsdl(self, wsdl_source_filename=wsdl_local_path.format(wsdl_correct),
+                           wsdl_target_filename=wsdl_local_path.format(new_wsdl))
+
+        # Connect to ss and get current log line count
+        log_checker = auditchecker.AuditChecker(host=ss_ssh_host, username=ss_ssh_user, password=ss_ssh_pass)
+        current_log_lines = log_checker.get_line_count()
+        # Refresh new WSDL services
+        clients_table_vm.client_services_popup_select_wsdl(self, wsdl_url=new_wsdl_url)
+        refresh_wsdl()
+        # Error message should show up, which says that xroadgetrandom service exists in another WSDL
+        error = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
+
+        # Adding existing WSDL service error
+        correct_error = messages.WSDL_REFRESH_ERROR_SERVICE_EXISTS.format(service_name_2, new_wsdl_url, wsdl_url)
+        # Check if error message is correct
+        self.is_equal(con1=error, con2=correct_error,
+                      msg='Error message {0} is not correct, should be: {1}'.format(error, correct_error))
+
+        # Expected log message
+        wsdl_refresh_failed_log_message = 'Refresh WSDL failed'
+        # Check if log contains expected message
+        logs_found = log_checker.check_log(wsdl_refresh_failed_log_message, from_line=current_log_lines + 1)
+        self.is_true(logs_found,
+                     msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
+                         wsdl_refresh_failed_log_message,
+                         log_checker.found_lines))
 
     return refresh_existing_wsdl
 

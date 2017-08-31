@@ -26,6 +26,7 @@
 |   | server\_name |   |   |   |   | x |   |   |   |   |   |   |   |   |   |   |
 |   | client\_name |   |   |   |   | x |   |   |   |   |   |   |   |   |   |   |
 |   | client\_id |   |   | x |   | x | x | x | x | x |   | x |   |   |   |   |
+|   | client\_name |   |   |   |   | x |   |   |   |   |   |   |   |   |   |   |
 |   | client2\_id |   |   |   |   | x |   |   |   |   |   | x |   |   |   |   |
 |   | client2\_name |   |   |   |   | x |   |   |   |   |   |   |   |   |   |   |
 | **cs** |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
@@ -37,10 +38,12 @@
 |   | ssh\_pass |   |   |   |   |   |   |   |   |   |   |   | x |   | x |   |
 |   | global\_group |   |   |   |   |   |   |   |   |   |   |   |   |   | x |   |
 | **ca** |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+|   | host |   | x |   |   |   |   |   |   |   |   |   |   |   |   |   |
 |   | ocs\_host |   | x |   |   |   |   |   |   |   |   |   |   |   |   |   |
 |   | ssh\_host |   | x |   |   |   |   |   |   |   |   |   |   |   |   |   |
 |   | ssh\_user |   | x |   |   |   |   |   |   |   |   |   |   |   |   |   |
 |   | ssh\_pass |   | x |   |   |   |   |   |   |   |   |   |   |   |   |   |
+|   | profile\_class |   | x |   |   |   |   |   |   |   |   |   |   |   |   |   |
 | **wsdl** |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 |   | ssh\_host |   |   |   |   |   |   | x |   |   |   |   |   |   |   |   |
 |   | ssh\_user |   |   |   |   |   |   | x |   |   |   |   |   |   |   |   |
@@ -59,6 +62,7 @@
 |   | ssh\_user | x |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 |   | ssh\_pass | x |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 |   | service\_command | x |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+|   | service\_running\_regex | x |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 | **services** |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 |   | test\_service |   |   | x |   |   | x | x |   | x | x | x |   |   |   |   |
 |   | test\_service\_url |   |   |   |   |   |   |   |   | x |   |   |   |   |   |   |
@@ -113,4 +117,4 @@
 |   | load\_custom\_config | x |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 |   | debug | x |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 
-![Logo](https://github.com/ria-ee/X-Road/blob/develop/doc/Manuals/img/eu_regional_development_fund_horizontal_div_15.png "EU logo")
+![Logo](https://raw.githubusercontent.com/ria-ee/X-Road/develop/doc/Manuals/img/eu_regional_development_fund_horizontal_div_15.png "EU logo")

@@ -1,0 +1,1 @@
+Documentation = /job/documentation-ui-tests/ws/xroad-utils/ui-integration-tests/xrd-ui-tests-qautomate/documentation/build/html/code_documentation/tests/{TestSet}.html

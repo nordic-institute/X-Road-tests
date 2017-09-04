@@ -61,7 +61,7 @@ class Component_cs_tsp_services(CommonUtils):
 
         :param section1:  Test data section name
         :param section2:  Test data section name
-
+        
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.cs_time_stamping_services.Cs_time_stamping_services.click_button_id_tsp_add`
                 * **Step 2:** :func:`~pagemodel.cs_time_stamping_services_add_dlg.Cs_time_stamping_services_add_dlg.input_text_to_id_tsp_url`, *self.parameters[section2]*

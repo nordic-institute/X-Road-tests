@@ -70,7 +70,7 @@ class Component_cs_cert_services(CommonUtils):
         :param section1:  Test data section name
         :param section2:  Test data section name
         :param section3:  Test data section name
-
+        
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.cs_cert_services.Cs_cert_services.click_button_id_ca_add`
                 * **Step 2:** :func:`~pagemodel.cs_cert_services_insert_service_ca_cert.Cs_cert_services_insert_service_ca_cert.click_button_browse`
@@ -94,7 +94,7 @@ class Component_cs_cert_services(CommonUtils):
         *Updated: 11.07.2017*
 
         :param section:  Test data section name
-
+        
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.cs_cert_services.Cs_cert_services.click_trusted_cert_table_first_row`
                 * **Step 2:** :func:`~pagemodel.cs_cert_services.Cs_cert_services.click_button_id_ca_details`

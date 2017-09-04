@@ -62,7 +62,7 @@ class Ss_clients_dlg_services_edit_wsdl(CommonUtils):
         """
 
         :param parameters:  Test data section dictionary
-
+        
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.input_text`, *self.ID_PARAMS_URL*, *changed_http_in_url*
             * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.select_checkbox`, *self.ID_PARAMS_URL_ALL*, *parameters[u'params_url_all']*

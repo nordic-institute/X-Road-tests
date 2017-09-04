@@ -97,7 +97,7 @@ class Ss_keys_and_cert(CommonUtils):
         Click generate key in generated keys table with given text
 
         :param text:  String value for text
-
+        
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
@@ -136,7 +136,7 @@ class Ss_keys_and_cert(CommonUtils):
         Click generate key in generated keys table with given text
 
         :param text:  String value for text
-
+        
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
@@ -166,7 +166,7 @@ class Ss_keys_and_cert(CommonUtils):
         Click button to delete imported certificate key
 
         :param parameters:  Test data section dictionary
-
+        
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_element_is_enabled`, *self.ID_DELETE*
             * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_DELETE*
@@ -225,7 +225,7 @@ class Ss_keys_and_cert(CommonUtils):
         Click authentication in table and then click button to register it
 
         :param text:  String value for text
-
+        
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_element_is_enabled`, *self.ID_REGISTER*
             * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_REGISTER*

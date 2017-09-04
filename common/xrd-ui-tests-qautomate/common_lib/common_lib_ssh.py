@@ -82,6 +82,8 @@ class Common_lib_ssh(CommonUtils):
     # server="jenkins@test-cs2.i.palveluvayla.com" or xroad-lxd-cs
     def empty_server_log_files(self, server):
         """
+        **Test steps:**
+                * **Step 2:** :func:`~pagemodel.run_bash_command(formated_command.Run_bash_command(formated_command.format`, *formated_command.format(server*, *'service rsyslog rotate'*, *""*
         """
         shell_command = 'sudo truncate -c -s 0'
         if strings.server_environment_type() == strings.lxd_type_environment:
@@ -154,11 +156,12 @@ class Common_lib_ssh(CommonUtils):
         Verify audit log file in server.
 
         :param section:  Test data section name
-
+        
         **Test steps:**
-                * **Step 1:** :func:`~pagemodel.fail(errors.Fail(errors.string_is_not_dict + "\n" + self`, *errors.string_is_not_dict + "\n" + self.parse_log_file_tail(log_output*
-                * **Step 2:** :func:`~pagemodel.fail(errors.Fail(errors.log_event_fail`, *errors.log_event_fail(event*
-                * **Step 3:** :func:`~pagemodel.fail(errors.Fail(errors.log_user_fail`, *errors.log_user_fail(user*
+                * **Step 1:** :func:`~pagemodel.fail(errors.Fail(errors.audit_log_is_empty)`, *errors.audit_log_is_empty*
+                * **Step 2:** :func:`~pagemodel.fail(errors.Fail(errors.string_is_not_dict + "\n" + self`, *errors.string_is_not_dict + "\n" + self.parse_log_file_tail(log_output*
+                * **Step 3:** :func:`~pagemodel.fail(errors.Fail(errors.log_event_fail`, *errors.log_event_fail(event*
+                * **Step 4:** :func:`~pagemodel.fail(errors.Fail(errors.log_user_fail`, *errors.log_user_fail(user*
         """
 
         # Sleep waiting log

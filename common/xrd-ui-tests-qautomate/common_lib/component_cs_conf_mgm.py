@@ -84,7 +84,7 @@ class Component_cs_conf_mgm(CommonUtils):
         *Updated: 11.07.2017*
 
         :param section:  Test data section name
-
+        
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.cs_conf_mgm_enter_pin.Cs_conf_mgm_enter_pin.input_text_to_id_activate_token_pin`, *self.parameters[section]*
                 * **Step 2:** :func:`~pagemodel.cs_conf_mgm_enter_pin.Cs_conf_mgm_enter_pin.click_button_ok`
@@ -103,7 +103,7 @@ class Component_cs_conf_mgm(CommonUtils):
         *Updated: 11.07.2017*
 
         :param section:  Test data section name
-
+        
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.cs_conf_mgm.Cs_conf_mgm.click_element_login`
                 * **Step 3:** :func:`~pagemodel.cs_conf_mgm.Cs_conf_mgm.click_element_ok_pin_login_button`

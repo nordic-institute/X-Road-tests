@@ -192,6 +192,7 @@ class Xroad_ss_server_management(SetupTest):
             * **Step 1: open security server for login add user name password**
                 * :func:`~common_lib.component_ss.Component_ss.login`, *u'ss1_url'*, *initial_conf=True*, *wait_for_jquery=False*
                 * :func:`~common_lib.component_ss.Component_ss.verify_login_fail`, *strings.login_restore_in_progress*
+                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *u'ss1_url'*, *strings.logout_user*
         """
         self.restore_backup_browser = self.common_utils.open_browser()
         self.component_ss.login(u'ss1_url')

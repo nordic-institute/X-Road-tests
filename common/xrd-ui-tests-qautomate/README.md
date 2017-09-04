@@ -1,7 +1,6 @@
-# xrd-mock-tests-qautomate
+# xrd-ui-tests-qautomate
 
-This folder contains X-Road SoapUI mock service and SoapUI testing client.
-
+This folder contains X-Road ui test made with qautomate framework.
 
 ## Folder structure
 
@@ -10,7 +9,7 @@ This folder contains X-Road SoapUI mock service and SoapUI testing client.
 * config > configuration files for qautomate project
 * data > xml test data
 * documentation > sphinx documentation source
-* measurements >
+* measurements > Performance test measurements
 * profile > test running profiles
 * scripts > scripts used during tests or development
 * tests > test cases

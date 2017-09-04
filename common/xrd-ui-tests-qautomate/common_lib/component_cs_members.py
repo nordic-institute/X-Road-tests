@@ -94,7 +94,7 @@ class Component_cs_members(CommonUtils):
 
         :param section:  Test data section name
         :param parameter:  Test data parameter name
-
+        
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.cs_members.Cs_members.click_element_from_table_members`, *self.parameters[section][parameter]*
                 * **Step 2:** :func:`~pagemodel.cs_members.Cs_members.click_button_member_action`
@@ -120,7 +120,7 @@ class Component_cs_members(CommonUtils):
         *Updated: 11.07.2017*
 
         :param section:  Test data section name
-
+        
         **Test steps:**
                 * **Step 2:** :func:`~pagemodel.cs_members_details_dlg.Cs_members_details_dlg.click_subsystems_tab`
                 * **Step 3:** :func:`~pagemodel.cs_members_subsystems_dlg.Cs_members_subsystems_dlg.click_button_add`
@@ -143,7 +143,7 @@ class Component_cs_members(CommonUtils):
         *Updated: 11.07.2017*
 
         :param section:  Test data section name
-
+        
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.cs_members.Cs_members.click_button_group_add_icon`
                 * **Step 2:** :func:`~pagemodel.cs_add_member_dlg.Cs_add_member_dlg.fill_input_add_member`, *self.parameters[section]*
@@ -175,7 +175,7 @@ class Component_cs_members(CommonUtils):
         *Updated: 11.07.2017*
 
         :param section:  Test data section name
-
+        
         **Test steps:**
                 * **Step 2:** :func:`~pagemodel.cs_members.Cs_members.wait_until_element_is_visible_member_name`
                 * **Step 3:** :func:`~pagemodel.cs_members.Cs_members.search_text_from_table_members`, *self.parameters[section]*
@@ -215,7 +215,7 @@ class Component_cs_members(CommonUtils):
         *Updated: 11.07.2017*
 
         :param section:  Test data section name
-
+        
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.cs_members.Cs_members.search_text_from_table_members`, *self.parameters[section]*
                 * **Step 2:** :func:`~pagemodel.cs_members.Cs_members.click_button_member_action`
@@ -261,7 +261,7 @@ class Component_cs_members(CommonUtils):
         *Updated: 11.07.2017*
 
         :param section:  Test data section name
-
+        
         **Test steps:**
                 * **Step 2:** :func:`~pagemodel.cs_members.Cs_members.wait_until_element_is_visible_member_name`
                 * **Step 3:** :func:`~pagemodel.cs_members.Cs_members.search_text_from_table_members`, *self.parameters[section]*
@@ -308,7 +308,7 @@ class Component_cs_members(CommonUtils):
 
         :param section:  Test data section name
         :param parameter:  Test data parameter name
-
+        
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.cs_members_details_dlg.Cs_members_details_dlg.click_subsystems_tab`
                 * **Step 2:** :func:`~pagemodel.cs_members_subsystems_dlg.Cs_members_subsystems_dlg.check_subsystem_is_red`, *self.parameters[section][parameter]*
@@ -328,7 +328,7 @@ class Component_cs_members(CommonUtils):
 
         :param section:  Test data section name
         :param parameter:  Test data parameter name
-
+        
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.cs_members.Cs_members.table_does_not_contain_member`, *self.parameters[section][parameter]*
         """
@@ -342,7 +342,7 @@ class Component_cs_members(CommonUtils):
 
         :param section:  Test data section name
         :param parameter:  Test data parameter name
-
+        
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.cs_members.Cs_members.table_contains_member`, *self.parameters[section][parameter]*
         """

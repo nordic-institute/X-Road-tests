@@ -95,28 +95,28 @@ class Ss_keys_and_cert(CommonUtils):
     def click_generated_key_request(self, text=u'ta_generated_key_sign'):
         """
         Click generate key in generated keys table with given text
-        
+
         :param text:  String value for text
-        
+
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         self.wait_until_jquery_ajax_loaded()
-        print "finding key"
+        print("finding key")
         element_rowtable = self.get_table_column_and_row_by_text(self.ID_KEYS, "Key: " + text + " (?)","TBODY/TR","TD")
         #Key: ta_generated_key_sign (?)
-        print element_rowtable[0]
+        print(element_rowtable[0])
         sleep(0.5)
         element_rowtable[0].click()
         #element_rowtable[0].find_element(By.XPATH, u'//span[contains(text(),"?")]').click()
-        print "ELEMENT SELECTED"
+        print("ELEMENT SELECTED")
         #element_rowtable[0].find_element(By.CSS_SELECTOR, '.fa-info').click_element()
         sleep(3)
 
     def click_delete_cert(self):
         """
         Click button to delete certification
-        
+
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_DELETE*
         """
@@ -136,19 +136,19 @@ class Ss_keys_and_cert(CommonUtils):
         Click generate key in generated keys table with given text
 
         :param text:  String value for text
-        
+
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         self.wait_until_jquery_ajax_loaded()
-        print "finding request key"
+        print("finding request key")
         sleep(2)
         search_key_string = "Key: " + text + " (sign)"
         element_rowtable = self.get_table_column_and_row_by_text(self.ID_KEYS, search_key_string,"TBODY/TR","TD")
         sleep(0.5)
         #element_rowtable[0].click_element()
         element_rowtable[0].click()
-        print "ELEMENT SELECTED"
+        print("ELEMENT SELECTED")
         #element_rowtable[0].find_element(By.CSS_SELECTOR, '.fa-info').click_element()
         sleep(4)
 
@@ -164,9 +164,9 @@ class Ss_keys_and_cert(CommonUtils):
     def delete_imported_cert_key(self, parameters=None):
         """
         Click button to delete imported certificate key
-        
+
         :param parameters:  Test data section dictionary
-        
+
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_element_is_enabled`, *self.ID_DELETE*
             * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_DELETE*
@@ -198,17 +198,17 @@ class Ss_keys_and_cert(CommonUtils):
         row_cert_key = int(elem_table[2]) - 2
 
         if self.get_table_cell_text_by_column_and_row(self.ID_KEYS, str(cell_cert_details), str(row_cert_details)) == find_word:
-            print "Succesfully imported certificate"
+            print("Succesfully imported certificate")
         if self.get_table_cell_text_by_column_and_row(self.ID_KEYS, str(cell_cert_oscp), str(row_cert_details)) in  ["good", "revoked"]:
-            print "OSCP response ok"
+            print("OSCP response ok")
         if self.get_table_cell_text_by_column_and_row(self.ID_KEYS, str(cell_cert_register), str(row_cert_details)) in ["registered"]:
-            print "Registered ok"
+            print("Registered ok")
 
         cert_key = self.get_table_cell_text_by_column_and_row(self.ID_KEYS, str(cell_cert_details), str(row_cert_key))
         # Find key for registered cert
-        print cert_key
+        print(cert_key)
         if "Key" in cert_key:
-            print "Find cert key"
+            print("Find cert key")
             return cert_key
 
     def wait_until_cert_req_active(self):
@@ -223,9 +223,9 @@ class Ss_keys_and_cert(CommonUtils):
     def register_auth_cert(self, text=None):
         """
         Click authentication in table and then click button to register it
-        
+
         :param text:  String value for text
-        
+
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_element_is_enabled`, *self.ID_REGISTER*
             * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_REGISTER*
@@ -256,18 +256,18 @@ class Ss_keys_and_cert(CommonUtils):
         row_cert_key = int(elem_table[2]) - 2
 
         if self.get_table_cell_text_by_column_and_row(self.ID_KEYS, str(cell_cert_details), str(row_cert_details)) == find_word:
-            print "Succesfully imported certificate"
+            print("Succesfully imported certificate")
         if self.get_table_cell_text_by_column_and_row(self.ID_KEYS, str(cell_cert_oscp), str(row_cert_details)) in  ["disabled"]:
-            print "Disabled ok"
+            print("Disabled ok")
         if self.get_table_cell_text_by_column_and_row(self.ID_KEYS, str(cell_cert_register), str(row_cert_details)) in ["saved"]:
-            print "Saved ok"
+            print("Saved ok")
 
         cert_key = self.get_table_cell_text_by_column_and_row(self.ID_KEYS, str(cell_cert_details), str(row_cert_key))
 
         # Find key for registered cert
-        print cert_key
+        print(cert_key)
         if "Key" in cert_key:
-            print "Find cert key"
+            print("Find cert key")
             return cert_key
 
     def click_cert_activate(self):

@@ -63,7 +63,6 @@ class Component_ss_keys_and_certs(CommonUtils):
                 * **Step 5:** :func:`~pagemodel.ss_keys_and_cert.Ss_keys_and_cert.wait_until_cert_req_active`
                 * **Step 6:** :func:`~pagemodel.ss_keys_and_cert.Ss_keys_and_cert.click_generated_key_request`, *text*
         """
-        print text
         self.ss_keys_and_cert.verify_keys_and_cert_title()
         self.ss_keys_and_cert.click_soft_token()
         self.ss_keys_and_cert.click_generate_key()
@@ -79,7 +78,7 @@ class Component_ss_keys_and_certs(CommonUtils):
         *Updated: 11.07.2017*
 
         :param section:  Test data section name
-        
+
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.ss_keys_and_cert.Ss_keys_and_cert.click_generate_certificate_request`
                 * **Step 2:** :func:`~pagemodel.ss_keys_and_cert_generate_csr.Ss_keys_and_cert_generate_csr.fill_input_values_keys_csr_sign`, *self.parameters[section]*
@@ -100,7 +99,7 @@ class Component_ss_keys_and_certs(CommonUtils):
         *Updated: 11.07.2017*
 
         :param section:  Test data section name
-        
+
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.ss_keys_and_cert.Ss_keys_and_cert.click_generate_certificate_request`
                 * **Step 2:** :func:`~pagemodel.ss_keys_and_cert_generate_csr.Ss_keys_and_cert_generate_csr.fill_input_values_keys_csr_auth`
@@ -121,7 +120,7 @@ class Component_ss_keys_and_certs(CommonUtils):
         *Updated: 11.07.2017*
 
         :param value_string:  String value
-        
+
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.ss_keys_and_cert.Ss_keys_and_cert.click_import_cert`
                 * **Step 2:** :func:`~pagemodel.ss_keys_and_cert_dlg_import_cert.Ss_keys_and_cert_dlg_import_cert.verify_title_file_dlg`
@@ -142,10 +141,10 @@ class Component_ss_keys_and_certs(CommonUtils):
 
         *Updated: 11.07.2017*
         '
-        
+
         :param value_string:  String value
         :param section:  Test data section name
-        
+
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.ss_keys_and_cert.Ss_keys_and_cert.register_auth_cert`, *value_string*
                 * **Step 2:** :func:`~pagemodel.ss_keys_and_cert_dlg_registration_req.Ss_keys_and_cert_dlg_registration_req.input_text_to_server_address`, *self.parameters[section]*
@@ -161,9 +160,9 @@ class Component_ss_keys_and_certs(CommonUtils):
         Activate token and inster pin code if needed
 
         *Updated: 11.07.2017*
-        
+
         :param section:  Test data section name
-        
+
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.ss_softoken_enter_pin.Ss_softoken_enter_pin.click_button_activate_token_enter_pin`
                 * **Step 2:** :func:`~pagemodel.ss_enter_pin_dlg.Ss_enter_pin_dlg.input_text_to_id_activate_token_pin`, *self.parameters[section]*
@@ -176,7 +175,7 @@ class Component_ss_keys_and_certs(CommonUtils):
             self.ss_enter_pin_dlg.input_text_to_id_activate_token_pin(self.parameters[section])
             self.ss_enter_pin_dlg.click_button_ok()
         except:
-            print "Pin code query not prompted this time"
+            print("Pin code query not prompted this time")
         self.ss_softoken_enter_pin.wait_until_softoken_pin_query_is_not_visible()
 
     def make_cert_file_upload(self, parameters="sign"):
@@ -186,16 +185,16 @@ class Component_ss_keys_and_certs(CommonUtils):
         *Updated: 11.07.2017*
 
         :param parameters:  Test data section dictionary
-        
+
         **Test steps:**
                 * **Step 1:** :func:`~common_lib.common_lib.Common_lib.type_file_name_pyautogui`, *str(type_string*
         """
         sleep(6)
         path = os.getcwd() + "/scripts/" + parameters + "-cert_automation.der"
-        print path
+        print(path)
         type_string = path
         self.common_lib.type_file_name_pyautogui(str(type_string))
-        print "done upload"
+        print("done upload")
         sleep(2)
 
     def verify_key_and_sign_certificate_sign(self, section=u'paths'):
@@ -205,13 +204,13 @@ class Component_ss_keys_and_certs(CommonUtils):
         *Updated: 11.07.2017*
 
         :param section:  Test data section name
-        
+
         **Test steps:**
                 * **Step 1:** :func:`~common_lib.common_lib.Common_lib.copy_and_sign_cert_request`, *self.parameters[section]*
                 * **Step 2:** :func:`~pagemodel.fail(errors.Fail(errors.could_not_verify_certificate)`, *errors.could_not_verify_certificate*
         """
         if self.common_lib.verify_cert_request(self.parameters[section]):
-            print "cert sign ok"
+            print("cert sign ok")
             self.common_lib.copy_and_sign_cert_request(self.parameters[section])
         else:
             self.fail(errors.could_not_verify_certificate)
@@ -221,15 +220,15 @@ class Component_ss_keys_and_certs(CommonUtils):
         Verify key and sign certificate authentication
 
         *Updated: 11.07.2017*
-        
+
         :param section:  Test data section name
-        
+
         **Test steps:**
                 * **Step 1:** :func:`~common_lib.common_lib.Common_lib.copy_and_auth_cert_request`, *self.parameters[section]*
                 * **Step 2:** :func:`~pagemodel.fail(errors.Fail(errors.could_not_verify_certificate)`, *errors.could_not_verify_certificate*
         """
         if self.common_lib.verify_cert_request(self.parameters[section]):
-            print "cert auth ok"
+            print("cert auth ok")
             self.common_lib.copy_and_auth_cert_request(self.parameters[section])
         else:
             self.fail(errors.could_not_verify_certificate)
@@ -241,12 +240,12 @@ class Component_ss_keys_and_certs(CommonUtils):
         *Updated: 11.07.2017*
 
         :param section:  Test data section name
-        
+
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.fail(errors.Fail(errors.could_not_verify_certificate)`, *errors.could_not_verify_certificate*
         """
         if self.common_lib.verify_cert_request(self.parameters[section]):
-            print "cert ok"
+            print("cert ok")
         else:
             self.fail(errors.could_not_verify_certificate)
 
@@ -268,7 +267,7 @@ class Component_ss_keys_and_certs(CommonUtils):
         *Updated: 11.07.2017*
 
         :param text:  String value for text
-        
+
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.ss_keys_and_cert.Ss_keys_and_cert.click_generated_key_request_to_signed_label`, *text*
                 * **Step 2:** :func:`~pagemodel.ss_keys_and_cert.Ss_keys_and_cert.click_delete_cert`

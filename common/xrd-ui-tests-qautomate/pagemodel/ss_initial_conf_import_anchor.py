@@ -69,11 +69,11 @@ class Ss_initial_conf_import_anchor(CommonUtils):
         import os
         import glob
         newest_anchor = max(glob.iglob(parameters[u'downloads_folder'] + '*.xml'), key=os.path.getctime)
-        print newest_anchor
+        print(newest_anchor)
         file_name = newest_anchor
         type_string = file_name
         self.common_lib.type_file_name_pyautogui(type_string)
-        print "done upload"
+        print("done upload")
         sleep(2)
         enable_import = '$("#anchor_upload_submit").enable();'
         enable_import_js = "document.getElementById('anchor_upload_submit').removeAttribute('disabled');"

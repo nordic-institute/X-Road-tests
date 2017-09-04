@@ -117,7 +117,7 @@ class Xroad_deletion_of_registered_object(BaseTest):
                 * :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *self.parameters[u'ss1_url']['url']*
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
         """
-        print "tearDown"
+        print("tearDown")
         stop_log_time = self.common_lib.get_log_utc_time()
         if not self.is_last_test_passed():
             _, copy_log = self.get_log_file_paths()
@@ -129,7 +129,7 @@ class Xroad_deletion_of_registered_object(BaseTest):
         error = ""
 
         if self.restore_cs:
-            print "tearDown_restore_cs"
+            print("tearDown_restore_cs")
             try:
                 # Step Restore central server backup in central server
                 self.common_utils.open_url(self.parameters[u'cs_url']['url'])
@@ -140,7 +140,7 @@ class Xroad_deletion_of_registered_object(BaseTest):
                 try:
                     self.component_cs_conf_mgm.insert_pin_from_login_button(u'cs_url')
                 except:
-                    print "Pin not needed?"
+                    print("Pin not needed?")
 
                 # Step Verify member found in members table in central server
                 self.component_cs_sidebar.open_members_view()
@@ -151,14 +151,14 @@ class Xroad_deletion_of_registered_object(BaseTest):
                 self.component_cs_sec_servers.verify_servers_does_contain_server(u'member1_configuration', u'member_name')
             except Exception as e:
                 error = "\n" + str(e)
-                print error
+                print(error)
 
             # Step Log out from central server
             self.common_utils.open_url(self.parameters[u'cs_url']['url'])
             self.common_lib.log_out()
 
         if self.restore_ss:
-            print "tearDown_restore_ss"
+            print("tearDown_restore_ss")
             try:
                 # Step Restore security server in security server
                 self.common_utils.open_url(self.parameters[u'ss1_url']['url'])
@@ -175,16 +175,15 @@ class Xroad_deletion_of_registered_object(BaseTest):
                 self.component_cs_sec_servers.verify_table_contains_subsystem(u'member1_configuration')
             except Exception as e:
                 error = "\n" + str(e)
-                print error
+                print(error)
 
             # Step Log out from security
             self.common_utils.open_url(self.parameters[u'ss1_url']['url'])
             self.common_lib.log_out()
-        print "END"
+        print("END")
 
         if error:
-            print error
-            #self.fail(error)
+            print(error)
 
     def test_deletion_of_the_owner_of_ss_from_cs(self):
         """

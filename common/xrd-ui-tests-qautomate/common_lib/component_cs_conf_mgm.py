@@ -82,9 +82,9 @@ class Component_cs_conf_mgm(CommonUtils):
         Try inserting pin code to token in central server
 
         *Updated: 11.07.2017*
-        
+
         :param section:  Test data section name
-        
+
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.cs_conf_mgm_enter_pin.Cs_conf_mgm_enter_pin.input_text_to_id_activate_token_pin`, *self.parameters[section]*
                 * **Step 2:** :func:`~pagemodel.cs_conf_mgm_enter_pin.Cs_conf_mgm_enter_pin.click_button_ok`
@@ -94,16 +94,16 @@ class Component_cs_conf_mgm(CommonUtils):
             self.cs_conf_mgm_enter_pin.input_text_to_id_activate_token_pin(self.parameters[section])
             self.cs_conf_mgm_enter_pin.click_button_ok()
         except:
-            print "Pin code query not prompted this time"
+            print("Pin code query not prompted this time")
 
     def insert_pin_from_login_button(self, section=u'cs_url'):
         """
         Login to token in central server
 
         *Updated: 11.07.2017*
-        
+
         :param section:  Test data section name
-        
+
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.cs_conf_mgm.Cs_conf_mgm.click_element_login`
                 * **Step 3:** :func:`~pagemodel.cs_conf_mgm.Cs_conf_mgm.click_element_ok_pin_login_button`
@@ -117,7 +117,7 @@ class Component_cs_conf_mgm(CommonUtils):
         Verify external configuration view
 
         *Updated: 11.07.2017*
-        
+
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.cs_conf_mgm.Cs_conf_mgm.click_link_external_configuration`
                 * **Step 2:** :func:`~pagemodel.cs_conf_mgm.Cs_conf_mgm.verify_hash_value_is_visible`
@@ -172,7 +172,7 @@ class Component_cs_conf_mgm(CommonUtils):
         Logout signing key
 
         *Updated: 11.07.2017*
-        
+
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.cs_conf_mgm.Cs_conf_mgm.click_button_logout`
         """

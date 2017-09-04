@@ -67,7 +67,7 @@ class Component_ss_clients(CommonUtils):
         except:
             sleep(5)
             self.reload_page()
-            print "jquery is not regocnized"
+            print("jquery is not regocnized")
             sleep(15)
 
     def add_from_search_existing_client_in_ss(self, section=u'member_mgm_configuration'):
@@ -77,7 +77,7 @@ class Component_ss_clients(CommonUtils):
         *Updated: 11.07.2017*
 
         :param section:  Test data section name
-        
+
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.ss_clients.Ss_clients.click_client_add_subsystem_server`
                 * **Step 2:** :func:`~pagemodel.ss_clients_add_client.Ss_clients_add_client.click_element_id_client_select`
@@ -100,7 +100,7 @@ class Component_ss_clients(CommonUtils):
         *Updated: 11.07.2017*
 
         :param section:  Test data section name
-        
+
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.ss_clients.Ss_clients.find_and_open_by_text_dlg_by_subsystem_code`, *self.parameters[section]*
                 * **Step 2:** :func:`~pagemodel.ss_clients_dlg_services.Ss_clients_dlg_services.verify_client_dlg_open`
@@ -116,7 +116,7 @@ class Component_ss_clients(CommonUtils):
         *Updated: 11.07.2017*
 
         :param section:  Test data section name
-        
+
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.ss_clients.Ss_clients.click_and_open_details_of_client_in_table`, *self.parameters[section]*
                 * **Step 2:** :func:`~pagemodel.ss_clients_dlg_services.Ss_clients_dlg_services.verify_client_dlg_open`

@@ -136,8 +136,7 @@ class Xroad_test_service(BaseTest):
             sleep(1)
             self.common_lib.log_out()
         except:
-            print "Error in teardown"
-            pass
+            print("Error in teardown")
 
     def test_add_and_registering_new_subsystem_and_service_1(self):
         """

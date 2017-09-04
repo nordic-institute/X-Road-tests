@@ -128,8 +128,7 @@ class Xroad_ss_server_management(SetupTest):
             self.common_lib.log_out()
 
         if error:
-            print error
-            #self.fail(error)
+            print(error)
 
     def test_login_and_logout_ss_gui(self):
         """

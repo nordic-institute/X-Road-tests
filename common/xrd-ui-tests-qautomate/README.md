@@ -1,4 +1,4 @@
-# xrd-mock-soapui
+# xrd-mock-tests-qautomate
 
 This folder contains X-Road SoapUI mock service and SoapUI testing client.
 

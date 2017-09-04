@@ -219,7 +219,7 @@ class Xroad_keys_and_certs(SetupTest):
 
         cert_key = cert_key.split(": ")[-1]
         cert_key = cert_key.split(" ")[0]
-        print cert_key
+        print(cert_key)
         # Step Click delete cert confirm key #Webpage: ss_keys_and_cert_dlg_delete
         self.ss_keys_and_cert_dlg_delete.click_delete_cert_confirm(strings.sign_key_label_2)
         self.common_lib.revoke_cert(self.parameters[u'paths'])
@@ -341,7 +341,7 @@ class Xroad_keys_and_certs(SetupTest):
         self.ss_keys_and_cert.delete_imported_cert_key(cert_key)
         cert_key = cert_key.split(": ")[-1]
         cert_key = cert_key.split(" ")[0]
-        print cert_key
+        print(cert_key)
         # Step Click unregister and delete cert confirm #Webpage: ss_keys_and_cert_dlg_delete #Parameters: certificate_auth
         self.ss_keys_and_cert_dlg_delete.click_unregister_and_delete_cert_confirm(strings.auth_key_label_2)
         # Step Revoke cert

@@ -56,9 +56,9 @@ class Component_cs_cert_services(CommonUtils):
         type_string = os.path.join(os.getcwd(),
                                    self.parameters[section1][u'data_folder'],
                                    self.parameters[section2][u'ca_cert_file_name'])
-        print type_string
+        print(type_string)
         self.common_lib.type_file_name_pyautogui(type_string)
-        print "done upload"
+        print("done upload")
         sleep(2)
 
     def add_certification_service_and_upload_ca_root_to_cs(self, section1=u'paths', section2=u'cs_url', section3=u'server_environment'):
@@ -66,11 +66,11 @@ class Component_cs_cert_services(CommonUtils):
         Add certification service and upload ca root to central server
 
         *Updated: 11.07.2017*
-        
+
         :param section1:  Test data section name
         :param section2:  Test data section name
         :param section3:  Test data section name
-        
+
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.cs_cert_services.Cs_cert_services.click_button_id_ca_add`
                 * **Step 2:** :func:`~pagemodel.cs_cert_services_insert_service_ca_cert.Cs_cert_services_insert_service_ca_cert.click_button_browse`
@@ -92,9 +92,9 @@ class Component_cs_cert_services(CommonUtils):
         Add new oscp responder
 
         *Updated: 11.07.2017*
-        
+
         :param section:  Test data section name
-        
+
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.cs_cert_services.Cs_cert_services.click_trusted_cert_table_first_row`
                 * **Step 2:** :func:`~pagemodel.cs_cert_services.Cs_cert_services.click_button_id_ca_details`

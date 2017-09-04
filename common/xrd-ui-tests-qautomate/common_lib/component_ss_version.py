@@ -38,4 +38,4 @@ class Component_ss_version(CommonUtils):
                 * **Step 1:** :func:`~pagemodel.ss_version.Ss_version.verify_version_text`, *text*
         """
         self.ss_version.verify_version_text(text)
-        print "Version text contains '{}'".format(text)
+        print("Version text contains '{}'".format(text))

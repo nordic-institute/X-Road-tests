@@ -146,7 +146,7 @@ class Lxd_help_scripts(SetupTest):
         try:
             self.component_cs_conf_mgm.insert_pin_from_login_button(u'cs_url')
         except:
-            print "Pin not needed?"
+            print("Pin not needed?")
 
         self.common_utils.open_url(self.parameters[u'ss_mgm_url']['url'])
         self.component_ss_sidebar.open_keys_and_certs_view()

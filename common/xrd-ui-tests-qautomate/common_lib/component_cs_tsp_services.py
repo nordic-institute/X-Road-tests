@@ -48,9 +48,9 @@ class Component_cs_tsp_services(CommonUtils):
         type_string = os.path.join(os.getcwd(),
                                    self.parameters[section1][u'data_folder'],
                                    self.parameters[section2][u'tsa_cert_file_name'])
-        print type_string
+        print(type_string)
         self.common_lib.type_file_name_pyautogui(type_string)
-        print "done upload"
+        print("done upload")
         sleep(2)
 
     def add_timestamping_service_to_cs(self, section1=u'paths', section2=u'cs_url'):
@@ -61,7 +61,7 @@ class Component_cs_tsp_services(CommonUtils):
 
         :param section1:  Test data section name
         :param section2:  Test data section name
-        
+
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.cs_time_stamping_services.Cs_time_stamping_services.click_button_id_tsp_add`
                 * **Step 2:** :func:`~pagemodel.cs_time_stamping_services_add_dlg.Cs_time_stamping_services_add_dlg.input_text_to_id_tsp_url`, *self.parameters[section2]*

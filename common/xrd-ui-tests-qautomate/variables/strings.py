@@ -79,7 +79,7 @@ def generate_subject_name(section=u'member1_configuration'):
     member_code = parameters[section][u'member_code']
     instance_identifier = parameters[section][u'instance_identifier']
     subject_name_string = u'C=FI, O={}, CN={}, serialNumber={}/'.format(member_name, member_code, instance_identifier)
-    print subject_name_string
+    print(subject_name_string)
     return subject_name_string
 
 
@@ -88,7 +88,7 @@ def generate_member_id_short(parameters=None):
     member_class = parameters[u'member_class']
     member_code = parameters[u'member_code']
     member_id_short = u'{}:{}:{}:*'.format(instance_identifier, member_class, member_code)
-    print member_id_short
+    print(member_id_short)
     return member_id_short
 
 

@@ -557,7 +557,7 @@ class Xroad_install_ui_configuration(SetupTest):
         self.component_ss_clients.add_from_search_existing_client_in_ss(u'member_mgm_configuration')
         sleep(2)
         self.common_lib.log_out()
-        print "waiting while"
+        print("waiting while")
         sleep(30)
 
         # Step Add WSDL service to security server subsystem
@@ -681,7 +681,7 @@ class Xroad_install_ui_configuration(SetupTest):
         self.component_cs_conf_mgm.download_source_anchor_from_cs()
         self.common_lib.log_out()
 
-        print "Waiting server sync time that member name can be found on security server"
+        print("Waiting server sync time that member name can be found on security server")
         sleep(41)
 
         # Step Import configuration anchor to security server
@@ -861,7 +861,7 @@ class Xroad_install_ui_configuration(SetupTest):
         self.component_cs_conf_mgm.download_source_anchor_from_cs()
         self.common_lib.log_out()
 
-        print "Waiting server sync time that member name can be found on security server"
+        print("Waiting server sync time that member name can be found on security server")
         sleep(40)
 
         # Step Import configuration anchor to security server

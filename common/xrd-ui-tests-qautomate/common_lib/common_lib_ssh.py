@@ -51,7 +51,7 @@ class Common_lib_ssh(CommonUtils):
             for line in log_content:
                 if "] ERROR" in line.upper():
                     has_error = True
-                    print log_file_name + ": " + line
+                    print(log_file_name + ": " + line)
                     error_log_file.write(log_file_name + ": " + line)
                 elif ".EXCEPTION" in line.upper():
                     has_error = True
@@ -67,7 +67,7 @@ class Common_lib_ssh(CommonUtils):
         for log_file in strings.ss_all_logs:
             log_file_name = log_file.split("/")[-1]
             copy_location = copy_location.split("error_logs.txt")[0]
-            print copy_location
+            print(copy_location)
             try:
                 if not os.path.exists(copy_location):
                     os.makedirs(copy_location)
@@ -104,7 +104,7 @@ class Common_lib_ssh(CommonUtils):
             server = server.split(".lxd")[0]
             formated_command = "lxc file pull {}{} " + self.run_folder + "/{} || true"
         elif strings.server_environment_type() == strings.ssh_type_environment:
-            print self.run_folder
+            print(self.run_folder)
             formated_command = "ssh {} sudo cat {} > " + self.run_folder + "/{} || true"
         else:
             raise Exception(errors.enviroment_type_not_valid)
@@ -118,7 +118,7 @@ class Common_lib_ssh(CommonUtils):
 
         """
         if to_print:
-            print command
+            print(command)
         p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         output, com_errors = p.communicate()
         if com_errors:
@@ -154,7 +154,7 @@ class Common_lib_ssh(CommonUtils):
         Verify audit log file in server.
 
         :param section:  Test data section name
-        
+
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.fail(errors.Fail(errors.string_is_not_dict + "\n" + self`, *errors.string_is_not_dict + "\n" + self.parse_log_file_tail(log_output*
                 * **Step 2:** :func:`~pagemodel.fail(errors.Fail(errors.log_event_fail`, *errors.log_event_fail(event*
@@ -170,14 +170,14 @@ class Common_lib_ssh(CommonUtils):
 
         # Prints full log string
         newest_log_string = self.parse_log_file_tail(log_output, row_count=1)
-        print newest_log_string
+        print(newest_log_string)
         newest_log = newest_log_string[newest_log_string.find("{"):]
-        print newest_log
+        print(newest_log)
         if not newest_log:
             self.fail(errors.audit_log_is_empty)
         newest_log = eval(newest_log, {"null":None})
-        print "Log event:", newest_log["event"]
-        print "Log user:", newest_log["user"]
+        print("Log event:", newest_log["event"])
+        print("Log user:", newest_log["user"])
         if not isinstance(newest_log, dict):
             self.fail(errors.string_is_not_dict + "\n" + self.parse_log_file_tail(log_output))
         if not event == newest_log["event"]:
@@ -192,10 +192,10 @@ class Common_lib_ssh(CommonUtils):
         """
         server_log_address = self.parameters[section][u'server_address']
         try:
-            print "GETTING ALL LOGS"
+            print("GETTING ALL LOGS")
             log_output = self.collect_server_log_files(server_log_address)
         except Exception as e:
-            print "Could not read all log file" + str(e)
+            print("Could not read all log file" + str(e))
 
     def empty_all_logs_from_server(self, section):
         """
@@ -205,4 +205,4 @@ class Common_lib_ssh(CommonUtils):
         try:
             log_output = self.empty_server_log_files(server_log_address)
         except Exception as e:
-            print "Could not read all log file" + str(e)
+            print("Could not read all log file" + str(e))

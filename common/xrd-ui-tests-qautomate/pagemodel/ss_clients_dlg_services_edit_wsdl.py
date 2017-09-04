@@ -60,9 +60,9 @@ class Ss_clients_dlg_services_edit_wsdl(CommonUtils):
 
     def fill_service_parameters(self, parameters=None):
         """
-        
+
         :param parameters:  Test data section dictionary
-        
+
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.input_text`, *self.ID_PARAMS_URL*, *changed_http_in_url*
             * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.select_checkbox`, *self.ID_PARAMS_URL_ALL*, *parameters[u'params_url_all']*
@@ -83,8 +83,7 @@ class Ss_clients_dlg_services_edit_wsdl(CommonUtils):
         try:
             self.select_checkbox(self.ID_PARAMS_SSLAUTH, parameters[u'params_sslauth'])
         except:
-            print "Could not set sslauth to checkin"
-            pass
+            print("Could not set sslauth to checkin")
         #self.select_checkbox(self.ID_PARAMS_SSLAUTH_ALL, parameters[u'params_sslauth_all'])
 
     def click_ok_service_parameters(self):

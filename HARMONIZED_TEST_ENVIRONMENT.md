@@ -1,8 +1,9 @@
 Harmonized Xroad test environment
 ===================
 
-- Common test development environment to Finland and Estonia
+- LXD based common test development environment to Finland and Estonia
 	- Includes servers: CA, CENTRAL SERVER, MANAGEMENT SECURITY SERVER, SECURITY SERVERS
+	    - https://github.com/ria-ee/X-Road/tree/develop/ansible
 - Can be used for testing:
 	- UI and integrations, SOAP testing, Service testing and Service mocks
 	- Not for performance testing!
@@ -11,19 +12,18 @@ Harmonized Xroad test environment
 		- Re-usable tests
 	- Test can be easily imported to own specific environment from LXD
 	- Jenkins jobs are generated and we have harmonized test data in different test environments
-	- LXD will easy up environment settings work
-		->Harmonised test environments setups and SOAP  testing
+	- Less work settings up environment in LXD
 
-Repositories to Xroad test development
+Repositories to X-Road test development
 -------------
-- Xroad test development repositoryInstall oracle-virtualbox or use ubuntu16.04 Virtualbox
+- X-Road test development repository
 	- https://github.com/ria-ee/X-Road-tests
-- LXD environment ansible scripts
+- LXD environment Ansible scripts
 	- https://github.com/vrk-kpa/X-Road
-- Xroad lxd test environment configs and sensitive data repository
+- X-Road LXD test environment configs and sensitive data repository
 	- https://github.com/vrk-kpa/xroad-utils
 
-**Xroad shared repository folder structure**
+**X-Road shared repository folder structure**
 
 ```
 common
@@ -39,9 +39,9 @@ common
 	xrd-gatling-tests
 ```
 
-Xroad-tests naming conventions
+X-Road-tests naming conventions
 -------------
-- Xroad server naming conventions
+- X-Road server naming conventions
 ```
 MEMBER_NAMES= MemberMGM, Member1, Member2, Member3
 MEMBER_CODE=00000000,00000001,00000002, 00000003,
@@ -55,7 +55,7 @@ PASSWORD=secret
 
 KEY_NAMES=xrd-automation-key-auth, xrd-automation-key-sign, or xrd-automation-key-sign-123
 ```
-- Ansible script use ”xroad”, ”Xroad” or ”XROAD”...just avoid country specific things
+- In Ansible scripts avoid using country specific terms e.g. Palveluväylä or X-Tee and use generic X-Road instead
 
 - Jenkins test set job names:
 ```

@@ -1,20 +1,20 @@
-Harmonized Xroad test environment
+Harmonized X-road test environment
 ===================
 
 - LXD based common test development environment to Finland and Estonia
 	- Includes servers: CA, CENTRAL SERVER, MANAGEMENT SECURITY SERVER, SECURITY SERVERS
 	    - https://github.com/ria-ee/X-Road/tree/develop/ansible
 - Can be used for testing:
-	- UI and integrations, SOAP testing, Service testing and Service mocks
+	- UI and integrations, SOAP testing, service testing and Service mocks
 	- Not for performance testing!
 - Benefits:
-	- Tests are compatible in Estonia and Finland common test environments
+	- Tests are compatible between Estonia and Finland common test environments
 		- Re-usable tests
 	- Test can be easily imported to own specific environment from LXD
 	- Jenkins jobs are generated and we have harmonized test data in different test environments
 	- Less work settings up environment in LXD
 
-Repositories to X-Road test development
+X-Road test development repositories
 -------------
 - X-Road test development repository
 	- https://github.com/ria-ee/X-Road-tests

@@ -60,4 +60,6 @@ class UserInputParse(unittest.TestCase):
         test_func = parse_user_input_SS_41.test_11()
         test_func(main)
 
+        test_func = parse_user_input_SS_41.test_12()
+        test_func(main)
         main.tearDown()

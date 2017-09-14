@@ -33,6 +33,7 @@ def split_xroad_member(xroad_id, member_type='MEMBER'):
 def split_xroad_subsystem(xroad_id, member_type='SUBSYSTEM'):
     return split_xroad_id(xroad_id=xroad_id, type=member_type)
 
+
 def get_service_name(service):
     '''
     Returns service part of string service.version
@@ -40,6 +41,7 @@ def get_service_name(service):
     :return: str - service name
     '''
     return service.split('.')[0]
+
 
 def get_service_version(service):
     '''
@@ -109,3 +111,16 @@ def fill_upload_input(self, upload_button_element, local_path):
 
     # Restore classes.
     self.js('arguments[0].setAttribute("class", arguments[1]);', upload_button_element, file_input_container_classes)
+
+
+def get_xroad_path(client, client_type=None):
+    '''
+    Returns an X-Road path. Example: SUBSYSTEM:CS1/COM/CLIENT1/sub
+    :param client: dict - client data
+    :param client_type: str|None - if set, used as client type; otherwise the type is extracted from client parameter
+    :return: str - X-Road path
+    '''
+    if client_type is not None:
+        client['type'] = client_type
+    return '{0}:{1}/{2}/{3}/{4}'.format(client['type'], client['instance'], client['class'], client['code'],
+                                         client['subsystem'])

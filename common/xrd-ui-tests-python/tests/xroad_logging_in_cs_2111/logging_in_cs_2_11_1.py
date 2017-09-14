@@ -15,9 +15,12 @@ PASSWORD = 'password'
 test_name = 'LOGGING IN CENTRAL SERVER'
 
 
-def test_test(ssh_host, ssh_username, ssh_password, users, client_id, client_name, client_name2, group, server_id):
+def test_test(ssh_host, ssh_username, ssh_password, users, client_id, client_name, client_name2, group, server_id,
+              existing_client_id, existing_client_name):
     '''
     MainController test function. Tests maintentance actions and logging in central server.
+    :param existing_client_name:  str - existing client name
+    :param existing_client_id: str - existing client id
     :param ssh_host: str - SSH server hostname
     :param ssh_username: str - SSH username
     :param ssh_password: str - SSH password
@@ -45,6 +48,9 @@ def test_test(ssh_host, ssh_username, ssh_password, users, client_id, client_nam
         client['name'] = client_name
         client['name2'] = client_name2
 
+        existing_client = xroad.split_xroad_subsystem(existing_client_id)
+        existing_client['name'] = existing_client_name
+
         # Create SSH session
         ssh_client = ssh_server_actions.get_client(ssh_host, ssh_username, ssh_password)
         self.log('Adding users to system')
@@ -62,7 +68,8 @@ def test_test(ssh_host, ssh_username, ssh_password, users, client_id, client_nam
 
             # TEST PLAN 2.11.1-2 adding new member to central server
             self.log('2.11.1-2 adding new member to central server')
-            add_member_to_cs(self, ssh_client, user, member=client)
+            add_member_to_cs(self, ssh_client, user, member=client, existing_client=existing_client,
+                             with_extensions=True)
 
             # TEST PLAN 2.11.1-3 adding new subsystem to the member
             self.log('2.11.1-3 adding new subsystem to the member')
@@ -79,7 +86,7 @@ def test_test(ssh_host, ssh_username, ssh_password, users, client_id, client_nam
 
             # TEST PLAN 2.11.1-7, 2.11.1-8 add new group (failure and success test)
             self.log('2.11.1-7, 2.11.1-8 add new group (failure and success test)')
-            add_group(self, ssh_client, user, group)
+            add_group(self, ssh_client, user, group, try_empty=True)
 
             # TEST PLAN 2.11.1-9 add the new subsystem to the new group
             self.log('2.11.1-9 add the subsystem to the new group')
@@ -102,7 +109,7 @@ def test_test(ssh_host, ssh_username, ssh_password, users, client_id, client_nam
 
             # TEST PLAN 2.11.1-13 delete the member from central server
             self.log('2.11.1-13 delete the member from central server')
-            delete_client(self, ssh_client, user, member=client)
+            delete_client(self, ssh_client, user, member=client, cancel_deletion=True)
 
             # TEST PLAN 2.11.1-14 checks are done in the corresponding functions.
         except:
@@ -178,9 +185,11 @@ def test_test(ssh_host, ssh_username, ssh_password, users, client_id, client_nam
     return test_case
 
 
-def add_member_to_cs(self, ssh_client, user, member):
+def add_member_to_cs(self, ssh_client, user, member, existing_client=None, with_extensions=False):
     '''
     Adds a new member to central server and checks logs for this action.
+    :param with_extensions:
+    :param existing_client:
     :param self: MainController object
     :param ssh_client: SSHClient object
     :param user: dict - user data
@@ -188,13 +197,59 @@ def add_member_to_cs(self, ssh_client, user, member):
     :return: None
     '''
 
-    # Open add dialog
+    '''Open add dialog'''
     self.log('Wait for the "ADD" button and click')
     self.wait_until_visible(type=By.ID, element=members_table.ADD_MEMBER_BTN_ID).click()
     self.log('Wait for the popup to be visible')
     self.wait_jquery()
 
-    # Enter data
+    if with_extensions:
+        '''MEMBER_10 3a parsing user input terminates with error'''
+        '''Click OK with empty fields'''
+        self.wait_until_visible(type=By.XPATH, element=members_table.ADD_MEMBER_POPUP_OK_BTN_XPATH).click()
+        self.wait_jquery()
+        '''Get error message'''
+        error_msg = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
+        '''Check if error message is same as expected'''
+        self.is_equal(error_msg, messages.MISSING_PARAMETER.format('memberClass'),
+                      msg='Missing parameter error different from expected')
+        bool_value, data, date_time = check_logs_for(ssh_client, ADD_MEMBER_FAILED, user[USERNAME])
+        self.is_true(bool_value, test_name=test_name,
+                     msg='2.11.1-2/2.11.1-14 checking logs for added member - check failed',
+                     log_message='2.11.1-2/2.11.1-14 checking logs for added member')
+        '''MEMBER_10 4a member with the inserted class and code already exists'''
+        '''Try to add already existing member'''
+        self.wait_until_visible(type=By.XPATH, element=members_table.ADD_MEMBER_POPUP_XPATH)
+        '''Existing member parameters'''
+        existing_member_name = existing_client['name']
+        existing_member_class = existing_client['class']
+        existing_member_code = existing_client['code']
+        self.log('Enter {0} to "member name" area'.format(existing_member_name))
+        input_name = self.wait_until_visible(type=By.ID, element=members_table.ADD_MEMBER_POPUP_MEMBER_NAME_AREA_ID)
+        self.input(input_name, existing_member_name)
+        self.log('Select {0} from "class" dropdown'.format(existing_member_class))
+        select = Select(self.wait_until_visible(type=By.ID,
+                                                element=members_table.ADD_MEMBER_POPUP_MEMBER_CLASS_DROPDOWN_ID))
+        select.select_by_visible_text(existing_member_class)
+        self.log('Enter {0} to "member code" area'.format(existing_member_code))
+        input_code = self.wait_until_visible(type=By.ID, element=members_table.ADD_MEMBER_POPUP_MEMBER_CODE_AREA_ID)
+        self.input(input_code, existing_member_code)
+
+        '''Click OK'''
+        self.wait_until_visible(type=By.XPATH, element=members_table.ADD_MEMBER_POPUP_OK_BTN_XPATH).click()
+        self.wait_jquery()
+
+        '''Check if error message is as expected'''
+        error_msg = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
+        self.is_equal(error_msg,
+                      messages.MEMBER_ALREADY_EXISTS_ERROR.format(existing_member_class, existing_member_code),
+                      msg='Member already exists error different from expected')
+        bool_value, data, date_time = check_logs_for(ssh_client, ADD_MEMBER_FAILED, user[USERNAME])
+        self.is_true(bool_value, test_name=test_name,
+                     msg='2.11.1-2/2.11.1-14 checking logs for added member - check failed',
+                     log_message='2.11.1-2/2.11.1-14 checking logs for added member')
+
+    '''Enter data'''
     self.wait_until_visible(type=By.XPATH, element=members_table.ADD_MEMBER_POPUP_XPATH)
     self.log('Enter {0} to "member name" area'.format(member['name']))
     input_name = self.wait_until_visible(type=By.ID, element=members_table.ADD_MEMBER_POPUP_MEMBER_NAME_AREA_ID)
@@ -207,12 +262,12 @@ def add_member_to_cs(self, ssh_client, user, member):
     input_code = self.wait_until_visible(type=By.ID, element=members_table.ADD_MEMBER_POPUP_MEMBER_CODE_AREA_ID)
     self.input(input_code, member['code'])
 
-    # Save data
+    '''Save data'''
     self.log('Click "OK" to add member')
     self.wait_until_visible(type=By.XPATH, element=members_table.ADD_MEMBER_POPUP_OK_BTN_XPATH).click()
     self.wait_jquery()
 
-    # TEST PLAN 2.11.1-14 check logs for added member
+    '''TEST PLAN 2.11.1-14 check logs for added member'''
     bool_value, data, date_time = check_logs_for(ssh_client, ADD_MEMBER, user[USERNAME])
     self.is_true((bool_value & (str(data['data']['memberCode']) == member['code'])), test_name,
                  '2.11.1-2/2.11.1-14 checking logs for added member - check failed',
@@ -315,18 +370,17 @@ def change_member_name(self, ssh_client, user, member):
                  '2.11.1-5/2.11.1-14 log check for member name change')
 
 
-def add_group(self, ssh_client, user, group):
+def add_group(self, ssh_client, user, group, try_empty=False):
     '''
     Adds a new global group to the system. First tries to add with empty values, then with the correct ones.
     Checks if the action was logged.
+    :param try_empty: bool - try adding group with empty fields
     :param self: MainController object
     :param ssh_client: SSHClient object
     :param user: dict - user data
     :param group: str - group name
     :return: None
     '''
-    # TEST PLAN 2.11.1-7 try to add new group, leave required fields empty
-    self.log('2.11.1-7 add new group, leave required fields empty')
     self.log('Open Global Groups tab')
     self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.GLOBAL_GROUPS_CSS).click()
     self.wait_jquery()
@@ -334,15 +388,19 @@ def add_group(self, ssh_client, user, group):
     # Start adding new group
     self.log('Click "ADD" to add new group')
     self.wait_until_visible(type=By.ID, element=groups_table.ADD_GROUP_BTN_ID).click()
-    self.log('Click on "OK" to add new group')
-    self.wait_until_visible(type=By.XPATH, element=groups_table.NEW_GROUP_POPUP_OK_BTN_XPATH).click()
-    self.wait_jquery()
 
-    # TEST PLAN 2.11.1-14 check logs for group add failure
-    bool_value, data, date_time = check_logs_for(ssh_client, ADD_GLOBAL_GROUP_FAILED, user[USERNAME])
-    self.is_true(bool_value, test_name,
-                 '2.11.1-7/2.11.1-14 log check for trying to add group - check failed',
-                 '2.11.1-7/2.11.1-14 log check for trying to add group')
+    if try_empty:
+        # TEST PLAN 2.11.1-7 try to add new group, leave required fields empty
+        self.log('2.11.1-7 add new group, leave required fields empty')
+        self.log('Click on "OK" to add new group')
+        self.wait_until_visible(type=By.XPATH, element=groups_table.NEW_GROUP_POPUP_OK_BTN_XPATH).click()
+        self.wait_jquery()
+
+        # TEST PLAN 2.11.1-14 check logs for group add failure
+        bool_value, data, date_time = check_logs_for(ssh_client, ADD_GLOBAL_GROUP_FAILED, user[USERNAME])
+        self.is_true(bool_value, test_name,
+                     '2.11.1-7/2.11.1-14 log check for trying to add group - check failed',
+                     '2.11.1-7/2.11.1-14 log check for trying to add group')
 
     # TEST PLAN 2.11.1-8 fill in required fields and try again
     self.log('2.11.1-8 add new group, fill in required fields')
@@ -544,7 +602,7 @@ def remove_group(self, group):
     popups.confirm_dialog_click(self)
 
 
-def delete_client(self, ssh_client, user, member):
+def delete_client(self, ssh_client, user, member, cancel_deletion=False):
     '''
     Deletes a member from the system. Checks if the action was logged.
     :param self: MainController object
@@ -560,7 +618,13 @@ def delete_client(self, ssh_client, user, member):
     # Delete the member
     self.wait_until_visible(type=By.XPATH, element=members_table.MEMBER_EDIT_DELETE_BTN_XPATH).click()
     self.wait_jquery()
-    # Confirm deletion
+    '''MEMBER_26 3a cancel central server member deletion'''
+    if cancel_deletion:
+        self.log('Cancel member deletion')
+        self.wait_until_visible(type=By.XPATH, element=popups.CONFIRM_POPUP_CANCEL_BTN_XPATH).click()
+        self.log('Click delete button again')
+        self.wait_until_visible(type=By.XPATH, element=members_table.MEMBER_EDIT_DELETE_BTN_XPATH).click()
+    '''Confirm deletion'''
     popups.confirm_dialog_click(self)
     time.sleep(10)
 

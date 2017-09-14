@@ -9,6 +9,7 @@ KEY_LABEL_TEXT_AND_RESULTS = [[256 * 'S', True, "Parameter '{0}' input exceeds 2
                               ['', False, None, None, False],
                               [KEY_LABEL_TEXT, False, None, None, False]]
 
+KEY_USAGE_TYPE_SIGN = 'sign'
 DETAILS_BTN_ID = 'details'
 GENERATEKEY_BTN_ID = 'generate_key'
 GENERATECSR_BTN_ID = 'generate_csr'
@@ -22,8 +23,14 @@ FILEPATH_IMPORT_BTN_ID = 'file_upload_button'
 FILE_IMPORT_OK_BTN_ID = 'file_upload_submit'
 FILEPATH_INPUT_AREA_CSS = '.selected_file'
 FILEPATH_FORM_INPUT_ID = 'file_upload'
+UNSAVED_KEY_CSS = '.unsaved'
 
 KEYS_AND_CERTIFICATES_TABLE_ID = 'keys'
+KEYS_AND_CERTIFICATES_TABLE_ROWS_CSS = '.keys tbody tr'
+GLOBAL_ERROR_CERTIFICATE_ROW_XPATH = '//td[text()="global error"]'
+SAVED_CERTIFICATE_ROW_XPATH = '//td[text()="saved"]'
+
+REGISTER_DIALOG_ADDRESS_INPUT_ID = 'address'
 
 GENERATED_KEYS_TABLE_ROW_CSS = '.key'
 CERT_REQUESTS_TABLE_ROW_CSS = ".cert-request"
@@ -55,6 +62,14 @@ def get_generated_row_row_by_td_text(text):
 def get_generated_key_row_xpath(client_code, client_class):
     return '//table[contains(@id, "keys")]//tr[contains(@class, "key")]//td[contains(text(), \"' + \
            KEY_LABEL_TEXT + '_' + client_code + '_' + client_class + '\")]'
+
+def get_generated_key_row_key_usage_xpath(client_code, client_class):
+    return '//table[contains(@id, "keys")]//tr[contains(@class, "key")]//td[contains(text(), \"' + \
+           KEY_LABEL_TEXT + '_' + client_code + '_' + client_class + '\")]//span[contains(@class, "key-usage")]'
+
+def get_generated_key_row_cert_xpath(client_code, client_class):
+    return '//table[contains(@id, "keys")]//tr[contains(@class, "key")]//td[contains(text(), \"' + \
+           KEY_LABEL_TEXT + '_' + client_code + '_' + client_class + '\")]/../following::tr[2]'
 
 
 def get_text(text):

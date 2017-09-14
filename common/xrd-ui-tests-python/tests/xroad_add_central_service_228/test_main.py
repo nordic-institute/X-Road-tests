@@ -20,6 +20,10 @@ class XroadAddCentralService(unittest.TestCase):
         cs_user = main.config.get('cs.user')
         cs_pass = main.config.get('cs.pass')
 
+        cs_ssh_host = main.config.get('cs.ssh_host')
+        cs_ssh_user = main.config.get('cs.ssh_user')
+        cs_ssh_pass = main.config.get('cs.ssh_pass')
+
         ss2_host = main.config.get('ss2.host')
         ss2_user = main.config.get('ss2.user')
         ss2_pass = main.config.get('ss2.pass')
@@ -35,6 +39,7 @@ class XroadAddCentralService(unittest.TestCase):
 
         wait_sync_retry_delay = main.config.get('services.request_sync_delay')
         sync_max_seconds = main.config.get('services.request_sync_timeout')
+        service_url = main.config.get('services.test_service_url')
 
         requester_id = xroad.get_xroad_subsystem(requester)
 
@@ -43,13 +48,19 @@ class XroadAddCentralService(unittest.TestCase):
                                                                                  requester=requester,
                                                                                  central_service_name=central_service_name,
                                                                                  sync_max_seconds=sync_max_seconds,
-                                                                                 wait_sync_retry_delay=wait_sync_retry_delay)
+                                                                                 wait_sync_retry_delay=wait_sync_retry_delay,
+                                                                                 try_same_code_twice=True,
+                                                                                 try_not_existing_member=True,
+                                                                                 cs_ssh_host=cs_ssh_host,
+                                                                                 cs_ssh_user=cs_ssh_user,
+                                                                                 cs_ssh_pass=cs_ssh_pass)
 
         # Configure a new service (2.2.8-4)
         configure_service = configure_service_2_2_2.test_configure_service(main, client=provider_2,
                                                                            service_name=service_name,
                                                                            check_add_errors=False,
                                                                            check_edit_errors=False,
+                                                                           service_url=service_url,
                                                                            check_parameter_errors=False)
 
         # Add subject to ACL (2.2.8-4)
@@ -69,7 +80,11 @@ class XroadAddCentralService(unittest.TestCase):
                                                                                    requester=requester,
                                                                                    central_service_name=central_service_name,
                                                                                    sync_max_seconds=sync_max_seconds,
-                                                                                   wait_sync_retry_delay=wait_sync_retry_delay)
+                                                                                   wait_sync_retry_delay=wait_sync_retry_delay,
+                                                                                   cs_ssh_host=cs_ssh_host,
+                                                                                   cs_ssh_user=cs_ssh_user,
+                                                                                   cs_ssh_pass=cs_ssh_pass,
+                                                                                   try_not_existing_provider=True)
 
         # Delete central service (undo changes we made for 2.2.8)
         delete_central_service = add_central_service_2_2_8.test_delete_central_service(main,
@@ -135,10 +150,10 @@ class XroadAddCentralService(unittest.TestCase):
                         assert False
             except:
                 assert False
+            assert False
         finally:
             # Test teardown
             main.tearDown(save_exception=False)
-
 
 class XroadDeleteCentralService(unittest.TestCase):
     def test_add_central_service_2_2_8(self):

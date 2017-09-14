@@ -6,7 +6,8 @@ SERVICE_EDIT_BUTTON_ID = 'central_service_details'
 SERVICE_DELETE_BUTTON_ID = 'central_service_delete'
 SERVICE_EDIT_DIALOG_CLEAR_BUTTON_ID = 'central_service_details_clear_search'
 
-NEW_CENTRAL_SERVICE_DATA = [['CS_CODE', 'TS1OWNER', 'VERSION', 'TS1', 'TS1OWNER', 'GOV', 'Management Services', False,
+
+NEW_CENTRAL_SERVICE_DATA = [['CS_CODE', 'Test member 2', 'VERSION', 'Test member 2', '00000002', 'COM', 'Central monitoring client', False,
                             None, None, False],
                             ['   CS_CODE   ', '   TS1OWNER   ', '   VERSION   ', '   TS1   ', '   TS1OWNER   ', 'GOV',
                              '   Management Services   ', False, None, None, True],

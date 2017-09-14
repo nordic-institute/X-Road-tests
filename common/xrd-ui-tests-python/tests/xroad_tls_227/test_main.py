@@ -2,8 +2,8 @@
 import unittest
 
 import local_tls_2_2_7
-from main.maincontroller import MainController
 from helpers import xroad
+from main.maincontroller import MainController
 
 
 class XroadLocalTls(unittest.TestCase):

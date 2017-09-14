@@ -8,12 +8,14 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
 
 import tests.xroad_parse_users_input_SS_41.parse_user_input_SS_41 as user_input_check
-from helpers import ssh_client, ssh_server_actions, xroad, login
+from helpers import ssh_client, ssh_server_actions, xroad, login, auditchecker
+from tests.xroad_configure_service_222.wsdl_validator_errors import wait_until_server_up
 from view_models import sidebar as sidebar_constants, keys_and_certificates_table as keyscertificates_constants, \
-    popups as popups, certification_services, clients_table_vm, messages, keys_and_certificates_table
+    popups as popups, certification_services, clients_table_vm, messages, keys_and_certificates_table, \
+    ss_system_parameters, log_constants
 
 
-def test(client_code, client_class, check_inputs=False):
+def test_generate_csr_and_import_cert(client_code, client_class, check_inputs=False, check_success=True):
     def test_case(self):
         '''
         Test 2.1.3 success scenarios. Failure scenarios are tested in another function.
@@ -45,7 +47,8 @@ def test(client_code, client_class, check_inputs=False):
         self.log('2.1.3-1, 2.1.3-2 generate key and certificate request using that key')
         generate_csr(self, client_code, client_class, server_name, check_inputs=check_inputs,
                      cancel_key_generation=True,
-                     cancel_csr_generation=True)
+                     cancel_csr_generation=True,
+                     generate_same_csr_twice=True)
 
         # Get the certificate request path
         file_path = glob.glob(self.get_download_path('_'.join(['*', server_name, client_class, client_code]) + '.der'))[
@@ -69,9 +72,10 @@ def test(client_code, client_class, check_inputs=False):
         self.log('2.1.3-4 import certificate to security server')
         import_cert(self, file_cert_path)
 
-        # Check if import succeeded
-        self.log('2.1.3-4 check if import succeeded')
-        check_import(self, client_class, client_code)
+        if check_success:
+            # Check if import succeeded
+            self.log('2.1.3-4 check if import succeeded')
+            check_import(self, client_class, client_code)
 
     return test_case
 
@@ -812,7 +816,7 @@ def get_cert(client, service, file_path, local_path, remote_cert_path, remote_cs
 
 
 def generate_csr(self, client_code, client_class, server_name, check_inputs=False, cancel_key_generation=False,
-                 cancel_csr_generation=False):
+                 cancel_csr_generation=False, generate_same_csr_twice=False, generate_key=True):
     """
     Generates the CSR (certificate request) for a client.
     :param self: MainController object
@@ -826,6 +830,8 @@ def generate_csr(self, client_code, client_class, server_name, check_inputs=Fals
     # Generate XRoad ID for the client
     client = ':'.join([server_name, client_class, client_code, '*'])
 
+    '''Key label'''
+    key_label = keyscertificates_constants.KEY_LABEL_TEXT + '_' + client_code + '_' + client_class
     # TEST PLAN SS_28_4 System verifies entered key label
     if check_inputs:
         user_input_check.parse_key_label_inputs(self)
@@ -836,46 +842,49 @@ def generate_csr(self, client_code, client_class, server_name, check_inputs=Fals
     self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar_constants.KEYSANDCERTIFICATES_BTN_CSS).click()
     self.wait_jquery()
 
-    keys_before = len(self.by_css(keyscertificates_constants.GENERATED_KEYS_TABLE_ROW_CSS, multiple=True))
-    # Generate key from softtoken
-    self.log('Click on softtoken row')
-    self.wait_until_visible(type=By.XPATH, element=keyscertificates_constants.SOFTTOKEN_TABLE_ROW_XPATH).click()
-    self.log('Click on "Generate key" button')
-    self.wait_until_visible(type=By.ID, element=keyscertificates_constants.GENERATEKEY_BTN_ID).click()
-
-    # UC SS_28 3a key generation is cancelled
-    self.log('UC SS_28 3a key generation is cancelled')
-    if cancel_key_generation:
-        # Cancel key generation
-        self.log('Click on "Cancel" button')
-        self.wait_until_visible(type=By.XPATH, element=popups.GENERATE_KEY_POPUP_CANCEL_BTN_XPATH).click()
-        self.wait_jquery()
-        # Get number of keys in table after canceling
-        self.wait_until_visible(type=By.CSS_SELECTOR, element=keyscertificates_constants.GENERATED_KEYS_TABLE_ROW_CSS)
-        keys_after_canceling = len(
-            self.by_css(keyscertificates_constants.GENERATED_KEYS_TABLE_ROW_CSS, multiple=True))
-        # Check if number of keys in table is same as before
-        self.is_equal(keys_before, keys_after_canceling,
-                      msg='Number of keys after cancelling {0} not equal to number of keys before {1}'.format(
-                          keys_before, keys_after_canceling))
-
-        # Generate key from softtoken again
+    if generate_key:
+        keys_before = len(
+            self.wait_until_visible(type=By.CSS_SELECTOR, element=keyscertificates_constants.GENERATED_KEYS_TABLE_ROW_CSS,
+                                    multiple=True))
+        # Generate key from softtoken
         self.log('Click on softtoken row')
         self.wait_until_visible(type=By.XPATH, element=keyscertificates_constants.SOFTTOKEN_TABLE_ROW_XPATH).click()
         self.log('Click on "Generate key" button')
         self.wait_until_visible(type=By.ID, element=keyscertificates_constants.GENERATEKEY_BTN_ID).click()
 
-    # Enter data (key label)
-    key_label = keyscertificates_constants.KEY_LABEL_TEXT + '_' + client_code + '_' + client_class
-    self.log(
-        'Insert ' + key_label + ' to "LABEL" area')
-    key_label_input = self.wait_until_visible(type=By.ID, element=popups.GENERATE_KEY_POPUP_KEY_LABEL_AREA_ID)
-    self.input(key_label_input, key_label)
+        # UC SS_28 3a key generation is cancelled
+        self.log('UC SS_28 3a key generation is cancelled')
+        if cancel_key_generation:
+            # Cancel key generation
+            self.log('Click on "Cancel" button')
+            self.wait_until_visible(type=By.XPATH, element=popups.GENERATE_KEY_POPUP_CANCEL_BTN_XPATH).click()
+            self.wait_jquery()
+            # Get number of keys in table after canceling
+            self.wait_until_visible(type=By.CSS_SELECTOR, element=keyscertificates_constants.GENERATED_KEYS_TABLE_ROW_CSS)
+            self.wait_jquery()
+            keys_after_canceling = len(
+                self.wait_until_visible(type=By.CSS_SELECTOR,
+                                        element=keyscertificates_constants.GENERATED_KEYS_TABLE_ROW_CSS, multiple=True))
+            # Check if number of keys in table is same as before
+            self.is_equal(keys_before, keys_after_canceling,
+                          msg='Number of keys after cancelling {0} not equal to number of keys before {1}'.format(
+                              keys_before, keys_after_canceling))
 
-    # Save the key data
-    self.log('Click on "OK" button')
-    self.wait_until_visible(type=By.XPATH, element=popups.GENERATE_KEY_POPUP_OK_BTN_XPATH).click()
-    self.wait_jquery()
+            # Generate key from softtoken again
+            self.log('Click on softtoken row')
+            self.wait_until_visible(type=By.XPATH, element=keyscertificates_constants.SOFTTOKEN_TABLE_ROW_XPATH).click()
+            self.log('Click on "Generate key" button')
+            self.wait_until_visible(type=By.ID, element=keyscertificates_constants.GENERATEKEY_BTN_ID).click()
+
+        self.log(
+            'Insert ' + key_label + ' to "LABEL" area')
+        key_label_input = self.wait_until_visible(type=By.ID, element=popups.GENERATE_KEY_POPUP_KEY_LABEL_AREA_ID)
+        self.input(key_label_input, key_label)
+
+        # Save the key data
+        self.log('Click on "OK" button')
+        self.wait_until_visible(type=By.XPATH, element=popups.GENERATE_KEY_POPUP_OK_BTN_XPATH).click()
+        self.wait_jquery()
 
     # Key should be generated now. Click on it.
     self.log('Click on generated key row')
@@ -984,6 +993,31 @@ def generate_csr(self, client_code, client_class, server_name, check_inputs=Fals
     self.wait_until_visible(type=By.XPATH,
                             element=keyscertificates_constants.SUBJECT_DISTINGUISHED_NAME_POPUP_OK_BTN_XPATH).click()
     self.wait_jquery()
+
+    '''SS_29 7a the token information is already saved in the system configuration'''
+    self.log('SS_29 7a the token information is already saved in the system configuration')
+    if generate_same_csr_twice:
+        '''SS_29 8a the key information is already saved in the system configuration'''
+        self.log('SS_29 8a the key information is already saved in the system configuration')
+        self.log('Check if key usage is set to sign from previous csr generation')
+        key_usage = self.wait_until_visible(type=By.XPATH,
+                                            element=keys_and_certificates_table.get_generated_key_row_key_usage_xpath(
+                                                client_code, client_class)).text
+        self.is_equal(keys_and_certificates_table.KEY_USAGE_TYPE_SIGN, key_usage)
+
+        self.log('Get csr requests count in table before generating same request again')
+        keys_before_another_csr_generation = len(self.wait_until_visible(type=By.CSS_SELECTOR,
+                                                                         element=keys_and_certificates_table.CERT_REQUESTS_TABLE_ROW_CSS,
+                                                                         multiple=True))
+        self.log('Generate CSR again')
+        generate_csr(self, client_code, client_class, server_name, check_inputs=False, cancel_key_generation=False,
+                     cancel_csr_generation=False, generate_same_csr_twice=False, generate_key=False)
+
+        self.log('Check if CSR requests in table is same as before')
+        keys_after_another_csr_generation = len(self.wait_until_visible(type=By.CSS_SELECTOR,
+                                                                        element=keys_and_certificates_table.CERT_REQUESTS_TABLE_ROW_CSS,
+                                                                        multiple=True))
+        self.is_equal(keys_before_another_csr_generation, keys_after_another_csr_generation)
 
 
 def delete_added_key(self, client_code, client_class, cancel_deletion=False):
@@ -1106,9 +1140,10 @@ def added_client_row(self, client):
     return table_rows[client_row_index]
 
 
-def generate_auth_csr(self, ca_name):
+def generate_auth_csr(self, ca_name, change_usage=True):
     """
     Generates the CSR (certificate request) for a client.
+    :param change_usage: bool - when True changes usage to auth
     :param self: MainController object
     :param ca_name: str - CA display name
     :return:
@@ -1119,11 +1154,12 @@ def generate_auth_csr(self, ca_name):
     self.wait_until_visible(type=By.ID, element=keyscertificates_constants.GENERATECSR_BTN_ID).click()
 
     self.wait_jquery()
-    self.log('Change CSR usage')
-    select = Select(self.wait_until_visible(type=By.ID,
-                                            element=keyscertificates_constants.
-                                            GENERATE_CSR_SIGNING_REQUEST_USAGE_DROPDOWN_ID))
-    select.select_by_visible_text('Auth')
+    if change_usage:
+        self.log('Change CSR usage')
+        select = Select(self.wait_until_visible(type=By.ID,
+                                                element=keyscertificates_constants.
+                                                GENERATE_CSR_SIGNING_REQUEST_USAGE_DROPDOWN_ID))
+        select.select_by_visible_text('Auth')
 
     # TEST PLAN 2.1.3-2 check 1: Check that the certification authority can be chosen
     self.log('Select "certification service"')
@@ -1148,3 +1184,205 @@ def generate_auth_csr(self, ca_name):
                             element=keyscertificates_constants.SUBJECT_DISTINGUISHED_NAME_POPUP_OK_BTN_XPATH).click()
 
     self.wait_jquery()
+
+
+def security_server_global_conf_expired(case, ss_host, ss_username, ss_pass, ss2_client):
+    """
+    Tests adding certificate, when global configuration is expired
+    :param case:
+    :param ss_host: str - security server host
+    :param ss_username: str - security server username
+    :param ss_pass: str - security server password
+    :param ss2_client: dict - security server client info
+    :return:
+    """
+    self = case
+
+    def ss_global_conf_expired():
+        self.log('Opening security server page')
+        self.reload_webdriver(url=ss_host, username=ss_username, password=ss_pass)
+        self.log('Check if global configuration expired notification is shown')
+        self.is_equal(self.by_id('alerts').text, messages.GLOBAL_CONF_EXPIRED_MESSAGE,
+                      msg='Global configuration expired notification not shown')
+        self.log('Try to import certificate')
+        try_to_certify = test_generate_csr_and_import_cert(client_code=ss2_client['code'],
+                                                           client_class=ss2_client['class'],
+                                                           check_success=False)
+        try_to_certify(self)
+        self.wait_jquery()
+        self.log('Wait until error message is visible')
+        message = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
+        self.log('Check if error message about expired global configuration is correct')
+        self.is_equal(message, messages.CERTIFICATE_IMPORT_EXPIRED_GLOBAL_CONF_ERROR)
+
+    return ss_global_conf_expired
+
+
+def expire_global_conf(self, ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass):
+    def expire_conf():
+        '''Security server 2 ssh client instance'''
+        client = ssh_client.SSHClient(ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass)
+        self.log('Stop configuration client service')
+        client.exec_command('service xroad-confclient stop', sudo=True)
+        self.log('Close ssh connection')
+        client.close()
+        self.log('Wait 11 minutes, so the global configuration has expired for sure')
+        time.sleep(ss_system_parameters.GLOBAL_CONF_EXPIRATION_TIME_IN_SECONDS)
+
+    return expire_conf
+
+
+def start_xroad_conf_client(self, ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass):
+    def start_conf_client():
+        '''Security server 2 ssh client instance'''
+        client = ssh_client.SSHClient(ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass)
+        self.log('Start configuration client service')
+        client.exec_command('service xroad-confclient start', sudo=True)
+        self.log('Close ssh connection')
+        client.close()
+
+    return start_conf_client
+
+
+def test_generate_key_timed_out(main, ss_host, ss_username, ss_pass, ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass):
+    self = main
+
+    def generate_key_timed_out():
+        '''Security server auditchecker instance'''
+        log_checker = auditchecker.AuditChecker(host=ss2_ssh_host, username=ss2_ssh_user, password=ss2_ssh_pass)
+        '''Get current log lines count'''
+        current_log_lines = log_checker.get_line_count()
+        '''Security server ssh client'''
+        self.ssh_client = ssh_client.SSHClient(ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass)
+        self.log('Open security server page')
+        self.reload_webdriver(ss_host, ss_username, ss_pass)
+        self.log('Open keys and certificates')
+        self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar_constants.KEYSANDCERTIFICATES_BTN_CSS).click()
+        self.wait_jquery()
+        self.log('Click on softtoken row')
+        self.wait_until_visible(type=By.XPATH, element=keyscertificates_constants.SOFTTOKEN_TABLE_ROW_XPATH).click()
+        self.log('Click on "Generate key" button')
+        self.wait_until_visible(type=By.ID, element=keyscertificates_constants.GENERATEKEY_BTN_ID).click()
+        self.log('Stop xroad signer service')
+        self.ssh_client.exec_command(command='service xroad-signer stop', sudo=True)
+        self.ssh_client.close()
+        self.log('Wait until service has stopped')
+        wait_until_server_up(ss_host)
+        self.log('Confirm key generation popup')
+        self.wait_until_visible(type=By.XPATH, element=popups.GENERATE_KEY_POPUP_OK_BTN_XPATH).click()
+        self.log('Wait until key generation times out and error is displayed')
+        error_msg = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS, timeout=300).text
+        self.log('Check if key generation timeout error is as expected')
+        try:
+            self.is_equal(messages.KEY_GENERATION_TIMEOUT_ERROR, error_msg)
+        except AssertionError:
+            self.log('Key generation request did not get "timed out" error, checking for "Server unreachable" error')
+            self.is_equal(messages.SERVER_UNREACHABLE_ERROR, error_msg)
+        self.log('Check if key generation failed event in audit log')
+        logs_found = log_checker.check_log(log_constants.GENERATE_KEY_FAILED, from_line=current_log_lines + 1)
+        self.is_true(logs_found,
+                     msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
+                         log_constants.GENERATE_KEY_FAILED,
+                         log_checker.found_lines))
+
+    return generate_key_timed_out
+
+
+def start_xroad_signer_service(main, ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass):
+    self = main
+
+    def start_xroad_signer():
+        self.ssh_client = ssh_client.SSHClient(ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass)
+        self.log('Starting xroad signer service')
+        self.ssh_client.exec_command(command='service xroad-signer start', sudo=True)
+        self.ssh_client.close()
+
+    return start_xroad_signer
+
+
+def test_generate_csr_timed_out(main, ss_host, ss_username, ss_pass, ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass):
+    self = main
+
+    def generate_csr_timed_out():
+        '''Security server auditchecker instance'''
+        log_checker = auditchecker.AuditChecker(host=ss2_ssh_host, username=ss2_ssh_user, password=ss2_ssh_pass)
+        '''Get current log lines count'''
+        current_log_lines = log_checker.get_line_count()
+        '''Security server ssh client'''
+        self.ssh_client = ssh_client.SSHClient(ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass)
+        self.log('Open security server page')
+        self.reload_webdriver(ss_host, ss_username, ss_pass)
+        self.log('Open keys and certificates')
+        self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar_constants.KEYSANDCERTIFICATES_BTN_CSS).click()
+        self.wait_jquery()
+        self.log('Click on softtoken row')
+        self.wait_until_visible(type=By.XPATH, element=keyscertificates_constants.SOFTTOKEN_TABLE_ROW_XPATH).click()
+        self.log('Click on "Generate key" button')
+        self.wait_until_visible(type=By.ID, element=keyscertificates_constants.GENERATEKEY_BTN_ID).click()
+        '''Test key label'''
+        key_label = 'testKey'
+        self.log('Insert ' + key_label + ' to "LABEL" area')
+        key_label_input = self.wait_until_visible(type=By.ID, element=popups.GENERATE_KEY_POPUP_KEY_LABEL_AREA_ID)
+        self.input(key_label_input, key_label)
+
+        '''Save the key data'''
+        self.log('Click on "OK" button')
+        self.wait_until_visible(type=By.XPATH, element=popups.GENERATE_KEY_POPUP_OK_BTN_XPATH).click()
+        self.wait_jquery()
+
+        self.log('Click on "Generate CSR" button')
+        self.wait_until_visible(type=By.ID, element=keys_and_certificates_table.GENERATECSR_BTN_ID).click()
+
+        self.log('Wait until CSR generation popup is visible')
+        self.wait_until_visible(type=By.XPATH,
+                                element=keyscertificates_constants.GENERATE_CSR_SIGNING_REQUEST_POPUP_XPATH)
+
+        self.log('Select certification authority')
+        select = Select(self.wait_until_visible(type=By.ID,
+                                                element=keyscertificates_constants.GENERATE_CSR_SIGNING_REQUEST_APPROVED_CA_DROPDOWN_ID))
+        filter(lambda x: self.config.get('ca.ssh_host').upper() in x.text, select.options).pop().click()
+
+        self.log('Click "OK"')
+        self.by_xpath(keys_and_certificates_table.GENERATE_CSR_SIGNING_REQUEST_POPUP_OK_BTN_XPATH).click()
+
+        self.log('Stop xroad signer service')
+        self.ssh_client.exec_command(command='service xroad-signer stop', sudo=True)
+        self.ssh_client.close()
+
+        self.log('Wait until service has stopped')
+        wait_until_server_up(ss_host)
+
+        self.log('Click "OK" to start csr generation')
+        self.wait_until_visible(type=By.XPATH,
+                                element=keys_and_certificates_table.SUBJECT_DISTINGUISHED_NAME_POPUP_OK_BTN_XPATH).click()
+
+        self.log('Wait until csr generation times out and error is displayed')
+        error_msg = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS, timeout=300).text
+        self.log('Check if csr generation timeout error is as expected')
+        try:
+            self.is_equal(messages.KEY_GENERATION_TIMEOUT_ERROR, error_msg)
+        except AssertionError:
+            self.log('CSR generation request did not get "timed out" error, checking for "Server unreachable" error')
+            self.is_equal(messages.SERVER_UNREACHABLE_ERROR, error_msg)
+        self.log('Check if csr generation failed event in audit log')
+        logs_found = log_checker.check_log(log_constants.GENERATE_CSR_FAILED, from_line=current_log_lines + 1)
+        self.is_true(logs_found,
+                     msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
+                         log_constants.GENERATE_CSR_FAILED,
+                         log_checker.found_lines))
+        self.wait_until_visible(type=By.XPATH,
+                                element=keyscertificates_constants.SUBJECT_DISTINGUISHED_NAME_POPUP_CANCEL_BTN_XPATH).click()
+        self.wait_until_visible(type=By.XPATH,
+                                element=keys_and_certificates_table.GENERATE_CSR_SIGNING_REQUEST_POPUP_CANCEL_BTN_XPATH).click()
+
+    return generate_csr_timed_out
+
+
+def delete_added_key_after_service_up(self, ss_host):
+    """Deletes currently selected key after checking that server is up"""
+    self.log('Wait until server responds')
+    wait_until_server_up(ss_host)
+    self.log('Click "Delete" button')
+    self.wait_until_visible(type=By.ID, element=keys_and_certificates_table.DELETE_BTN_ID).click()
+    self.log('Confirm deletion')
+    self.wait_until_visible(type=By.XPATH, element=popups.CONFIRM_POPUP_OK_BTN_XPATH).click()

@@ -24,5 +24,11 @@ GROUP_DATA = [['', '', True, "Missing parameter: {0}", 'code', False],
               ]
 
 
+LOCAL_GROUP_ROW_BY_TD_TEXT_XPATH = '//table[@id="groups"]//tr[td//text()[contains(., "{0}")]]'
+LOCAL_GROUP_ROW_CSS = '#groups tbody tr'
+
 def get_clobal_group_code_description_by_text(text):
     return "//table[@id='global_groups']//td[text()='{0}']".format(text)
+
+def get_global_group_member_count_by_code(code):
+    return "//table[@id='global_groups']//td[text()='{0}']/following::td[2]".format(code)

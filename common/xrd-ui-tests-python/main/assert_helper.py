@@ -29,7 +29,7 @@ class AssertHelper:
         log(test_name, msg, log_message, con1 == False)
         self.case.assertFalse(con1, msg)
 
-    def is_equal(self, con1, con2, test_name=None, msg='Failed', log_message=None):
+    def is_equal(self, con1, con2, test_name=None, msg=None, log_message=None):
         '''
         Checks if variables are equal.
         :param con1: variable to compare
@@ -39,6 +39,8 @@ class AssertHelper:
         :param log_message: str - message to log
         :return: None
         '''
+        if msg is None:
+            msg = 'Expected: {0}, got: {1}'.format(con1, con2)
         log(test_name, msg, log_message, con1 == con2)
         self.case.assertEqual(con1, con2, msg)
 

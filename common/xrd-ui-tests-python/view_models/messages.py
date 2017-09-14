@@ -15,6 +15,13 @@ WSDL_ERROR_DUPLICATE_SERVICE = 'Failed to add WSDL: Duplicate service.'
 WSDL_ERROR_VALIDATION_FAILED = 'Failed to add WSDL: WSDL ({0}) validation failed'
 
 WSDL_EDIT_ERROR_VALIDATION_FAILED = 'Failed to edit WSDL: WSDL ({0}) validation failed'
+WSDL_EDIT_ERROR_FILE_DOES_NOT_EXIST = 'Failed to edit WSDL: Downloading WSDL failed. WSDL URL must point to a WSDL file.'
+WSDL_EDIT_ERROR_WSDL_EXISTS = 'Failed to edit WSDL: WSDL address already exists.'
+
+WSDL_ADD_ERROR_VALIDATOR_COMMAND_NOT_FOUND = 'Failed to add WSDL: Running WSDL validator failed. Command not found.'
+WSDL_REFRESH_ERROR_VALIDATOR_COMMAND_NOT_FOUND = 'Failed to refresh WSDL(s): Running WSDL validator failed. Command not found.'
+WSDL_REFRESH_ERROR_VALIDATOR_COMMAND_NOT_EXECUTABLE = 'Failed to refresh WSDL(s): Running WSDL validator failed. Command not executable.'
+WSDL_ERROR_VALIDATOR_COMMAND_NOT_EXECUTABLE = 'Failed to add WSDL: Running WSDL validator failed. Command not executable.'
 
 WSDL_REFRESH_ERROR_SERVICE_EXISTS = 'Failed to refresh WSDL(s): New service \'{0}\' at {1} also exists at {2}'
 WSDL_REFRESH_ERROR_VALIDATION_FAILED = 'Failed to refresh WSDL(s): WSDL ({0}) validation failed'
@@ -22,7 +29,7 @@ WSDL_REFRESH_WARNING_ADDING_SERVICES = 'Adding services:'
 WSDL_REFRESH_WARNING_DELETING_SERVICES = 'Deleting services:'
 
 # INVALID_URL = 'Invalid URL format, must begin with \'http\' or \'https\'' # Specification variant
-INVALID_URL = '\'{0}\' is an invalid URL, examples of valid URL-s: \'http://www.example.com\', \'https://www.example.com\'' # Real variant
+INVALID_URL = '\'{0}\' is an invalid URL, examples of valid URL-s: \'http://www.example.com\', \'https://www.example.com\''  # Real variant
 INPUT_DATA_TOO_LONG = "Parameter '{0}' input exceeds 255 characters"
 MISSING_PARAMETER = "Missing parameter: {0}"
 INVALID_CERTIFICATE_PROFILE = "Certificate profile with name '{0}' does not exist."
@@ -33,6 +40,8 @@ SERVICE_EDIT_INFINITE_TIMEOUT_WARNING = 'A timeout value of zero is interpreted 
 
 INVALID_URL = SERVICE_EDIT_INVALID_URL
 
+TSL_CERTIFICATE_ALREADY_EXISTS = "Certificate already exists"
+TSL_CERTIFICATE_INCORRECT_FILE_FORMAT = "Incorrect file format. Only PEM and DER files allowed."
 CERTIFICATE_IMPORT_SUCCESSFUL = 'Certificate imported successfully'
 CA_ADD_SUCCESSFUL = 'Certification service added successfully'
 
@@ -45,7 +54,31 @@ WRONG_FORMAT_OCSP_CERTIFICATE = 'Failed to upload OCSP responder certificate: In
 CERTIFICATE_ALREADY_EXISTS = 'Failed to import certificate: Certificate already exists under key'
 CA_NOT_VALID_AS_SERVICE = 'Failed to import certificate: Cannot read member identifier from signing certificate: InternalError: Certificate is not issued by approved certification service provider.'
 WRONG_FORMAT_CA_CERTIFICATE = 'Failed to upload service CA certificate: Incorrect file format. Only PEM and DER files allowed.'
+GROUP_ALREADY_EXISTS_ERROR = 'A group with code \'{0}\' already exists'
 
+GLOBAL_GROUP_ALREADY_TAKEN = "Failed to add global group: '{0}' has already been taken"
+
+MEMBER_ALREADY_EXISTS_ERROR = 'Failed to add member: Member with class \'{0}\' and code \'{1}\' already exists'
+CERTIFICATE_ADDING_REQUEST_ADDED_NOTICE = 'Request of adding authentication certificate to new security server \'SERVER:{0}\' added successfully'
+SUBSYSTEM_DELETION_COMMENT = '\'SUBSYSTEM:{0}/{1}/{2}/{3}\' deletion'
+CERTIFICATE_IMPORT_EXPIRED_GLOBAL_CONF_ERROR = 'Failed to import certificate: Global configuration is expired'
+GLOBAL_CONF_EXPIRED_MESSAGE = 'Global configuration is expired'
+
+# Client registration request confirmation message, {0}=subsystem, {1}=client name, {2}=client class, {3}=client code
+CLIENT_REGISTRATION_SUBSYSTEM_CONFIRMATION = 'Do you want to send a client registration request for the added client?\n' \
+                                             'New subsystem \'{0}\' will be submitted for registration for member \'{1} {2}: {3}\'.'
+CLIENT_REGISTRATION_CONFIRMATION = 'Do you want to send a client registration request for the added client?'
+
+# For CLIENT_REGISTRATION_* {0} is replaced with the client X-Road identifier, {1} is replaced with the X-Road server identifier
+CLIENT_REGISTRATION_SUCCESS = "Request of adding client '{0}' to security server '{1}' added successfully"
+CLIENT_REGISTRATION_ALREADY_REGISTERED = "Failed to add new server client request: '{0}' has already been registered as a client to security server '{1}'"
+CLIENT_REGISTRATION_ALREADY_REQUESTED = "Failed to add new server client request: A request for registering '{0}', as a client to security server '{1}' has already been submitted"
+
+KEY_GENERATION_TIMEOUT_ERROR = 'Connection to Signer (port 5558) timed out'
+SERVER_UNREACHABLE_ERROR = 'Server unreachable. Make sure if server is up and running.'
+ADD_CENTRAL_SERVICE_EXISTS_ERROR = 'Failed to save central service: \'{0}\' has already been taken'
+ADD_CENTRAL_SERVICE_PROVIDER_NOT_FOUND_ERROR = 'Failed to save central service: Provider with ID \'SUBSYSTEM:{0}/{1}/{2}/{3}\' not found'
+EDIT_CENTRAL_SERVICE_PROVIDER_NOT_FOUND_ERROR = 'Failed to update central service: Provider with ID \'SUBSYSTEM:{0}/{1}/{2}/{3}\' not found'
 
 def get_error_message(self):
     '''

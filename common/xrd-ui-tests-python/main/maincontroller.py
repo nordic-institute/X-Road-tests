@@ -486,37 +486,49 @@ class MainController(AssertHelper):
         '''
         return login.login(self=self, username=username, password=password)
 
-    def by_id(self, element):
+    def by_id(self, element, parent=None):
         """
-        Searches for and returns a WebElement using element ID
+        Searches for and returns a WebElement using element ID.
+        If parent is set, finds sub-elements of the parent, otherwise uses the whole document as parent.
         :param element: str - element ID
-        :return: WebDriverElement|[WebDriverElement] - element(s) found
+        :param parent: WebElement|None - parent element; if None, the whole document is used
+        :return: WebElement|[WebElement] - element(s) found
         """
-        return self.driver.find_element_by_id(element)
+        if parent is None:
+            parent = self.driver
+        return parent.find_element_by_id(element)
 
-    def by_xpath(self, element, multiple=False):
+    def by_xpath(self, element, multiple=False, parent=None):
         """
-        Searches for and returns WebElement(s) (depending on if multiple is True or False) using XPATH
+        Searches for and returns WebElement(s) (depending on if multiple is True or False) using XPATH.
+        If parent is set, finds sub-elements of the parent, otherwise uses the whole document as parent.
         :param element: str - XPath selector
         :param multiple: bool - True to return multiple elements; False to return the first one
-        :return: WebDriverElement|[WebDriverElement] - element(s) found
+        :param parent: WebElement|None - parent element; if None, the whole document is used
+        :return: WebElement|[WebElement] - element(s) found
         """
+        if parent is None:
+            parent = self.driver
         if multiple:
-            return self.driver.find_elements_by_xpath(element)
+            return parent.find_elements_by_xpath(element)
         else:
-            return self.driver.find_element_by_xpath(element)
+            return parent.find_element_by_xpath(element)
 
-    def by_css(self, element, multiple=False):
+    def by_css(self, element, multiple=False, parent=None):
         """
-        Searches for and returns WebElement(s) (depending on if multiple is True or False) using CSS selector
+        Searches for and returns WebElement(s) (depending on if multiple is True or False) using CSS selector.
+        If parent is set, finds sub-elements of the parent, otherwise uses the whole document as parent.
         :param element: str - CSS selector
         :param multiple: bool - True to return multiple elements; False to return the first one
-        :return: WebDriverElement|[WebDriverElement] - element(s) found
+        :param parent: WebElement|None - parent element; if None, the whole document is used
+        :return: WebElement|[WebElement] - element(s) found
         """
+        if parent is None:
+            parent = self.driver
         if multiple:
-            return self.driver.find_elements_by_css_selector(element)
+            return parent.find_elements_by_css_selector(element)
         else:
-            return self.driver.find_element_by_css_selector(element)
+            return parent.find_element_by_css_selector(element)
 
     def wait(self, condition, timeout=120):
         """
@@ -533,11 +545,11 @@ class MainController(AssertHelper):
         Waits until an element (or elements if multiple is True) is visible or timeout occurs, then returns the
          element(s). Element parameter can be a WebElement or a string in combination with type parameter that specifies
          the type of the query.
-        :param element: WebDriverElement|str - element to be waited for; if type specified, the lookup string of the element
+        :param element: WebElement|str - element to be waited for; if type specified, the lookup string of the element
         :param type: type of the element to be looked for, comes from WebDriver By class
         :param timeout: int - how long are we trying to wait for the elements
         :param multiple: bool - True to return multiple elements; False to return the first one
-        :return: WebDriverElement|[WebDriverElement] - element(s) found
+        :return: WebElement|[WebElement] - element(s) found
         """
         if type is None:
             ui.WebDriverWait(self.driver, timeout=timeout).until(conditions.visibility_of(element))
@@ -585,7 +597,7 @@ class MainController(AssertHelper):
     def get_classes(self, element):
         """
         Returns element classes as a list
-        :param element: WebDriverElement
+        :param element: WebElement
         :return: [str] - classes found
         """
         return element.get_attribute('class').split(' ')
@@ -594,7 +606,7 @@ class MainController(AssertHelper):
         '''
         Helper method to type characters into input and textarea elements. Works better with default settings than
         using just send_keys on the element.
-        :param element: WebDriverElement - element to be interacted with (input, textarea)
+        :param element: WebElement - element to be interacted with (input, textarea)
         :param text: str - text to be written
         :param click: bool - True to click on the element before typing or clearing (prevents crashes)
         :param clear: bool - True to clear the element before typing
@@ -627,3 +639,45 @@ class MainController(AssertHelper):
         '''
         ActionChains(self.driver).double_click(element).perform()
 
+    def click(self, element, type=None, wait_until_clickable=True, timeout=60, wait_ajax=False, ajax_timeout=60):
+        '''
+        Clicks on a visible element and allows waiting for element to be enabled first.
+        :param element: WebElement | str - element to be clicked on, or a selector accompanied by "type" parameter
+        :param type: int|None - type of the element to be looked for, comes from WebDriver By class
+        :param wait_until_clickable: bool - wait until element is clickable or not
+        :param wait_ajax: bool - wait until JQuery is finished
+        :param ajax_timeout: int - if wait_ajax is set, this is used as the JQuery timeout in seconds
+        :return: WebElement - element that was found and clicked
+        '''
+        # If we need to wait for an ajax query to finish, do it
+        if wait_ajax:
+            self.wait_jquery(timeout=ajax_timeout)
+
+        # If type is set, assume we need to look for the element first
+        if type is not None:
+            element = self.wait_until_visible(element=element, type=type, timeout=timeout)
+        if wait_until_clickable:
+            self.wait(condition=conditions.element_to_be_clickable(element), timeout=timeout)
+        element.click()
+        return element
+
+    def select(self, element, type=None, value=None, text=None, index=None):
+        '''
+        Selects a value from a visible <select> element using the value itself or visible text.
+        :param element: WebElement | str - element to be clicked on, or a selector accompanied by "type" parameter
+        :param type: int|None - type of the element to be looked for, comes from WebDriver By class
+        :param value: str - value to be selected
+        :param text: str - text to be selected
+        :param index: int - zero-based index of the option to be selected
+        :return: Select - element that was found
+        '''
+        if type is not None:
+            element = self.wait_until_visible(element, type=type)
+        select = ui.Select(element)
+        if index is not None:
+            select.select_by_index(index)
+        elif value is not None:
+            select.select_by_value(value)
+        elif text is not None:
+            select.select_by_visible_text(text)
+        return select

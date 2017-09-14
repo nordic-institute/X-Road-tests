@@ -1,8 +1,8 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 
-from helpers import soaptestclient
-from view_models import popups, sidebar, messages, central_services
+from helpers import soaptestclient, auditchecker
+from view_models import popups, sidebar, messages, central_services, log_constants
 
 # These faults are checked when we need the result to be unsuccessful. Otherwise the checking function returns True.
 faults_unsuccessful = ['Server.ServerProxy.ServiceDisabled', 'Client.InternalError']
@@ -46,7 +46,9 @@ def get_central_service_row(self, central_service_name):
 
 
 def test_add_central_service(case, provider=None, central_service_name=None,
-                             sync_max_seconds=0, wait_sync_retry_delay=0, requester=None):
+                             sync_max_seconds=0, wait_sync_retry_delay=0, requester=None, try_same_code_twice=False,
+                             try_not_existing_member=False,
+                             cs_ssh_host=None, cs_ssh_user=None, cs_ssh_pass=None):
     '''
     MainController test function. Adds a central service and tests if queries work.
     :param client_name: string | None - name of the client whose ACL we modify
@@ -140,7 +142,6 @@ def test_add_central_service(case, provider=None, central_service_name=None,
         # Find "service code" input field, clear it and enter the service name there
         central_service_code_input = self.by_id(popups.CENTRAL_SERVICE_POPUP_CENTRAL_SERVICE_CODE_ID)
         central_service_code_input.clear()
-        # central_service_code_input.send_keys(central_service_name)
         self.input(central_service_code_input, central_service_name)
 
         # Set other fields
@@ -168,13 +169,78 @@ def test_add_central_service(case, provider=None, central_service_name=None,
 
         self.is_true(testclient_central.check_success(), msg='2.2.8-3 Test query to central service failed')
 
-        # TEST PLAN 2.2.8-4 uses a helper scenario and is called from the main TestCase object (XroadAddCentralService)
+        '''SERVICE_41 4a A central service with the inserted central service code already exists'''
+        log_checker = auditchecker.AuditChecker(host=cs_ssh_host, username=cs_ssh_user,
+                                                password=cs_ssh_pass)
+        if try_same_code_twice:
+            current_log_lines = log_checker.get_line_count()
+            self.log('SERVICE_41 4a A central service with the inserted central service code already exists')
+            self.log('Click on adding button')
+            add_button = self.by_id(central_services.SERVICE_ADD_BUTTON_ID)
+            add_button.click()
+
+            '''Wait until popup opens'''
+            self.wait_until_visible(element=popups.CENTRAL_SERVICE_POPUP, type=By.XPATH)
+
+            '''Find "service code" input field, clear it and enter the service name there'''
+            central_service_code_input = self.by_id(popups.CENTRAL_SERVICE_POPUP_CENTRAL_SERVICE_CODE_ID)
+            central_service_code_input.clear()
+            self.input(central_service_code_input, central_service_name)
+            add_service_ok_button = self.by_id(popups.CENTRAL_SERVICE_POPUP_OK_BUTTON_ID)
+            add_service_ok_button.click()
+            self.wait_jquery()
+            error_message = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
+            self.is_equal(messages.ADD_CENTRAL_SERVICE_EXISTS_ERROR.format(central_service_name),
+                          error_message)
+            logs_found = log_checker.check_log(log_constants.ADD_CENTRAL_SERVICE_FAILED,
+                                               from_line=current_log_lines + 1)
+            self.is_true(logs_found,
+                         msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
+                             log_constants.ADD_CENTRAL_SERVICE_FAILED,
+                             log_checker.found_lines))
+            popups.close_all_open_dialogs(self)
+        '''SERVICE_41 5a Adding central service with not existing member'''
+        if try_not_existing_member:
+            current_log_lines = log_checker.get_line_count()
+            self.log('SERVICE_41 5a Adding central service with not existing member')
+            self.log('Click on adding button')
+            add_button = self.by_id(central_services.SERVICE_ADD_BUTTON_ID)
+            add_button.click()
+
+            '''Wait until popup opens'''
+            self.wait_until_visible(element=popups.CENTRAL_SERVICE_POPUP, type=By.XPATH)
+
+            '''Find "service code" input field, clear it and enter the service name there'''
+            central_service_code_input = self.by_id(popups.CENTRAL_SERVICE_POPUP_CENTRAL_SERVICE_CODE_ID)
+            central_service_code_input.clear()
+            self.input(central_service_code_input, central_service_name)
+            not_existing_provider = 'notexisting'
+            provider['code'] = not_existing_provider
+            set_central_service_provider_fields(self, provider=provider)
+
+            add_service_ok_button = self.by_id(popups.CENTRAL_SERVICE_POPUP_OK_BUTTON_ID)
+            add_service_ok_button.click()
+            self.wait_jquery()
+            error_message = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
+            self.is_equal(
+                messages.ADD_CENTRAL_SERVICE_PROVIDER_NOT_FOUND_ERROR.format(provider['instance'], provider['class'],
+                                                                             not_existing_provider,
+                                                                             provider['subsystem']),
+                error_message)
+            logs_found = log_checker.check_log(log_constants.ADD_CENTRAL_SERVICE_FAILED,
+                                               from_line=current_log_lines + 1)
+            self.is_true(logs_found,
+                         msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
+                             log_constants.ADD_CENTRAL_SERVICE_FAILED,
+                             log_checker.found_lines))
+            popups.close_all_open_dialogs(self)
 
     return add_central_service
 
 
 def test_edit_central_service(case, provider, requester, central_service_name, sync_max_seconds=0,
-                              wait_sync_retry_delay=0):
+                              wait_sync_retry_delay=0, try_not_existing_provider=False, cs_ssh_host=None, cs_ssh_user=None,
+                              cs_ssh_pass=None):
     self = case
 
     query_url = self.config.get('ss1.service_path')
@@ -200,7 +266,8 @@ def test_edit_central_service(case, provider, requester, central_service_name, s
                                                        fail_timeout=sync_max_seconds,
                                                        faults_successful=faults_successful,
                                                        faults_unsuccessful=faults_unsuccessful,
-                                                       params=testclient_central_params)
+                                                       params=testclient_central_params
+                                                       )
 
     def edit_central_service():
         # TEST PLAN 2.2.8-5 update central service and set a new provider
@@ -226,7 +293,7 @@ def test_edit_central_service(case, provider, requester, central_service_name, s
         # Click the row to select it
         service_row.click()
 
-        # Find and click the "Delete" button to delete the service
+        # Find and click the "Edit" button to edit the service
         edit_button = self.by_id(central_services.SERVICE_EDIT_BUTTON_ID)
         edit_button.click()
 
@@ -264,6 +331,41 @@ def test_edit_central_service(case, provider, requester, central_service_name, s
         testclient_central.verify_service_data = verify_service
 
         case.is_true(testclient_central.check_success(), msg='2.2.8-6 Test query after updating central service failed')
+        log_checker = auditchecker.AuditChecker(host=cs_ssh_host, username=cs_ssh_user,
+                                                password=cs_ssh_pass)
+        if try_not_existing_provider:
+            current_log_lines = log_checker.get_line_count()
+            edit_button = self.by_id(central_services.SERVICE_EDIT_BUTTON_ID)
+            edit_button.click()
+
+            # Wait until ajax query finishes.
+            self.wait_jquery()
+
+            # Find and click the "Clear" button (after the Edit dialog opens) to clear fields.
+            clear_button = self.wait_until_visible(central_services.SERVICE_EDIT_DIALOG_CLEAR_BUTTON_ID, type=By.ID)
+            clear_button.click()
+
+            not_existing_provider = 'notexisting'
+            provider['code'] = not_existing_provider
+
+            set_central_service_provider_fields(self, provider=provider)
+
+            add_service_ok_button = self.by_id(popups.CENTRAL_SERVICE_POPUP_OK_BUTTON_ID)
+            add_service_ok_button.click()
+            self.wait_jquery()
+            error_message = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
+            self.is_equal(
+                messages.EDIT_CENTRAL_SERVICE_PROVIDER_NOT_FOUND_ERROR.format(provider['instance'], provider['class'],
+                                                                             not_existing_provider,
+                                                                             provider['subsystem']),
+                error_message)
+            logs_found = log_checker.check_log(log_constants.EDIT_CENTRAL_SERVICE_FAILED,
+                                               from_line=current_log_lines + 1)
+            self.is_true(logs_found,
+                         msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
+                             log_constants.EDIT_CENTRAL_SERVICE_FAILED,
+                             log_checker.found_lines))
+            popups.close_all_open_dialogs(self)
 
     return edit_central_service
 
@@ -330,7 +432,8 @@ def test_delete_central_service(case, central_service_name, provider, requester,
             '''Check if cs still exists'''
             self.wait_jquery()
             service_row = get_central_service_row(self, central_service_name)
-            self.is_not_none(service_row, msg='Central service not found after canceling: {0}'.format(central_service_name))
+            self.is_not_none(service_row,
+                             msg='Central service not found after canceling: {0}'.format(central_service_name))
 
             '''Click delete button again'''
             delete_button.click()

@@ -30,6 +30,7 @@ MEMBER_EDIT_DELETE_BTN_XPATH = '//div[not(contains(@style,"display:none")) and c
 MEMBER_NAME_EDIT_BTN_XPATH = '//div[not(contains(@style,"display:none")) and contains(@class, "ui-dialog")]//button[@id="member_edit_change_name"]'
 MEMBER_EDIT_NAME_POPUP_EDIT_NAME_AREA_XPATH = '//div[not(contains(@style,"display:none")) and contains(@class, "ui-dialog")]//input[@id="member_edit_name_new"]'
 
+
 MEMBER_DETAILS_NAME_POPUP_CLOSE_BTN_XPATH = '//div[@data-name="member_edit_dialog"]//div[@class="ui-dialog-buttonset"]//button[span="Close"]'
 MEMBER_DELETE_CONFIRM_BTN_ID = '//div[@aria-describedby="confirm"]//div[@class="ui-dialog-buttonset"]//button[span="Confirm"]'
 
@@ -41,8 +42,8 @@ MEMBERS_TABLE_ID = 'members'
 MANAGEMENT_REQUEST_TABLE_ID = 'management_requests_all'
 MEMBERS_TABLE_ROWS_CSS = '#members tbody tr'
 MANAGEMENT_REQUEST_DETAILS_BTN_ID = 'request_details'
-APPROVE_REQUEST_BTN_XPATH = '//div[not(contains(@style,"display:none")) and contains(@data-name, "client_reg_request_edit_dialog")]//button[span= "Approve"]'
-DECLINE_REQUEST_BTN_XPATH = '//div[not(contains(@style,"display:none")) and contains(@data-name, "client_reg_request_edit_dialog")]//button[span= "Decline"]'
+APPROVE_REQUEST_BTN_XPATH = '//div[not(contains(@style,"display: none")) and contains(@data-name, "reg_request_edit_dialog")]//button[span= "Approve"]'
+DECLINE_REQUEST_BTN_XPATH = '//div[not(contains(@style,"display: none")) and contains(@data-name, "reg_request_edit_dialog")]//button[span= "Decline"]'
 
 NEW_CLIENT_REGISTRATION_REQUEST_POPUP_XPATH = '//div[@aria-describedby="member_used_server_register_dialog"]'
 CLIENT_REGISTRATION_SUBSYSTEM_CODE_AREA_ID = 'used_server_subsystem_code'
@@ -104,3 +105,7 @@ def get_row_by_columns(table, values):
 
 def get_member_data_from_table(nr, text):
     return "//table[@id='members']//td[" + str(nr) + "][text()='" + text + "']"
+
+
+def get_member_used_servers(row, column):
+    return "//div[@id='member_used_servers_tab']//tr[{0}]/td[{1}]".format(row, column)

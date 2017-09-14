@@ -4,12 +4,20 @@ DELETE_BTN_ID = 'ca_delete'
 ADD_BTN_ID = 'ca_add'
 DETAILS_BTN_ID = 'ca_details'
 
+# Timestamp buttons
+TSDELETE_BTN_ID = 'tsp_delete'
+TSADD_BTN_ID = 'tsp_add'
+TSEDIT_BTN_ID = 'tsp_details'
+
 IMPORT_CA_CERT_BTN_ID = 'ca_cert_button'
 ADD_CA_AUTH_ONLY_CHECKBOX_XPATH = '//div[@id="ca_settings_dialog"]//input[@name="authentication_only"]'
 EDIT_CA_AUTH_ONLY_CHECKBOX_XPATH = '//div[@id="ca_settings_tab"]//input[@name="authentication_only"]'
 CA_SETTINGS_TAB_XPATH = '//li[@aria-controls="ca_settings_tab"]'
 
 SUBMIT_CA_CERT_BTN_ID = 'ca_cert_submit'
+
+# Timestamp view certificate
+VIEW_CERTIFICATE = 'tsp_cert_view'
 
 CERTIFICATE_PROFILE_INFO_AREA_CSS = '.cert_profile_info'
 ADD_CERTIFICATE_PROFILE_INFO_AREA_XPATH = '//div[@id="ca_settings_dialog"]//input[@name="cert_profile_info"]'
@@ -34,6 +42,11 @@ OCSP_SETTINGS_POPUP_CANCEL_BTN_XPATH = OCSP_SETTINGS_POPUP + '//div[@class="ui-d
 
 def get_ca_by_td_text(text):
     return '//table[contains(@id, "cas")]//tr//td[contains(text(), \"' + text + '\")]'
+
+
+# timestamp id
+def ts_get_ca_by_td_text(text):
+    return '//table[contains(@id, "tsps")]//tr//td[contains(text(), \"' + text + '\")]'
 
 
 def get_ocsp_by_td_text(text):

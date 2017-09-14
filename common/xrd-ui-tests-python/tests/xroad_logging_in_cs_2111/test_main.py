@@ -25,6 +25,8 @@ class XroadLoggingInCentralServer(unittest.TestCase):
         client_id = main.config.get('ss1.client2_id')
         client_name = main.config.get('ss1.client2_name')
         client_name2 = main.config.get('ss1.client2_name2')
+        existing_client_id = main.config.get('ss1.management_id')
+        existing_client_name = main.config.get('ss1.server_name')
 
         server_groups = '{0},{1},{2}'.format(main.config.get('xroad.registration_officer_group'),
                                              main.config.get('xroad.system_administrator_group'),
@@ -43,7 +45,9 @@ class XroadLoggingInCentralServer(unittest.TestCase):
                                                    main.config.get('cs.ssh_user'),
                                                    main.config.get('cs.ssh_pass'),
                                                    group=group, server_id=server_id, client_id=client_id,
-                                                   client_name=client_name, client_name2=client_name2, users=users)
+                                                   client_name=client_name, client_name2=client_name2, users=users,
+                                                   existing_client_id=existing_client_id,
+                                                   existing_client_name=existing_client_name)
         test_func(main)
         main.tearDown()
 

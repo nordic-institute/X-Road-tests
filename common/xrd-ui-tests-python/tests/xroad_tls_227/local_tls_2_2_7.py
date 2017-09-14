@@ -1,10 +1,13 @@
+import os
 import tarfile
-from view_models import popups, clients_table_vm, sidebar, ss_system_parameters
-from helpers import xroad, soaptestclient
-import os, time
-from selenium.webdriver.common.by import By
+import time
+
 from requests.exceptions import SSLError
+from selenium.webdriver.common.by import By
+
+from helpers import xroad, soaptestclient, auditchecker
 from tests.xroad_configure_service_222 import configure_service_2_2_2
+from view_models import popups, clients_table_vm, sidebar, ss_system_parameters, messages, log_constants
 
 # These faults are checked when we need the result to be unsuccessful. Otherwise the checking function returns True.
 faults_unsuccessful = ['Server.ClientProxy.SslAuthenticationFailed']
@@ -24,6 +27,14 @@ def test_delete_tls(case, client, provider):
     ss2_user = self.config.get('ss2.user')
     ss2_pass = self.config.get('ss2.pass')
 
+    ss1_ssh_host = self.config.get('ss1.ssh_host')
+    ss1_ssh_user = self.config.get('ss1.ssh_user')
+    ss1_ssh_pass = self.config.get('ss1.ssh_pass')
+
+    ss2_ssh_host = self.config.get('ss2.ssh_host')
+    ss2_ssh_user = self.config.get('ss2.ssh_user')
+    ss2_ssh_pass = self.config.get('ss2.ssh_pass')
+
     client_id = xroad.get_xroad_subsystem(client)
     provider_id = xroad.get_xroad_subsystem(provider)
 
@@ -32,6 +43,10 @@ def test_delete_tls(case, client, provider):
     new_service_url = self.config.get('services.test_service_url')
 
     def delete_tls():
+        '''Getting auditchecker instance for ss1'''
+        log_checker = auditchecker.AuditChecker(host=ss1_ssh_host, username=ss1_ssh_user, password=ss1_ssh_pass)
+        '''Get current log lines count'''
+        current_log_lines = log_checker.get_line_count()
         self.reload_webdriver(url=ss1_host, username=ss1_user, password=ss1_pass)
 
         self.log('2.2.7 delete_tls')
@@ -51,8 +66,21 @@ def test_delete_tls(case, client, provider):
                      msg='2.2.7-delete-2 Failed to set connection type')
 
         # Delete all internal certificates
-        clients_table_vm.client_servers_popup_delete_tls_certs(self)
+        deleted_certs = clients_table_vm.client_servers_popup_delete_tls_certs(self, cancel_deletion=True)
 
+        expected_log_msg = log_constants.DELETE_INTERNAL_TSL_CERT
+        '''If cert(s) were deleted check audit.log'''
+        if deleted_certs > 0:
+            '''Log message expected to be present in audit.log after deletion'''
+            logs_found = log_checker.check_log(expected_log_msg,
+                                               from_line=current_log_lines + 1)
+            self.is_true(logs_found,
+                         msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
+                             expected_log_msg,
+                             log_checker.found_lines))
+
+        '''Get auditchecker instance for ss2'''
+        log_checker = auditchecker.AuditChecker(host=ss2_ssh_host, username=ss2_ssh_user, password=ss2_ssh_pass)
         # Switch to Security server 2
         self.reload_webdriver(url=ss2_host, username=ss2_user, password=ss2_pass)
 
@@ -87,8 +115,19 @@ def test_delete_tls(case, client, provider):
         # Wait until everything is loaded.
         self.wait_jquery()
 
+        '''Get current log lines count'''
+        current_log_lines = log_checker.get_line_count()
         # Delete all internal certificates
-        clients_table_vm.client_servers_popup_delete_tls_certs(self)
+        deleted_certs = clients_table_vm.client_servers_popup_delete_tls_certs(self)
+        '''If certs were deleted, check log'''
+        if deleted_certs > 0:
+            '''Checks if expected message present in log'''
+            logs_found = log_checker.check_log(expected_log_msg,
+                                               from_line=current_log_lines + 1)
+            self.is_true(logs_found,
+                         msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
+                             expected_log_msg,
+                             log_checker.found_lines))
 
     return delete_tls
 
@@ -113,6 +152,10 @@ def test_tls(case, client, provider):
 
     client_id = xroad.get_xroad_subsystem(client)
     provider_id = xroad.get_xroad_subsystem(provider)
+
+    ss1_ssh_host = self.config.get('ss1.ssh_host')
+    ss1_ssh_user = self.config.get('ss1.ssh_user')
+    ss1_ssh_pass = self.config.get('ss1.ssh_pass')
 
     ss1_host = self.config.get('ss1.host')
     ss1_user = self.config.get('ss1.user')
@@ -265,9 +308,23 @@ def test_tls(case, client, provider):
         # Open client popup using shortcut button to open it directly at Services tab.
         clients_table_vm.open_client_popup_internal_servers(self, client_id=client_id)
 
-        # Set connection type to HTTPS_NO_AUTH (SSLNOAUTH)
+        '''Get auditcheker instance for ss1'''
+        log_checker = auditchecker.AuditChecker(host=ss1_ssh_host, username=ss1_ssh_user, password=ss1_ssh_pass)
+        '''Get current audit.log line count'''
+        current_log_lines = log_checker.get_line_count()
+
+        '''Set connection type to HTTPS_NO_AUTH (SSLNOAUTH)'''
         case.is_true(clients_table_vm.client_servers_popup_set_connection(self, 'SSLNOAUTH'),
                      msg='2.2.7-2 Failed to set connection type')
+        '''Log message expected to present after changing Service consumer connection type'''
+        expected_log_msg = log_constants.SET_SERVICE_CONSUMER_CONNECTION_TYPE
+        '''Checks if expected log message present in log'''
+        logs_found = log_checker.check_log(expected_log_msg,
+                                           from_line=current_log_lines + 1)
+        self.is_true(logs_found,
+                     msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
+                         expected_log_msg,
+                         log_checker.found_lines))
 
         # TEST PLAN 2.2.7-3 test query from TS1:CLIENT1:sub to test service. Query should fail.
         self.log('2.2.7-3 test query {0} to test service. Query should fail.'.format(query_filename))
@@ -292,15 +349,76 @@ def test_tls(case, client, provider):
         # TEST PLAN 2.2.7-8 upload certificate to TS1 client CLIENT1:sub
         self.log('2.2.7-8 upload certificate to TS1 client {0}'.format(client_id))
 
-        # Find the "Add" button and click it.
+        '''Gets current audit.log line count'''
+        current_log_lines = log_checker.get_line_count()
+        '''Click add certificate button'''
         self.by_id(popups.CLIENT_DETAILS_POPUP_INTERNAL_SERVERS_ADD_CERTIFICATE_BTN_ID).click()
 
-        # Get the upload button
+        '''Get upload button'''
         upload_button = self.by_id(popups.FILE_UPLOAD_BROWSE_BUTTON_ID)
+        '''File with wrong extension'''
+        not_existing_file_with_wrong_extension = 'C:\\file.asd'
+        xroad.fill_upload_input(self, upload_button, not_existing_file_with_wrong_extension)
+
+        '''Find submit button'''
+        submit_button = self.by_id(popups.FILE_UPLOAD_SUBMIT_BUTTON_ID)
+        '''Click submit button'''
+        submit_button.click()
+        '''Wait until error message is visible'''
+        time.sleep(0.5)
+        self.wait_jquery()
+        error_message = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
+        '''Check if wrong file format error message is correct'''
+        self.is_equal(error_message, messages.TSL_CERTIFICATE_INCORRECT_FILE_FORMAT,
+                      msg='Already existing certificate message not correct')
+        '''Cancel uploading'''
+        self.by_xpath(popups.FILE_UPLOAD_CANCEL_BTN_XPATH).click()
+
+        '''Find the "Add" button and click it.'''
+        self.by_id(popups.CLIENT_DETAILS_POPUP_INTERNAL_SERVERS_ADD_CERTIFICATE_BTN_ID).click()
+
+        '''Fill the upload popup'''
         xroad.fill_upload_input(self, upload_button, client_cert_path)
 
         submit_button = self.by_id(popups.FILE_UPLOAD_SUBMIT_BUTTON_ID)
         submit_button.click()
+        '''Wait until notice message visible'''
+        time.sleep(0.5)
+        self.wait_jquery()
+        notice_message = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.NOTICE_MESSAGE_CSS).text
+        '''Check if successful import message is correct'''
+        self.is_equal(notice_message, messages.CERTIFICATE_IMPORT_SUCCESSFUL,
+                      msg='Certificate successful import message not correct.')
+
+        '''Expected internal TLS adding log message'''
+        expected_log_msg = log_constants.ADD_INTERNAL_TLS_CERT
+        '''Check if expected messsage is present'''
+        logs_found = log_checker.check_log(expected_log_msg,
+                                           from_line=current_log_lines + 1)
+        self.is_true(logs_found,
+                     msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
+                         expected_log_msg,
+                         log_checker.found_lines))
+        '''Find the "Add" button and click it.'''
+        self.by_id(popups.CLIENT_DETAILS_POPUP_INTERNAL_SERVERS_ADD_CERTIFICATE_BTN_ID).click()
+
+        '''Get the upload button'''
+        upload_button = self.by_id(popups.FILE_UPLOAD_BROWSE_BUTTON_ID)
+        '''Fill the upload popup'''
+        xroad.fill_upload_input(self, upload_button, client_cert_path)
+
+        '''Confirm TLS adding'''
+        submit_button = self.by_id(popups.FILE_UPLOAD_SUBMIT_BUTTON_ID)
+        submit_button.click()
+        '''Wait until error message visible'''
+        time.sleep(0.5)
+        self.wait_jquery()
+        error_message = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
+        '''Check if error message is expected'''
+        self.is_equal(error_message, messages.TSL_CERTIFICATE_ALREADY_EXISTS,
+                      msg='Already existing certificate message not correct')
+        '''Cancel TLS adding'''
+        self.by_xpath(popups.FILE_UPLOAD_CANCEL_BTN_XPATH).click()
 
         # TEST PLAN 2.2.7-9 test query to test service using SSL and client certificate. Query should succeed.
         self.log('2.2.7-9 test query to test service using SSL and client certificate. Query should succeed.')

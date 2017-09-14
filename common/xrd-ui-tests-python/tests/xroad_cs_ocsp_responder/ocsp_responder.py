@@ -281,6 +281,7 @@ def test_edit_ocsp_responder(case, ca_name, ocsp_url, cs_ssh_host=None, cs_ssh_u
                                  check_errors=False)
 
         # Check logs for entries if cs_ssh_host is set
+        self.logdata.append('Add OCSP responder failed')
         if cs_ssh_host is not None:
             self.log('TRUST_10 5a, 6a, 8 - checking logs for: {0}'.format(self.logdata))
             logs_found = log_checker.check_log(self.logdata, from_line=current_log_lines + 1)

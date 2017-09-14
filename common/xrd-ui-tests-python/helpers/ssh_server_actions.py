@@ -64,3 +64,8 @@ def get_server_name(self):
 
 def get_client(ssh_host, ssh_username, ssh_password):
     return ssh_client.SSHClient(ssh_host, username=ssh_username, password=ssh_password)
+
+
+def cp(ssh_client_instance, src, destination, sudo=False):
+    cp_command = 'cp {0} {1}'.format(src, destination)
+    return ssh_client_instance.exec_command(cp_command, sudo)

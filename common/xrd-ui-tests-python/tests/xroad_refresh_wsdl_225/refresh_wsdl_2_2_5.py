@@ -111,26 +111,6 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
                                                       faults_unsuccessful=faults_unsuccessful,
                                                       params=testclient_params_2)
 
-    def refresh_wsdl():
-        # Find the "Refresh" button
-        refresh_button = self.by_id(popups.CLIENT_DETAILS_POPUP_REFRESH_WSDL_BTN_ID)
-
-        time.sleep(3)
-        # Click the "Refresh" button to reload the WSDL. This may take some time as the system does an
-        # HTTP(S) request to another server. Then wait until the ajax query finishes.
-        refresh_button.click()
-        self.wait_jquery()
-
-        console_output = messages.get_console_output(
-            self)  # Console message (displayed if WSDL validator gives a warning)
-        warning_message = messages.get_warning_message(self)  # Warning message
-        error_message = messages.get_error_message(self)  # Error message (anywhere)
-
-        if console_output is not None:
-            popups.close_console_output_dialog(self)
-
-        return warning_message, error_message, console_output
-
     def refresh_existing_wsdl():
         """
         :param self: MainController class object
@@ -182,7 +162,7 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
                            wsdl_target_filename=wsdl_local_path.format(wsdl_filename))
 
         # Click "Refresh" and return status
-        warning, error, console = refresh_wsdl()
+        warning, error, console = refresh_wsdl(self)
         self.is_not_none(error, msg='Invalid WSDL: no error shown for WSDL {0}'.format(wsdl_url))
         self.is_equal(error, messages.WSDL_REFRESH_ERROR_VALIDATION_FAILED.format(wsdl_url),
                       msg='Refresh invalid WSDL: wrong error shown for WSDL {0} : {1}'
@@ -197,7 +177,7 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
         self.log('2.2.5.2 - replace WSDL with a file that gives a validation warning: {0}'.format(wsdl_warning))
         webserver_set_wsdl(self, wsdl_source_filename=wsdl_local_path.format(wsdl_warning),
                            wsdl_target_filename=wsdl_local_path.format(wsdl_filename))
-        warning, error, console = refresh_wsdl()
+        warning, error, console = refresh_wsdl(self)
         self.is_none(error,
                      msg='Refresh WSDL with validator warnings: got error for WSDL {0}'.format(wsdl_url))
         self.is_not_none(warning, msg='Refresh WSDL with validator warnings: no warning shown for WSDL {0} : {1}'
@@ -213,7 +193,7 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
         # UC SERVICE 14 3c2. Refreshing process continues with WSDL, which gives warnings
         # Refresh WSDL again with WSDL, which gives warnings(WSDL contains no services)
         self.log('UC SERVICE 14 3c2. Refreshing process continues with WSDL, which gives warnings')
-        refresh_wsdl()
+        refresh_wsdl(self)
         self.wait_jquery()
 
         # Wait until service deletion confirmation dialogs popup and confirm them
@@ -229,7 +209,7 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
         # Replace WSDL with correct WSDL and restore its services
         webserver_set_wsdl(self, wsdl_source_filename=wsdl_local_path.format(wsdl_correct),
                            wsdl_target_filename=wsdl_local_path.format(wsdl_filename))
-        refresh_wsdl()
+        refresh_wsdl(self)
         # Confirm adding service popup
         self.wait_until_visible(type=By.XPATH, element=popups.WARNING_POPUP_CONTINUE_XPATH).click()
         self.wait_jquery()
@@ -248,7 +228,7 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
                            wsdl_target_filename=wsdl_local_path.format(wsdl_filename))
 
         # Click "Refresh" and return status
-        warning, error, console = refresh_wsdl()
+        warning, error, console = refresh_wsdl(self)
 
         # Check if warning message is correct.
         warning_message_is_correct = warning.startswith(
@@ -288,7 +268,7 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
                            wsdl_target_filename=wsdl_local_path.format(wsdl_filename))
 
         # Click "Refresh" and return status
-        warning, error, console = refresh_wsdl()
+        warning, error, console = refresh_wsdl(self)
 
         # Check if warning message is correct.
         warning_message_is_correct = warning.startswith(
@@ -387,7 +367,7 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
         current_log_lines = log_checker.get_line_count()
         # Refresh new WSDL services
         clients_table_vm.client_services_popup_select_wsdl(self, wsdl_url=new_wsdl_url)
-        refresh_wsdl()
+        refresh_wsdl(self)
         # Error message should show up, which says that xroadgetrandom service exists in another WSDL
         error = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
 
@@ -439,3 +419,24 @@ def test_reset_wsdl(case, wsdl_local_path=None, wsdl_filename=None, wsdl_correct
                            wsdl_target_filename=wsdl_local_path.format(wsdl_filename))
 
     return reset_wsdl
+
+
+def refresh_wsdl(self):
+    # Find the "Refresh" button
+    refresh_button = self.by_id(popups.CLIENT_DETAILS_POPUP_REFRESH_WSDL_BTN_ID)
+
+    time.sleep(3)
+    # Click the "Refresh" button to reload the WSDL. This may take some time as the system does an
+    # HTTP(S) request to another server. Then wait until the ajax query finishes.
+    refresh_button.click()
+    self.wait_jquery()
+
+    console_output = messages.get_console_output(
+        self)  # Console message (displayed if WSDL validator gives a warning)
+    warning_message = messages.get_warning_message(self)  # Warning message
+    error_message = messages.get_error_message(self)  # Error message (anywhere)
+
+    if console_output is not None:
+        popups.close_console_output_dialog(self)
+
+    return warning_message, error_message, console_output

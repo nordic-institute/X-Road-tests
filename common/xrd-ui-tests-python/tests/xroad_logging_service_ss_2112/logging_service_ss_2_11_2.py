@@ -5,11 +5,11 @@ from datetime import datetime
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
 
-from helpers import ssh_server_actions, ssh_user_actions, xroad
+from helpers import ssh_server_actions, ssh_user_actions, xroad, auditchecker
 from tests.xroad_add_to_acl_218 import add_to_acl_2_1_8
 from tests.xroad_ss_client_certification_213 import client_certification_2_1_3
 from view_models import popups as popups, members_table, clients_table_vm as clients_table, sidebar, \
-    keys_and_certificates_table
+    keys_and_certificates_table, messages, groups_table
 from view_models.log_constants import *
 
 USERNAME = 'username'
@@ -239,6 +239,12 @@ def add_group_to_client(self, sec_host, sec_username, sec_password, ssh_host, ss
     :param client: dict - client data
     :return: None
     '''
+
+    '''SERVICE_25 user input parsing terminates with error message'''
+    '''Get auditchecker instance on given ssh server'''
+    log_checker = auditchecker.AuditChecker(host=ssh_host, username=ssh_username, password=ssh_password)
+    '''Get current log lines count'''
+    current_log_lines = log_checker.get_line_count()
     self.logout(sec_host)
     self.login(sec_username, sec_password)
     self.log('Waiting 120 seconds for changes')
@@ -246,22 +252,83 @@ def add_group_to_client(self, sec_host, sec_username, sec_password, ssh_host, ss
     self.driver.refresh()
     self.wait_jquery()
     time.sleep(5)
-    self.log('Select added client')
+    '''Open client local groups tab'''
     added_client_row(self, client).find_element_by_css_selector(clients_table.LOCAL_GROUPS_TAB_CSS).click()
-    self.log('Click OK')
+    '''Check if local groups table is empty and contains expected message'''
+    self.is_not_none(self.by_xpath(groups_table.LOCAL_GROUP_ROW_BY_TD_TEXT_XPATH.format('No (matching) records')))
+    '''Click on group add button'''
     self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_GROUP_ADD_BTN_ID).click()
-    self.log('Confirm popup')
+    '''Confirm group adding popup'''
     self.wait_until_visible(type=By.XPATH, element=popups.GROUP_ADD_POPUP_OK_BTN_XPATH).click()
     self.wait_jquery()
     time.sleep(5)
+    '''TEST PLAN 2.11.2-5/2.11.2-14 log check for adding group to client '''
+    logs_found = log_checker.check_log(ADD_GROUP_FAILED, from_line=current_log_lines + 1)
+    self.is_true(logs_found,
+                 msg='2.11.2-5/2.11.2-14 log check for adding group to client - check failed')
 
-    # TEST PLAN 2.11.2-5/2.11.2-14 log check for adding group to client
-    bool_value, log_data, date_time = check_logs_for(self, ssh_host, ssh_username, ssh_password, ADD_GROUP_FAILED,
-                                                     sec_username)
+    '''SERVICE_25 successful local group adding'''
+    '''Get curent log lines count'''
+    current_log_lines = log_checker.get_line_count()
+    '''Name of the addable test group'''
+    group_name = 'testgroup'
+    group_add_code_input = self.by_id(popups.GROUP_ADD_POPUP_CODE_AREA_ID)
+    self.log('Filling group adding popup')
+    self.input(element=group_add_code_input, text=group_name)
+    group_add_description_input = self.by_id(popups.GROUP_ADD_POPUP_CODE_DESCRIPTION_ID)
+    self.input(element=group_add_description_input, text=group_name)
+    self.log('Confirm group adding popup')
+    self.wait_until_visible(type=By.XPATH, element=popups.GROUP_ADD_POPUP_OK_BTN_XPATH).click()
+    self.wait_jquery()
+    '''Check if groups table contains added group'''
+    self.is_not_none(self.by_xpath(groups_table.LOCAL_GROUP_ROW_BY_TD_TEXT_XPATH.format(group_name)))
+    '''Check if log contains add group event'''
+    logs_found = log_checker.check_log(ADD_GROUP, from_line=current_log_lines + 1)
+    self.is_true(logs_found,
+                 msg='Add group not found in log')
 
-    self.is_true(bool_value, test_name, '2.11.2-5/2.11.2-14 log check for adding group to client - check failed',
-                 '2.11.2-5/2.11.2-14 log check for adding group to client'
-                 )
+    '''SERVICE_25 inserting group with same code produces error message'''
+    '''Get current lines count'''
+    current_log_lines = log_checker.get_line_count()
+    self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_GROUP_ADD_BTN_ID).click()
+    self.log('Filling group adding popup with already existing group info')
+    group_add_code_input = self.by_id(popups.GROUP_ADD_POPUP_CODE_AREA_ID)
+    self.input(element=group_add_code_input, text=group_name)
+    group_add_description_input = self.by_id(popups.GROUP_ADD_POPUP_CODE_DESCRIPTION_ID)
+    self.input(element=group_add_description_input, text=group_name)
+    self.log('Confirm popup')
+    self.wait_until_visible(type=By.XPATH, element=popups.GROUP_ADD_POPUP_OK_BTN_XPATH).click()
+    self.wait_jquery()
+    '''Get error message'''
+    error_message = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
+    '''Check if correct error message is displayed for already existing group'''
+    self.is_equal(error_message, messages.GROUP_ALREADY_EXISTS_ERROR.format(group_name),
+                  msg='Group already exists error different from expected')
+    '''Check if log contains expected message'''
+    logs_found = log_checker.check_log(ADD_GROUP_FAILED, from_line=current_log_lines + 1)
+    self.is_true(logs_found, msg='\'Add group failed\' not found in log')
+
+    '''SERVICE_25 inserting group after failure'''
+    '''Get current lines count'''
+    current_log_lines = log_checker.get_line_count()
+    '''Name of the new addable group'''
+    group_name = 'testgroup1'
+    '''Fill group adding popup'''
+    self.input(element=group_add_code_input, text=group_name)
+    group_add_description_input = self.by_id(popups.GROUP_ADD_POPUP_CODE_DESCRIPTION_ID)
+    self.input(element=group_add_description_input, text=group_name)
+    self.log('Confirm popup')
+    self.wait_until_visible(type=By.XPATH, element=popups.GROUP_ADD_POPUP_OK_BTN_XPATH).click()
+    self.wait_jquery()
+    '''Check if local groups table contains new added group'''
+    self.is_not_none(self.by_xpath(groups_table.LOCAL_GROUP_ROW_BY_TD_TEXT_XPATH.format(group_name)))
+    '''Check if number of groups is equal to 2(2 successful addings)'''
+    self.is_equal(2, len(
+        self.by_css(element=groups_table.LOCAL_GROUP_ROW_CSS, multiple=True)))
+    '''Check if log contains expected message'''
+    logs_found = log_checker.check_log(ADD_GROUP, from_line=current_log_lines + 1)
+    self.is_true(logs_found,
+                 msg='Add group not found in log')
 
 
 def certify_client_in_ss(self, ssh_host, ssh_username, ssh_password, sec_host, sec_username, sec_password, users,
@@ -296,7 +363,7 @@ def certify_client_in_ss(self, ssh_host, ssh_username, ssh_password, sec_host, s
     self.driver.get(sec_host)
     self.wait_jquery()
     self.url = sec_host
-    client_certification_2_1_3.test(client_code=client['code'], client_class=client['class'])(self)
+    client_certification_2_1_3.test_generate_csr_and_import_cert(client_code=client['code'], client_class=client['class'])(self)
 
 
 def get_current_time(ssh_host, ssh_password, ssh_username):
@@ -358,7 +425,7 @@ def add_services_to_client(self, ssh_host, ssh_username, ssh_password, sec_host,
     added_client_row(self=self, client=client).find_element_by_css_selector(clients_table.SERVICES_TAB_CSS).click()
     self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_ADD_WSDL_BTN_ID).click()
     wsdl_area = self.wait_until_visible(type=By.ID, element=popups.ADD_WSDL_POPUP_URL_ID)
-    self.input(wsdl_area, self.config.get('wsdl.remote_path').format('')) # URL that does not return a WSDL file
+    self.input(wsdl_area, self.config.get('wsdl.remote_path').format(''))  # URL that does not return a WSDL file
     self.wait_until_visible(type=By.XPATH, element=popups.ADD_WSDL_POPUP_OK_BTN_XPATH).click()
     self.wait_jquery()
 
@@ -405,7 +472,7 @@ def add_services_to_client(self, ssh_host, ssh_username, ssh_password, sec_host,
                      'code': client['code'], 'subsystem': client['subsystem']}
     subject = xroad.split_xroad_subsystem(self.config.get('ss1.client_id'))
     acl_subject = ' : '.join([subject['type'], subject['instance'], subject['class'],
-                          subject['code'], client['subsystem']])
+                              subject['code'], client['subsystem']])
 
     add_to_acl_2_1_8.test_add_subjects(client=client_to_add, wsdl_index=0, service_index=0,
                                        service_subjects=[acl_subject], remove_data=False,

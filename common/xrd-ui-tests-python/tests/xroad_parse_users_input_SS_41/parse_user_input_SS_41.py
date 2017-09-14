@@ -1,18 +1,17 @@
+import re
 import time
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
 
-import re
-
-from view_models import sidebar as sidebar_constants, clients_table_vm, members_table,\
+from helpers import auditchecker
+from view_models import sidebar as sidebar_constants, clients_table_vm, members_table, \
     keys_and_certificates_table as keyscertificates_constants, popups as popups, messages, \
-    groups_table, central_services
+    groups_table, central_services, log_constants
 
 
 def test_01():
     def test_case(self):
-
         parse_key_label_inputs(self)
 
     return test_case
@@ -65,9 +64,12 @@ def test_03():
                 popups.confirm_dialog_click(self)
 
                 self.log('Find added Member Code == "' + member_code + ', Subsystem Code == ' + subsystem_code)
+                self.wait_jquery()
                 client_id = self.wait_until_visible(type=By.XPATH, element=clients_table_vm.
-                                                    get_client_id_by_member_code_subsystem_code(member_code.strip(),
+                                                    get_client_id_by_member_code_subsystem_code(self,
+                                                                                                member_code.strip(),
                                                                                                 subsystem_code.strip()))
+
                 client_id_text = client_id.text
                 self.log(client_id_text)
                 if whitespaces:
@@ -81,6 +83,7 @@ def test_03():
             counter += 1
 
         self.wait_jquery()
+
     return test_case
 
 
@@ -110,31 +113,77 @@ def test_04():
 
         self.log('Find added Member Code == "' + member_code + ', Subsystem Code == ' + subsystem_code)
         client_id = self.wait_until_visible(type=By.XPATH, element=clients_table_vm.
-                                            get_client_id_by_member_code_subsystem_code(member_code,
+                                            get_client_id_by_member_code_subsystem_code(self, member_code,
                                                                                         subsystem_code))
         counter = 1
         management_wsdl_url = self.config.get('wsdl.management_service_wsdl_url')
         cs_host = self.config.get('cs.ssh_host')
+        ss_2_ssh_host = self.config.get('ss2.ssh_host')
+        ss_2_ssh_user = self.config.get('ss2.ssh_user')
+        ss_2_ssh_pass = self.config.get('ss2.ssh_pass')
+        self.wait_jquery()
+        self.log("Open client details")
+        self.double_click(client_id)
+        add_wsdl_url(self, management_wsdl_url)
+        self.wait_jquery()
+        # Open WSDL URL services
+        self.log('Click on added wsdl url - {0}'.format(management_wsdl_url))
+        self.wait_until_visible(type=By.XPATH,
+                                element=popups.get_wsdl_url_row(management_wsdl_url)).click()
+        self.wait_jquery()
+        self.log('Click on "CLOSE" button')
+        self.wait_until_visible(type=By.XPATH, element=popups.CLIENT_DETAILS_POPUP_CLOSE_BTN_XPATH).click()
+
+        log_checker = auditchecker.AuditChecker(host=ss_2_ssh_host, username=ss_2_ssh_user, password=ss_2_ssh_pass)
+
         # Loop through wsdl url's
         for wsdl_data in clients_table_vm.WSDL_DATA:
+            current_log_lines = log_checker.get_line_count()
             wsdl_url = wsdl_data[0].format(management_wsdl_url, cs_host)
             error = wsdl_data[1]
             error_message = wsdl_data[2]
             error_message_label = wsdl_data[3]
             whitespaces = wsdl_data[4]
 
+            '''Generate long inputs'''
+            long_wsdl_url = wsdl_url.split('#')
+            try:
+                if long_wsdl_url[1] == '255':
+                    multiplier = int(long_wsdl_url[1]) - len(long_wsdl_url[0]) - len(long_wsdl_url[2])
+                    wsdl_url = long_wsdl_url[0] + multiplier * 'A' + long_wsdl_url[2]
+                elif long_wsdl_url[1] == '256':
+                    multiplier = int(long_wsdl_url[1]) - len(long_wsdl_url[0]) - len(long_wsdl_url[2])
+                    wsdl_url = long_wsdl_url[0] + multiplier * 'A' + long_wsdl_url[2]
+            except:
+                pass
+
             self.log('Test-' + str(counter) + '. WSDL URL == "' + wsdl_url + '"')
 
             self.log("Open client details")
             self.double_click(client_id)
 
-            add_wsdl_url(self, wsdl_url)
-
-            parse_user_input(self, error, error_message, error_message_label)
+            self.wait_jquery()
+            self.log("Open 'Services' tab")
+            self.wait_until_visible(type=By.XPATH, element=clients_table_vm.SERVICES_TAB_XPATH).click()
 
             self.wait_jquery()
+            self.log('Click on "Edit" button')
+            self.wait_until_visible(type=By.ID, element=popups.EDIT_WSDL_BUTTON_ID).click()
+            self.wait_jquery()
+            self.log('Enter wsdl url - {0}'.format(wsdl_url))
+            url_field = self.wait_until_visible(type=By.ID, element=popups.EDIT_WSDL_POPUP_URL_ID)
+            self.input(url_field, wsdl_url)
+
+            self.wait_jquery()
+            self.log('Click on "OK" button')
+            self.wait_until_visible(type=By.XPATH, element=popups.EDIT_WSDL_POPUP_OK_BTN_XPATH).click()
+
+            parse_user_input(self, error, error_message, error_message_label)
+            self.wait_jquery()
             if error:
-                self.wait_until_visible(type=By.XPATH, element=popups.ADD_WSDL_POPUP_CANCEL_BTN_XPATH).click()
+                logs_found = log_checker.check_log(log_constants.EDIT_WSDL_FAILED, from_line=current_log_lines + 1)
+                self.is_true(logs_found, msg="Edit wsdl failed not found in audit log")
+                self.wait_until_visible(type=By.XPATH, element=popups.EDIT_WSDL_POPUP_CANCEL_BTN_XPATH).click()
             else:
                 # Verify that the added WSDL URL exists
                 self.log('Find added WSDL URL row number - ' + wsdl_url)
@@ -149,12 +198,14 @@ def test_04():
 
             self.log('Click on "CLOSE" button')
             self.wait_until_visible(type=By.XPATH, element=popups.CLIENT_DETAILS_POPUP_CLOSE_BTN_XPATH).click()
+            counter += 1
 
         client_id = self.wait_until_visible(type=By.XPATH, element=clients_table_vm.
-                                            get_client_id_by_member_code_subsystem_code(member_code, subsystem_code))
+                                            get_client_id_by_member_code_subsystem_code(self, member_code,
+                                                                                        subsystem_code))
+
         self.log('Delete added client')
         delete_added_client(self, client_id)
-        counter += 1
 
     return test_case
 
@@ -162,12 +213,12 @@ def test_04():
 def test_05():
     def test_case(self):
         """
-        SERVICE_09 step 3 Verifies WSDL url
+        SERVICE_13 step 34Verifies WSDL url
         :param self: MainController object
         :return: None
         """
         # TEST PLAN SERVICE 9 step 3 System verifies clients member and subsystem code
-        self.log('*** SERVICE_09_3 / XTKB-53')
+        self.log('*** SERVICE_13_4 / XTKB-54')
         # Open security server clients tab
         self.log('Open security server clients tab')
         self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar_constants.CLIENTS_BTN_CSS).click()
@@ -186,8 +237,9 @@ def test_05():
 
         self.log('Find added Member Code == "' + member_code + ', Subsystem Code == ' + subsystem_code)
         client_id = self.wait_until_visible(type=By.XPATH, element=clients_table_vm.
-                                            get_client_id_by_member_code_subsystem_code(member_code,
+                                            get_client_id_by_member_code_subsystem_code(self, member_code,
                                                                                         subsystem_code))
+        self.wait_jquery()
         # Add wsdl url
         self.log("Open client details")
         self.double_click(client_id)
@@ -198,7 +250,12 @@ def test_05():
 
         wsdl_disabled = True
         counter = 1
+        ss_2_ssh_host = self.config.get('ss2.ssh_host')
+        ss_2_ssh_user = self.config.get('ss2.ssh_user')
+        ss_2_ssh_pass = self.config.get('ss2.ssh_pass')
+        log_checker = auditchecker.AuditChecker(host=ss_2_ssh_host, username=ss_2_ssh_user, password=ss_2_ssh_pass)
         for wsdl_disable_notice in clients_table_vm.WSDL_DISABLE_NOTICES:
+            current_log_lines = log_checker.get_line_count()
             notice = wsdl_disable_notice[0]
             error = wsdl_disable_notice[1]
             error_message = wsdl_disable_notice[2]
@@ -222,6 +279,10 @@ def test_05():
                                     element=popups.DISABLE_WSDL_POPUP_OK_BTN_XPATH).click()
             parse_user_input(self, error, error_message, error_message_label)
             if error:
+                '''SERVICE_13 4a2 audit log contains disable wsdl failed when disabling fails'''
+                self.log('SERVICE_13 4a2 audit log contains disable wsdl failed when disabling fails')
+                logs_found = log_checker.check_log(log_constants.DISABLE_WSDL_FAILED, from_line=current_log_lines + 1)
+                self.is_true(logs_found, msg="Disable wsdl failed not found in audit log")
                 self.log('Click on "CANCEL" button')
                 self.wait_until_visible(type=By.XPATH,
                                         element=popups.DISABLE_WSDL_POPUP_CANCEL_BTN_XPATH).click()
@@ -247,6 +308,9 @@ def test_06():
         :param self: MainController object
         :return: None
         """
+        ss_2_ssh_host = self.config.get('ss2.ssh_host')
+        ss_2_ssh_user = self.config.get('ss2.ssh_user')
+        ss_2_ssh_pass = self.config.get('ss2.ssh_pass')
         # TEST PLAN SERVICE 19 step 3 System verifies address of a service
         self.log('*** SERVICE_19_3 / XTKB-55')
         # Open security server clients tab
@@ -266,11 +330,13 @@ def test_06():
         self.log('Click on "CONFIRM" button')
         popups.confirm_dialog_click(self)
 
+        self.wait_jquery()
         # Get a client id as a parameter
         self.log('Find added Member Code == "' + member_code + ', Subsystem Code == ' + subsystem_code)
         client_id = self.wait_until_visible(type=By.XPATH, element=clients_table_vm.
-                                            get_client_id_by_member_code_subsystem_code(member_code,
+                                            get_client_id_by_member_code_subsystem_code(self, member_code,
                                                                                         subsystem_code))
+        self.wait_jquery()
         # Add a wsdl url
         self.log("Open client details")
         self.double_click(client_id)
@@ -283,15 +349,27 @@ def test_06():
 
         counter = 1
         cs_service_url = self.config.get('cs.service_url')
+        log_checker = auditchecker.AuditChecker(host=ss_2_ssh_host, username=ss_2_ssh_user, password=ss_2_ssh_pass)
 
         # Loop through data from the clients_table_vm.py
         for service_url_data in clients_table_vm.SERVICE_URLS_DATA:
+            current_log_lines = log_checker.get_line_count()
             # Set necessary parameters
             service_url = service_url_data[0].format(cs_service_url)
             error = service_url_data[1]
             error_message = service_url_data[2]
             error_message_label = service_url_data[3]
             whitespaces = service_url_data[4]
+
+            '''Generate long inputs'''
+            long_service_url = service_url.split('#')
+
+            try:
+                if long_service_url[1] == '255' or long_service_url[1] == '256':
+                    multiplier = int(long_service_url[1]) - len(long_service_url[0]) - len(long_service_url[2])
+                    service_url = long_service_url[0] + multiplier * 'A' + long_service_url[2]
+            except:
+                pass
 
             self.log('Test-' + str(counter) + '. Service url == "' + service_url + '"')
 
@@ -314,6 +392,10 @@ def test_06():
             parse_user_input(self, error, error_message, error_message_label)
 
             if error:
+                '''Check if log contains info about service editing failure'''
+                logs_found = log_checker.check_log(log_constants.EDIT_SERVICE_PARAMS_FAILED,
+                                                   from_line=current_log_lines + 1)
+                self.is_true(logs_found, msg="Edit service parameters failed not found in audit log")
                 # Close a pop-up window of the service details, if there is a error message
                 self.log('Click on "CANCEL" button')
                 self.wait_until_visible(type=By.XPATH, element=popups.EDIT_SERVICE_POPUP_CANCEL_BTN_XPATH).click()
@@ -384,7 +466,7 @@ def test_07():
 
                 # Close the member details pop up window
                 self.log('Click on "CLOSE" button')
-                self.wait_until_visible(type=By.XPATH, element=members_table.MEMBER_DETAILS_NAME_POPUP_CLOSE_BTN_XPATH)\
+                self.wait_until_visible(type=By.XPATH, element=members_table.MEMBER_DETAILS_NAME_POPUP_CLOSE_BTN_XPATH) \
                     .click()
 
                 self.wait_jquery()
@@ -461,8 +543,7 @@ def test_08():
                                                        MEMBER_EDIT_NAME_POPUP_EDIT_NAME_AREA_XPATH)
             self.input(edit_member_name, new_member_name)
 
-            self.wait_until_visible(type=By.XPATH, element=members_table.MEMBER_EDIT_NAME_POPUP_OK_BTN_XPATH)\
-                .click()
+            self.wait_until_visible(type=By.XPATH, element=members_table.MEMBER_EDIT_NAME_POPUP_OK_BTN_XPATH).click()
 
             # Verify member name
             parse_user_input(self, error, error_message, error_message_label)
@@ -473,7 +554,7 @@ def test_08():
                     .click()
                 self.wait_jquery()
                 self.log('Click on "Close" button')
-                self.wait_until_visible(type=By.XPATH, element=members_table.MEMBER_DETAILS_NAME_POPUP_CLOSE_BTN_XPATH)\
+                self.wait_until_visible(type=By.XPATH, element=members_table.MEMBER_DETAILS_NAME_POPUP_CLOSE_BTN_XPATH) \
                     .click()
 
             else:
@@ -502,98 +583,7 @@ def test_08():
 
 def test_09():
     def test_case(self):
-        """
-        MEMBER_32 step 3 System verifies changed member name in the central server
-        :param self: MainController object
-        :return: None
-        """
-        # TEST PLAN MEMBER_32 step 3 System verifies changed member name in the central server
-        self.log('*** MEMBER_32_3 / XTKB-56')
-
-        # Open global groups
-        self.log('Open Global Groups tab')
-        self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar_constants.GLOBAL_GROUPS_CSS).click()
-        self.wait_jquery()
-
-        # Loop through data from the groups_table.py
-        counter = 1
-        for group_data in groups_table.GROUP_DATA:
-            # Set necessary parameters
-            code = group_data[0]
-            description = group_data[1]
-            error = group_data[2]
-            error_message = group_data[3]
-            error_message_label = group_data[4]
-            whitespaces = group_data[5]
-
-            self.log('Test-' + str(counter) + '. Code == "' + code +
-                     '", Description == "' + description + '"')
-
-            # Start adding new group
-            self.log('Click "ADD" to add new group')
-            self.wait_until_visible(type=By.ID, element=groups_table.ADD_GROUP_BTN_ID).click()
-
-            # Add new group
-            self.log('2.11.1-8 add new group, fill in required fields')
-            self.log('Send {0} to code area input'.format(code))
-            group_code_input = self.wait_until_visible(type=By.ID, element=groups_table.GROUP_CODE_AREA_ID)
-            self.input(group_code_input, code)
-            self.log('Send {0} to code description input'.format(description))
-            group_description_input = self.wait_until_visible(type=By.ID, element=groups_table.
-                                                              GROUP_DESCRIPTION_AREA_ID)
-            self.input(group_description_input, description)
-
-            self.log('Click on "OK" to add new group')
-            self.wait_until_visible(type=By.XPATH, element=groups_table.NEW_GROUP_POPUP_OK_BTN_XPATH).click()
-            self.wait_jquery()
-
-            # Verify group code and description
-            parse_user_input(self, error, error_message, error_message_label)
-
-            if error:
-                # Close a pop-up window , if there is a error message
-                self.log('Click on "Cancel" button')
-                self.wait_until_visible(type=By.XPATH, element=groups_table.NEW_GROUP_POPUP_CANCEL_BTN_XPATH).click()
-                self.wait_jquery()
-            else:
-                # Verify that the added global group code exists
-                self.log('Find added code text - ' + code.strip())
-                global_croup_code = self.wait_until_visible(type=By.XPATH,
-                                                            element=groups_table.
-                                                            get_clobal_group_code_description_by_text(code.strip()))
-                global_croup_code = global_croup_code.text
-                # Verify that the added global group description exists
-                self.log('Find added description text - ' + description.strip())
-                global_croup_description = self.wait_until_visible(type=By.XPATH,
-                                                                   element=groups_table.
-                                                                   get_clobal_group_code_description_by_text(
-                                                                       description.strip()))
-                global_croup_description = global_croup_description.text
-                self.log('Found global group code - ' + code)
-                self.log('Found global group description - ' + description)
-
-                if whitespaces:
-                    find_text_with_whitespaces(self, code, global_croup_code)
-                    find_text_with_whitespaces(self, description, global_croup_description)
-                else:
-                    assert code in global_croup_code
-                    assert description in global_croup_description
-
-                # Delete added global group
-                self.log('Delete added global group')
-                self.log('Click on added global group row')
-                self.wait_until_visible(type=By.XPATH, element=groups_table.
-                                        get_clobal_group_code_description_by_text(code.strip())).click()
-                self.log('Click on "DETAILS" button')
-                self.wait_until_visible(type=By.ID,
-                                        element=groups_table.GROUP_DETAILS_BTN_ID).click()
-                self.log('Click on "DELETE" button')
-                self.wait_until_visible(type=By.XPATH,
-                                        element=groups_table.DELETE_GROUP_BTN_ID).click()
-                self.log('Click on "CONFIRM" button')
-                popups.confirm_dialog_click(self)
-
-            counter += 1
+        parse_global_groups_inputs(self)
 
     return test_case
 
@@ -608,14 +598,15 @@ def test_10():
         # TEST PLAN MEMBER_42 step 3 System verifies added central services
         self.log('*** MEMBER_42_3 / XTKB-57')
 
-        # Open central services
-        self.log('Open Central Cervices tab')
-        self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar_constants.CENTRAL_SERVICES_CSS).click()
-        self.wait_jquery()
+        cs_ssh_host = self.config.get('cs.ssh_host')
+        cs_ssh_user = self.config.get('cs.ssh_user')
+        cs_ssh_pass = self.config.get('cs.ssh_pass')
 
         # Loop through data from the groups_table.py
         counter = 1
+        log_checker = auditchecker.AuditChecker(host=cs_ssh_host, username=cs_ssh_user, password=cs_ssh_pass)
         for group_data in central_services.NEW_CENTRAL_SERVICE_DATA:
+            current_log_lines = log_checker.get_line_count()
             # Set parameters
             cs_code = group_data[0]
             code = group_data[1]
@@ -635,6 +626,26 @@ def test_10():
                      '", Provider Class == "' + provider_class + '", Provider subsystem == "' +
                      provider_subsystem + '"')
 
+            if not error:
+                '''Get provider parameters from the system'''
+                get_provider_parameter = get_provider_parameters(self)
+                provider_code = get_provider_parameter[0]
+                provider_class = get_provider_parameter[1]
+                provider_subsystem = get_provider_parameter[2]
+                code = get_provider_parameter[3]
+                provider_name = get_provider_parameter[4]
+
+                if whitespaces:
+                    provider_subsystem = '{0}{1}{0}'.format('   ', provider_subsystem)
+                    code = '{0}{1}{0}'.format('   ', code)
+                    provider_name = '{0}{1}{0}'.format('   ', provider_name)
+                    provider_code = '{0}{1}{0}'.format('   ', provider_code)
+
+            # Open central services
+            self.log('Open Central Cervices tab')
+            self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar_constants.CENTRAL_SERVICES_CSS).click()
+            self.wait_jquery()
+
             # Start adding central service
             add_central_service(self, cs_code, code, version, provider_name, provider_code, provider_class,
                                 provider_subsystem)
@@ -643,6 +654,10 @@ def test_10():
             parse_user_input(self, error, error_message, error_message_label)
 
             if error:
+                '''Check if log contains info about central service adding failure'''
+                logs_found = log_checker.check_log(log_constants.ADD_CENTRAL_SERVICE_FAILED,
+                                                   from_line=current_log_lines + 1)
+                self.is_true(logs_found, msg="Add central service failed not found in audit log")
                 # Click on 'CANCEL' button
                 self.log('Click on "CANCEL" button')
                 self.wait_until_visible(type=By.ID, element=popups.CENTRAL_SERVICE_POPUP_CANCEL_BUTTON_ID).click()
@@ -710,8 +725,19 @@ def test_11():
         :param self: MainController object
         :return: None
         """
-        # TEST PLAN MEMBER_32 step 3 System verifies changed Implementing Service
+        # TEST PLAN MEMBER_42 step 3 System verifies changed Implementing Service
         self.log('*** MEMBER_42_3 / XTKB-58')
+
+        cs_ssh_host = self.config.get('cs.ssh_host')
+        cs_ssh_user = self.config.get('cs.ssh_user')
+        cs_ssh_pass = self.config.get('cs.ssh_pass')
+
+        get_provider_parameter = get_provider_parameters(self)
+        provider_code = get_provider_parameter[0]
+        provider_class = get_provider_parameter[1]
+        provider_subsystem = get_provider_parameter[2]
+        code = get_provider_parameter[3]
+        provider_name = get_provider_parameter[4]
 
         # Open central services
         self.log('Open Central Cervices tab')
@@ -720,17 +746,16 @@ def test_11():
 
         # Start adding central service
         self.log('Add central service')
-        add_central_service(self, central_services.CENTRAL_SERVICE[0], central_services.CENTRAL_SERVICE[1],
-                            central_services.CENTRAL_SERVICE[2], central_services.CENTRAL_SERVICE[3],
-                            central_services.CENTRAL_SERVICE[4], central_services.CENTRAL_SERVICE[5],
-                            central_services.CENTRAL_SERVICE[6])
-
-        cs_row = self.wait_until_visible(type=By.XPATH, element=central_services.
-                                         get_central_service_text(central_services.CENTRAL_SERVICE[0].strip()))
+        add_central_service(self, central_services.CENTRAL_SERVICE[0], code,
+                            central_services.CENTRAL_SERVICE[2], provider_name,
+                            provider_code, provider_class,
+                            provider_subsystem)
 
         # Loop through data from the groups_table.py
         counter = 1
+        log_checker = auditchecker.AuditChecker(host=cs_ssh_host, username=cs_ssh_user, password=cs_ssh_pass)
         for group_data in central_services.EDIT_CENTRAL_SERVICE_DATA:
+            current_log_lines = log_checker.get_line_count()
             # Set parameters
             cs_code = group_data[0]
             code = group_data[1]
@@ -743,6 +768,27 @@ def test_11():
             error_message = group_data[8]
             error_message_label = group_data[9]
             whitespaces = group_data[10]
+
+            if not error:
+                '''Get provider parameters from the system'''
+                get_provider_parameter = get_provider_parameters(self)
+                provider_code = get_provider_parameter[0]
+                provider_class = get_provider_parameter[1]
+                provider_subsystem = get_provider_parameter[2]
+                code = get_provider_parameter[3]
+                provider_name = get_provider_parameter[4]
+
+                if whitespaces:
+                    provider_subsystem = '{0}{1}{0}'.format('   ', provider_subsystem)
+                    code = '{0}{1}{0}'.format('   ', code)
+                    provider_name = '{0}{1}{0}'.format('   ', provider_name)
+                    provider_code = '{0}{1}{0}'.format('   ', provider_code)
+
+            # Open central services
+            self.log('Open Central Cervices tab')
+            self.wait_until_visible(type=By.CSS_SELECTOR,
+                                    element=sidebar_constants.CENTRAL_SERVICES_CSS).click()
+            self.wait_jquery()
 
             self.log('Test-' + str(counter) + '. Central Service Code == "' + cs_code +
                      '", Implementing Service Code == "' + code + '", Version == "' + version +
@@ -812,14 +858,16 @@ def test_11():
             parse_user_input(self, error, error_message, error_message_label)
 
             if error:
+                '''Check if log contains info about central service editing failure'''
+                logs_found = log_checker.check_log(log_constants.EDIT_CENTRAL_SERVICE_FAILED,
+                                                   from_line=current_log_lines + 1)
+                self.is_true(logs_found, msg="Edit central service failed not found in audit log")
                 # Click on 'CANCEL' button
                 self.log('Click on "CANCEL" button')
                 self.wait_until_visible(type=By.ID, element=popups.CENTRAL_SERVICE_POPUP_CANCEL_BUTTON_ID).click()
             else:
+                self.wait_jquery()
                 # Verify that the added central service data exists
-                self.log('Find added code text - ' + cs_code.strip())
-                cs_code_in = self.wait_until_visible(type=By.XPATH,
-                                                     element=central_services.get_central_service_text(cs_code.strip()))
                 self.log('Find added code text - ' + code.strip())
                 code_in = self.wait_until_visible(type=By.XPATH,
                                                   element=central_services.get_central_service_text(code.strip()))
@@ -871,6 +919,133 @@ def test_11():
     return test_case
 
 
+def test_12():
+    def test_case(self):
+        """
+        SERVICE_21 step 3 verifies timeout of a service
+        :param self: MainController object
+        :return: None
+        """
+        ss_2_ssh_host = self.config.get('ss2.ssh_host')
+        ss_2_ssh_user = self.config.get('ss2.ssh_user')
+        ss_2_ssh_pass = self.config.get('ss2.ssh_pass')
+        '''TEST PLAN SERVICE 21 step 3 System verifies timeout of a service'''
+        self.log('*** SERVICE_21_3 / XTKB-28')
+        '''Open security server clients tab'''
+        self.log('Open security server clients tab')
+        self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar_constants.CLIENTS_BTN_CSS).click()
+
+        '''Get parameters member_code and subsystem_code from clients_table_vm.py'''
+        member_code = clients_table_vm.ONE_SS_CLIENT[0]
+        subsystem_code = clients_table_vm.ONE_SS_CLIENT[1]
+
+        '''Add client of the security service'''
+        add_ss_client(self, member_code, subsystem_code)
+
+        '''Confirm added client'''
+        self.log('Click on "CONTINUE" button')
+        self.wait_until_visible(type=By.XPATH, element=popups.WARNING_POPUP_CONTINUE_XPATH).click()
+        self.log('Click on "CONFIRM" button')
+        popups.confirm_dialog_click(self)
+
+        self.wait_jquery()
+        '''Get a client id as a parameter'''
+        self.log('Find added Member Code == "' + member_code + ', Subsystem Code == ' + subsystem_code)
+        client_id = self.wait_until_visible(type=By.XPATH, element=clients_table_vm.
+                                            get_client_id_by_member_code_subsystem_code(self, member_code,
+                                                                                        subsystem_code))
+        self.wait_jquery()
+        '''Add a wsdl url'''
+        self.log("Open client details")
+        self.double_click(client_id)
+
+        add_wsdl_url(self, self.config.get('wsdl.management_service_wsdl_url'))
+
+        '''Open WSDL URL services'''
+        self.log('Open WSDL URL services, clicking on "+"')
+        self.wait_until_visible(type=By.CLASS_NAME, element=popups.CLIENT_DETAILS_POPUP_WSDL_URL_DETAILS_CLASS).click()
+
+        counter = 1
+        log_checker = auditchecker.AuditChecker(host=ss_2_ssh_host, username=ss_2_ssh_user, password=ss_2_ssh_pass)
+
+        '''Loop through data from the clients_table_vm.py'''
+        for service_timeout_data in clients_table_vm.SERVICE_TIMEOUTS_DATA:
+            current_log_lines = log_checker.get_line_count()
+            '''Set necessary parameters'''
+            repeat_timeout_value_multiplier = service_timeout_data[0]
+            service_timeout = service_timeout_data[1]
+            error = service_timeout_data[2]
+            error_message = service_timeout_data[3]
+            error_message_label = service_timeout_data[4]
+            whitespaces = service_timeout_data[5]
+
+            '''Generate long inputs'''
+            try:
+                if repeat_timeout_value_multiplier > 0:
+                    multiplier = int(repeat_timeout_value_multiplier) - len(service_timeout)
+                    service_timeout = service_timeout + multiplier * '1'
+            except:
+                pass
+
+            self.log('Test-{0}. Service timeout == "{1}"'.format(counter, service_timeout))
+
+            '''Activate a authCertDeletion service row'''
+            self.log('Click on authCertDeletion service row')
+            self.wait_until_visible(type=By.XPATH, element=popups.
+                                    CLIENT_DETAILS_POPUP_WSDL_SERVICES_AUTHCERTDELETION_XPATH).click()
+            '''Add a service url'''
+            self.log('Click on "EDIT" button')
+            self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_EDIT_WSDL_BTN_ID).click()
+
+            self.log('Enter service timeout')
+            entered_service_timeout = self.wait_until_visible(type=By.ID, element=popups.EDIT_SERVICE_POPUP_TIMEOUT_ID)
+            self.input(entered_service_timeout, service_timeout)
+
+            self.log('Get service url to find the row later')
+            entered_service_url = self.wait_until_visible(type=By.ID, element=popups.EDIT_SERVICE_POPUP_URL_ID)
+            entered_service_url_value = entered_service_url.get_attribute('value')
+
+            self.log('Click on "OK" button')
+            self.wait_until_visible(type=By.XPATH, element=popups.EDIT_SERVICE_POPUP_OK_BTN_XPATH).click()
+
+            '''Check for the error messages'''
+            parse_user_input(self, error, error_message, error_message_label)
+
+            if error:
+                '''Check if log contains info about service editing failure'''
+                logs_found = log_checker.check_log(log_constants.EDIT_SERVICE_PARAMS_FAILED,
+                                                   from_line=current_log_lines + 1)
+                self.is_true(logs_found, msg="Edit service paramters failed not found in audit log")
+                '''Close a pop-up window of the service details, if there is a error message'''
+                self.log('Click on "CANCEL" button')
+                self.wait_until_visible(type=By.XPATH, element=popups.EDIT_SERVICE_POPUP_CANCEL_BTN_XPATH).click()
+            else:
+                '''Verify that the added service url exists'''
+                self.log('Find added service timeout text - {0}'.format(service_timeout))
+                get_service_timeout = clients_table_vm.find_service_timeout_by_text(self, entered_service_url_value,
+                                                                                    service_timeout.strip())
+                get_service_timeout = get_service_timeout.text
+                self.log('Found service timeout - {0}'.format(get_service_timeout))
+                '''Verify that there is not inputs with whitespaces'''
+                if whitespaces:
+                    find_text_with_whitespaces(self, service_timeout, get_service_timeout)
+                else:
+                    assert service_timeout in get_service_timeout
+                    self.log('Found service with timeout- ' + get_service_timeout)
+
+        '''Close a pop-up window of the client details'''
+        self.wait_jquery()
+        self.log('Click on "CLOSE" button')
+        self.wait_until_visible(type=By.XPATH, element=popups.CLIENT_DETAILS_POPUP_CLOSE_BTN_XPATH).click()
+
+        '''Delete added client'''
+        delete_added_client(self, client_id)
+
+        counter += 1
+
+    return test_case
+
+
 def parse_user_selection(self, element, start_nr):
     """
     Verify user selections
@@ -880,7 +1055,7 @@ def parse_user_selection(self, element, start_nr):
     :return:
     """
 
-    self.log('Verify that there is no selected element with empty text, more than 256 characters and with whitespaces')
+    self.log('Verify that there is no selections with empty text, more than 256 characters and with whitespaces')
     element_exists = True
     while element_exists:
         try:
@@ -1066,6 +1241,41 @@ def add_wsdl_url(self, wsdl_url):
     self.input(wsdl_url_element, wsdl_url)
     self.log('Click on "OK" button')
     self.wait_until_visible(type=By.XPATH, element=popups.ADD_WSDL_POPUP_OK_BTN_XPATH).click()
+
+
+def get_provider_parameters(self):
+    '''Get provider class and code fromm config.ini'''
+    central_service_provider_2_id = self.config.get('services.central_service_provider_2_id')
+    central_service_provider_2_id = central_service_provider_2_id.split(' : ')
+    provider_code = central_service_provider_2_id[2]
+    provider_class = central_service_provider_2_id[1]
+
+    # Open central services
+    self.log('Open MEMBERS tab')
+    self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar_constants.MEMBERS_CSS).click()
+
+    self.wait_jquery()
+    self.log('Click member name - ' + provider_code + ' - in members table')
+    self.wait_until_visible(type=By.XPATH,
+                            element=members_table.get_member_data_from_table(3, provider_code)).click()
+    self.log('Click on "DETAILS" button')
+    self.wait_until_visible(type=By.ID, element=members_table.MEMBERS_DETATILS_BTN_ID).click()
+    self.log('Click on "Used servers" tab')
+    self.wait_jquery()
+    self.wait_until_visible(type=By.XPATH, element=members_table.USED_SERVERS_TAB).click()
+    self.wait_jquery()
+
+    provider_subsystem = self.by_xpath(members_table.get_member_used_servers(1, 2))
+    provider_subsystem = provider_subsystem.text
+
+    code = self.by_xpath(members_table.get_member_used_servers(1, 3))
+    code = code.text
+    provider_name = code
+    self.log('Click on "Used servers" tab')
+    self.wait_jquery()
+    self.wait_until_visible(type=By.XPATH, element=members_table.MEMBER_DETAILS_NAME_POPUP_CLOSE_BTN_XPATH) \
+        .click()
+    return [provider_code, provider_class, provider_subsystem, code, provider_name]
 
 
 def add_central_service(self, cs_code, code, version, provider_name, provider_code, provider_class, provider_subsystem):
@@ -1259,7 +1469,7 @@ def parse_key_label_inputs(self):
                             generated_key_name = True
                             break
                     except:
-                            pass
+                        pass
 
                 assert generated_key_name is True
 
@@ -1309,7 +1519,122 @@ def parse_csr_inputs(self):
     parse_user_selection(self, keyscertificates_constants.GENERATE_CSR_SIGNING_REQUEST_CSR_FORMAT_DROPDOWN_ID, 1)
 
     self.log('Click on "CANCEL" button')
-    self.wait_until_visible(type=By.XPATH, element=keyscertificates_constants.GENERATE_CSR_SIGNING_REQUEST_POPUP_CANCEL_BTN_XPATH).click()
+    self.wait_until_visible(type=By.XPATH,
+                            element=keyscertificates_constants.GENERATE_CSR_SIGNING_REQUEST_POPUP_CANCEL_BTN_XPATH).click()
 
     # Delete the added key label
     delete_added_key_label(self)
+
+
+def enter_global_group(self, code, description):
+    """
+    :param self: MainController object
+    :param code: str - Group code
+    :param description: str - Group description
+    :return:
+    """
+    self.wait_jquery()
+    # Start adding new group
+    self.log('Click "ADD" to add new group')
+    self.wait_until_visible(type=By.ID, element=groups_table.ADD_GROUP_BTN_ID).click()
+
+    # Add new group
+    self.log('2.11.1-8 add new group, fill in required fields')
+    self.log('Send {0} to code area input'.format(code))
+    group_code_input = self.wait_until_visible(type=By.ID, element=groups_table.GROUP_CODE_AREA_ID)
+    self.input(group_code_input, code)
+    self.log('Send {0} to code description input'.format(description))
+    group_description_input = self.wait_until_visible(type=By.ID, element=groups_table.
+                                                      GROUP_DESCRIPTION_AREA_ID)
+    self.input(group_description_input, description)
+
+    self.log('Click on "OK" to add new group')
+    self.wait_until_visible(type=By.XPATH, element=groups_table.NEW_GROUP_POPUP_OK_BTN_XPATH).click()
+    self.wait_jquery()
+
+
+def delete_global_group(self, code):
+    """
+    :param self: MainController object
+    :param code: str - Group code
+    :return:
+    """
+    # Delete added global group
+    self.log('Delete added global group')
+    self.log('Click on added global group row')
+    self.wait_until_visible(type=By.XPATH, element=groups_table.
+                            get_clobal_group_code_description_by_text(code.strip())).click()
+    self.log('Click on "DETAILS" button')
+    self.wait_until_visible(type=By.ID,
+                            element=groups_table.GROUP_DETAILS_BTN_ID).click()
+    self.log('Click on "DELETE" button')
+    self.wait_until_visible(type=By.XPATH,
+                            element=groups_table.DELETE_GROUP_BTN_ID).click()
+    self.log('Click on "CONFIRM" button')
+    popups.confirm_dialog_click(self)
+
+
+def parse_global_groups_inputs(self):
+    """
+    SERVICE_32 step 3 System verifies global groups inputs in the central server
+    :param self: MainController object
+    :return: None
+    """
+    # TEST PLAN SERVICE_32 step 3 System verifies global groups inputs in the central server
+    self.log('*** SERVICE_33_3 / XTKB-56')
+    # Open global groups
+    self.wait_jquery()
+    self.log('Open Global Groups tab')
+    self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar_constants.GLOBAL_GROUPS_CSS).click()
+    self.wait_jquery()
+
+    # Loop through data from the groups_table.py
+    counter = 1
+    for group_data in groups_table.GROUP_DATA:
+        # Set necessary parameters
+        code = group_data[0]
+        description = group_data[1]
+        error = group_data[2]
+        error_message = group_data[3]
+        error_message_label = group_data[4]
+        whitespaces = group_data[5]
+
+        # Start adding new group
+        enter_global_group(self, code, description)
+
+        # Verify group code and description
+        parse_user_input(self, error, error_message, error_message_label)
+
+        if error:
+            # Close a pop-up window , if there is a error message
+            self.log('Click on "Cancel" button')
+            self.wait_until_visible(type=By.XPATH, element=groups_table.NEW_GROUP_POPUP_CANCEL_BTN_XPATH).click()
+            self.wait_jquery()
+        else:
+            # Verify that the added global group code exists
+            self.log('Find added code text - ' + code.strip())
+            global_croup_code = self.wait_until_visible(type=By.XPATH,
+                                                        element=groups_table.
+                                                        get_clobal_group_code_description_by_text(code.strip()))
+            global_croup_code = global_croup_code.text
+            # Verify that the added global group description exists
+            self.log('Find added description text - ' + description.strip())
+            global_croup_description = self.wait_until_visible(type=By.XPATH,
+                                                               element=groups_table.
+                                                               get_clobal_group_code_description_by_text(
+                                                                   description.strip()))
+            global_croup_description = global_croup_description.text
+            self.log('Found global group code - ' + code)
+            self.log('Found global group description - ' + description)
+
+            if whitespaces:
+                find_text_with_whitespaces(self, code, global_croup_code)
+                find_text_with_whitespaces(self, description, global_croup_description)
+            else:
+                assert code in global_croup_code
+                assert description in global_croup_description
+
+            # Delete added global group
+            delete_global_group(self, code)
+
+        counter += 1

@@ -38,7 +38,7 @@ class SecurityServerClientRegistration(unittest.TestCase):
             main.reset_webdriver(main.url, main.username, main.password)
 
             # TODO: check_inputs=True
-            test_func = client_certification_2_1_3.test(member_name, member_class, check_inputs=False)
+            test_func = client_certification_2_1_3.test_generate_csr_and_import_cert(member_name, member_class, check_inputs=False)
             test_func(main)
 
             main.log('Waiting {0} seconds for configuration update'.format(config_wait_time))

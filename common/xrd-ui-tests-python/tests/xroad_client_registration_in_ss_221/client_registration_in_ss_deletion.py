@@ -2,9 +2,9 @@ from __future__ import absolute_import
 
 import unittest
 
-from tests.xroad_client_registration_in_ss_221 import client_registration_in_ss_2_2_1
-from main.maincontroller import MainController
 from helpers import xroad
+from main.maincontroller import MainController
+from tests.xroad_client_registration_in_ss_221 import client_registration_in_ss_2_2_1
 
 
 class XroadSecurityServerClientDeletion(unittest.TestCase):
@@ -21,6 +21,14 @@ class XroadSecurityServerClientDeletion(unittest.TestCase):
 
         main.reset_webdriver(url=main.url, username=main.username, password=main.password, close_previous=False,
                              init_new_webdriver=False)
+
+        ss1_ssh_host = main.config.get('ss1.ssh_host')
+        ss1_ssh_username = main.config.get('ss1.ssh_user')
+        ss1_ssh_password = main.config.get('ss1.ssh_pass')
+
+        ss2_ssh_host = main.config.get('ss2.ssh_host')
+        ss2_ssh_username = main.config.get('ss2.ssh_user')
+        ss2_ssh_password = main.config.get('ss2.ssh_pass')
 
         main.management_services = xroad.split_xroad_subsystem(main.config.get('ss1.management_id'))
         cs_member = xroad.split_xroad_id(main.config.get('ss1.client_id'))
@@ -45,6 +53,12 @@ class XroadSecurityServerClientDeletion(unittest.TestCase):
                                                                 main.config.get('ss2.pass'),
                                                                 cs_new_member=cs_member, cs_member_name=cs_member_name,
                                                                 ss1_client=ss1_client, ss1_client_name=ss1_client_name,
+                                                                ss1_ssh_host=ss1_ssh_host,
+                                                                ss1_ssh_username=ss1_ssh_username,
+                                                                ss1_ssh_password=ss1_ssh_password,
+                                                                ss2_ssh_host=ss2_ssh_host,
+                                                                ss2_ssh_username=ss2_ssh_username,
+                                                                ss2_ssh_password=ss2_ssh_password,
                                                                 ss2_client=ss2_client, ss2_client_name=ss2_client_name,
                                                                 ss2_client_2=ss2_client_2,
                                                                 ss2_client_2_name=ss2_client_2_name)

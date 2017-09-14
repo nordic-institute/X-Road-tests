@@ -10,9 +10,12 @@ import messages
 MEMBER_SUBSYSTEM_CODE_AND_RESULTS = [['', '', True, 'Missing parameter: {0}', 'add_member_code', False],
                                      ['', 'SUB_TEST', True, 'Missing parameter: {0}', 'add_member_code', False],
                                      ['SUB_TEST', '', True, 'Missing parameter: {0}', 'add_subsystem_code', False],
-                                     [256 * 'A', 'SUB_TEST', True, "Parameter '{0}' input exceeds 255 characters", 'add_member_code', False],
-                                     ['SUB_TEST', 256 * 'A', True, "Parameter '{0}' input exceeds 255 characters", 'add_subsystem_code', False],
-                                     [256 * 'A', 256 * 'A', True, "Parameter '{0}' input exceeds 255 characters", 'add_member_code', False],
+                                     [256 * 'A', 'SUB_TEST', True, "Parameter '{0}' input exceeds 255 characters",
+                                      'add_member_code', False],
+                                     ['SUB_TEST', 256 * 'A', True, "Parameter '{0}' input exceeds 255 characters",
+                                      'add_subsystem_code', False],
+                                     [256 * 'A', 256 * 'A', True, "Parameter '{0}' input exceeds 255 characters",
+                                      'add_member_code', False],
                                      ['SUB_TEST', 'TEST_SUB', False, None, None, False],
                                      ['Z', 'Y', False, None, None, False],
                                      ['   SUB_TEST   ', '   TEST_SUB   ', False, None, None, True]
@@ -21,9 +24,12 @@ MEMBER_SUBSYSTEM_CODE_AND_RESULTS = [['', '', True, 'Missing parameter: {0}', 'a
 ONE_SS_CLIENT = ['CL_TEST', 'TEST_CL']
 
 WSDL_DATA = [['   {0}   ', False, None, None, True],
-             ['', True, 'Missing parameter: {0}', 'wsdl_add_url', None],
-             ['http://{1}/' + 237 * 'A' + '.wsdl', True, "Parameter '{0}' input exceeds 255 characters", 'wsdl_add_url', None],
-             ['http://{1}/' + 236 * 'T' + '.wsdl', True, "Failed to add WSDL: Downloading WSDL failed. WSDL URL must point to a WSDL file.", None, None],
+             ['{0}', False, None, None, False],
+             ['', True, 'Missing parameter: {0}', 'new_url', None],
+             ['http://{1}/' + 237 * 'A' + '.wsdl', True, "Parameter '{0}' input exceeds 255 characters", 'new_url',
+              None],
+             ['http://{1}/#255#.wsdl', True,
+              "Failed to edit WSDL: Downloading WSDL failed. WSDL URL must point to a WSDL file.", None, None],
              ]
 
 WSDL_DISABLE_NOTICES = [[256 * 'A', True, "Parameter '{0}' input exceeds 255 characters", 'wsdl_disabled_notice'],
@@ -35,11 +41,17 @@ WSDL_DISABLE_NOTICES = [[256 * 'A', True, "Parameter '{0}' input exceeds 255 cha
                         ]
 
 SERVICE_URLS_DATA = [['', True, 'Missing parameter: {0}', 'params_url', False],
-                     ['{0}' + 219 * '0' + '/managementservice/', True, "Parameter '{0}' input exceeds 255 characters", 'params_url', False],
-                     ['{0}' + 218 * '0' + '/managementservice/', False, None, None, False],
+                     ['{0}#256#/managementservice/', True, "Parameter '{0}' input exceeds 255 characters", 'params_url',
+                      False],
+                     ['{0}#255#/managementservice/', False, None, None, False],
                      ['{0}managementservice/', False, None, None, False],
                      ['    {0}managementservice/    ', False, None, None, True]
                      ]
+
+SERVICE_TIMEOUTS_DATA = [[0, '', True, 'Missing parameter: {0}', 'params_timeout', False],
+                         [256, '12', True, "Parameter '{0}' input exceeds 255 characters", 'params_timeout', False],
+                         [0, '    12   ', False, None, None, True],
+                         ]
 
 ADD_CLIENT_BTN_ID = 'client_add'
 
@@ -61,6 +73,7 @@ GLOBAL_CLIENTS_TABLE_ID = 'clients_global_wrapper'
 SELECT_CLIENT_POPUP_XPATH = '//div[@aria-describedby = "client_select_dialog"]'
 SELECT_CLIENT_POPUP_OK_BTN_XPATH = SELECT_CLIENT_POPUP_XPATH + '//div[@class="ui-dialog-buttonset"]//button[span="OK"]'
 
+CLIENT_STATUS_SAVED = 'saved'
 
 def open_acl_subjects_popup(self):
     print('Open clients view')
@@ -213,12 +226,14 @@ def get_client_row_element(self, client=None, client_name=None, client_id=None):
 
 
 def open_client_popup_services(self, client=None, client_name=None, client_id=None):
-    return open_client_popup_tab(self, client=client, client_name=client_name, client_id=client_id, selector=SERVICES_TAB_CSS,
+    return open_client_popup_tab(self, client=client, client_name=client_name, client_id=client_id,
+                                 selector=SERVICES_TAB_CSS,
                                  type=By.CSS_SELECTOR)
 
 
 def open_client_popup_internal_servers(self, client=None, client_name=None, client_id=None):
-    return open_client_popup_tab(self, client=client, client_name=client_name, client_id=client_id, selector=INTERNAL_CERTS_TAB_CSS,
+    return open_client_popup_tab(self, client=client, client_name=client_name, client_id=client_id,
+                                 selector=INTERNAL_CERTS_TAB_CSS,
                                  type=By.CSS_SELECTOR)
 
 
@@ -475,7 +490,12 @@ def client_servers_popup_set_connection(self, type):
     return (notice is not None)
 
 
-def client_servers_popup_delete_tls_certs(self):
+def client_servers_popup_delete_tls_certs(self, cancel_deletion=False):
+    '''
+    :param self:
+    :param cancel_deletion: bool|False - True if canceling confirmation before confirming wanted
+    :return:
+    '''
     delete_button = self.by_id(popups.CLIENT_DETAILS_POPUP_INTERNAL_SERVERS_DELETE_CERTIFICATE_BTN_ID)
     deleted_certs = 0
     while True:
@@ -491,6 +511,10 @@ def client_servers_popup_delete_tls_certs(self):
         certificate.click()
         delete_button.click()
 
+        if cancel_deletion:
+            self.wait_until_visible(type=By.XPATH, element=popups.CONFIRM_POPUP_CANCEL_BTN_XPATH).click()
+            delete_button.click()
+
         # Confirm deletion
         popups.confirm_dialog_click(self)
 
@@ -502,9 +526,22 @@ def client_servers_popup_delete_tls_certs(self):
     return deleted_certs
 
 
-def get_client_id_by_member_code_subsystem_code(member_code, subsystem_code):
-    return '//span[text()= "SUBSYSTEM : KS1 : COM : ' + member_code + ' : ' + subsystem_code + '"]'
+def get_client_id_by_member_code_subsystem_code(self, member_code, subsystem_code):
+    client_id = self.config.get('ss2.client_id')
+    client_id = client_id.split(' : ')
+    instance = client_id[0]
+    client_class = client_id[1]
+    return '//span[text()= "SUBSYSTEM : ' + instance + ' : ' + client_class + ' : ' + member_code + ' : ' + \
+           subsystem_code + '"]'
 
+def get_client_subsystem_xpath(self, client):
+    return '//span[text()= "SUBSYSTEM : ' + client['instance'] + ' : ' + client['class'] + ' : ' + client['code'] + ' : ' + \
+           client['subsystem'] + '"]'
 
 def find_service_url_by_text(self, text):
     return self.wait_until_visible(type=By.XPATH, element='//table[@id="services"]//td[text()="' + text + '"]')
+
+
+def find_service_timeout_by_text(self, url, timeout):
+    return self.wait_until_visible(type=By.XPATH,
+                                   element='//table[@id="services"]//td[text()="' + url + '"]/../td[text()="' + timeout + '"]')

@@ -4,6 +4,7 @@ GENERATE_KEY_POPUP_KEY_LABEL_AREA_ID = 'label'
 
 FILE_UPLOAD_BROWSE_BUTTON_ID = 'file_upload_button'
 FILE_UPLOAD_SUBMIT_BUTTON_ID = 'file_upload_submit'
+FILE_UPLOAD_CANCEL_BTN_XPATH = '//button[@data-name="cancel"]'
 
 GENERATE_KEY_POPUP = '//div[@aria-describedby="generate_key_dialog"]'
 GENERATE_KEY_POPUP_OK_BTN_XPATH = GENERATE_KEY_POPUP + '//div[@class="ui-dialog-buttonset"]//button[span="OK"]'
@@ -73,12 +74,14 @@ GROUP_ADD_POPUP_CODE_AREA_ID = 'add_group_code'
 GROUP_ADD_POPUP_CODE_DESCRIPTION_ID = 'add_group_description'
 GROUP_ADD_POPUP_OK_BTN_XPATH = GROUP_ADD_POPUP_XPATH + '//button[@data-name="ok"]'
 
+REGISTRATION_DIALOG_OK_BUTTON_XPATH = '//div[@id="register_dialog"]/following::div[2]//button[@data-name="ok"]'
 ADD_WSDL_POPUP_XPATH = '//div[@data-name="wsdl_add_dialog"]'
 ADD_WSDL_POPUP_URL_ID = 'wsdl_add_url'
 ADD_WSDL_POPUP_CANCEL_BTN_XPATH = ADD_WSDL_POPUP_XPATH + '//button[@data-name="cancel"]'
 ADD_WSDL_POPUP_OK_BTN_XPATH = ADD_WSDL_POPUP_XPATH + '//button[@data-name="ok"]'
 
 EDIT_WSDL_POPUP_XPATH = '//div[@data-name="wsdl_params_dialog"]'
+EDIT_WSDL_BUTTON_ID = 'service_params'
 EDIT_WSDL_POPUP_URL_ID = 'params_wsdl_url'
 EDIT_WSDL_POPUP_CANCEL_BTN_XPATH = EDIT_WSDL_POPUP_XPATH + '//button[@data-name="cancel"]'
 EDIT_WSDL_POPUP_OK_BTN_XPATH = EDIT_WSDL_POPUP_XPATH + '//button[@data-name="ok"]'
@@ -145,6 +148,15 @@ YESNO_POPUP_YES_BTN_XPATH = YESNO_POPUP_XPATH + '//div[@class="ui-dialog-buttons
 YESNO_POPUP_NO_BTN_XPATH = YESNO_POPUP_XPATH + '//div[@class="ui-dialog-buttonset"]//button[span="No"]'
 
 FILE_UPLOAD_ID = 'file_upload_button'
+
+
+def confirm_dialog_visible(self):
+    # Check if anything with a "Confirm" button is visible
+    try:
+        self.by_css('button#confirm')
+        return True
+    except:
+        return False
 
 
 def confirm_dialog_click(self):
@@ -227,7 +239,7 @@ def close_console_output_dialog(self):
         ok_button.click()
 
 
-def close_all_open_dialogs(self):
+def close_all_open_dialogs(self, limit=0):
     """
 
     Closes all open dialogs by searching for non-hidden ones, sorting the by z-index and clicking the "X" button in
@@ -250,8 +262,16 @@ def close_all_open_dialogs(self):
 
     # Start from the topmost (highest z-index) dialog and close it, keep going until the last visible dialog has been
     # closed.
+    count = 0
     for data in dialogs:
         dialog = data['dialog']
         # Find the close button ("X") and click it.
         close_button = dialog.find_element_by_css_selector(POPUP_HEADER_CLOSE_BUTTON_CSS)
         close_button.click()
+        count += 1
+        if limit > 0 and count >= limit:
+            break
+
+
+def get_wsdl_url_row(wsdl_url):
+    return "//td[text()='WSDL DISABLED ({0})']".format(wsdl_url)

@@ -23,7 +23,7 @@ class Lxd_help_scripts(SetupTest):
     """
     Test set that contains useful test cases for lxd enviroment
 
-    Changelog:
+    **Changelog:**
 
     * 11.07.2017
         | Documentation updated

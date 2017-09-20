@@ -24,7 +24,7 @@ class Xroad_deletion_of_registered_object(BaseTest):
     """
     Xroad cases for deleting registered objects
 
-    Changelog:
+    **Changelog:**
 
     * 11.07.2017
         | Documentation updated

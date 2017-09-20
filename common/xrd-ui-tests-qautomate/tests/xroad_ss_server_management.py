@@ -25,12 +25,37 @@ from common_lib.component_ss_services import Component_ss_services
 
 class Xroad_ss_server_management(SetupTest):
     """
+    .. _document: https://github.com/ria-ee/X-Road/blob/develop/doc/UseCases/uc-ss_x-road_use_case_model_for_security_server_management_1.4_Y-883-4.md
+    .. _3.2: https://github.com/ria-ee/X-Road/blob/develop/doc/UseCases/uc-ss_x-road_use_case_model_for_security_server_management_1.4_Y-883-4.md#32-uc-ss_01-log-in-to-the-graphical-user-interface
+    .. _3.3: https://github.com/ria-ee/X-Road/blob/develop/doc/UseCases/uc-ss_x-road_use_case_model_for_security_server_management_1.4_Y-883-4.md#33-uc-ss_02-log-out-of-the-graphical-user-interface
+    .. _3.5: https://github.com/ria-ee/X-Road/blob/develop/doc/UseCases/uc-ss_x-road_use_case_model_for_security_server_management_1.4_Y-883-4.md#35-uc-ss_04-change-the-graphical-user-interface-language
+    .. _3.6: https://github.com/ria-ee/X-Road/blob/develop/doc/UseCases/uc-ss_x-road_use_case_model_for_security_server_management_1.4_Y-883-4.md#36-uc-ss_05-view-the-installed-software-version
+    .. _3.7: https://github.com/ria-ee/X-Road/blob/develop/doc/UseCases/uc-ss_x-road_use_case_model_for_security_server_management_1.4_Y-883-4.md#37-uc-ss_06-view-timestamping-services
+    .. _3.8: https://github.com/ria-ee/X-Road/blob/develop/doc/UseCases/uc-ss_x-road_use_case_model_for_security_server_management_1.4_Y-883-4.md#38-uc-ss_07-add-a-timestamping-service
+    .. _3.9: https://github.com/ria-ee/X-Road/blob/develop/doc/UseCases/uc-ss_x-road_use_case_model_for_security_server_management_1.4_Y-883-4.md#39-uc-ss_08-delete-a-timestamping-service
+    .. _3.10: https://github.com/ria-ee/X-Road/blob/develop/doc/UseCases/uc-ss_x-road_use_case_model_for_security_server_management_1.4_Y-883-4.md#310-uc-ss_09-view-certificate-details
+
     Xroad cases for security server management test cases
 
-    https://github.com/ria-ee/X-Road/blob/develop/doc/UseCases/uc-ss_x-road_use_case_model_for_security_server_management_1.4_Y-883-4.docx
+    Use cases `document`_
 
-    Changelog:
+    **Use cases:**
+        * `3.2`_: Log In to the Graphical User Interface
+            * 3a: The system is currently undergoing the system restore process
+            * 4a: The user with the inserted user name does not exist or the password is incorrect
+        * `3.3`_: Log Out of the Graphical User Interface
+        * `3.5`_: Change the Graphical User Interface Language
+        * `3.6`_: View the Installed Software Version
+        * `3.7`_: View Timestamping Services
+        * `3.8`_: Add a Timestamping Service
+            * 3a: SS administrator selected a timestamping service that already exists in the security server
+        * `3.9`_: Delete a Timestamping Service
+        * `3.10`_: View Certificate Details
 
+    **Changelog:**
+
+    * 20.09.2017
+        | Links added to md use case documentation
     * 11.07.2017
         | Documentation updated
     """
@@ -59,19 +84,6 @@ class Xroad_ss_server_management(SetupTest):
         """
         Method that runs before every unittest
 
-        https://github.com/ria-ee/X-Road/blob/develop/doc/UseCases/uc-ss_x-road_use_case_model_for_security_server_management_1.4_Y-883-4.docx
-
-        **Test cases**
-            * 3.2, 3.3
-            * 3.2.3a
-            * 3.2.4a
-            * 3.4
-            * 3.6
-            * 3.7, 3.8, 3.9, 38.3a
-            * 3.10
-
-        *Updated: 11.07.2017*
-
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.autogen_browser = self.Autogen_browser = self.common_utils`
         """
@@ -82,10 +94,6 @@ class Xroad_ss_server_management(SetupTest):
         """
         Method that runs after every unittest
 
-        **Case**
-
-        *Updated: 11.07.2017*
-
         **Test steps:**
                 * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.close_all_browsers`
         """
@@ -94,8 +102,6 @@ class Xroad_ss_server_management(SetupTest):
     def setUp(self):
         """
         Method that runs before every test case
-
-        *Updated: 11.07.2017*
 
         **Test steps:**
                 * **Step 1:** :func:`~common_lib.common_lib_ssh.Common_lib_ssh.empty_all_logs_from_server`, *u'ss1_url'*
@@ -108,8 +114,6 @@ class Xroad_ss_server_management(SetupTest):
     def tearDown(self):
         """
         Method that runs after every test case
-
-        *Updated: 11.07.2017*
 
         **Test steps:**
             * **Step 1: log out from system gui**
@@ -134,9 +138,9 @@ class Xroad_ss_server_management(SetupTest):
         """
         Test case for logging in and logging out from security server qui
 
-        Spe
-
-        *Updated: 11.07.2017*
+        **Use cases:**
+            * `3.2`_: Log In to the Graphical User Interface
+            * `3.3`_: Log Out of the Graphical User Interface
 
         **Test steps:**
             * **Step 1: open security server for login add user name password**
@@ -166,7 +170,9 @@ class Xroad_ss_server_management(SetupTest):
         """
         Test case for logging in with wrong password
 
-        *Updated: 11.07.2017*
+            **Use cases:**
+                * `3.2`_: Log In to the Graphical User Interface
+                    * 4a: The user with the inserted user name does not exist or the password is incorrect
 
         **Test steps:**
             * **Step 1: open security server the user with the inserted user name does not exist or the password is incorrect.**
@@ -186,7 +192,9 @@ class Xroad_ss_server_management(SetupTest):
         """
         Test case for logging in during restore back up process
 
-        *Updated: 11.07.2017*
+        **Use cases:**
+            * `3.2`_: Log In to the Graphical User Interface
+                * 3a: The system is currently undergoing the system restore process
 
         **Test steps:**
             * **Step 1: open security server for login add user name password**
@@ -212,11 +220,40 @@ class Xroad_ss_server_management(SetupTest):
         #3a.2. System logs the event “Log out user” to the audit log.
         self.common_lib_ssh.verify_audit_log(u'ss1_url', strings.logout_user)
 
+    def test_change_language(self):
+        """
+        Test case for changing qui language
+
+        **Use cases:**
+            * `3.5`_: Change the Graphical User Interface Language
+
+        **Test steps:**
+            * **Step 1: open security server for login add user name password**
+                * :func:`~common_lib.component_ss.Component_ss.login`, *u'ss1_url'*
+            * **Step 2: change language**
+                * :func:`~common_lib.component_common.Component_common.open_select_language_dlg`
+                * :func:`~common_lib.component_common.Component_common.change_language_in_dlg`, *u'ENGLISH (EN*
+                * :func:`~common_lib.component_common.Component_common.accept_select_language_dlg`
+            * **Step 3: verify audit log for language change**
+                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *u'ss1_url'*, *strings.set_ui_language*
+        """
+        # Step Open security server for login add user name password
+        self.component_ss.login(u'ss1_url')
+
+        # Step Change language
+        self.component_common.open_select_language_dlg()
+        self.component_common.change_language_in_dlg(u'ENGLISH (EN)')
+        self.component_common.accept_select_language_dlg()
+
+        # Step Verify audit log for language change
+        self.common_lib_ssh.verify_audit_log(u'ss1_url', strings.set_ui_language)
+
     def test_view_installed_software_version(self):
         """
         Test case for viewing installed software version
 
-        *Updated: 11.07.2017*
+        **Use cases:**
+            * `3.6`_: View the Installed Software Version
 
         **Test steps:**
             * **Step 1: open security server for login add user name password**
@@ -244,7 +281,11 @@ class Xroad_ss_server_management(SetupTest):
         """
         Test case for time stamping services
 
-        *Updated: 11.07.2017*
+        **Use cases:**
+            * `3.7`_: View Timestamping Services
+            * `3.8`_: Add a Timestamping Service
+                * 3a: SS administrator selected a timestamping service that already exists in the security server
+            * `3.9`_: Delete a Timestamping Service
 
         **Test steps:**
             * **Step 1: open security server for login add user name password**
@@ -286,7 +327,8 @@ class Xroad_ss_server_management(SetupTest):
         """
         Test case for viewing certificate details
 
-        *Updated: 11.07.2017*
+        **Use cases:**
+            * `3.10`_: View Certificate Details
 
         **Test steps:**
             * **Step 1: open security server for login add user name password**
@@ -307,38 +349,9 @@ class Xroad_ss_server_management(SetupTest):
         # Step Log out
         self.common_lib.log_out()
 
-    def test_change_language(self):
-        """
-        Test case for changing qui language
-
-        *Updated: 11.07.2017*
-
-        **Test steps:**
-            * **Step 1: open security server for login add user name password**
-                * :func:`~common_lib.component_ss.Component_ss.login`, *u'ss1_url'*
-            * **Step 2: change language**
-                * :func:`~common_lib.component_common.Component_common.open_select_language_dlg`
-                * :func:`~common_lib.component_common.Component_common.change_language_in_dlg`, *u'ENGLISH (EN*
-                * :func:`~common_lib.component_common.Component_common.accept_select_language_dlg`
-            * **Step 3: verify audit log for language change**
-                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *u'ss1_url'*, *strings.set_ui_language*
-        """
-        # Step Open security server for login add user name password
-        self.component_ss.login(u'ss1_url')
-
-        # Step Change language
-        self.component_common.open_select_language_dlg()
-        self.component_common.change_language_in_dlg(u'ENGLISH (EN)')
-        self.component_common.accept_select_language_dlg()
-
-        # Step Verify audit log for language change
-        self.common_lib_ssh.verify_audit_log(u'ss1_url', strings.set_ui_language)
-
     def test_open_multiple_diagnostics_simultaneously(self):
         """
-        Test case for opeting multiple diagnostic views simultaneosly
-
-        *Updated: 11.07.2017*
+        Test case for opening multiple diagnostic views simultaneosly
 
         **Test steps:**
                 * **Step 1:** :func:`~common_lib.component_ss.Component_ss.login`, *u'ss1_url'*, *False*, *True*

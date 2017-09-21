@@ -95,6 +95,7 @@ class Component_cs_conf_mgm(CommonUtils):
             self.cs_conf_mgm_enter_pin.click_button_ok()
         except:
             print("Pin code query not prompted this time")
+        sleep(2)
 
     def insert_pin_from_login_button(self, section=u'cs_url'):
         """

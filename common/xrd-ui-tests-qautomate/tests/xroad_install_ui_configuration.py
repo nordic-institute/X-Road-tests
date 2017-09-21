@@ -482,11 +482,13 @@ class Xroad_install_ui_configuration(SetupTest):
         self.component_cs_conf_mgm.generate_new_internal_config_key_in_cs()
         self.component_cs_conf_mgm.try_insert_pin_code(u'cs_url')
         self.common_utils.wait_until_jquery_ajax_loaded()
-        ## Might show double pin dialog
-        #sleep(5)
 
         # Step Set global conf external key in central server
         self.component_cs_conf_mgm.generate_new_external_config_key_in_cs()
+
+        ## Might show double pin dialog
+        self.component_cs_conf_mgm.try_insert_pin_code(u'cs_url')
+        self.common_utils.wait_until_jquery_ajax_loaded()
 
         # Step set OCSP responder in central server
         self.component_cs_sidebar.open_certification_services_view()

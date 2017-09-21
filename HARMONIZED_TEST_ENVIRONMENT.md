@@ -1,4 +1,4 @@
-Harmonized X-road test environment
+Harmonized X-Road test environment
 ===================
 
 - LXD based common test development environment to Finland and Estonia

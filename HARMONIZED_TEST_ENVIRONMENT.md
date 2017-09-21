@@ -11,12 +11,12 @@ Harmonized X-road test environment
 	- Tests are compatible between Estonia and Finland common test environments
 		- Re-usable tests
 	- Test can be easily imported to own specific environment from LXD
-	- Jenkins jobs are generated and we have harmonized test data in different test environments
+	- Jenkins jobs are created by the testing person who originally created the test case and by syncing the Jenkins jobs between countries via common Github repo, we have harmonized test data in different test environments
 	- Less work settings up environment in LXD
 
 X-Road test development repositories
 -------------
-- X-Road test development repository
+X-Road test development master repository
 	- https://github.com/ria-ee/X-Road-tests
 - LXD environment Ansible scripts
 	- https://github.com/vrk-kpa/X-Road

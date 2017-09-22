@@ -39,7 +39,7 @@ class Xroad_test_service(BaseTest):
     """
     Xroad cases for testing enabling wsdl services and sending messages
 
-    Changelog:
+    **Changelog:**
 
     * 11.07.2017
         | Documentation updated

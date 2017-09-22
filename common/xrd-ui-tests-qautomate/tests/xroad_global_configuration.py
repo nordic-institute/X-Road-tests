@@ -16,19 +16,42 @@ from common_lib.component_cs_system_settings import Component_cs_system_settings
 
 class Xroad_global_configuration(SetupTest):
     """
+    .. _document: https://github.com/ria-ee/X-Road/blob/develop/doc/UseCases/uc-gconf_x-road_use_case_model_for_global_configuration_distribution_1.4_Y-883-8.md
+    .. _2.2.1: https://github.com/ria-ee/X-Road/blob/develop/doc/UseCases/uc-gconf_x-road_use_case_model_for_global_configuration_distribution_1.4_Y-883-8.md#221-uc-gconf_01-view-a-configuration-source
+    .. _2.2.2: https://github.com/ria-ee/X-Road/blob/develop/doc/UseCases/uc-gconf_x-road_use_case_model_for_global_configuration_distribution_1.4_Y-883-8.md#222-uc-gconf_02-download-a-configuration-source-anchor-file
+    .. _2.2.3: https://github.com/ria-ee/X-Road/blob/develop/doc/UseCases/uc-gconf_x-road_use_case_model_for_global_configuration_distribution_1.4_Y-883-8.md#223-uc-gconf_03-re-create-a-configuration-source-anchor
+    .. _2.2.7: https://github.com/ria-ee/X-Road/blob/develop/doc/UseCases/uc-gconf_x-road_use_case_model_for_global_configuration_distribution_1.4_Y-883-8.md#227-uc-gconf_07-log-in-to-a-software-security-token
+    .. _2.2.9: https://github.com/ria-ee/X-Road/blob/develop/doc/UseCases/uc-gconf_x-road_use_case_model_for_global_configuration_distribution_1.4_Y-883-8.md#229-uc-gconf_09-log-out-of-a-software-security-token
+    .. _2.2.11: https://github.com/ria-ee/X-Road/blob/develop/doc/UseCases/uc-gconf_x-road_use_case_model_for_global_configuration_distribution_1.4_Y-883-8.md#2211-uc-gconf_11-add-a-configuration-source-signing-key
+    .. _2.2.12: https://github.com/ria-ee/X-Road/blob/develop/doc/UseCases/uc-gconf_x-road_use_case_model_for_global_configuration_distribution_1.4_Y-883-8.md#2212-uc-gconf_12-activate-a-configuration-source-signing-key
+    .. _2.2.13: https://github.com/ria-ee/X-Road/blob/develop/doc/UseCases/uc-gconf_x-road_use_case_model_for_global_configuration_distribution_1.4_Y-883-8.md#2213-uc-gconf_13-delete-a-configuration-source-signing-key
+    .. _2.2.14: https://github.com/ria-ee/X-Road/blob/develop/doc/UseCases/uc-gconf_x-road_use_case_model_for_global_configuration_distribution_1.4_Y-883-8.md#2214-uc-gconf_14-view-system-parameters
+    .. _2.2.15: https://github.com/ria-ee/X-Road/blob/develop/doc/UseCases/uc-gconf_x-road_use_case_model_for_global_configuration_distribution_1.4_Y-883-8.md#2215-uc-gconf_15-edit-the-address-of-the-central-server
+
     Xroad cases for global configurations
 
-    https://github.com/ria-ee/X-Road/blob/develop/doc/UseCases/uc-gconf_x-road_use_case_model_for_global_configuration_distribution_1.4_Y-883-8.docx
+    Use cases `document`_
 
-    Test cases:
-        * 2.2.1
-        * 2.2.2, 2.2.3
-        * 2.2.7, 2.2.9
-        * 2.2.12, 2.2.12.3a, 2.2.13, 2.2.13.3a
-        * 2.2.14, 2.2.15, 2.2.15, 2.2.15.3a, 2.2.15.4a
+    **Use cases:**
+        * `2.2.1`_: View a Configuration Source
+        * `2.2.2`_: Download a Configuration Source Anchor File
+        * `2.2.3`_: Re-Create a Configuration Source Anchor
+        * `2.2.7`_: Log In to a Software Security Token
+        * `2.2.9`_: Log Out of a Software Security Token
+        * `2.2.11`_: Add a Configuration Source Signing Key
+        * `2.2.12`_: Activate a Configuration Source Signing Key
+            * 3a: CS administrator cancels the key activation
+        * `2.2.13`_: Delete a Configuration Source Signing Key
+            * 3a: CS administrator cancels the key deletion
+        * `2.2.14`_: View System Parameters
+        * `2.2.15`_: Edit the Address of the Central Server
+            * 3a: The parsing of the user input terminated with an error message
+            * 4a: The inserted address is not valid
 
-    Changelog:
+    **Changelog:**
 
+    * 20.09.2017
+        | Links added to md use case documentation
     * 11.07.2017
         | Documentation updated
     """
@@ -49,8 +72,6 @@ class Xroad_global_configuration(SetupTest):
         """
         Method that runs before every unittest
 
-        *Updated: 11.07.2017*
-
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.autogen_browser = self.Autogen_browser = self.common_utils`
         """
@@ -65,8 +86,6 @@ class Xroad_global_configuration(SetupTest):
         """
         Method that runs after every unittest
 
-        *Updated: 11.07.2017*
-
         **Test steps:**
                 * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.close_all_browsers`
         """
@@ -75,8 +94,6 @@ class Xroad_global_configuration(SetupTest):
     def setUp(self):
         """
         Method that runs before every test case
-
-        *Updated: 11.07.2017*
 
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.start_log_time = self.Start_log_time = self.common_lib`
@@ -90,8 +107,6 @@ class Xroad_global_configuration(SetupTest):
     def tearDown(self):
         """
         Method that runs after every test case
-
-        *Updated: 11.07.2017*
 
         **Test steps:**
             * **Step 1: log out if logged in**
@@ -115,7 +130,8 @@ class Xroad_global_configuration(SetupTest):
         """
         Test case for viewing global configuration view source
 
-        *Updated: 11.07.2017*
+        **Use cases:**
+            * `2.2.1`_: View a Configuration Source
 
         **Test steps:**
             * **Step 1: login to central server and open configuration view**
@@ -145,7 +161,9 @@ class Xroad_global_configuration(SetupTest):
         """
         Test case for downloading source anchor and recreating it
 
-        *Updated: 11.07.2017*
+        **Use cases:**
+            * `2.2.2`_: Download a Configuration Source Anchor File
+            * `2.2.3`_: Re-Create a Configuration Source Anchor
 
         **Test steps:**
             * **Step 1: login to central server and open configuration view**
@@ -185,7 +203,9 @@ class Xroad_global_configuration(SetupTest):
         """
         Test case for logging in and logging out software security token
 
-        *Updated: 11.07.2017*
+        **Use cases:**
+            * `2.2.7`_: Log In to a Software Security Token
+            * `2.2.9`_: Log Out of a Software Security Token
 
         **Test steps:**
             * **Step 1: login to central server and open configuration view**
@@ -225,7 +245,11 @@ class Xroad_global_configuration(SetupTest):
         """
         Test case for activating and deleting config signing key
 
-        *Updated: 11.07.2017*
+        **Use cases:**
+            * `2.2.12`_: Activate a Configuration Source Signing Key
+               * 3a: CS administrator cancels the key activation
+            * `2.2.13`_: Delete a Configuration Source Signing Key
+                * 3a: CS administrator cancels the key deletion
 
         **Test steps:**
             * **Step 1: login to central server and open configuration view**
@@ -283,7 +307,8 @@ class Xroad_global_configuration(SetupTest):
         """
         Test case for generating config signing key
 
-        *Updated: 11.07.2017*
+        **Use cases:**
+            * `2.2.11`_: Add a Configuration Source Signing Key
 
         **Test steps:**
             * **Step 1: login to central server and open configuration view**
@@ -312,7 +337,11 @@ class Xroad_global_configuration(SetupTest):
         """
         Test case for viewing system parameters and editing address of central server
 
-        *Updated: 11.07.2017*
+        **Use cases:**
+            * `2.2.14`_: View System Parameters
+            * `2.2.15`_: Edit the Address of the Central Server
+                * 3a: The parsing of the user input terminated with an error message
+                * 4a: The inserted address is not valid
 
         **Test steps:**
             * **Step 1: login to central server and open system settings**

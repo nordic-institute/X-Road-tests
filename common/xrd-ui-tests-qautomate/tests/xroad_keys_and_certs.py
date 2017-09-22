@@ -37,7 +37,7 @@ class Xroad_keys_and_certs(SetupTest):
     """
     Xroad cases for testing key and certificate use cases
 
-    Changelog:
+    **Changelog:**
 
     * 11.07.2017
         | Documentation updated

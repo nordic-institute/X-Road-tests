@@ -46,7 +46,7 @@ class Xroad_install_ui_configuration(SetupTest):
     """
     Xroad cases for installing ui configurations
 
-    Changelog:
+    **Changelog:**
 
     * 11.07.2017
         | Documentation updated

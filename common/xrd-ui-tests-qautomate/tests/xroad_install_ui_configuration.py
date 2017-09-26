@@ -376,6 +376,8 @@ class Xroad_install_ui_configuration(SetupTest):
                 * :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
             * **Step 9: set global conf external key in central server**
                 * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.generate_new_external_config_key_in_cs`
+                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.try_insert_pin_code`, *u'cs_url'*
+                * :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
             * **Step 10: set ocsp responder in central server**
                 * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_certification_services_view`
                 * :func:`~common_lib.component_cs_cert_services.Component_cs_cert_services.add_new_ocsp_responder`, *u'cs_url'*

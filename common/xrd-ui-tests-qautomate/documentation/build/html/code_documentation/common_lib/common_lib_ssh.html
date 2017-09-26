@@ -5,12 +5,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>Common lib ssh &#8212; qautomate  documentation</title>
-    
     <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
@@ -74,7 +71,7 @@
 </ul>
 <dl class="method">
 <dt id="common_lib.common_lib_ssh.Common_lib_ssh.collect_server_log_files">
-<code class="descname">collect_server_log_files</code><span class="sig-paren">(</span><em>server=’xroad-lxd-cs’</em><span class="sig-paren">)</span><a class="headerlink" href="#common_lib.common_lib_ssh.Common_lib_ssh.collect_server_log_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">collect_server_log_files</code><span class="sig-paren">(</span><em>server='xroad-lxd-cs'</em><span class="sig-paren">)</span><a class="headerlink" href="#common_lib.common_lib_ssh.Common_lib_ssh.collect_server_log_files" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -104,7 +101,7 @@
 
 <dl class="method">
 <dt id="common_lib.common_lib_ssh.Common_lib_ssh.find_exception_from_logs_and_save">
-<code class="descname">find_exception_from_logs_and_save</code><span class="sig-paren">(</span><em>start_time</em>, <em>stop_time</em>, <em>name_prefix=”</em>, <em>copy_location=”</em><span class="sig-paren">)</span><a class="headerlink" href="#common_lib.common_lib_ssh.Common_lib_ssh.find_exception_from_logs_and_save" title="Permalink to this definition">¶</a></dt>
+<code class="descname">find_exception_from_logs_and_save</code><span class="sig-paren">(</span><em>start_time</em>, <em>stop_time</em>, <em>name_prefix=''</em>, <em>copy_location=''</em><span class="sig-paren">)</span><a class="headerlink" href="#common_lib.common_lib_ssh.Common_lib_ssh.find_exception_from_logs_and_save" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find exceptions from logs and save them</p>
 </dd></dl>
 
@@ -123,13 +120,13 @@
 
 <dl class="method">
 <dt id="common_lib.common_lib_ssh.Common_lib_ssh.parse_log_file_tail">
-<code class="descname">parse_log_file_tail</code><span class="sig-paren">(</span><em>log_output=”</em>, <em>row_count=5</em><span class="sig-paren">)</span><a class="headerlink" href="#common_lib.common_lib_ssh.Common_lib_ssh.parse_log_file_tail" title="Permalink to this definition">¶</a></dt>
+<code class="descname">parse_log_file_tail</code><span class="sig-paren">(</span><em>log_output=''</em>, <em>row_count=5</em><span class="sig-paren">)</span><a class="headerlink" href="#common_lib.common_lib_ssh.Common_lib_ssh.parse_log_file_tail" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse log file to show x number of rows</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="common_lib.common_lib_ssh.Common_lib_ssh.read_server_file">
-<code class="descname">read_server_file</code><span class="sig-paren">(</span><em>server=’xroad-lxd-cs’</em>, <em>log_file_name=’/var/log/xroad/audit.log’</em><span class="sig-paren">)</span><a class="headerlink" href="#common_lib.common_lib_ssh.Common_lib_ssh.read_server_file" title="Permalink to this definition">¶</a></dt>
+<code class="descname">read_server_file</code><span class="sig-paren">(</span><em>server='xroad-lxd-cs'</em>, <em>log_file_name='/var/log/xroad/audit.log'</em><span class="sig-paren">)</span><a class="headerlink" href="#common_lib.common_lib_ssh.Common_lib_ssh.read_server_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read file from given path in server</p>
 <dl class="docutils">
 <dt><strong>Test steps:</strong></dt>
@@ -148,7 +145,7 @@
 
 <dl class="method">
 <dt id="common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log">
-<code class="descname">verify_audit_log</code><span class="sig-paren">(</span><em>section=u’ss1_url’</em>, <em>event=’Log in user’</em><span class="sig-paren">)</span><a class="headerlink" href="#common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log" title="Permalink to this definition">¶</a></dt>
+<code class="descname">verify_audit_log</code><span class="sig-paren">(</span><em>section=u'ss1_url'</em>, <em>event='Log in user'</em><span class="sig-paren">)</span><a class="headerlink" href="#common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div><p>Verify audit log file in server.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -264,7 +261,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017, qautomate.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
   </body>
 </html>

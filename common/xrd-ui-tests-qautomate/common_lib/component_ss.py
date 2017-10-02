@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from webframework import TESTDATA
 from selenium.webdriver.common.by import By
 from webframework.extension.util.common_utils import *
 from time import sleep
@@ -23,7 +24,7 @@ class Component_ss(CommonUtils):
     ss_system_param_add_timestamp_dlg = Ss_system_param_add_timestamp_dlg()
     open_application = Open_application()
 
-    def __init__(self, parameters=None):
+    def __init__(self):
         """
         Initilization method for moving test data to class
 
@@ -32,7 +33,6 @@ class Component_ss(CommonUtils):
         :param parameters:  Test data section dictionary
         """
         CommonUtils.__init__(self)
-        self.parameters = parameters
 
     def login(self, section=u'security_server_url', initial_conf=False, wait_for_jquery=True):
         """
@@ -50,8 +50,8 @@ class Component_ss(CommonUtils):
                 * **Step 3:** :func:`~pagemodel.ss_sidebar.Ss_sidebar.verify_sidebar_title`
         """
         ## Go to security server
-        self.open_application.open_application_url(self.parameters[section])
-        self.ss_login.login(self.parameters[section], wait_for_jquery)
+        self.open_application.open_application_url(TESTDATA[section])
+        self.ss_login.login(TESTDATA[section], wait_for_jquery)
         if not initial_conf:
             self.ss_sidebar.verify_sidebar_title()
 
@@ -74,7 +74,7 @@ class Component_ss(CommonUtils):
         self.ss_system_param_add_timestamp_dlg.click_trusted_tsp_first_row()
         sleep(3)
         self.ss_system_param_add_timestamp_dlg.click_button_ok()
-        self.ss_system_parameters.verify_time_stamping_url(self.parameters[section])
+        self.ss_system_parameters.verify_time_stamping_url(TESTDATA[section])
 
     def verify_login_fail(self, text=u'Authentication failed'):
         """
@@ -102,6 +102,6 @@ class Component_ss(CommonUtils):
                 * **Step 2:** :func:`~pagemodel.ss_system_parameters.Ss_system_parameters.click_element_from_table_tsps_1`, *self.parameters[section][u'tsp_url']*
                 * **Step 3:** :func:`~pagemodel.ss_system_parameters.Ss_system_parameters.click_button_id_tsp_delete`
         """
-        self.wait_until_page_contains(self.parameters[section][u'tsp_url'])
-        self.ss_system_parameters.click_element_from_table_tsps_1(self.parameters[section][u'tsp_url'])
+        self.wait_until_page_contains(TESTDATA[section][u'tsp_url'])
+        self.ss_system_parameters.click_element_from_table_tsps_1(TESTDATA[section][u'tsp_url'])
         self.ss_system_parameters.click_button_id_tsp_delete()

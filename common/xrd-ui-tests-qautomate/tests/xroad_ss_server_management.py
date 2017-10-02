@@ -59,15 +59,14 @@ class Xroad_ss_server_management(SetupTest):
     * 11.07.2017
         | Documentation updated
     """
-    parameters = get_all_parameters()
     common_utils = CommonUtils()
     open_application = Open_application()
-    component_ss = Component_ss(parameters)
-    common_lib = Common_lib(parameters)
-    common_lib_ssh = Common_lib_ssh(parameters)
-    component_ss_backup = Component_ss_backup(parameters)
-    component_ss_sidebar = Component_ss_sidebar(parameters)
-    component_ss_version = Component_ss_version(parameters)
+    component_ss = Component_ss()
+    common_lib = Common_lib()
+    common_lib_ssh = Common_lib_ssh()
+    component_ss_backup = Component_ss_backup()
+    component_ss_sidebar = Component_ss_sidebar()
+    component_ss_version = Component_ss_version()
     ss_system_parameters = Ss_system_parameters()
     ss_login = Ss_login()
     ss_backup_restore = Ss_backup_restore()
@@ -76,8 +75,8 @@ class Xroad_ss_server_management(SetupTest):
     ss_backup_restore_back_up_config = Ss_backup_restore_back_up_config()
     component_ss_keys_and_certs = Component_ss_keys_and_certs()
     ss_sidebar = Ss_sidebar()
-    component_common = Component_common(parameters)
-    component_ss_services = Component_ss_services(parameters)
+    component_common = Component_common()
+    component_ss_services = Component_ss_services()
 
     @classmethod
     def setUpTestSet(self):
@@ -242,7 +241,7 @@ class Xroad_ss_server_management(SetupTest):
 
         # Step Change language
         self.component_common.open_select_language_dlg()
-        self.component_common.change_language_in_dlg(u'ENGLISH (EN)')
+        self.component_common.change_language_in_dlg(strings.lanquage_eng)
         self.component_common.accept_select_language_dlg()
 
         # Step Verify audit log for language change

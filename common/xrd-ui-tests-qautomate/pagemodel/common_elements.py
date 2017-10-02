@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = self.get_current_driver() e.g driver.current_url
+from webframework import TESTDATA
 from selenium.webdriver.common.by import By
 from webframework.extension.util.common_utils import *
 from webframework.extension.parsers.parameter_parser import get_parameter
@@ -53,7 +54,7 @@ Pagemodel
         Verify bottom message text
 
         :param message:  String value for message
-        
+
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.element_should_contain`, *self.MESSAGE*, *message*
         """
@@ -66,7 +67,7 @@ Pagemodel
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.USER_INFO*
         """
-        self.click_element(self.USER_INFO)
+        self.mouse_over(self.USER_INFO)
 
     def click_log_out(self):
         """

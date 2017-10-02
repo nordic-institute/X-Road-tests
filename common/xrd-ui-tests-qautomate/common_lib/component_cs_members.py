@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from webframework import TESTDATA
 from selenium.webdriver.common.by import By
 from webframework.extension.util.common_utils import *
 from webframework.extension.parsers.parameter_parser import get_all_parameters
@@ -56,7 +57,7 @@ class Component_cs_members(CommonUtils):
     cs_members_details_dlg = Cs_members_details_dlg()
     cs_sec_servers_mgm_requests = Cs_sec_servers_mgm_requests()
 
-    def __init__(self, parameters=None):
+    def __init__(self):
         """
         Initilization method for moving test data to class
 
@@ -65,7 +66,6 @@ class Component_cs_members(CommonUtils):
         :param parameters:  Test data section dictionary
         """
         CommonUtils.__init__(self)
-        self.parameters = parameters
 
     def make_cert_file_upload(self, parameters="sign"):
         """
@@ -99,7 +99,7 @@ class Component_cs_members(CommonUtils):
                 * **Step 1:** :func:`~pagemodel.cs_members.Cs_members.click_element_from_table_members`, *self.parameters[section][parameter]*
                 * **Step 2:** :func:`~pagemodel.cs_members.Cs_members.click_button_member_action`
         """
-        self.cs_members.click_element_from_table_members(self.parameters[section][parameter])
+        self.cs_members.click_element_from_table_members(TESTDATA[section][parameter])
         self.cs_members.click_button_member_action()
 
     def close_member_details_dlg(self):
@@ -131,7 +131,7 @@ class Component_cs_members(CommonUtils):
         self.wait_until_jquery_ajax_loaded()
         self.cs_members_details_dlg.click_subsystems_tab()
         self.cs_members_subsystems_dlg.click_button_add()
-        self.cs_members_add_subsystem_dlg.input_text_to_id_subsystem_add_code(self.parameters[section])
+        self.cs_members_add_subsystem_dlg.input_text_to_id_subsystem_add_code(TESTDATA[section])
         self.cs_members_add_subsystem_dlg.click_button_id_subsystem_add_submit()
         self.cs_members_subsystems_dlg.click_button_submit()
         #self.common_lib.get_ui_error_message()
@@ -150,7 +150,7 @@ class Component_cs_members(CommonUtils):
                 * **Step 3:** :func:`~pagemodel.cs_add_member_dlg.Cs_add_member_dlg.click_button_ok_0`
         """
         self.cs_members.click_button_group_add_icon()
-        self.cs_add_member_dlg.fill_input_add_member(self.parameters[section])
+        self.cs_add_member_dlg.fill_input_add_member(TESTDATA[section])
         self.cs_add_member_dlg.click_button_ok_0()
 
     def delete_member_in_member_details_dlg(self):
@@ -193,16 +193,16 @@ class Component_cs_members(CommonUtils):
         """
         self.wait_until_jquery_ajax_loaded()
         self.cs_members.wait_until_element_is_visible_member_name()
-        self.cs_members.search_text_from_table_members(self.parameters[section])
+        self.cs_members.search_text_from_table_members(TESTDATA[section])
         self.cs_members.click_button_member_action()
         self.cs_members_details_dlg.click_element_owned_servers()
-        self.cs_member_details_owned_servers.click_element_owned_server(self.parameters[section])
+        self.cs_member_details_owned_servers.click_element_owned_server(TESTDATA[section])
         self.cs_sec_servers_details.click_clients_tab()
         self.cs_sec_servers_details_clients.click_add_new_client_request()
         self.cs_sec_servers_new_client_req.click_new_client_search()
-        self.cs_sec_servers_new_client_req_search.click_member_from_table(self.parameters[section]['member_name'])
+        self.cs_sec_servers_new_client_req_search.click_member_from_table(TESTDATA[section]['member_name'])
         self.cs_sec_servers_new_client_req_search.click_ok_search()
-        self.cs_sec_servers_new_client_req.insert_subsystem_code(self.parameters[section])
+        self.cs_sec_servers_new_client_req.insert_subsystem_code(TESTDATA[section])
         self.cs_sec_servers_new_client_req.click_submit_new_client_request()
         sleep(3)
         self.cs_sec_servers_details.click_mgm_requests_tab()
@@ -225,7 +225,7 @@ class Component_cs_members(CommonUtils):
                 * **Step 6:** :func:`~pagemodel.cs_sec_servers_mgm_request_app_conf.Cs_sec_servers_mgm_request_app_conf.click_confirm_approve_request`
                 * **Step 7:** :func:`~pagemodel.cs_members_details_dlg.Cs_members_details_dlg.click_button_close`
         """
-        self.cs_members.search_text_from_table_members(self.parameters[section])
+        self.cs_members.search_text_from_table_members(TESTDATA[section])
         sleep(1)
         self.cs_members.click_button_member_action()
         self.cs_members_details_dlg.click_element_management_requests_tab()
@@ -280,14 +280,14 @@ class Component_cs_members(CommonUtils):
         """
         self.wait_until_jquery_ajax_loaded()
         self.cs_members.wait_until_element_is_visible_member_name()
-        self.cs_members.search_text_from_table_members(self.parameters[section])
+        self.cs_members.search_text_from_table_members(TESTDATA[section])
         self.cs_members.click_button_member_action()
         self.cs_members_details_dlg.click_element_owned_servers()
         self.cs_member_details_owned_servers.click_button_ui_titlebar_widget_corner_all_helper_clearfix_draggable_handle_tabs()
         self.cs_members_owned_auth_cert_reg_dlg.click_element_id_owned_server_cert_upload_button()
         self.make_cert_file_upload("auth")
         sleep(2)
-        self.cs_members_owned_auth_cert_reg_dlg.input_text_to_id_owned_server_add_servercode(self.parameters[section])
+        self.cs_members_owned_auth_cert_reg_dlg.input_text_to_id_owned_server_add_servercode(TESTDATA[section])
         self.cs_members_owned_auth_cert_reg_dlg.click_button_id_add_owned_server_submit()
         self.cs_members_details_dlg.wait_until_submitted_certificate()
         self.cs_members_details_dlg.click_element_management_requests_tab()
@@ -316,8 +316,8 @@ class Component_cs_members(CommonUtils):
                 * **Step 4:** :func:`~pagemodel.cs_members_subsystems_dlg.Cs_members_subsystems_dlg.sub_delete_is_enabled`
         """
         self.cs_members_details_dlg.click_subsystems_tab()
-        self.cs_members_subsystems_dlg.check_subsystem_is_red(self.parameters[section][parameter])
-        self.cs_members_subsystems_dlg.click_element_in_subsystems_table(self.parameters[section][parameter])
+        self.cs_members_subsystems_dlg.check_subsystem_is_red(TESTDATA[section][parameter])
+        self.cs_members_subsystems_dlg.click_element_in_subsystems_table(TESTDATA[section][parameter])
         self.cs_members_subsystems_dlg.sub_delete_is_enabled()
 
     def verify_members_does_not_contain_member(self, section=u'central_server_config', parameter=u'member_name'):
@@ -332,7 +332,7 @@ class Component_cs_members(CommonUtils):
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.cs_members.Cs_members.table_does_not_contain_member`, *self.parameters[section][parameter]*
         """
-        self.cs_members.table_does_not_contain_member(self.parameters[section][parameter])
+        self.cs_members.table_does_not_contain_member(TESTDATA[section][parameter])
 
     def verify_members_does_contain_member(self, section=u'member_mgm_configuration', parameter=u'member_name'):
         """
@@ -346,4 +346,4 @@ class Component_cs_members(CommonUtils):
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.cs_members.Cs_members.table_contains_member`, *self.parameters[section][parameter]*
         """
-        self.cs_members.table_contains_member(self.parameters[section][parameter])
+        self.cs_members.table_contains_member(TESTDATA[section][parameter])

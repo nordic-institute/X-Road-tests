@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from webframework import TESTDATA
 from variables import strings
 from webframework.extension.base.setupTest import SetupTest
 from webframework.extension.parsers.parameter_parser import get_all_parameters
@@ -52,22 +53,21 @@ class Xroad_install_ui_configuration(SetupTest):
         | Documentation updated
     """
     start_log_time = ""
-    parameters = get_all_parameters()
     common_utils = CommonUtils()
     common_lib = Common_lib()
-    common_lib_ssh = Common_lib_ssh(parameters)
-    component_cs = Component_cs(parameters)
-    component_cs_backup = Component_cs_backup(parameters)
-    component_cs_cert_services = Component_cs_cert_services(parameters)
-    component_cs_conf_mgm = Component_cs_conf_mgm(parameters)
-    component_cs_members = Component_cs_members(parameters)
-    component_cs_system_settings = Component_cs_system_settings(parameters)
-    component_cs_tsp_services = Component_cs_tsp_services(parameters)
-    component_ss = Component_ss(parameters)
-    component_ss_clients = Component_ss_clients(parameters)
-    component_ss_initial_conf = Component_ss_initial_conf(parameters)
-    component_ss_keys_and_certs = Component_ss_keys_and_certs(parameters)
-    component_ss_services = Component_ss_services(parameters)
+    common_lib_ssh = Common_lib_ssh()
+    component_cs = Component_cs()
+    component_cs_backup = Component_cs_backup()
+    component_cs_cert_services = Component_cs_cert_services()
+    component_cs_conf_mgm = Component_cs_conf_mgm()
+    component_cs_members = Component_cs_members()
+    component_cs_system_settings = Component_cs_system_settings()
+    component_cs_tsp_services = Component_cs_tsp_services()
+    component_ss = Component_ss()
+    component_ss_clients = Component_ss_clients()
+    component_ss_initial_conf = Component_ss_initial_conf()
+    component_ss_keys_and_certs = Component_ss_keys_and_certs()
+    component_ss_services = Component_ss_services()
     cs_members = Cs_members()
     cs_members_subsystems_dlg = Cs_members_subsystems_dlg()
     ss_clients_dlg_services = Ss_clients_dlg_services()
@@ -89,8 +89,8 @@ class Xroad_install_ui_configuration(SetupTest):
     open_application = Open_application()
     cs_remove_member_dlg = Cs_remove_member_dlg()
     cs_members_details_dlg = Cs_members_details_dlg()
-    component_cs_sidebar = Component_cs_sidebar(parameters)
-    component_ss_sidebar = Component_ss_sidebar(parameters)
+    component_cs_sidebar = Component_cs_sidebar()
+    component_ss_sidebar = Component_ss_sidebar()
 
     @classmethod
     def setUpTestSet(self):
@@ -129,7 +129,7 @@ class Xroad_install_ui_configuration(SetupTest):
                 * **Step 4:** :func:`~common_lib.common_lib_ssh.Common_lib_ssh.empty_all_logs_from_server`, *"cs_url"*
                 * **Step 5:** :func:`~common_lib.common_lib_ssh.Common_lib_ssh.empty_all_logs_from_server`, *"ss_mgm_url"*
         """
-        self.common_lib.remove_anchor_and_certs_from_downloads(self.parameters[u'paths'])
+        self.common_lib.remove_anchor_and_certs_from_downloads(TESTDATA[u'paths'])
         self.start_log_time = self.common_lib.get_log_utc_time()
         self.common_lib_ssh.empty_all_logs_from_server("ss1_url")
         self.common_lib_ssh.empty_all_logs_from_server("cs_url")
@@ -162,7 +162,7 @@ class Xroad_install_ui_configuration(SetupTest):
             self.common_lib_ssh.find_exception_from_logs_and_save(self.start_log_time, stop_log_time, u'ss1_url', copy_log)
 
         self.common_lib.get_ui_error_message()
-        self.common_lib.remove_anchor_and_certs_from_downloads(self.parameters[u'paths'])
+        self.common_lib.remove_anchor_and_certs_from_downloads(TESTDATA[u'paths'])
 
     def test_configure_ss_server_add_to_existing_cs_2(self):
         """
@@ -247,7 +247,7 @@ class Xroad_install_ui_configuration(SetupTest):
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
         """
         # Step Read liityntapalvelin konfiguraatio parameters
-        self.common_lib.read_liityntapalvelin_konfiguraatio_parameters(self.parameters)
+        self.common_lib.read_liityntapalvelin_konfiguraatio_parameters(TESTDATA)
 
         # Step Find existing member in central server
         self.component_cs.login(u'cs_url')
@@ -311,7 +311,7 @@ class Xroad_install_ui_configuration(SetupTest):
 
         # Step Get WSDL address
         self.component_cs_sidebar.open_system_settings_view()
-        self.cs_system_settings.get_wsdl_and_services_address(self.parameters[u'cs_url'])
+        self.cs_system_settings.get_wsdl_and_services_address(TESTDATA[u'cs_url'])
         self.common_lib.log_out()
 
         # Step Add subsystem to central server
@@ -322,14 +322,14 @@ class Xroad_install_ui_configuration(SetupTest):
         self.component_cs_members.close_member_details_dlg()
         self.common_lib.log_out()
         # Sync global conf timeout
-        self.common_lib.sync_global_conf(self.parameters[u'ss1_url'][u'sync_timeout'])
+        self.common_lib.sync_global_conf(TESTDATA[u'ss1_url'][u'sync_timeout'])
 
         # Step Add subsystem to security server
         self.component_ss.login(u'ss1_url')
-        self.ss_clients.verify_service_registration_complete(self.parameters[u'member1_configuration'])
+        self.ss_clients.verify_service_registration_complete(TESTDATA[u'member1_configuration'])
         self.component_ss_clients.add_new_subsystem_to_ss(u'member1_configuration')
         self.common_lib.log_out()
-        self.common_lib.sync_global_conf(self.parameters[u'ss1_url'][u'sync_timeout'])
+        self.common_lib.sync_global_conf(TESTDATA[u'ss1_url'][u'sync_timeout'])
 
         # Step Accept subsystem in in central server
         self.component_cs.login(u'cs_url')
@@ -339,7 +339,7 @@ class Xroad_install_ui_configuration(SetupTest):
 
         # Step Check registration complete
         self.component_ss.login(u'ss1_url')
-        self.ss_clients.verify_service_registration_complete(self.parameters[u'member1_configuration'])
+        self.ss_clients.verify_service_registration_complete(TESTDATA[u'member1_configuration'])
         self.common_lib.log_out()
 
     def test_configure_cs_and_ss_mgm_servers_1(self):
@@ -453,7 +453,7 @@ class Xroad_install_ui_configuration(SetupTest):
         """
 
         # Step Read liityntapalvelin konfiguraatio parameters
-        self.common_lib.read_keskuspalvelin_konfiguraatio_parameters(self.parameters)
+        self.common_lib.read_keskuspalvelin_konfiguraatio_parameters(TESTDATA)
 
         # Step Initialize server and add new member in central server
         self.component_cs.login(u'cs_url', initial_conf=True)
@@ -554,7 +554,7 @@ class Xroad_install_ui_configuration(SetupTest):
         # Step Register subsystem in central server
         self.component_cs_system_settings.register_subsystem_system_settings_in_cs(u'member_mgm_configuration')
         self.common_lib.log_out()
-        self.common_lib.sync_global_conf(self.parameters[u'cs_url'][u'sync_timeout'])
+        self.common_lib.sync_global_conf(TESTDATA[u'cs_url'][u'sync_timeout'])
 
         # Step Add subsystem to security server
         self.component_ss.login(u'ss_mgm_url')
@@ -671,7 +671,7 @@ class Xroad_install_ui_configuration(SetupTest):
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
         """
         # Step Read liityntapalvelin konfiguraatio parameters
-        self.common_lib.read_liityntapalvelin_konfiguraatio_parameters(self.parameters)
+        self.common_lib.read_liityntapalvelin_konfiguraatio_parameters(TESTDATA)
 
         # Step Add new member to central server
         self.component_cs.login(u'cs_url')
@@ -734,7 +734,7 @@ class Xroad_install_ui_configuration(SetupTest):
         # Step Get WSDL address
         self.component_cs_sidebar.open_system_settings_view()
         # Step Get wsdl and services address #Webpage: cs_system_settings
-        self.cs_system_settings.get_wsdl_and_services_address(self.parameters[u'cs_url'])
+        self.cs_system_settings.get_wsdl_and_services_address(TESTDATA[u'cs_url'])
         self.common_lib.log_out()
         #self.common_lib.sync_global_conf(self.parameters[u'central_server_configuration'][u'sync_timeout'])
 
@@ -746,14 +746,14 @@ class Xroad_install_ui_configuration(SetupTest):
         self.component_cs_members.close_member_details_dlg()
         self.common_lib.log_out()
         # Sync global conf timeout
-        self.common_lib.sync_global_conf(self.parameters[u'ss1_url'][u'sync_timeout'])
+        self.common_lib.sync_global_conf(TESTDATA[u'ss1_url'][u'sync_timeout'])
 
         # Step Add subsystem to security server
         self.component_ss.login(u'ss1_url')
         self.component_ss_clients.add_new_subsystem_to_ss(u'member1_configuration')
         # Sync global conf timeout
         self.common_lib.log_out()
-        self.common_lib.sync_global_conf(self.parameters[u'ss1_url'][u'sync_timeout'])
+        self.common_lib.sync_global_conf(TESTDATA[u'ss1_url'][u'sync_timeout'])
 
         # Step Accept subsystem in in central server
         self.component_cs.login(u'cs_url')
@@ -765,7 +765,7 @@ class Xroad_install_ui_configuration(SetupTest):
         self.component_ss.login(u'ss1_url')
         self.ss_sidebar.verify_sidebar_title()
         # Step Check service registration complete #Webpage: ss_clients #Parameters: server_configuration
-        self.ss_clients.verify_service_registration_complete(self.parameters[u'member1_configuration'])
+        self.ss_clients.verify_service_registration_complete(TESTDATA[u'member1_configuration'])
         self.common_lib.log_out()
 
     def test_configure_ss_server_with_new_member_add_to_existing_cs_4(self):
@@ -851,7 +851,7 @@ class Xroad_install_ui_configuration(SetupTest):
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
         """
         # Step Read liityntapalvelin konfiguraatio parameters
-        self.common_lib.read_liityntapalvelin_konfiguraatio_parameters(self.parameters)
+        self.common_lib.read_liityntapalvelin_konfiguraatio_parameters(TESTDATA)
 
         # Step Add new member to central server
         self.component_cs.login(u'cs_url')
@@ -914,7 +914,7 @@ class Xroad_install_ui_configuration(SetupTest):
         # Step Get WSDL address
         self.component_cs_sidebar.open_system_settings_view()
         # Step Get wsdl and services address #Webpage: cs_system_settings
-        self.cs_system_settings.get_wsdl_and_services_address(self.parameters[u'cs_url'])
+        self.cs_system_settings.get_wsdl_and_services_address(TESTDATA[u'cs_url'])
         self.common_lib.log_out()
         # self.common_lib.sync_global_conf(self.parameters[u'central_server_configuration'][u'sync_timeout'])
 
@@ -926,14 +926,14 @@ class Xroad_install_ui_configuration(SetupTest):
         self.component_cs_members.close_member_details_dlg()
         self.common_lib.log_out()
         # Sync global conf timeout
-        self.common_lib.sync_global_conf(self.parameters[u'ss2_url'][u'sync_timeout'])
+        self.common_lib.sync_global_conf(TESTDATA[u'ss2_url'][u'sync_timeout'])
 
         # Step Add subsystem to security server
         self.component_ss.login(u'ss2_url')
         self.component_ss_clients.add_new_subsystem_to_ss(u'member2_configuration')
         # Sync global conf timeout
         self.common_lib.log_out()
-        self.common_lib.sync_global_conf(self.parameters[u'ss2_url'][u'sync_timeout'])
+        self.common_lib.sync_global_conf(TESTDATA[u'ss2_url'][u'sync_timeout'])
 
         # Step Accept subsystem in in central server
         self.component_cs.login(u'cs_url')
@@ -945,5 +945,5 @@ class Xroad_install_ui_configuration(SetupTest):
         self.component_ss.login(u'ss2_url')
         self.ss_sidebar.verify_sidebar_title()
         # Step Check service registration complete #Webpage: ss_clients #Parameters: server_configuration
-        self.ss_clients.verify_service_registration_complete(self.parameters[u'member2_configuration'])
+        self.ss_clients.verify_service_registration_complete(TESTDATA[u'member2_configuration'])
         self.common_lib.log_out()

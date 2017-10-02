@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from webframework import TESTDATA
 from variables import strings
 from webframework.extension.base.baseTest import BaseTest
 from webframework.extension.parsers.parameter_parser import get_all_parameters
@@ -29,22 +30,21 @@ class Xroad_deletion_of_registered_object(BaseTest):
     * 11.07.2017
         | Documentation updated
     """
-    parameters = get_all_parameters()
     common_utils = CommonUtils()
-    component_cs_sidebar = Component_cs_sidebar(parameters)
-    common_lib = Common_lib(parameters)
-    common_lib_ssh = Common_lib_ssh(parameters)
-    component_cs_mgm_requests = Component_cs_mgm_requests(parameters)
-    component_cs_backup = Component_cs_backup(parameters)
-    component_cs_sec_servers = Component_cs_sec_servers(parameters)
-    component_cs = Component_cs(parameters)
-    component_cs_members = Component_cs_members(parameters)
-    component_ss = Component_ss(parameters)
-    component_ss_backup = Component_ss_backup(parameters)
-    component_ss_sidebar = Component_ss_sidebar(parameters)
-    component_ss_keys_and_certs = Component_ss_keys_and_certs(parameters)
-    component_cs_conf_mgm = Component_cs_conf_mgm(parameters)
-    component_ss_clients = Component_ss_clients(parameters)
+    component_cs_sidebar = Component_cs_sidebar()
+    common_lib = Common_lib()
+    common_lib_ssh = Common_lib_ssh()
+    component_cs_mgm_requests = Component_cs_mgm_requests()
+    component_cs_backup = Component_cs_backup()
+    component_cs_sec_servers = Component_cs_sec_servers()
+    component_cs = Component_cs()
+    component_cs_members = Component_cs_members()
+    component_ss = Component_ss()
+    component_ss_backup = Component_ss_backup()
+    component_ss_sidebar = Component_ss_sidebar()
+    component_ss_keys_and_certs = Component_ss_keys_and_certs()
+    component_cs_conf_mgm = Component_cs_conf_mgm()
+    component_ss_clients = Component_ss_clients()
     ss_clients = Ss_clients()
 
     @classmethod
@@ -132,7 +132,7 @@ class Xroad_deletion_of_registered_object(BaseTest):
             print("tearDown_restore_cs")
             try:
                 # Step Restore central server backup in central server
-                self.common_utils.open_url(self.parameters[u'cs_url']['url'])
+                self.common_utils.open_url(TESTDATA[u'cs_url']['url'])
                 self.component_cs_sidebar.open_backup_restore_view()
                 self.component_cs_backup.restore_backup()
                 self.component_cs_sidebar.open_global_configuration_view()
@@ -154,14 +154,14 @@ class Xroad_deletion_of_registered_object(BaseTest):
                 print(error)
 
             # Step Log out from central server
-            self.common_utils.open_url(self.parameters[u'cs_url']['url'])
+            self.common_utils.open_url(TESTDATA[u'cs_url']['url'])
             self.common_lib.log_out()
 
         if self.restore_ss:
             print("tearDown_restore_ss")
             try:
                 # Step Restore security server in security server
-                self.common_utils.open_url(self.parameters[u'ss1_url']['url'])
+                self.common_utils.open_url(TESTDATA[u'ss1_url']['url'])
                 self.component_ss_sidebar.open_backup_restore_view()
                 self.component_ss_backup.restore_backup()
                 # For some reason jquery takes too long
@@ -178,7 +178,7 @@ class Xroad_deletion_of_registered_object(BaseTest):
                 print(error)
 
             # Step Log out from security
-            self.common_utils.open_url(self.parameters[u'ss1_url']['url'])
+            self.common_utils.open_url(TESTDATA[u'ss1_url']['url'])
             self.common_lib.log_out()
         print("END")
 
@@ -471,7 +471,7 @@ class Xroad_deletion_of_registered_object(BaseTest):
 
         # Step Delete client of security server in security server
         self.component_ss_sidebar.open_security_servers_client_view()
-        self.ss_clients.find_and_open_by_text_dlg_by_subsystem_code(self.parameters[u'member1_configuration'])
+        self.ss_clients.find_and_open_by_text_dlg_by_subsystem_code(TESTDATA[u'member1_configuration'])
         self.component_ss_clients.unregister_and_delete_subsystem_in_subsystem_details_dlg()
 
         # Step Verify test service status in security server

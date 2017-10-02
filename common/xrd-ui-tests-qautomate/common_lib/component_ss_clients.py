@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from webframework import TESTDATA
 from selenium.webdriver.common.by import By
 from webframework.extension.util.common_utils import *
 from time import sleep
@@ -31,7 +32,7 @@ class Component_ss_clients(CommonUtils):
     ss_client_dlg_unregister = Ss_client_dlg_unregister()
     ss_client_dlg_delete_unregister = Ss_client_dlg_delete_unregister()
 
-    def __init__(self, parameters=None):
+    def __init__(self):
         """
         Initilization method for moving test data to class
 
@@ -40,7 +41,6 @@ class Component_ss_clients(CommonUtils):
         :param parameters:  Test data section dictionary
         """
         CommonUtils.__init__(self)
-        self.parameters = parameters
 
     def add_new_subsystem_to_ss(self, section=u'member_mgm_configuration'):
         """
@@ -56,7 +56,7 @@ class Component_ss_clients(CommonUtils):
                 * **Step 3:** :func:`~pagemodel.ss_clients_add_client_conf.Ss_clients_add_client_conf.click_confirm_client_registration_request`
         """
         self.ss_clients.click_client_add_subsystem_server()
-        self.ss_clients_add_client.fill_and_submit_client_details(self.parameters[section])
+        self.ss_clients_add_client.fill_and_submit_client_details(TESTDATA[section])
         # self.ss_clients_add_warning.click_element_continue()
         self.ss_clients_add_client_conf.click_confirm_client_registration_request()
         # Sync registration request before jquery
@@ -89,7 +89,7 @@ class Component_ss_clients(CommonUtils):
         self.ss_clients.click_client_add_subsystem_server()
         self.ss_clients_add_client.click_element_id_client_select()
         self.ss_clients_add_search_client_dlg.click_element_id_search_filter()
-        self.ss_clients_add_search_client_dlg.click_client_from_table_clientsglobal(self.parameters[section])
+        self.ss_clients_add_search_client_dlg.click_client_from_table_clientsglobal(TESTDATA[section])
         self.ss_clients_add_search_client_dlg.click_button_id_client_select_ok()
         self.ss_clients_add_client.click_element_ok()
 
@@ -106,7 +106,7 @@ class Component_ss_clients(CommonUtils):
                 * **Step 2:** :func:`~pagemodel.ss_clients_dlg_services.Ss_clients_dlg_services.verify_client_dlg_open`
         """
         #step Open services dialog from dynamic list
-        self.ss_clients.find_and_open_by_text_dlg_by_subsystem_code(self.parameters[section])
+        self.ss_clients.find_and_open_by_text_dlg_by_subsystem_code(TESTDATA[section])
         self.ss_clients_dlg_services.verify_client_dlg_open()
 
     def open_client_services_dlg_with_full_member_id(self, section=u'member1_configuration'):
@@ -121,7 +121,7 @@ class Component_ss_clients(CommonUtils):
                 * **Step 1:** :func:`~pagemodel.ss_clients.Ss_clients.click_and_open_details_of_client_in_table`, *self.parameters[section]*
                 * **Step 2:** :func:`~pagemodel.ss_clients_dlg_services.Ss_clients_dlg_services.verify_client_dlg_open`
         """
-        self.ss_clients.click_and_open_details_of_client_in_table(self.parameters[section])
+        self.ss_clients.click_and_open_details_of_client_in_table(TESTDATA[section])
         self.ss_clients_dlg_services.verify_client_dlg_open()
 
     def unregister_and_delete_subsystem_in_subsystem_details_dlg(self):

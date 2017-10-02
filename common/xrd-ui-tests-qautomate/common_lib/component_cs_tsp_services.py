@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from webframework import TESTDATA
 import os
 from selenium.webdriver.common.by import By
 from webframework.extension.util.common_utils import *
@@ -21,7 +22,7 @@ class Component_cs_tsp_services(CommonUtils):
     cs_time_stamping_services_add_dlg = Cs_time_stamping_services_add_dlg()
     cs_time_stamping_services = Cs_time_stamping_services()
 
-    def __init__(self, parameters=None):
+    def __init__(self):
         """
         Initilization method for moving test data to class
 
@@ -30,7 +31,6 @@ class Component_cs_tsp_services(CommonUtils):
         :param parameters:  Test data section dictionary
         """
         CommonUtils.__init__(self)
-        self.parameters = parameters
 
     def upload_tsa_certificate(self, section1=u'paths', section2=u'cs_url'):
         """
@@ -46,8 +46,8 @@ class Component_cs_tsp_services(CommonUtils):
         """
         sleep(2)
         type_string = os.path.join(os.getcwd(),
-                                   self.parameters[section1][u'data_folder'],
-                                   self.parameters[section2][u'tsa_cert_file_name'])
+                                   TESTDATA[section1][u'data_folder'],
+                                   TESTDATA[section2][u'tsa_cert_file_name'])
         print(type_string)
         self.common_lib.type_file_name_pyautogui(type_string)
         print("done upload")
@@ -69,7 +69,7 @@ class Component_cs_tsp_services(CommonUtils):
                 * **Step 5:** :func:`~pagemodel.cs_time_stamping_services_add_dlg.Cs_time_stamping_services_add_dlg.click_button_ok`
         """
         self.cs_time_stamping_services.click_button_id_tsp_add()
-        self.cs_time_stamping_services_add_dlg.input_text_to_id_tsp_url(self.parameters[section2])
+        self.cs_time_stamping_services_add_dlg.input_text_to_id_tsp_url(TESTDATA[section2])
         self.cs_time_stamping_services_add_dlg.click_button_upload()
         self.upload_tsa_certificate(section1, section2)
         self.cs_time_stamping_services_add_dlg.click_button_ok()

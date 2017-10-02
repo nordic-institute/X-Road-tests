@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from webframework import TESTDATA
 from variables import errors
 from selenium.webdriver.common.by import By
 from webframework.extension.util.common_utils import *
@@ -36,7 +37,7 @@ class Component_ss_keys_and_certs(CommonUtils):
     ss_softoken_enter_pin = Ss_softoken_enter_pin()
     ss_keys_and_cert_details = Ss_keys_and_cert_details()
 
-    def __init__(self, parameters=None):
+    def __init__(self):
         """
         Initilization method for moving test data to class
 
@@ -45,7 +46,6 @@ class Component_ss_keys_and_certs(CommonUtils):
         :param parameters:  Test data section dictionary
         """
         CommonUtils.__init__(self)
-        self.parameters = parameters
 
     def generate_and_select_certificate_key_in_ss(self, text=u'ta_generated_key_sign'):
         """
@@ -87,9 +87,9 @@ class Component_ss_keys_and_certs(CommonUtils):
                 * **Step 5:** :func:`~pagemodel.ss_keys_and_cert_dlg_subject_dname.Ss_keys_and_cert_dlg_subject_dname.submit_keys_dname`
         """
         self.ss_keys_and_cert.click_generate_certificate_request()
-        self.ss_keys_and_cert_generate_csr.fill_input_values_keys_csr_sign(self.parameters[section])
+        self.ss_keys_and_cert_generate_csr.fill_input_values_keys_csr_sign(TESTDATA[section])
         self.ss_keys_and_cert_generate_csr.click_button_id_generate_csr_submit()
-        self.ss_keys_and_cert_dlg_subject_dname.fill_input_values_keys_dname_sign(self.parameters[section])
+        self.ss_keys_and_cert_dlg_subject_dname.fill_input_values_keys_dname_sign(TESTDATA[section])
         self.ss_keys_and_cert_dlg_subject_dname.submit_keys_dname()
 
     def generate_auth_certificate_request_in_ss(self, section=u'member1_configuration'):
@@ -110,7 +110,7 @@ class Component_ss_keys_and_certs(CommonUtils):
         self.ss_keys_and_cert.click_generate_certificate_request()
         self.ss_keys_and_cert_generate_csr.fill_input_values_keys_csr_auth()
         self.ss_keys_and_cert_generate_csr.click_button_id_generate_csr_submit()
-        self.ss_keys_and_cert_dlg_subject_dname.fill_input_values_keys_dname_auth(self.parameters[section])
+        self.ss_keys_and_cert_dlg_subject_dname.fill_input_values_keys_dname_auth(TESTDATA[section])
         self.ss_keys_and_cert_dlg_subject_dname.submit_keys_dname()
 
     def import_and_upload_key_certificate(self, value_string=None):
@@ -152,7 +152,7 @@ class Component_ss_keys_and_certs(CommonUtils):
         """
         # step Send register request #Webpage: ss_keys_and_cert
         self.ss_keys_and_cert.register_auth_cert(value_string)
-        self.ss_keys_and_cert_dlg_registration_req.input_text_to_server_address(self.parameters[section])
+        self.ss_keys_and_cert_dlg_registration_req.input_text_to_server_address(TESTDATA[section])
         self.ss_keys_and_cert_dlg_registration_req.submit_register_request()
 
     def active_token_and_insert_pin_code_if_needed(self, section=u'cs_url'):
@@ -172,7 +172,7 @@ class Component_ss_keys_and_certs(CommonUtils):
         # Sometimes it will not ask pin code, recovery added
         try:
             self.ss_softoken_enter_pin.click_button_activate_token_enter_pin()
-            self.ss_enter_pin_dlg.input_text_to_id_activate_token_pin(self.parameters[section])
+            self.ss_enter_pin_dlg.input_text_to_id_activate_token_pin(TESTDATA[section])
             self.ss_enter_pin_dlg.click_button_ok()
         except:
             print("Pin code query not prompted this time")
@@ -209,9 +209,9 @@ class Component_ss_keys_and_certs(CommonUtils):
                 * **Step 1:** :func:`~common_lib.common_lib.Common_lib.copy_and_sign_cert_request`, *self.parameters[section]*
                 * **Step 2:** :func:`~pagemodel.fail(errors.Fail(errors.could_not_verify_certificate)`, *errors.could_not_verify_certificate*
         """
-        if self.common_lib.verify_cert_request(self.parameters[section]):
+        if self.common_lib.verify_cert_request(TESTDATA[section]):
             print("cert sign ok")
-            self.common_lib.copy_and_sign_cert_request(self.parameters[section])
+            self.common_lib.copy_and_sign_cert_request(TESTDATA[section])
         else:
             self.fail(errors.could_not_verify_certificate)
 
@@ -227,9 +227,9 @@ class Component_ss_keys_and_certs(CommonUtils):
                 * **Step 1:** :func:`~common_lib.common_lib.Common_lib.copy_and_auth_cert_request`, *self.parameters[section]*
                 * **Step 2:** :func:`~pagemodel.fail(errors.Fail(errors.could_not_verify_certificate)`, *errors.could_not_verify_certificate*
         """
-        if self.common_lib.verify_cert_request(self.parameters[section]):
+        if self.common_lib.verify_cert_request(TESTDATA[section]):
             print("cert auth ok")
-            self.common_lib.copy_and_auth_cert_request(self.parameters[section])
+            self.common_lib.copy_and_auth_cert_request(TESTDATA[section])
         else:
             self.fail(errors.could_not_verify_certificate)
 
@@ -244,7 +244,7 @@ class Component_ss_keys_and_certs(CommonUtils):
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.fail(errors.Fail(errors.could_not_verify_certificate)`, *errors.could_not_verify_certificate*
         """
-        if self.common_lib.verify_cert_request(self.parameters[section]):
+        if self.common_lib.verify_cert_request(TESTDATA[section]):
             print("cert ok")
         else:
             self.fail(errors.could_not_verify_certificate)

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from webframework import TESTDATA
 import os
 from selenium.webdriver.common.by import By
 from webframework.extension.util.common_utils import *
@@ -29,7 +30,7 @@ class Component_cs_cert_services(CommonUtils):
     cs_cert_services_ocsp_add_new_dlg = Cs_cert_services_ocsp_add_new_dlg()
     cs_cert_services_dlg_ca_settings = Cs_cert_services_dlg_ca_settings()
 
-    def __init__(self, parameters=None):
+    def __init__(self):
         """
         Initilization method for moving test data to class
 
@@ -38,7 +39,6 @@ class Component_cs_cert_services(CommonUtils):
         :param parameters:  Test data section dictionary
         """
         CommonUtils.__init__(self)
-        self.parameters = parameters
 
     def upload_ca_certificate(self, section1=u'paths', section2=u'cs_url'):
         """
@@ -54,8 +54,8 @@ class Component_cs_cert_services(CommonUtils):
         """
         sleep(2)
         type_string = os.path.join(os.getcwd(),
-                                   self.parameters[section1][u'data_folder'],
-                                   self.parameters[section2][u'ca_cert_file_name'])
+                                   TESTDATA[section1][u'data_folder'],
+                                   TESTDATA[section2][u'ca_cert_file_name'])
         print(type_string)
         self.common_lib.type_file_name_pyautogui(type_string)
         print("done upload")
@@ -83,7 +83,7 @@ class Component_cs_cert_services(CommonUtils):
         self.cs_cert_services_insert_service_ca_cert.click_button_browse()
         self.upload_ca_certificate(section1, section2)
         self.cs_cert_services_insert_service_ca_cert.click_button_next()
-        self.cs_cert_services_dlg_ca_settings.input_text_to_cert_profile_info_text(self.parameters[section3])
+        self.cs_cert_services_dlg_ca_settings.input_text_to_cert_profile_info_text(TESTDATA[section3])
         self.cs_cert_services_dlg_ca_settings.click_button_id_ca_settings_submit()
         self.ca_cert_services_ca_details.click_button_close()
 
@@ -108,6 +108,6 @@ class Component_cs_cert_services(CommonUtils):
         self.cs_cert_services.click_button_id_ca_details()
         self.ca_cert_services_ca_details.click_oscp_responders()
         self.cs_cert_services_ocsp_responder_dlg.click_button_id_ocsp_responder_add()
-        self.cs_cert_services_ocsp_add_new_dlg.input_text_to_id_ocsp_responder_url(self.parameters[section])
+        self.cs_cert_services_ocsp_add_new_dlg.input_text_to_id_ocsp_responder_url(TESTDATA[section])
         self.cs_cert_services_ocsp_add_new_dlg.click_button_ok()
         self.cs_cert_services_ocsp_responder_dlg.click_button_close()

@@ -48,6 +48,8 @@ change_address_error = u'Central server address must be DNS name or IP address'
 
 external_conf_anchor_generated_success = u'External configuration anchor generated successfully'
 
+lanquage_eng = u'ENGLISH (EN)'
+
 # enviroment information
 ssh_type_environment = "ssh"
 lxd_type_environment = "lxd"
@@ -71,7 +73,6 @@ sign_key_label = "ta_generated_key_sign"
 auth_key_label = "ta_generated_key_auth"
 sign_key_label_2 = "ta_generated_key_sign_b"
 auth_key_label_2 = "ta_generated_key_auth_b"
-
 
 def generate_subject_name(section=u'member1_configuration'):
     parameters = get_all_parameters()

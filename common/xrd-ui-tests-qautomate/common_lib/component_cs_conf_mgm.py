@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from webframework import TESTDATA
 from selenium.webdriver.common.by import By
 from webframework.extension.util.common_utils import *
 from time import sleep
@@ -27,7 +28,7 @@ class Component_cs_conf_mgm(CommonUtils):
     cs_conf_mgm_delete_confirm_dlg = Cs_conf_mgm_delete_confirm_dlg()
     cs_conf_mgm_activate_confirm_dlg = Cs_conf_mgm_activate_confirm_dlg()
 
-    def __init__(self, parameters=None):
+    def __init__(self):
         """
         Initilization method for moving test data to class
 
@@ -36,7 +37,6 @@ class Component_cs_conf_mgm(CommonUtils):
         :param parameters:  Test data section dictionary
         """
         CommonUtils.__init__(self)
-        self.parameters = parameters
 
     def download_source_anchor_from_cs(self):
         """
@@ -91,7 +91,7 @@ class Component_cs_conf_mgm(CommonUtils):
         """
         # Sometimes it will not ask pin code, recovery added
         try:
-            self.cs_conf_mgm_enter_pin.input_text_to_id_activate_token_pin(self.parameters[section])
+            self.cs_conf_mgm_enter_pin.input_text_to_id_activate_token_pin(TESTDATA[section])
             self.cs_conf_mgm_enter_pin.click_button_ok()
         except:
             print("Pin code query not prompted this time")

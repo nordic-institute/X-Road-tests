@@ -15,3 +15,5 @@ subsystem_status_error = "Subsystem status error"
 subsystem_not_found = "Subsystem not found"
 
 could_not_verify_certificate = "Could not verify certificate"
+
+backup_name_is_empty = "Backup file is missing name"

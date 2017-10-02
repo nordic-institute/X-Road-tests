@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from webframework import TESTDATA
 from selenium.webdriver.common.by import By
 from webframework.extension.util.common_utils import *
 from time import sleep
@@ -17,7 +18,7 @@ class Component_cs_mgm_requests(CommonUtils):
     cs_mgm_requests_dlg_reg_details = Cs_mgm_requests_dlg_reg_details()
     cs_mgm_requests = Cs_mgm_requests()
 
-    def __init__(self, parameters=None):
+    def __init__(self):
         """
         Initilization method for moving test data to class
 
@@ -26,7 +27,6 @@ class Component_cs_mgm_requests(CommonUtils):
         :param parameters:  Test data section dictionary
         """
         CommonUtils.__init__(self)
-        self.parameters = parameters
 
     def verify_comment_in_request_details_dlg(self, text=None):
         """

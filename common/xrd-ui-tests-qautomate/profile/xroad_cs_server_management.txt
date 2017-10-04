@@ -1,0 +1,3 @@
+Xroad_cs_server_management.test_change_the_graphical_user_interface_language=1
+Xroad_cs_server_management.test_view_the_installed_software_version=1
+Xroad_cs_server_management.test_back_up_cases=1

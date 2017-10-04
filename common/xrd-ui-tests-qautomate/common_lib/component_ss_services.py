@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from webframework import TESTDATA
 from selenium.webdriver.common.by import By
 from webframework.extension.util.common_utils import *
 from time import sleep
@@ -29,7 +30,7 @@ class Component_ss_services(CommonUtils):
     ss_clients_services_dlg_add_subjects = Ss_clients_services_dlg_add_subjects()
     ss_clients_services_dlg_acl_confirm = Ss_clients_services_dlg_acl_confirm()
 
-    def __init__(self, parameters=None):
+    def __init__(self):
         """
         Initilization method for moving test data to class
 
@@ -38,7 +39,6 @@ class Component_ss_services(CommonUtils):
         :param parameters:  Test data section dictionary
         """
         CommonUtils.__init__(self)
-        self.parameters = parameters
 
     def add_new_wsdl(self, section=u'add_wsdl'):
         """
@@ -55,7 +55,7 @@ class Component_ss_services(CommonUtils):
         """
         self.ss_clients_dlg_services.click_wsdl_add()
         self.ss_clients_dlg_services_add_wsdl.verify_add_wsdl_dlg_open()
-        self.ss_clients_dlg_services_add_wsdl.add_wsdl(self.parameters[section])
+        self.ss_clients_dlg_services_add_wsdl.add_wsdl(TESTDATA[section])
 
     def edit_wsdl_service_parameters_in_ss(self, section1=u'wsdl_service_auth_cert_deletion', section2=u'service_wsdl_auth_cert_deletion', section3=u'cs_url', parameter=u'service_mgm_address'):
         """
@@ -77,12 +77,12 @@ class Component_ss_services(CommonUtils):
                 * **Step 6:** :func:`~pagemodel.ss_clients_dlg_services_edit_wsdl.Ss_clients_dlg_services_edit_wsdl.click_ok_service_parameters`
         """
         sleep(2)
-        self.ss_clients_dlg_services.click_and_open_wsdl_service(self.parameters[section1])
+        self.ss_clients_dlg_services.click_and_open_wsdl_service(TESTDATA[section1])
         self.ss_clients_dlg_services.click_edit_service_params()
         self.ss_clients_dlg_services_edit_wsdl.verify_edit_serv_param_dlg_open()
-        new_wsdl_value = self.parameters[section3][parameter]
-        self.add_dynamic_content_to_parameters(self.parameters, u'params_url', new_wsdl_value, section2)
-        self.ss_clients_dlg_services_edit_wsdl.fill_service_parameters(self.parameters[section2])
+        new_wsdl_value = TESTDATA[section3][parameter]
+        self.add_dynamic_content_to_parameters(TESTDATA, u'params_url', new_wsdl_value, section2)
+        self.ss_clients_dlg_services_edit_wsdl.fill_service_parameters(TESTDATA[section2])
         self.ss_clients_dlg_services_edit_wsdl.click_ok_service_parameters()
 
     def edit_wsdl_default_service_parameters_in_ss(self, section1=u'wsdl_service', section2=u'service_wsdl'):
@@ -102,10 +102,10 @@ class Component_ss_services(CommonUtils):
                 * **Step 5:** :func:`~pagemodel.ss_clients_dlg_services_edit_wsdl.Ss_clients_dlg_services_edit_wsdl.click_ok_service_parameters`
         """
         sleep(2)
-        self.ss_clients_dlg_services.click_and_open_wsdl_service(self.parameters[section1])
+        self.ss_clients_dlg_services.click_and_open_wsdl_service(TESTDATA[section1])
         self.ss_clients_dlg_services.click_edit_service_params()
         self.ss_clients_dlg_services_edit_wsdl.verify_edit_serv_param_dlg_open()
-        self.ss_clients_dlg_services_edit_wsdl.fill_service_parameters(self.parameters[section2])
+        self.ss_clients_dlg_services_edit_wsdl.fill_service_parameters(TESTDATA[section2])
         self.ss_clients_dlg_services_edit_wsdl.click_ok_service_parameters()
 
     def add_service_access_rights_to_add_to_subjects_in_ss(self):

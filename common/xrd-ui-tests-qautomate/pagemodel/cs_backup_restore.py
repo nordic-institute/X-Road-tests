@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = get_driver() e.g driver.current_url
+from variables import errors
+from webframework import TESTDATA
 from selenium.webdriver.common.by import By
 from webframework.extension.util.common_utils import *
 from webframework.extension.util.webtimings import get_measurements
@@ -50,11 +52,14 @@ class Cs_backup_restore(CommonUtils):
     # Dynamic objects:
     NEWEST_RESTORE = (By.XPATH, u'//td[2]/button[2]') # x: 1730 y: 190 width: 86 height: 33, tag: button, type: submit, name: None, form_id: , checkbox: , table_id: , href: # Dynamic object
     NEWEST_DELETE = (By.XPATH, u'//td[2]/button[1]') # x: 1821 y: 190 width: 73 height: 33, tag: button, type: submit, name: None, form_id: , checkbox: , table_id: , href: # Dynamic object
+    BACKUP_FILES = (By.ID, u'backup_files') # x: 291 y: 114 width: 1608 height: 43, tag: table, type: , name: None, form_id: , checkbox: , table_id: , href:
+    NEWEST_BACKUP_NAME = (By.XPATH, u'//div[2]/table[1]/tbody[1]/tr[1]/td[1]') # x: 291 y: 114 width: 804 height: 43, tag: td, type: , name: None, form_id: , checkbox: , table_id: , href:
+    NEWEST_DOWNLOAD = (By.XPATH, u'//td[2]/button[3]') # x: 1821 y: 119 width: 73 height: 33, tag: button, type: submit, name: None, form_id: , checkbox: , table_id: , href:
 
     def click_button_id_backup(self):
         """
         Click button to generate backup
-        
+
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_BACKUP*
             * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
@@ -80,3 +85,21 @@ class Cs_backup_restore(CommonUtils):
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.NEWEST_DELETE*
         """
         self.click_element(self.NEWEST_DELETE)
+
+    def verify_contains_all_user_actions(self, parameters=None):
+        self.element_should_be_present(self.ID_BACKUP)
+        self.element_should_be_present(self.ID_BACKUP_UPLOAD)
+        backup_file = self.get_text(self.NEWEST_BACKUP_NAME)
+        if not backup_file:
+            self.fail(errors.backup_name_is_empty)
+        else:
+            TESTDATA[u'paths'][u'backup_file'] = backup_file
+        self.element_should_be_present(self.NEWEST_RESTORE)
+        self.element_should_be_present(self.NEWEST_DELETE)
+        self.element_should_be_present(self.NEWEST_DOWNLOAD)
+
+    def click_element_newest_download(self, parameters=None):
+        self.click_element(self.NEWEST_DOWNLOAD)
+
+    def click_element_upload_backup_file(self, parameters=None):
+        self.click_element(self.ID_BACKUP_UPLOAD)

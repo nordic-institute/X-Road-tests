@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from webframework import TESTDATA
 from variables import strings
 from webframework.extension.base.setupTest import SetupTest
 from webframework.extension.parsers.parameter_parser import get_all_parameters
@@ -42,22 +43,21 @@ class Xroad_keys_and_certs(SetupTest):
     * 11.07.2017
         | Documentation updated
     """
-    parameters = get_all_parameters()
     common_utils = CommonUtils()
     common_lib = Common_lib()
-    common_lib_ssh = Common_lib_ssh(parameters)
-    component_cs = Component_cs(parameters)
-    component_cs_backup = Component_cs_backup(parameters)
-    component_cs_cert_services = Component_cs_cert_services(parameters)
-    component_cs_conf_mgm = Component_cs_conf_mgm(parameters)
-    component_cs_members = Component_cs_members(parameters)
-    component_cs_system_settings = Component_cs_system_settings(parameters)
-    component_cs_tsp_services = Component_cs_tsp_services(parameters)
-    component_ss = Component_ss(parameters)
-    component_ss_clients = Component_ss_clients(parameters)
-    component_ss_initial_conf = Component_ss_initial_conf(parameters)
-    component_ss_keys_and_certs = Component_ss_keys_and_certs(parameters)
-    component_ss_services = Component_ss_services(parameters)
+    common_lib_ssh = Common_lib_ssh()
+    component_cs = Component_cs()
+    component_cs_backup = Component_cs_backup()
+    component_cs_cert_services = Component_cs_cert_services()
+    component_cs_conf_mgm = Component_cs_conf_mgm()
+    component_cs_members = Component_cs_members()
+    component_cs_system_settings = Component_cs_system_settings()
+    component_cs_tsp_services = Component_cs_tsp_services()
+    component_ss = Component_ss()
+    component_ss_clients = Component_ss_clients()
+    component_ss_initial_conf = Component_ss_initial_conf()
+    component_ss_keys_and_certs = Component_ss_keys_and_certs()
+    component_ss_services = Component_ss_services()
     ss_keys_and_cert_dlg_delete = Ss_keys_and_cert_dlg_delete()
     cs_sec_servers_details = Cs_sec_servers_details()
     cs_sidebar = Cs_sidebar()
@@ -70,8 +70,8 @@ class Xroad_keys_and_certs(SetupTest):
     cs_sec_servers_mgm_requests = Cs_sec_servers_mgm_requests()
     cs_sec_serves_mgm_request_approve = Cs_sec_serves_mgm_request_approve()
     ss_sidebar = Ss_sidebar()
-    component_cs_sidebar = Component_cs_sidebar(parameters)
-    component_ss_sidebar = Component_ss_sidebar(parameters)
+    component_cs_sidebar = Component_cs_sidebar()
+    component_ss_sidebar = Component_ss_sidebar()
 
     @classmethod
     def setUpTestSet(self):
@@ -110,11 +110,11 @@ class Xroad_keys_and_certs(SetupTest):
                 * **Step 4:** :func:`~common_lib.common_lib_ssh.Common_lib_ssh.empty_all_logs_from_server`, *"cs_url"*
                 * **Step 5:** :func:`~common_lib.common_lib.Common_lib.get_version_information`
         """
-        self.common_lib.remove_cert_from_downloads(self.parameters[u'paths'])
+        self.common_lib.remove_cert_from_downloads(TESTDATA[u'paths'])
         self.start_log_time = self.common_lib.get_log_utc_time()
         self.common_lib_ssh.empty_all_logs_from_server("ss1_url")
         self.common_lib_ssh.empty_all_logs_from_server("cs_url")
-        if "test-" in self.parameters[u'ss1_url']['url']:
+        if "test-" in TESTDATA[u'ss1_url']['url']:
             self.common_lib.get_version_information()
 
     def tearDown(self):
@@ -140,7 +140,7 @@ class Xroad_keys_and_certs(SetupTest):
             self.common_lib_ssh.get_all_logs_from_server(u'cs_url')
             self.common_lib_ssh.find_exception_from_logs_and_save(self.start_log_time, stop_log_time, u'cs_url', copy_log)
 
-        self.common_lib.remove_cert_from_downloads(self.parameters[u'paths'])
+        self.common_lib.remove_cert_from_downloads(TESTDATA[u'paths'])
         self.common_lib.get_ui_error_message()
         sleep(1)
         try:
@@ -222,7 +222,7 @@ class Xroad_keys_and_certs(SetupTest):
         print(cert_key)
         # Step Click delete cert confirm key #Webpage: ss_keys_and_cert_dlg_delete
         self.ss_keys_and_cert_dlg_delete.click_delete_cert_confirm(strings.sign_key_label_2)
-        self.common_lib.revoke_cert(self.parameters[u'paths'])
+        self.common_lib.revoke_cert(TESTDATA[u'paths'])
         sleep(3)
         # Step Log out from securityserver
         self.common_lib.log_out()
@@ -292,7 +292,7 @@ class Xroad_keys_and_certs(SetupTest):
         self.component_cs.login(u'cs_url')
         self.component_cs_sidebar.open_security_servers_view()
         # Step Find security server by member name #Webpage: cs_sec_servers #Parameters: certificate_auth
-        self.cs_sec_servers.click_security_servers_row_with_text(self.parameters[u'member1_configuration'][u'member_name'])
+        self.cs_sec_servers.click_security_servers_row_with_text(TESTDATA[u'member1_configuration'][u'member_name'])
         # Step Click ss details server #Webpage: cs_sec_servers
         self.cs_sec_servers.click_ss_details()
         self.cs_sec_servers_details.verify_ss_details_view()
@@ -345,7 +345,7 @@ class Xroad_keys_and_certs(SetupTest):
         # Step Click unregister and delete cert confirm #Webpage: ss_keys_and_cert_dlg_delete #Parameters: certificate_auth
         self.ss_keys_and_cert_dlg_delete.click_unregister_and_delete_cert_confirm(strings.auth_key_label_2)
         # Step Revoke cert
-        self.common_lib.revoke_cert_auth(self.parameters[u'paths'])
+        self.common_lib.revoke_cert_auth(TESTDATA[u'paths'])
         sleep(3)
         # Step Log out security server
         self.common_lib.log_out()

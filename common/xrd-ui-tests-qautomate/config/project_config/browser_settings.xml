@@ -38,7 +38,7 @@
             <set_preference option="browser.download.manager.closeWhenDone">True</set_preference>
             <set_preference option="intl.accept_languages">tue.get_country_key(get_config_value("browser_language"))</set_preference>
 
-            <set_capabilities option="marionette">False</set_capabilities>
+            <set_capabilities option="marionette">True</set_capabilities>
         </browser>
         <browser name="Opera">
             <desired_capabilities option="browserName">"opera"</desired_capabilities>

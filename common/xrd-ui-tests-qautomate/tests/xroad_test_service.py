@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from webframework import TESTDATA
 from webframework.extension.base.baseTest import BaseTest
 from webframework.extension.parsers.parameter_parser import get_all_parameters
 from webframework.extension.util.common_utils import *
@@ -44,22 +45,21 @@ class Xroad_test_service(BaseTest):
     * 11.07.2017
         | Documentation updated
     """
-    parameters = get_all_parameters()
     common_utils = CommonUtils()
     common_lib = Common_lib()
-    common_lib_ssh = Common_lib_ssh(parameters)
-    component_cs = Component_cs(parameters)
-    component_cs_backup = Component_cs_backup(parameters)
-    component_cs_cert_services = Component_cs_cert_services(parameters)
-    component_cs_conf_mgm = Component_cs_conf_mgm(parameters)
-    component_cs_members = Component_cs_members(parameters)
-    component_cs_system_settings = Component_cs_system_settings(parameters)
-    component_cs_tsp_services = Component_cs_tsp_services(parameters)
-    component_ss = Component_ss(parameters)
-    component_ss_clients = Component_ss_clients(parameters)
-    component_ss_initial_conf = Component_ss_initial_conf(parameters)
-    component_ss_keys_and_certs = Component_ss_keys_and_certs(parameters)
-    component_ss_services = Component_ss_services(parameters)
+    common_lib_ssh = Common_lib_ssh()
+    component_cs = Component_cs()
+    component_cs_backup = Component_cs_backup()
+    component_cs_cert_services = Component_cs_cert_services()
+    component_cs_conf_mgm = Component_cs_conf_mgm()
+    component_cs_members = Component_cs_members()
+    component_cs_system_settings = Component_cs_system_settings()
+    component_cs_tsp_services = Component_cs_tsp_services()
+    component_ss = Component_ss()
+    component_ss_clients = Component_ss_clients()
+    component_ss_initial_conf = Component_ss_initial_conf()
+    component_ss_keys_and_certs = Component_ss_keys_and_certs()
+    component_ss_services = Component_ss_services()
     cs_members = Cs_members()
     ss_clients_dlg_services = Ss_clients_dlg_services()
     ss_client_dlg_details = Ss_client_dlg_details()
@@ -76,7 +76,7 @@ class Xroad_test_service(BaseTest):
     ss_sidebar = Ss_sidebar()
     open_application = Open_application()
     cs_members_details_dlg = Cs_members_details_dlg()
-    component_cs_sidebar = Component_cs_sidebar(parameters)
+    component_cs_sidebar = Component_cs_sidebar()
 
     def setUp(self):
         """
@@ -89,7 +89,7 @@ class Xroad_test_service(BaseTest):
                 * **Step 2:** :func:`~common_lib.common_lib.Common_lib.get_version_information`
         """
         self.start_log_time = self.common_lib.get_log_utc_time()
-        if "test-" in self.parameters[u'ss1_static_url']['url']:
+        if "test-" in TESTDATA[u'ss1_static_url']['url']:
             self.common_lib.get_version_information()
 
     def tearDown(self):
@@ -123,13 +123,13 @@ class Xroad_test_service(BaseTest):
             pass
         try:
             # Add new subsystem client
-            self.open_application.open_application_url(self.parameters[u'ss1_static_url'])
+            self.open_application.open_application_url(TESTDATA[u'ss1_static_url'])
             # login
-            self.ss_login.login(self.parameters[u'ss1_static_url'])
+            self.ss_login.login(TESTDATA[u'ss1_static_url'])
             self.ss_sidebar.verify_sidebar_title()
             sleep(2)
             # Unregister client
-            self.ss_clients.click_and_open_details_of_client_in_table(self.parameters[u'member_static_configuration'])
+            self.ss_clients.click_and_open_details_of_client_in_table(TESTDATA[u'member_static_configuration'])
             self.ss_client_dlg_details.click_unregister_client()
             self.ss_client_dlg_unregister.click_confirm_unregister()
             self.ss_client_dlg_delete_unregister.click_client_delete()
@@ -196,12 +196,12 @@ class Xroad_test_service(BaseTest):
         self.common_lib.log_out()
         sleep(23)
         # Step login ss1 server
-        self.open_application.open_application_url(self.parameters[u'ss1_static_url'])
+        self.open_application.open_application_url(TESTDATA[u'ss1_static_url'])
         # Step login #Webpage: ss_login
         self.component_ss.login(u'ss1_static_url')
         # Step Check service registration complete #Webpage: ss_clients #Parameters:
-        self.ss_clients.verify_service_registration_complete(self.parameters[u'member_static_configuration'])
+        self.ss_clients.verify_service_registration_complete(TESTDATA[u'member_static_configuration'])
         # Step Verify soap message
-        self.common_lib.send_soap_api_request_hello(self.parameters['soap'])
+        self.common_lib.send_soap_api_request_hello(TESTDATA['soap'])
         sleep(1)
         self.common_lib.log_out()

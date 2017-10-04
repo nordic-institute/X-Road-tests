@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from webframework import TESTDATA
 from variables import strings
 from webframework.extension.base.setupTest import SetupTest
 from webframework.extension.parsers.parameter_parser import get_all_parameters
@@ -55,17 +56,16 @@ class Xroad_global_configuration(SetupTest):
     * 11.07.2017
         | Documentation updated
     """
-    parameters = get_all_parameters()
     common_utils = CommonUtils()
     open_application = Open_application()
     ss_login = Ss_login()
-    common_lib = Common_lib(parameters)
-    component_cs = Component_cs(parameters)
-    component_common = Component_common(parameters)
-    common_lib_ssh = Common_lib_ssh(parameters)
-    component_cs_conf_mgm = Component_cs_conf_mgm(parameters)
-    component_cs_sidebar = Component_cs_sidebar(parameters)
-    component_cs_system_settings = Component_cs_system_settings(parameters)
+    common_lib = Common_lib()
+    component_cs = Component_cs()
+    component_common = Component_common()
+    common_lib_ssh = Common_lib_ssh()
+    component_cs_conf_mgm = Component_cs_conf_mgm()
+    component_cs_sidebar = Component_cs_sidebar()
+    component_cs_system_settings = Component_cs_system_settings()
 
     @classmethod
     def setUpTestSet(self):
@@ -123,7 +123,7 @@ class Xroad_global_configuration(SetupTest):
 
         # Step log out if logged in
         if not self.ss_login.verify_is_login_page():
-            self.open_application.open_application_url(self.parameters[u'cs_url'])
+            self.open_application.open_application_url(TESTDATA[u'cs_url'])
             self.common_lib.log_out()
 
     def test_global_configuration_view_source(self):

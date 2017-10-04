@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from webframework import TESTDATA
 from webframework.extension.base.setupTest import SetupTest
 from webframework.extension.parsers.parameter_parser import get_all_parameters
 from webframework.extension.util.common_utils import *
@@ -28,17 +29,16 @@ class Lxd_help_scripts(SetupTest):
     * 11.07.2017
         | Documentation updated
     """
-    parameters = get_all_parameters()
     common_utils = CommonUtils()
     open_application = Open_application()
-    component_cs = Component_cs(parameters)
-    component_ss = Component_ss(parameters)
-    component_cs_conf_mgm = Component_cs_conf_mgm(parameters)
-    component_ss_sidebar = Component_ss_sidebar(parameters)
-    component_cs_sidebar = Component_cs_sidebar(parameters)
-    component_ss_keys_and_certs = Component_ss_keys_and_certs(parameters)
-    component_ss_backup = Component_ss_backup(parameters)
-    component_cs_backup = Component_cs_backup(parameters)
+    component_cs = Component_cs()
+    component_ss = Component_ss()
+    component_cs_conf_mgm = Component_cs_conf_mgm()
+    component_ss_sidebar = Component_ss_sidebar()
+    component_cs_sidebar = Component_cs_sidebar()
+    component_ss_keys_and_certs = Component_ss_keys_and_certs()
+    component_ss_backup = Component_ss_backup()
+    component_cs_backup = Component_cs_backup()
     cs_backup_restore = Cs_backup_restore()
     cs_backup_restore_dlg_delete_confirm = Cs_backup_restore_dlg_delete_confirm()
     ss_backup_restore_confirm_delete = Ss_backup_restore_confirm_delete()
@@ -118,7 +118,7 @@ class Lxd_help_scripts(SetupTest):
         except:
             pass
 
-        self.common_utils.open_url(self.parameters[u'cs_url']['url'])
+        self.common_utils.open_url(TESTDATA[u'cs_url']['url'])
 
     def test_add_all_pins(self):
         """
@@ -141,26 +141,26 @@ class Lxd_help_scripts(SetupTest):
                 * **Step 12:** :func:`~common_lib.component_ss_keys_and_certs.Component_ss_keys_and_certs.active_token_and_insert_pin_code_if_needed`, *u'ss2_url'*
                 * **Step 13:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *self.parameters[u'cs_url']['url']*
         """
-        self.common_utils.open_url(self.parameters[u'cs_url']['url'])
+        self.common_utils.open_url(TESTDATA[u'cs_url']['url'])
         self.component_cs_sidebar.open_global_configuration_view()
         try:
             self.component_cs_conf_mgm.insert_pin_from_login_button(u'cs_url')
         except:
             print("Pin not needed?")
 
-        self.common_utils.open_url(self.parameters[u'ss_mgm_url']['url'])
+        self.common_utils.open_url(TESTDATA[u'ss_mgm_url']['url'])
         self.component_ss_sidebar.open_keys_and_certs_view()
         self.component_ss_keys_and_certs.active_token_and_insert_pin_code_if_needed(u'ss_mgm_url')
 
-        self.common_utils.open_url(self.parameters[u'ss1_url']['url'])
+        self.common_utils.open_url(TESTDATA[u'ss1_url']['url'])
         self.component_ss_sidebar.open_keys_and_certs_view()
         self.component_ss_keys_and_certs.active_token_and_insert_pin_code_if_needed(u'ss1_url')
 
-        self.common_utils.open_url(self.parameters[u'ss2_url']['url'])
+        self.common_utils.open_url(TESTDATA[u'ss2_url']['url'])
         self.component_ss_sidebar.open_keys_and_certs_view()
         self.component_ss_keys_and_certs.active_token_and_insert_pin_code_if_needed(u'ss2_url')
 
-        self.common_utils.open_url(self.parameters[u'cs_url']['url'])
+        self.common_utils.open_url(TESTDATA[u'cs_url']['url'])
 
     def test_generate_all_backup(self):
         """
@@ -185,23 +185,23 @@ class Lxd_help_scripts(SetupTest):
         """
         #self.test_login_all_servers()
 
-        self.common_utils.open_url(self.parameters[u'cs_url']['url'])
+        self.common_utils.open_url(TESTDATA[u'cs_url']['url'])
         self.component_cs_sidebar.open_backup_restore_view()
         self.component_cs_backup.generate_backup()
 
-        self.common_utils.open_url(self.parameters[u'ss_mgm_url']['url'])
+        self.common_utils.open_url(TESTDATA[u'ss_mgm_url']['url'])
         self.component_ss_sidebar.open_backup_restore_view()
         self.component_ss_backup.generate_backup()
 
-        self.common_utils.open_url(self.parameters[u'ss1_url']['url'])
+        self.common_utils.open_url(TESTDATA[u'ss1_url']['url'])
         self.component_ss_sidebar.open_backup_restore_view()
         self.component_ss_backup.generate_backup()
 
-        self.common_utils.open_url(self.parameters[u'ss2_url']['url'])
+        self.common_utils.open_url(TESTDATA[u'ss2_url']['url'])
         self.component_ss_sidebar.open_backup_restore_view()
         self.component_ss_backup.generate_backup()
 
-        self.common_utils.open_url(self.parameters[u'cs_url']['url'])
+        self.common_utils.open_url(TESTDATA[u'cs_url']['url'])
 
     def test_restore_all_backup(self):
         """
@@ -226,23 +226,23 @@ class Lxd_help_scripts(SetupTest):
         """
         #self.test_login_all_servers()
 
-        self.common_utils.open_url(self.parameters[u'cs_url']['url'])
+        self.common_utils.open_url(TESTDATA[u'cs_url']['url'])
         self.component_cs_sidebar.open_backup_restore_view()
         self.component_cs_backup.restore_backup()
 
-        self.common_utils.open_url(self.parameters[u'ss_mgm_url']['url'])
+        self.common_utils.open_url(TESTDATA[u'ss_mgm_url']['url'])
         self.component_ss_sidebar.open_backup_restore_view()
         self.component_ss_backup.restore_backup()
 
-        self.common_utils.open_url(self.parameters[u'ss1_url']['url'])
+        self.common_utils.open_url(TESTDATA[u'ss1_url']['url'])
         self.component_ss_sidebar.open_backup_restore_view()
         self.component_ss_backup.restore_backup()
 
-        self.common_utils.open_url(self.parameters[u'ss2_url']['url'])
+        self.common_utils.open_url(TESTDATA[u'ss2_url']['url'])
         self.component_ss_sidebar.open_backup_restore_view()
         self.component_ss_backup.restore_backup()
 
-        self.common_utils.open_url(self.parameters[u'cs_url']['url'])
+        self.common_utils.open_url(TESTDATA[u'cs_url']['url'])
 
     def test_delete_all_backups(self):
         """
@@ -271,7 +271,7 @@ class Lxd_help_scripts(SetupTest):
         set_config_value("default_timeout", 5)
         # self.test_login_all_servers()
 
-        self.common_utils.open_url(self.parameters[u'cs_url']['url'])
+        self.common_utils.open_url(TESTDATA[u'cs_url']['url'])
         self.component_cs_sidebar.open_backup_restore_view()
         for x in range(100):
             try:
@@ -280,7 +280,7 @@ class Lxd_help_scripts(SetupTest):
             except:
                 break
 
-        self.common_utils.open_url(self.parameters[u'ss_mgm_url']['url'])
+        self.common_utils.open_url(TESTDATA[u'ss_mgm_url']['url'])
         self.component_ss_sidebar.open_backup_restore_view()
         for x in range(100):
             try:
@@ -289,7 +289,7 @@ class Lxd_help_scripts(SetupTest):
             except:
                 break
 
-        self.common_utils.open_url(self.parameters[u'ss1_url']['url'])
+        self.common_utils.open_url(TESTDATA[u'ss1_url']['url'])
         self.component_ss_sidebar.open_backup_restore_view()
         for x in range(100):
             try:
@@ -298,7 +298,7 @@ class Lxd_help_scripts(SetupTest):
             except:
                 break
 
-        self.common_utils.open_url(self.parameters[u'ss2_url']['url'])
+        self.common_utils.open_url(TESTDATA[u'ss2_url']['url'])
         self.component_ss_sidebar.open_backup_restore_view()
         for x in range(100):
             try:
@@ -320,19 +320,19 @@ class Lxd_help_scripts(SetupTest):
                 * **Step 4:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *self.parameters[u'ss2_url']['url']*
         """
         driver = self.common_utils.driver_cache._get_current_driver()
-        self.common_utils.open_url(self.parameters[u'cs_url']['url'])
+        self.common_utils.open_url(TESTDATA[u'cs_url']['url'])
 
         driver.find_element_by_tag_name('body').send_keys(Keys.CONTROL+'t')
         driver.switch_to.window(driver.window_handles[-1])
-        self.common_utils.open_url(self.parameters[u'ss_mgm_url']['url'])
+        self.common_utils.open_url(TESTDATA[u'ss_mgm_url']['url'])
 
         driver.find_element_by_tag_name('body').send_keys(Keys.CONTROL+'t')
         driver.switch_to.window(driver.window_handles[-1])
-        self.common_utils.open_url(self.parameters[u'ss1_url']['url'])
+        self.common_utils.open_url(TESTDATA[u'ss1_url']['url'])
 
         driver.find_element_by_tag_name('body').send_keys(Keys.CONTROL+'t')
         driver.switch_to.window(driver.window_handles[-1])
-        self.common_utils.open_url(self.parameters[u'ss2_url']['url'])
+        self.common_utils.open_url(TESTDATA[u'ss2_url']['url'])
 
         driver.find_element_by_tag_name('body').send_keys(Keys.CONTROL, Keys.SHIFT, Keys.TAB)
         driver.find_element_by_tag_name('body').send_keys(Keys.CONTROL, Keys.SHIFT, Keys.TAB)

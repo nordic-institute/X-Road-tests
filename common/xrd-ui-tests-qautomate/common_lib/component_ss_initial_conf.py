@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from webframework import TESTDATA
 from selenium.webdriver.common.by import By
 from webframework.extension.util.common_utils import *
 from time import sleep
@@ -24,7 +25,7 @@ class Component_ss_initial_conf(CommonUtils):
     ss_initial_conf_server_init_dlg = Ss_initial_conf_server_init_dlg()
     ss_initial_conf_server_details = Ss_initial_conf_server_details()
 
-    def __init__(self, parameters=None):
+    def __init__(self):
         """
         Initilization method for moving test data to class
 
@@ -33,7 +34,6 @@ class Component_ss_initial_conf(CommonUtils):
         :param parameters:  Test data section dictionary
         """
         CommonUtils.__init__(self)
-        self.parameters = parameters
 
     def import_configuration_anchor(self, section=u'paths'):
         """
@@ -51,7 +51,7 @@ class Component_ss_initial_conf(CommonUtils):
                 * **Step 5:** :func:`~pagemodel.ss_initial_conf_server_details.Ss_initial_conf_server_details.wait_until_element_is_visible_security_server_owner`
         """
         self.ss_initial_conf_import_anchor.wait_until_element_is_visible_initial_conf()
-        self.ss_initial_conf_import_anchor.upload_anchor(self.parameters[section])
+        self.ss_initial_conf_import_anchor.upload_anchor(TESTDATA[section])
         self.ss_initial_conf_import_conf_dlg.wait_until_element_is_visible_conf_required()
         self.ss_initial_conf_import_conf_dlg.click_button_ui_buttonset_confirm()
         self.ss_initial_conf_server_details.wait_until_element_is_visible_security_server_owner()
@@ -73,8 +73,8 @@ class Component_ss_initial_conf(CommonUtils):
                 * **Step 4:** :func:`~pagemodel.ss_initial_conf_server_init_dlg.Ss_initial_conf_server_init_dlg.wait_until_element_is_visible_id_alert`
                 * **Step 5:** :func:`~pagemodel.ss_initial_conf_server_init_dlg.Ss_initial_conf_server_init_dlg.submit_serverconfform_noname3`
         """
-        self.ss_initial_conf_server_details.fill_input_values_serverconfform(self.parameters[section1])
-        self.ss_initial_conf_server_details.fill_input_values_pincode(self.parameters[section2])
+        self.ss_initial_conf_server_details.fill_input_values_serverconfform(TESTDATA[section1])
+        self.ss_initial_conf_server_details.fill_input_values_pincode(TESTDATA[section2])
         self.ss_initial_conf_server_details.submit_serverconfform_noname1()
         self.ss_initial_conf_server_init_dlg.wait_until_element_is_visible_id_alert()
         self.ss_initial_conf_server_init_dlg.submit_serverconfform_noname3()

@@ -5,12 +5,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>Common servers &#8212; qautomate  documentation</title>
-    
     <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
@@ -57,88 +54,6 @@
             
   <div class="section" id="common-servers">
 <h1>Common servers<a class="headerlink" href="#common-servers" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-default"><div class="highlight"><pre><span></span>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;TestData&gt;
-	&lt;Section name=&quot;server_environment&quot;&gt;
-		&lt;parameter name=&quot;type&quot; pagemodel=&quot;&quot; validation=&quot;&quot; value=&quot;lxd&quot; verify=&quot;&quot;/&gt;
-		&lt;parameter name=&quot;approved_ca&quot; pagemodel=&quot;&quot; validation=&quot;&quot; value=&quot;Xroad Test CA CN&quot; verify=&quot;&quot;/&gt;
-		&lt;parameter name=&quot;name_extractor_method&quot; value=&quot;ee.ria.xroad.common.certificateprofile.impl.FiVRKCertificateProfileInfoProvider&quot;/&gt;
-		&lt;parameter name=&quot;csr_format&quot; value=&quot;DER&quot;/&gt;
-	&lt;/Section&gt;
-	&lt;Section name=&quot;paths&quot;&gt;
-		&lt;parameter name=&quot;data_folder&quot; value=&quot;data&quot;/&gt;
-		&lt;parameter name=&quot;downloads_folder&quot; value=&quot;/home/jenkins/Downloads/&quot;/&gt;
-		&lt;parameter name=&quot;sign_cert_server_connect_parameters&quot; pagemodel=&quot;&quot; validation=&quot;&quot; value=&quot;lxc exec xroad-lxd-ca&quot; verify=&quot;&quot;/&gt;
-		&lt;parameter name=&quot;sign_cert_format&quot; value=&quot;der&quot;/&gt;
-	&lt;/Section&gt;
-	&lt;Section name=&quot;cs_url&quot;&gt;
-		&lt;parameter name=&quot;url&quot; pagemodel=&quot;open_application&quot; value=&quot;https://xroad-lxd-cs.lxd:4000/login&quot;/&gt;
-		&lt;parameter name=&quot;j_username&quot; pagemodel=&quot;cs_login&quot; value=&quot;xrd&quot;/&gt;
-		&lt;parameter name=&quot;j_password&quot; pagemodel=&quot;cs_login&quot; value=&quot;secret&quot;/&gt;
-		&lt;parameter name=&quot;pin&quot; value=&quot;12345678a!&quot;/&gt;
-		&lt;parameter name=&quot;server_address&quot; value=&quot;xroad-lxd-cs.lxd&quot;/&gt;
-		&lt;parameter name=&quot;instance_identifier&quot; value=&quot;XRD1&quot;/&gt;
-		&lt;parameter name=&quot;sync_timeout&quot; value=&quot;65&quot;/&gt;
-		&lt;parameter name=&quot;tsp_url&quot; value=&quot;http://xroad-lxd-ca.lxd:8899&quot;/&gt;
-		&lt;parameter name=&quot;ocsp_responder_url&quot; value=&quot;http://xroad-lxd-ca.lxd:8888&quot;/&gt;
-		&lt;parameter name=&quot;wsdl_add_url&quot; value=&quot;http://xroad-lxd-cs.lxd/managementservices.wsdl&quot;/&gt;
-		&lt;parameter name=&quot;tsa_cert_file_name&quot; value=&quot;tsa.cert.pem&quot;/&gt;
-		&lt;parameter name=&quot;ca_cert_file_name&quot; value=&quot;ca.cert.pem&quot;/&gt;
-	&lt;/Section&gt;
-	&lt;Section name=&quot;ss_mgm_url&quot;&gt;
-		&lt;parameter name=&quot;url&quot; value=&quot;https://xroad-lxd-ss0.lxd:4000/login&quot;/&gt;
-		&lt;parameter name=&quot;j_username&quot; value=&quot;xrd&quot;/&gt;
-		&lt;parameter name=&quot;j_password&quot; value=&quot;secret&quot;/&gt;
-		&lt;parameter name=&quot;server_address&quot; pagemodel=&quot;&quot; validation=&quot;&quot; value=&quot;xroad-lxd-ss0.lxd&quot; verify=&quot;&quot;/&gt;
-		&lt;parameter name=&quot;pin&quot; value=&quot;12345678a!&quot;/&gt;
-		&lt;parameter name=&quot;sync_timeout&quot; value=&quot;65&quot;/&gt;
-		&lt;parameter name=&quot;tsp_url&quot; value=&quot;http://xroad-lxd-ca.lxd:8899&quot;/&gt;
-	&lt;/Section&gt;
-	&lt;Section name=&quot;ss1_url&quot;&gt;
-		&lt;parameter name=&quot;url&quot; pagemodel=&quot;open_application&quot; value=&quot;https://xroad-lxd-ss1.lxd:4000/login&quot;/&gt;
-		&lt;parameter name=&quot;j_username&quot; value=&quot;xrd&quot;/&gt;
-		&lt;parameter name=&quot;j_password&quot; value=&quot;secret&quot;/&gt;
-		&lt;parameter name=&quot;server_address&quot; pagemodel=&quot;&quot; validation=&quot;&quot; value=&quot;xroad-lxd-ss1.lxd&quot; verify=&quot;&quot;/&gt;
-		&lt;parameter name=&quot;pin&quot; value=&quot;12345678a!&quot;/&gt;
-		&lt;parameter name=&quot;sync_timeout&quot; value=&quot;65&quot;/&gt;
-		&lt;parameter name=&quot;tsp_url&quot; value=&quot;http://xroad-lxd-ca.lxd:8899&quot;/&gt;
-	&lt;/Section&gt;
-	&lt;Section name=&quot;ss2_url&quot;&gt;
-		&lt;parameter name=&quot;url&quot; pagemodel=&quot;open_application&quot; value=&quot;https://xroad-lxd-ss2.lxd:4000/login&quot;/&gt;
-		&lt;parameter name=&quot;j_username&quot; value=&quot;xrd&quot;/&gt;
-		&lt;parameter name=&quot;j_password&quot; value=&quot;secret&quot;/&gt;
-        &lt;parameter name=&quot;server_address&quot; pagemodel=&quot;&quot; validation=&quot;&quot; value=&quot;xroad-lxd-ss2.lxd&quot; verify=&quot;&quot;/&gt;
-		&lt;parameter name=&quot;pin&quot; value=&quot;12345678a!&quot;/&gt;
-		&lt;parameter name=&quot;sync_timeout&quot; value=&quot;65&quot;/&gt;
-		&lt;parameter name=&quot;tsp_url&quot; value=&quot;http://xroad-lxd-ca.lxd:8899&quot;/&gt;
-	&lt;/Section&gt;
-	&lt;Section name=&quot;cs_static_url&quot;&gt;
-		&lt;parameter name=&quot;url&quot; pagemodel=&quot;open_application&quot; value=&quot;https://xroad-lxd-cs.lxd:4000/login&quot;/&gt;
-		&lt;parameter name=&quot;j_username&quot; value=&quot;xrd&quot;/&gt;
-		&lt;parameter name=&quot;j_password&quot; value=&quot;secret&quot;/&gt;
-	&lt;/Section&gt;
-	&lt;Section name=&quot;ss1_static_url&quot;&gt;
-		&lt;parameter name=&quot;url&quot; pagemodel=&quot;open_application&quot; value=&quot;https://xroad-lxd-ss2.lxd:4000/login&quot;/&gt;
-		&lt;parameter name=&quot;j_username&quot; value=&quot;xrd&quot;/&gt;
-		&lt;parameter name=&quot;j_password&quot; value=&quot;secret&quot;/&gt;
-	&lt;/Section&gt;
-	&lt;Section name=&quot;ss2_static_url&quot;&gt;
-		&lt;parameter name=&quot;url&quot; pagemodel=&quot;open_application&quot; validation=&quot;&quot; value=&quot;&quot; verify=&quot;&quot;/&gt;
-		&lt;parameter name=&quot;j_username&quot; value=&quot;xrd&quot;/&gt;
-		&lt;parameter name=&quot;j_password&quot; value=&quot;secret&quot;/&gt;
-	&lt;/Section&gt;
-    &lt;Section name=&quot;service_wsdl_client_deletion&quot;&gt;
-		&lt;parameter name=&quot;params_url&quot; pagemodel=&quot;clients_dlg_services_edit_wsdl&quot; value=&quot;http://xroad-lxd-cs.lxd:4400/managementservice/&quot;/&gt;
-	&lt;/Section&gt;
-	&lt;Section name=&quot;service_wsdl_client_reg&quot;&gt;
-		&lt;parameter name=&quot;params_url&quot; pagemodel=&quot;clients_dlg_services_edit_wsdl&quot; value=&quot;http://xroad-lxd-cs.lxd:4400/managementservice/&quot;/&gt;
-	&lt;/Section&gt;
-	&lt;Section name=&quot;service_wsdl_auth_cert_deletion&quot;&gt;
-		&lt;parameter name=&quot;params_url&quot; pagemodel=&quot;clients_dlg_services_edit_wsdl&quot; value=&quot;http://xroad-lxd-cs.lxd:4400/managementservice/&quot;/&gt;
-	&lt;/Section&gt;
-&lt;/TestData&gt;
-</pre></div>
-</div>
 </div>
 
 
@@ -211,7 +126,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017, qautomate.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
   </body>
 </html>

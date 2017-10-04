@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
+from webframework import TESTDATA
 import subprocess
 import os
-from variables import errors, strings
+from variables import strings, errors
 from selenium.webdriver.common.by import By
 from webframework.extension.util.common_utils import *
 from webframework.extension.config import get_config_value
@@ -18,7 +19,7 @@ class Common_lib_ssh(CommonUtils):
         | Documentation updated
     """
 
-    def __init__(self, parameters=None):
+    def __init__(self):
         """
         Initilization method for moving test data to class
 
@@ -27,7 +28,6 @@ class Common_lib_ssh(CommonUtils):
         :param parameters:  Test data section dictionary
         """
         CommonUtils.__init__(self)
-        self.parameters = parameters
         self.log_file_output = ""
         self.run_folder = ""
 
@@ -167,8 +167,8 @@ class Common_lib_ssh(CommonUtils):
         # Sleep waiting log
         sleep(1)
 
-        server_log_address = self.parameters[section][u'server_address']
-        user = self.parameters[section][u'j_username']
+        server_log_address = TESTDATA[section][u'server_address']
+        user = TESTDATA[section][u'j_username']
         log_output = self.read_server_file(server_log_address, strings.audit_log)
 
         # Prints full log string
@@ -193,7 +193,7 @@ class Common_lib_ssh(CommonUtils):
         """
         :param section:  Test data section name
         """
-        server_log_address = self.parameters[section][u'server_address']
+        server_log_address = TESTDATA[section][u'server_address']
         try:
             print("GETTING ALL LOGS")
             log_output = self.collect_server_log_files(server_log_address)
@@ -204,7 +204,7 @@ class Common_lib_ssh(CommonUtils):
         """
         :param section:  Test data section name
         """
-        server_log_address = self.parameters[section][u'server_address']
+        server_log_address = TESTDATA[section][u'server_address']
         try:
             log_output = self.empty_server_log_files(server_log_address)
         except Exception as e:

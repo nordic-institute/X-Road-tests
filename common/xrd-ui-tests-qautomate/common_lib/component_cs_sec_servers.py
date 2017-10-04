@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from webframework import TESTDATA
 from variables import strings
 from selenium.webdriver.common.by import By
 from webframework.extension.util.common_utils import *
@@ -30,7 +31,7 @@ class Component_cs_sec_servers(CommonUtils):
     cs_sec_servers_auth_dlg = Cs_sec_servers_auth_dlg()
     ss_clients = Ss_clients()
 
-    def __init__(self, parameters = None):
+    def __init__(self):
         """
         Initilization method for moving test data to class
 
@@ -39,7 +40,6 @@ class Component_cs_sec_servers(CommonUtils):
         :param parameters:  Test data section dictionary
         """
         CommonUtils.__init__(self)
-        self.parameters = parameters
 
     def open_server_details_dlg(self, section=u'member_mgm_configuration', parameter=u'member_name'):
         """
@@ -54,7 +54,7 @@ class Component_cs_sec_servers(CommonUtils):
                 * **Step 1:** :func:`~pagemodel.cs_sec_servers.Cs_sec_servers.click_security_servers_row_with_text`, *self.parameters[section][parameter]*
                 * **Step 2:** :func:`~pagemodel.cs_sec_servers.Cs_sec_servers.click_ss_details`
         """
-        self.cs_sec_servers.click_security_servers_row_with_text(self.parameters[section][parameter])
+        self.cs_sec_servers.click_security_servers_row_with_text(TESTDATA[section][parameter])
         self.cs_sec_servers.click_ss_details()
 
     def delete_server_in_server_details_dlg(self):
@@ -87,7 +87,7 @@ class Component_cs_sec_servers(CommonUtils):
                 * **Step 4:** :func:`~pagemodel.cs_sec_servers_delete_clients.Cs_sec_servers_delete_clients.click_element_submit`
         """
         self.cs_sec_servers_details.click_clients_tab()
-        self.cs_sec_servers_details_clients.search_text_from_table_securityserver_clients_1(self.parameters[section])
+        self.cs_sec_servers_details_clients.search_text_from_table_securityserver_clients_1(TESTDATA[section])
         self.cs_sec_servers_details_clients.click_element_id_securityserver_client_delete()
         self.cs_sec_servers_delete_clients.click_element_submit()
 
@@ -132,7 +132,7 @@ class Component_cs_sec_servers(CommonUtils):
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.cs_sec_servers.Cs_sec_servers.table_does_not_contain_server`, *self.parameters[section][parameter]*
         """
-        self.cs_sec_servers.table_does_not_contain_server(self.parameters[section][parameter])
+        self.cs_sec_servers.table_does_not_contain_server(TESTDATA[section][parameter])
 
     def verify_servers_does_contain_server(self, section=u'member_mgm_configuration', parameter=u'member_name'):
         """
@@ -146,7 +146,7 @@ class Component_cs_sec_servers(CommonUtils):
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.cs_sec_servers.Cs_sec_servers.table_contains_server`, *self.parameters[section][parameter]*
         """
-        self.cs_sec_servers.table_contains_server(self.parameters[section][parameter])
+        self.cs_sec_servers.table_contains_server(TESTDATA[section][parameter])
 
     def verify_table_contains_subsystem(self, section=u'member_mgm_configuration'):
         """
@@ -159,4 +159,4 @@ class Component_cs_sec_servers(CommonUtils):
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.ss_clients.Ss_clients.verify_table_contains_subsystem`, *self.parameters[section]*
         """
-        self.ss_clients.verify_table_contains_subsystem(self.parameters[section])
+        self.ss_clients.verify_table_contains_subsystem(TESTDATA[section])

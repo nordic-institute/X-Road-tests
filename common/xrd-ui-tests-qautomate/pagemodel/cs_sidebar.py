@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = get_driver() e.g driver.current_url
+from webframework import TESTDATA
 from selenium.webdriver.common.by import By
 from webframework.extension.util.common_utils import *
 from webframework.extension.util.webtimings import get_measurements
@@ -55,6 +56,7 @@ class Cs_sidebar(CommonUtils):
 
     # Dynamic objects:
     MEMBERS = (By.LINK_TEXT, u'Members') # x: 20 y: 136 width: 59 height: 18, tag: a, type: , name: , form_id: , checkbox: , table_id: , href: https://test-cs2.i.palveluvayla.com:4000/ # Dynamic object
+    DATA_NAME_ABOUT_VERSION = (By.CSS_SELECTOR, u'a[data-name="about"]') # x: 20 y: 530 width: 45 height: 18, tag: a, type: , name: about, form_id: , checkbox: , table_id: , href: https://xroad-lxd-cs.lxd:4000/about
 
     def verify_central_server_title(self):
         """

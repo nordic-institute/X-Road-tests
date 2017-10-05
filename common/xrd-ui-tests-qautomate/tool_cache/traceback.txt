@@ -1,0 +1,10 @@
+
+Browser start failed
+Traceback (most recent call last):
+  File "C:\projects\QAutomate\webframework\extension\ui\pmg\generator.py", line 1130, in _create_driver
+    self.common_utils.open_browser(browser_name)
+  File "C:\projects\QAutomate\webframework\extension\util\common_utils.py", line 961, in open_browser
+    DebugLog.log("* Opening browser '%s'" % browser_name)
+  File "C:\projects\QAutomate\webframework\extension\util\common_methods_helpers.py", line 124, in log
+    print "* %s %s" % (DebugLog.get_timestamp(), msg)
+IOError: [Errno 22] Invalid argument

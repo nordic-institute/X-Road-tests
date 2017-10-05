@@ -104,6 +104,7 @@ class Common_lib(CommonUtils):
             self.add_dynamic_content_to_parameters(parameters, "sync_timeout", SYNC_TIMEOUT, u'ss1_url')
             self.add_dynamic_content_to_parameters(parameters, "pin", CS_PIN_CODE, u'cs_url')
             self.add_dynamic_content_to_parameters(parameters, "pin", SS_PIN_CODE, u'ss1_url')
+            self.add_dynamic_content_to_parameters(parameters, "instance_identifier", XROAD_ID, u'member1_configuration')
 
             # Servers
             self.add_dynamic_content_to_parameters(parameters, "url", SERVER_FULL_URL + "/login", u'ss1_url')

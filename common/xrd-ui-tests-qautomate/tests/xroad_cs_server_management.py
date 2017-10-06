@@ -86,19 +86,17 @@ class Xroad_cs_server_management(SetupTest):
         Method that runs before every test case
         """
         self.start_log_time = self.common_lib.get_log_utc_time()
-        # Todo uncomment when fixed
-        #self.common_lib_ssh.empty_all_logs_from_server("cs_url")
+        self.common_lib_ssh.empty_all_logs_from_server("cs_url")
 
     def tearDown(self):
         """
         Method that runs after every test case
         """
-        # Todo uncomment when fixed
-        #stop_log_time = self.common_lib.get_log_utc_time()
-        #if not self.is_last_test_passed():
-        #    _, copy_log = self.get_log_file_paths()
-        #    self.common_lib_ssh.get_all_logs_from_server(u'cs_url')
-        #    self.common_lib_ssh.find_exception_from_logs_and_save(self.start_log_time, stop_log_time, u'cs_url', copy_log)
+        stop_log_time = self.common_lib.get_log_utc_time()
+        if not self.is_last_test_passed():
+            _, copy_log = self.get_log_file_paths()
+            self.common_lib_ssh.get_all_logs_from_server(u'cs_url')
+            self.common_lib_ssh.find_exception_from_logs_and_save(self.start_log_time, stop_log_time, u'cs_url', copy_log)
 
         # Delete all tar files from downloads
         self.common_lib.delete_files_with_extension(TESTDATA.get_parameter(u'paths', u'downloads_folder'), u'.tar')

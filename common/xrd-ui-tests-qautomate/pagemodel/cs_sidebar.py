@@ -77,7 +77,9 @@ class Cs_sidebar(CommonUtils):
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_SECURITYSERVERS_SECURITY_SERVERS*
         """
         # AutoGen method click_link: https://test-cs.i.palveluvayla.com:4000/securityservers
+        self.wait_until_element_is_enabled(self.DATA_NAME_SECURITYSERVERS_SECURITY_SERVERS)
         self.click_element(self.DATA_NAME_SECURITYSERVERS_SECURITY_SERVERS)
+        self.wait_until_jquery_ajax_loaded()
 
     def click_link_data_name_groups(self):
         """
@@ -87,7 +89,9 @@ class Cs_sidebar(CommonUtils):
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_GROUPS*
         """
         # AutoGen method click_link: https://test-cs.i.palveluvayla.com:4000/groups
+        self.wait_until_element_is_enabled(self.DATA_NAME_GROUPS)
         self.click_element(self.DATA_NAME_GROUPS)
+        self.wait_until_jquery_ajax_loaded()
 
     def click_link_data_name_central_services(self):
         """
@@ -97,7 +101,9 @@ class Cs_sidebar(CommonUtils):
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_CENTRAL_SERVICES*
         """
         # AutoGen method click_link: https://test-cs.i.palveluvayla.com:4000/central_services
+        self.wait_until_element_is_enabled(self.DATA_NAME_CENTRAL_SERVICES)
         self.click_element(self.DATA_NAME_CENTRAL_SERVICES)
+        self.wait_until_jquery_ajax_loaded()
 
     def click_link_data_name_approved_cas_certification_services(self):
         """
@@ -107,7 +113,9 @@ class Cs_sidebar(CommonUtils):
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_APPROVED_CAS_CERTIFICATION_SERVICES*
         """
         # AutoGen method click_link: https://test-cs.i.palveluvayla.com:4000/approved_cas
+        self.wait_until_element_is_enabled(self.DATA_NAME_APPROVED_CAS_CERTIFICATION_SERVICES)
         self.click_element(self.DATA_NAME_APPROVED_CAS_CERTIFICATION_SERVICES)
+        self.wait_until_jquery_ajax_loaded()
 
     def click_link_data_name_requests_management(self):
         """
@@ -118,6 +126,7 @@ class Cs_sidebar(CommonUtils):
             * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         # AutoGen method click_link: https://test-cs.i.palveluvayla.com:4000/requests
+        self.wait_until_element_is_enabled(self.DATA_NAME_REQUESTS_MANAGEMENT)
         self.click_element(self.DATA_NAME_REQUESTS_MANAGEMENT)
         self.wait_until_jquery_ajax_loaded()
 
@@ -129,7 +138,9 @@ class Cs_sidebar(CommonUtils):
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_CONFIGURATION_MANAGEMENT_GLOBAL*
         """
         # AutoGen method click_link: https://test-cs.i.palveluvayla.com:4000/configuration_management
+        self.wait_until_element_is_enabled(self.DATA_NAME_CONFIGURATION_MANAGEMENT_GLOBAL)
         self.click_element(self.DATA_NAME_CONFIGURATION_MANAGEMENT_GLOBAL)
+        self.wait_until_jquery_ajax_loaded()
 
     def click_link_data_name_system_settings(self):
         """
@@ -139,7 +150,9 @@ class Cs_sidebar(CommonUtils):
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_SYSTEM_SETTINGS*
         """
         # AutoGen method click_link: https://test-cs.i.palveluvayla.com:4000/system_settings
+        self.wait_until_element_is_enabled(self.DATA_NAME_SYSTEM_SETTINGS)
         self.click_element(self.DATA_NAME_SYSTEM_SETTINGS)
+        self.wait_until_jquery_ajax_loaded()
 
     def click_link_data_name_backup_back_up_and_restore(self):
         """
@@ -150,6 +163,7 @@ class Cs_sidebar(CommonUtils):
             * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         # AutoGen method click_link: https://test-cs.i.palveluvayla.com:4000/backup
+        self.wait_until_element_is_enabled(self.DATA_NAME_BACKUP_BACK_UP_AND_RESTORE)
         self.click_element(self.DATA_NAME_BACKUP_BACK_UP_AND_RESTORE)
         self.wait_until_jquery_ajax_loaded()
 
@@ -162,6 +176,7 @@ class Cs_sidebar(CommonUtils):
         """
         # AutoGen method click_link: https://test-cs.i.palveluvayla.com:4000/about
         self.click_element(self.DATA_NAME_ABOUT_VERSION)
+        self.wait_until_jquery_ajax_loaded()
 
     def click_element_members(self):
         """
@@ -171,6 +186,7 @@ class Cs_sidebar(CommonUtils):
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.MEMBERS*
             * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
+        self.wait_until_element_is_enabled(self.MEMBERS)
         self.click_element(self.MEMBERS)
         self.wait_until_jquery_ajax_loaded()
 
@@ -181,4 +197,6 @@ class Cs_sidebar(CommonUtils):
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_TSPS_TIMESTAMPING_SERVICES*
         """
+        self.wait_until_element_is_enabled(self.DATA_NAME_TSPS_TIMESTAMPING_SERVICES)
         self.click_element(self.DATA_NAME_TSPS_TIMESTAMPING_SERVICES)
+        self.wait_until_jquery_ajax_loaded()

@@ -71,3 +71,4 @@ class Cs_members_add_subsystem_dlg(CommonUtils):
         """
         # AutoGen method
         self.click_element(self.BUTTON_OK)
+        self.wait_until_jquery_ajax_loaded()

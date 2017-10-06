@@ -69,6 +69,7 @@ class Cs_sec_servers_auth_dlg(CommonUtils):
         """
         # AutoGen method
         self.click_element(self.BUTTON_SUBMIT)
+        self.wait_until_jquery_ajax_loaded()
 
     def click_upload_auth_cert(self):
         """

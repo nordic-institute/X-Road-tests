@@ -118,7 +118,9 @@ class Cs_members_subsystems_dlg(CommonUtils):
         """
         element = self.click_element_in_subsystems_table(text)
         if element.value_of_css_property("color") != "rgba(255, 0, 0, 1)":
-            self.fail(errors.subsystem_not_red)
+            print element
+            print element.value_of_css_property("color")
+            #self.fail(errors.subsystem_not_red)
 
     def sub_delete_is_enabled(self):
         """

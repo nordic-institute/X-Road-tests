@@ -56,7 +56,7 @@ def test_xroad_member_access(case, client=None, client_id=None, requester=None, 
         """
         :param self: MainController class object
         :return: None
-        ''"""
+        """
 
         self.log('*** 2.2.9 / XT-473')
 

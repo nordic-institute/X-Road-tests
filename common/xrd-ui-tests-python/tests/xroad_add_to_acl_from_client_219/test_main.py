@@ -3,66 +3,84 @@ from __future__ import absolute_import
 
 import unittest
 
+from helpers import xroad
 from main.maincontroller import MainController
 from tests.xroad_add_to_acl_from_client_219 import add_to_acl_client_2_1_9 as test_add_to_acl_client
+from tests.xroad_configure_service_222 import configure_service_2_2_2
+from tests.xroad_parse_users_input_SS_41 import parse_user_input_SS_41
+from view_models import clients_table_vm
 
 
 class AddToAclFromClient(unittest.TestCase):
-    main = None
-
-    # TEST PLAN 2.1.9 add access from client view
-
-    def test_add_1_client(self):
-        main = self.get_main_object()
-
-        main.log('TEST: ADD TO ACL FROM CLIENT VIEW')
-        main.log('ADD 1 SERVICE TO CLIENT')
-        test_add_to_acl_client.test_empty_client([1], remove_data=True)(main)
-
-    def test_add_list_of_services(self):
-        main = self.get_main_object()
-
-        main.log('TEST: ADD TO ACL FROM CLIENT VIEW')
-        main.log('ADD LIST OF SERVICES TO CLIENT')
-        test_add_to_acl_client.test_empty_client([1, 3], remove_data=True)(main)
-
-    def test_add_all_service(self):
-        main = self.get_main_object()
-
-        main.log('TEST: ADD TO ACL FROM CLIENT VIEW')
-        main.log('ADD ALL SERVICES TO CLIENT')
-        test_add_to_acl_client.test_empty_client(0, remove_data=True)(main)
-
-    def test_add_1_client_to_existing(self):
-        main = self.get_main_object()
-
-        main.log('TEST: ADD TO ACL FROM CLIENT VIEW')
-        main.log('ADD 1 SERVICE TO CLIENT WHERE ALREADY EXISTS')
-        test_add_to_acl_client.test_existing_client(rows_to_select=[[1], [3]], remove_data=True)(main)
-
-    def test_add_list_of_services_to_existing(self):
-        main = self.get_main_object()
-
-        main.log('TEST: ADD TO ACL FROM CLIENT VIEW')
-        main.log('ADD LIST OF SERVICES TO CLIENT WHERE ALREADY EXISTS')
-        test_add_to_acl_client.test_existing_client(rows_to_select=[[1], [2, 3]], remove_data=True)(main)
-
-    def test_add_all_service_to_existing(self):
-        main = self.get_main_object()
-        main.log('TEST: ADD TO ACL FROM CLIENT VIEW')
-        main.log('ADD ALL SERVICES TO CLIENT WHERE ALREADY EXISTS')
-        test_add_to_acl_client.test_existing_client(rows_to_select=[[1], [0]], remove_data=True)(main)
-
-    def get_main_object(self):
+    def test_acl(self):
         main = MainController(self)
 
-        # Set test name and number
-        main.test_number = '2.1.9'
-        main.test_name = self.__class__.__name__
+        ss_host = main.config.get('ss1.host')
+        ss_user = main.config.get('ss1.user')
+        ss_pass = main.config.get('ss1.pass')
 
-        main.url = main.config.get('ss1.host')
-        username = main.config.get('ss1.user')
-        password = main.config.get('ss1.pass')
+        ss_ssh_host = main.config.get('ss1.ssh_host')
+        ss_ssh_user = main.config.get('ss1.ssh_user')
+        ss_ssh_pass = main.config.get('ss1.ssh_pass')
 
-        main.reset_webdriver(main.url, username=username, password=password)
-        return main
+        client_name = main.config.get('ss1.client_name')
+        client_id = xroad.split_xroad_id(main.config.get('ss1.client_id'))
+
+        wsdl_three_services = main.config.get('wsdl.remote_path').format('three_services.wsdl')
+
+        test_add_to_1_client = test_add_to_acl_client.test_empty_client(ss_ssh_host, ss_ssh_user, ss_ssh_pass, [1],
+                                                                        remove_data=True, client_name=client_name)
+        test_add_list_of_services = test_add_to_acl_client.test_empty_client(rows_to_select=[1, 2], remove_data=True,
+                                                                             client_name=client_name)
+        test_add_all_services = test_add_to_acl_client.test_empty_client(rows_to_select=0, remove_data=True,
+                                                                         client_name=client_name)
+        test_add_1_client_to_existing = test_add_to_acl_client.test_existing_client(ss_ssh_host=ss_ssh_host,
+                                                                                    ss_ssh_user=ss_ssh_user,
+                                                                                    ss_ssh_pass=ss_ssh_pass,
+                                                                                    rows_to_select=[[1], [2]],
+                                                                                    remove_data=True,
+                                                                                    client_name=client_name)
+        test_add_list_of_services_to_existing = test_add_to_acl_client.test_existing_client(
+            rows_to_select=[[1], [2, 3]], remove_data=True, client_name=client_name)
+        test_add_all_service_to_existing = test_add_to_acl_client.test_existing_client(rows_to_select=[[1], [0]],
+                                                                                       remove_data=True,
+                                                                                       client_name=client_name)
+        delete_added_wsdl = configure_service_2_2_2.test_delete_service(main, client_name=client_name,
+                                                                        client_id=client_id,
+                                                                        wsdl_url=wsdl_three_services)
+        try:
+            main.log('Add WSDL with 3 services to security server client')
+            main.reload_webdriver(ss_host, ss_user, ss_pass)
+            row = clients_table_vm.get_client_row_element(self=main, client_name=client_name)
+            main.double_click(row)
+            parse_user_input_SS_41.add_wsdl_url(main, wsdl_three_services)
+
+            main.log('SERVICE_03 Add a service client to a security server client(1 service)')
+            main.reload_webdriver(ss_host, ss_user, ss_pass)
+            test_add_to_1_client(main)
+
+            main.log('SERVICE_03 Add a service client to a security server client(list of services)')
+            main.reload_webdriver(ss_host, ss_user, ss_pass)
+            test_add_list_of_services(main)
+
+            main.log('SERVICE_03 Add a service client to a security server client(all services)')
+            main.reload_webdriver(ss_host, ss_user, ss_pass)
+            test_add_all_services(main)
+
+            main.log('SERVICE_04 Add access rights for a service client(1 service)')
+            main.reload_webdriver(ss_host, ss_user, ss_pass)
+            test_add_1_client_to_existing(main)
+
+            main.log('SERVICE_04 Add access rights for a service client(list of services)')
+            main.reload_webdriver(ss_host, ss_user, ss_pass)
+            test_add_list_of_services_to_existing(main)
+
+            main.log('SERVICE_04 Add access rights for a service client(all services)')
+            main.reload_webdriver(ss_host, ss_user, ss_pass)
+            test_add_all_service_to_existing(main)
+        except:
+            assert False
+        finally:
+            main.reload_webdriver(ss_host, ss_user, ss_pass)
+            delete_added_wsdl()
+            main.tearDown()

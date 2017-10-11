@@ -10,6 +10,17 @@ GENERATE_KEY_POPUP = '//div[@aria-describedby="generate_key_dialog"]'
 GENERATE_KEY_POPUP_OK_BTN_XPATH = GENERATE_KEY_POPUP + '//div[@class="ui-dialog-buttonset"]//button[span="OK"]'
 GENERATE_KEY_POPUP_CANCEL_BTN_XPATH = GENERATE_KEY_POPUP + '//div[@class="ui-dialog-buttonset"]//button[span="Cancel"]'
 
+KEY_DETAILS_POPUP = '//div[@aria-describedby="key_details_dialog"]'
+KEY_DETAILS_POPUP_FRIENDLY_NAME = KEY_DETAILS_POPUP + '//input[@name="friendly_name"]'
+KEY_DETAILS_TOKEN_INFO_XPATH = KEY_DETAILS_POPUP + '//div[@class="dialog-body"]//pre'
+KEY_DETAILS_POPUP_POPUP_CANCEL_BTN_XPATH = KEY_DETAILS_POPUP + '//div[@class="ui-dialog-buttonset"]//button[span="Cancel"]'
+KEY_DETAILS_POPUP_POPUP_OK_BTN_XPATH = KEY_DETAILS_POPUP + '//div[@class="ui-dialog-buttonset"]//button[span="OK"]'
+
+TOKEN_DETAILS_POPUP = '//div[@aria-describedby="token_details_dialog"]'
+TOKEN_DETAILS_FRIENDLY_NAME = TOKEN_DETAILS_POPUP + '//input[@name="friendly_name"]'
+TOKEN_DETAILS_TOKEN_INFO_XPATH = TOKEN_DETAILS_POPUP + '//div[@class="dialog-body"]//pre'
+TOKEN_DETAILS_POPUP_POPUP_CANCEL_BTN_XPATH = TOKEN_DETAILS_POPUP + '//div[@class="ui-dialog-buttonset"]//button[span="Cancel"]'
+
 CONFIRM_POPUP = '//div[@aria-describedby="confirm"]'
 CONFIRM_POPUP_OK_BTN_XPATH = CONFIRM_POPUP + '//div[@class="ui-dialog-buttonset"]//button[span="Confirm"]'
 CONFIRM_POPUP_CANCEL_BTN_XPATH = CONFIRM_POPUP + '//div[@class="ui-dialog-buttonset"]//button[span="Cancel"]'
@@ -42,6 +53,7 @@ CLIENT_DETAILS_POPUP_EXISTING_ACL_SUBJECTS_XROAD_ID_ELEMENTS_CSS = '#subjects tb
 CLIENT_DETAILS_POPUP_EXISTING_ACL_SUBJECTS_FIRST_SUBJECT_ROW_CSS = '#subjects tbody tr'
 CLIENT_DETAILS_POPUP_EXISTING_ACL_SUBJECTS_ADD_SUBJECTS_BTN_CSS = 'service_acl_subjects_add'
 CLIENT_DETAILS_POPUP_DELETE_BUTTON_ID = 'client_delete'
+CLIENT_DETAILS_POPUP_REGISTER_BUTTON_ID = 'client_register'
 CLIENT_DETAILS_POPUP_UNREGISTER_BUTTON_ID = 'client_unregister'
 CLIENT_DETAILS_POPUP_INTERNAL_SERVERS_CONNECTION_TYPE_ID = 'connection_type'
 CLIENT_DETAILS_POPUP_INTERNAL_SERVERS_CONNECTION_TYPE_SAVE_BTN_ID = 'internal_connection_type_edit'
@@ -108,6 +120,7 @@ ACL_SUBJECTS_SEARCH_POPUP_CLOSE_BTN_XPATH = ACL_SUBJECTS_SEARCH_POPUP + '//butto
 ACL_SUBJECTS_SEARCH_POPUP_RESULTS_TABLE_ID = 'acl_subjects_search'
 ACL_SUBJECTS_SEARCH_POPUP_ADD_SELECTED_TO_ACL_BUTTON_ID = 'acl_subjects_search_add_selected'
 ACL_SUBJECTS_SEARCH_POPUP_ADD_ALL_TO_ACL_BUTTON_ID = 'acl_subjects_search_add_all'
+ACL_SUBJECTS_SEARCH_POPUP_CANCEL_BTN_XPATH = ACL_SUBJECTS_SEARCH_POPUP + '//button[text()="Cancel"]'
 
 ACL_SUBJECT_OPEN_SERVICES_ADD_POPUP = '//div[@aria-describedby="acl_subject_open_services_add_dialog"]'
 ACL_SUBJECT_OPEN_SERVICES_ADD_POPUP_ALL_SERVICES_TABLE_ID = 'services_all'
@@ -149,6 +162,16 @@ YESNO_POPUP_NO_BTN_XPATH = YESNO_POPUP_XPATH + '//div[@class="ui-dialog-buttonse
 
 FILE_UPLOAD_ID = 'file_upload_button'
 
+TOKEN_DETAILS_POPUP_KEY_LABEL_AREA_ID = 'friendly_name'
+TOKEN_DETAILS_POPUP = '//div[@aria-describedby="token_details_dialog"]'
+TOKEN_DETAILS_POPUP_OK_BTN_XPATH = TOKEN_DETAILS_POPUP + '//div[@class="ui-dialog-buttonset"]//button[span="OK"]'
+TOKEN_DETAILS_POPUP_CANCEL_BTN_XPATH = TOKEN_DETAILS_POPUP + '//div[@class="ui-dialog-buttonset"]//button[span="Cancel"]'
+
+TOKEN_LOGIN_POPUP = '//div[@aria-describedby="activate_token_dialog"]'
+TOKEN_LOGIN_OK_BTN_XPATH = TOKEN_LOGIN_POPUP + '//div[@class="ui-dialog-buttonset"]//button[span="OK"]'
+TOKEN_LOGIN_CANCEL_BTN_XPATH = TOKEN_LOGIN_POPUP + '//div[@class="ui-dialog-buttonset"]//button[span="Cancel"]'
+
+TOKEN_PIN_LABEL_AREA = 'activate_token_pin'
 
 def confirm_dialog_visible(self):
     # Check if anything with a "Confirm" button is visible

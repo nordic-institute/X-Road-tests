@@ -25,10 +25,16 @@ class SecurityServerClientRegistrationFailures(unittest.TestCase):
         member_code = client['code']
         member_class = client['class']
         member_instance = client['instance']
+        ss2_ssh_host = main.config.get('ss2.ssh_host')
+        ss2_ssh_user = main.config.get('ss2.ssh_user')
+        ss2_ssh_pass = main.config.get('ss2.ssh_pass')
 
         main.reset_webdriver(main.url, main.username, main.password)
         main.log('TEST: CERTIFYING SECURITY SERVER CLIENTS FAILURES')
-        fail_test_func = client_certification_2_1_3.failing_tests(client_name, member_class, member_code, member_instance, ca_name=ca_name)
+        fail_test_func = client_certification_2_1_3.failing_tests(client_name, member_class, member_code,
+                                                                  member_instance, ca_name=ca_name,
+                                                                  ss2_ssh_host=ss2_ssh_host, ss2_ssh_user=ss2_ssh_user,
+                                                                  ss2_ssh_pass=ss2_ssh_pass)
 
         fail_test_func(main)
         main.tearDown()

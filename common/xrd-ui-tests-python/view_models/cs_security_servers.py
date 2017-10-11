@@ -11,6 +11,9 @@ OWNED_SERVERS_UPLOAD_OWNER_NAME_ID = "owned_server_owner_name"
 OWNED_SERVERS_UPLOAD_OWNER_CLASS_ID = "owned_server_owner_class"
 OWNED_SERVERS_UPLOAD_OWNER_CODE_ID = "owned_server_owner_code"
 ADD_OWNED_SERVER_SUBMIT_BUTTON_ID = "add_owned_server_submit"
+SECURITYSERVER_AUTH_CERT_ROW_CSS = '#securityserver_auth_certs tbody tr'
+SECURITYSERVER_AUTH_CERT_TAB_XPATH = '//*[@href="#server_auth_certs_tab"]'
+SECURITYSERVER_AUTH_CERT_DELETE_BTN_ID = 'securityserver_authcert_delete'
 
 SECURITY_SERVER_CLIENTS_TABLE_ID = 'securityserver_clients'
 
@@ -37,7 +40,20 @@ SECURITYSERVER_CLIENT_SERVER_CODE_ID = 'securityserver_client_server_code'
 # MANAGEMENT REQUESTS
 SECURITYSERVER_MANAGEMENT_REQUESTS_TABLE_ID = 'securityserver_management_requests'
 REVOKE_REGISTRATION_REQUEST = '.reg_request_revoke'
-REVOKE_MANAGEMENT_REQUEST_BTN_XPATH = '//div[@aria-describedby="client_reg_request_edit_dialog"]//button[contains(@class, "reg_request_revoke")]'
+REVOKE_CLIENT_MANAGEMENT_REQUEST_BTN_XPATH = '//div[@aria-describedby="client_reg_request_edit_dialog"]//button[contains(@class, "reg_request_revoke")]'
+REVOKE_CERT_MANAGEMENT_REQUEST_BTN_XPATH = '//div[@aria-describedby="auth_cert_reg_request_edit_dialog"]//button[contains(@class, "reg_request_revoke")]'
 MANAGEMENT_REQUESTS_CLIENT_DELETION_XPATH = '//table[@id="management_requests_all"]//td[contains(text(), \"Client deletion\")]'
+MANAGEMENT_REQUESTS_CERT_DELETION_XPATH = '//table[@id="management_requests_all"]//td[contains(text(), \"Certificate deletion\")]'
 CLIENT_DELETION_REQUEST_DETAILS_DIALOG_ID = "client_deletion_request_edit_dialog"
+CERT_DELETION_REQUEST_DETAILS_DIALOG_ID = "auth_cert_deletion_request_edit_dialog"
 CLIENT_DELETION_REQUEST_DETAILS_DIALOG_COMMENTS_INPUT_CLASS = "management_request_comments"
+REVOKE_CERT_DELETE_REQUEST_COMMENT = '\'{}\' revocation'
+REVOKE_CLIENT_DELETE_REQUEST_COMMENT = 'Request ID {} revocation'
+
+# DELETION REQUEST
+DELETION_REQUEST_OWNER_NAME_ID = 'delete_auth_cert_owner_name'
+DELETION_REQUEST_OWNER_CLASS_ID = 'delete_auth_cert_owner_class'
+DELETION_REQUEST_OWNER_CODE_ID = 'delete_auth_cert_owner_code'
+DELETION_REQUEST_SERVER_CODE_ID = 'delete_auth_cert_servercode'
+DELETION_REQUEST_SUBMIT_BTN_XPATH = '//div[@aria-describedby="auth_cert_delete_dialog"]//span[text()="Submit"]'
+DELETION_REQUEST_CANCEL_BTN_XPATH = '//div[@aria-describedby="auth_cert_delete_dialog"]//span[text()="Cancel"]'

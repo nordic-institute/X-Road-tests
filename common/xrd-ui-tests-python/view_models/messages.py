@@ -1,6 +1,8 @@
-from selenium.common.exceptions import TimeoutException, NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException
+
 from view_models import popups
 
+DELETE_AUTH_CERT_REQ_ADDED = 'Request of deleting authentication certificate from security server \'{0}\' added successfully'
 ERROR_MESSAGE_CSS = '.messages .error'
 ERROR_MESSAGE_CLOSE_CSS = '.messages .error i'
 WARNING_MESSAGE_CSS = '#warning'
@@ -45,6 +47,7 @@ TSL_CERTIFICATE_INCORRECT_FILE_FORMAT = "Incorrect file format. Only PEM and DER
 CERTIFICATE_IMPORT_SUCCESSFUL = 'Certificate imported successfully'
 CA_ADD_SUCCESSFUL = 'Certification service added successfully'
 
+CERTIFICATE_NOT_VALID = 'Failed to import certificate: Certificate is not valid'
 CERTIFICATE_NOT_SIGNING_KEY = 'Failed to import certificate: Authentication certificate cannot be imported to signing keys'
 NO_KEY_FOR_CERTIFICATE = 'Failed to import certificate: Could not find key corresponding to the certificate'
 NO_CLIENT_FOR_CERTIFICATE = 'Failed to import certificate: Certificate issued to an unknown member'
@@ -54,15 +57,21 @@ WRONG_FORMAT_OCSP_CERTIFICATE = 'Failed to upload OCSP responder certificate: In
 CERTIFICATE_ALREADY_EXISTS = 'Failed to import certificate: Certificate already exists under key'
 CA_NOT_VALID_AS_SERVICE = 'Failed to import certificate: Cannot read member identifier from signing certificate: InternalError: Certificate is not issued by approved certification service provider.'
 WRONG_FORMAT_CA_CERTIFICATE = 'Failed to upload service CA certificate: Incorrect file format. Only PEM and DER files allowed.'
+WRONG_FORMAT_TS_CERTIFICATE = 'Failed to upload approved TSA certificate: Incorrect file format. Only PEM and DER files allowed.'
 GROUP_ALREADY_EXISTS_ERROR = 'A group with code \'{0}\' already exists'
 
 GLOBAL_GROUP_ALREADY_TAKEN = "Failed to add global group: '{0}' has already been taken"
+REQUEST_SENT_NOTICE = 'Request sent'
 
 MEMBER_ALREADY_EXISTS_ERROR = 'Failed to add member: Member with class \'{0}\' and code \'{1}\' already exists'
-CERTIFICATE_ADDING_REQUEST_ADDED_NOTICE = 'Request of adding authentication certificate to new security server \'SERVER:{0}\' added successfully'
+CERTIFICATE_ADDING_NEW_SERVER_REQUEST_ADDED_NOTICE = 'Request of adding authentication certificate to new security server \'SERVER:{0}\' added successfully'
+CERTIFICATE_ADDING_EXISTING_SERVER_REQUEST_ADDED_NOTICE = 'Request of adding authentication certificate to existing security server \'SERVER:{0}\' added successfully'
 SUBSYSTEM_DELETION_COMMENT = '\'SUBSYSTEM:{0}/{1}/{2}/{3}\' deletion'
 CERTIFICATE_IMPORT_EXPIRED_GLOBAL_CONF_ERROR = 'Failed to import certificate: Global configuration is expired'
+REQUEST_REVOKE_SUCCESSFUL_NOTICE = 'Successfully revoked client registration request with id \'{0}\''
+AUTH_REQUEST_REVOKE_SUCCESSFUL_NOTICE = 'Successfully revoked authentication request with id \'{0}\''
 GLOBAL_CONF_EXPIRED_MESSAGE = 'Global configuration is expired'
+UNREGISTER_CERT_FAIL_NO_VALID_CERT = 'Failed to unregister certificate: Security server has no valid authentication certificate'
 
 # Client registration request confirmation message, {0}=subsystem, {1}=client name, {2}=client class, {3}=client code
 CLIENT_REGISTRATION_SUBSYSTEM_CONFIRMATION = 'Do you want to send a client registration request for the added client?\n' \
@@ -73,12 +82,32 @@ CLIENT_REGISTRATION_CONFIRMATION = 'Do you want to send a client registration re
 CLIENT_REGISTRATION_SUCCESS = "Request of adding client '{0}' to security server '{1}' added successfully"
 CLIENT_REGISTRATION_ALREADY_REGISTERED = "Failed to add new server client request: '{0}' has already been registered as a client to security server '{1}'"
 CLIENT_REGISTRATION_ALREADY_REQUESTED = "Failed to add new server client request: A request for registering '{0}', as a client to security server '{1}' has already been submitted"
+CLIENT_REGISTRATION_FAIL_REGEX = "^Failed to send registration request\: .*"
 
 KEY_GENERATION_TIMEOUT_ERROR = 'Connection to Signer (port 5558) timed out'
 SERVER_UNREACHABLE_ERROR = 'Server unreachable. Make sure if server is up and running.'
 ADD_CENTRAL_SERVICE_EXISTS_ERROR = 'Failed to save central service: \'{0}\' has already been taken'
 ADD_CENTRAL_SERVICE_PROVIDER_NOT_FOUND_ERROR = 'Failed to save central service: Provider with ID \'SUBSYSTEM:{0}/{1}/{2}/{3}\' not found'
 EDIT_CENTRAL_SERVICE_PROVIDER_NOT_FOUND_ERROR = 'Failed to update central service: Provider with ID \'SUBSYSTEM:{0}/{1}/{2}/{3}\' not found'
+
+GENERATE_CERTIFICATE_NOT_FOUND_ERROR = 'Failed to generate new key: /bin/sh: 1: {0}: not found'
+REGISTRATION_REQUEST_SENDING_FAILED = 'Failed to send registration request: Could not connect to any target host'
+CERTIFICATE_DELETION_REQUEST_SENDING_FAILED = 'Failed to send certificate deletion request. Continue with certificate deletion anyway?'
+UNREGISTER_CERT_REQUEST_SENDING_FAILED = 'Failed to unregister certificate: Could not connect to any target host'
+SS_CONFIGURATION_BACKUP_ERROR = "Failed to back up configuration: Error making configuration backup, script exited with status code '1'"
+SS_SUCCESSFUL_DELETE = 'Selected backup deleted successfully'
+INPUT_EXCEEDS_255_CHARS = 'Parameter \'{0}\' input exceeds 255 characters'
+INVALID_HOST_ADDRESS = 'Invalid host address'
+FAILED_TO_REGISTER_HOST_NOT_KNOWN_ERROR = 'Failed to register certificate: UnknownHostException: {0}: Name or service not known'
+
+UPLOAD_CONTAIN_INVALID_CHARACTERS = 'Failed to upload new backup file: Filename \'{0}\' contains invalid characters. Valid characters include: (A-Z), (a-z), (0-9), (_), (.), (-).'
+UPLOAD_WRONG_EXTENSION = 'Failed to upload new backup file: Uploaded file name \'{0}\' has an invalid extension, the only valid one is \'tar\''
+
+UPLOAD_WRONG_FORMAT = 'Failed to upload new backup file: Content of uploaded file must be in tar format'
+UPLOAD_EXISTS = 'Backup file with name \'{0}\' already exists, do you want to overwrite it?'
+TOKEN_DETAILS_MISSING_PARAMETER = 'Missing parameter: friendly_name'
+TOKEN_PIN_INCORRECT = 'PIN incorrect'
+
 
 def get_error_message(self):
     '''
@@ -187,3 +216,13 @@ def get_console_output(self):
     # Element not found. This means that there is no error message.
     except NoSuchElementException:
         return None
+
+
+def get_auth_cert_del_req_added_message(client):
+    return DELETE_AUTH_CERT_REQ_ADDED.format(
+        'SERVER:{0}/{1}/{2}/{3}'.format(client['instance'], client['class'], client['code'], client['name']))
+
+
+def get_cert_adding_existing_server_req_added_notice(client):
+    return CERTIFICATE_ADDING_EXISTING_SERVER_REQUEST_ADDED_NOTICE.format(
+        '{0}/{1}/{2}/{3}'.format(client['instance'], client['class'], client['code'], client['name']))

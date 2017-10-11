@@ -121,6 +121,8 @@ def test_add_central_service(case, provider=None, central_service_name=None,
         # Find "Central Services" menu item, click on it.
         central_services_menu = self.by_css(sidebar.CENTRAL_SERVICES_CSS)
         central_services_menu.click()
+        log_checker = auditchecker.AuditChecker(host=cs_ssh_host, username=cs_ssh_user,
+                                                password=cs_ssh_pass)
 
         # TEST PLAN 2.2.8-1 define central service "random": code=xroadGetRandom; version=v1;
         #                                                   provider=SUBSYSTEM:KS1:COM:CLIENT1:testservice
@@ -144,6 +146,7 @@ def test_add_central_service(case, provider=None, central_service_name=None,
         central_service_code_input.clear()
         self.input(central_service_code_input, central_service_name)
 
+        current_log_lines = log_checker.get_line_count()
         # Set other fields
         set_central_service_provider_fields(self, provider=provider)
 
@@ -152,6 +155,14 @@ def test_add_central_service(case, provider=None, central_service_name=None,
 
         # Wait until the service is added.
         self.wait_jquery()
+
+        '''Checking log for "Add central service" event'''
+        logs_found = log_checker.check_log(log_constants.ADD_CENTRAL_SERVICE,
+                                           from_line=current_log_lines + 1)
+        self.is_true(logs_found,
+                     msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
+                         log_constants.ADD_CENTRAL_SERVICE,
+                         log_checker.found_lines))
 
         # Test that we didn't get an error. If we did, no need to continue.
         error_message = messages.get_error_message(self)  # Error message (anywhere)
@@ -170,8 +181,6 @@ def test_add_central_service(case, provider=None, central_service_name=None,
         self.is_true(testclient_central.check_success(), msg='2.2.8-3 Test query to central service failed')
 
         '''SERVICE_41 4a A central service with the inserted central service code already exists'''
-        log_checker = auditchecker.AuditChecker(host=cs_ssh_host, username=cs_ssh_user,
-                                                password=cs_ssh_pass)
         if try_same_code_twice:
             current_log_lines = log_checker.get_line_count()
             self.log('SERVICE_41 4a A central service with the inserted central service code already exists')
@@ -276,6 +285,9 @@ def test_edit_central_service(case, provider, requester, central_service_name, s
         self.log('Starting mock service')
         self.mock_service = self.start_mock_service()
 
+        log_checker = auditchecker.AuditChecker(host=cs_ssh_host, username=cs_ssh_user,
+                                                password=cs_ssh_pass)
+
         # Find "Central Services" menu item, click on it.
         central_services_menu = self.by_css(sidebar.CENTRAL_SERVICES_CSS)
         central_services_menu.click()
@@ -304,6 +316,7 @@ def test_edit_central_service(case, provider, requester, central_service_name, s
         clear_button = self.wait_until_visible(central_services.SERVICE_EDIT_DIALOG_CLEAR_BUTTON_ID, type=By.ID)
         clear_button.click()
 
+        current_log_lines = log_checker.get_line_count()
         # Set the new provider data
         set_central_service_provider_fields(self, provider=provider)
 
@@ -312,6 +325,14 @@ def test_edit_central_service(case, provider, requester, central_service_name, s
 
         # Wait until the service is added.
         self.wait_jquery()
+
+        '''Checking log for "Edit central service" event'''
+        logs_found = log_checker.check_log(log_constants.EDIT_CENTRAL_SERVICE,
+                                           from_line=current_log_lines + 1)
+        self.is_true(logs_found,
+                     msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
+                         log_constants.EDIT_CENTRAL_SERVICE,
+                         log_checker.found_lines))
 
         # Test that we didn't get an error. If we did, no need to continue.
         error_message = messages.get_error_message(self)  # Error message (anywhere)
@@ -331,8 +352,6 @@ def test_edit_central_service(case, provider, requester, central_service_name, s
         testclient_central.verify_service_data = verify_service
 
         case.is_true(testclient_central.check_success(), msg='2.2.8-6 Test query after updating central service failed')
-        log_checker = auditchecker.AuditChecker(host=cs_ssh_host, username=cs_ssh_user,
-                                                password=cs_ssh_pass)
         if try_not_existing_provider:
             current_log_lines = log_checker.get_line_count()
             edit_button = self.by_id(central_services.SERVICE_EDIT_BUTTON_ID)
@@ -370,7 +389,7 @@ def test_edit_central_service(case, provider, requester, central_service_name, s
     return edit_central_service
 
 
-def test_delete_central_service(case, central_service_name, provider, requester, sync_max_seconds=0,
+def test_delete_central_service(case, cs_ssh_host, cs_ssh_user, cs_ssh_pass, central_service_name, provider, requester, sync_max_seconds=0,
                                 wait_sync_retry_delay=0, cancel_deletion=False):
     self = case
 
@@ -402,6 +421,8 @@ def test_delete_central_service(case, central_service_name, provider, requester,
     def delete_central_service():
         self.log('2.2.8-del remove central service')
 
+        log_checker = auditchecker.AuditChecker(host=cs_ssh_host, username=cs_ssh_user,
+                                                password=cs_ssh_pass)
         # Find "Central Services" menu item, click on it.
         central_services_menu = self.by_css(sidebar.CENTRAL_SERVICES_CSS)
         central_services_menu.click()
@@ -418,6 +439,8 @@ def test_delete_central_service(case, central_service_name, provider, requester,
 
         # Click the row to select it
         service_row.click()
+
+        current_log_lines = log_checker.get_line_count()
 
         # Find and click the "Delete" button to delete the service
         delete_button = self.by_id(central_services.SERVICE_DELETE_BUTTON_ID)
@@ -444,6 +467,13 @@ def test_delete_central_service(case, central_service_name, provider, requester,
         # Wait until ajax query finishes.
         self.wait_jquery()
 
+        '''Checking log for "Delete service" event'''
+        logs_found = log_checker.check_log(log_constants.DELETE_CENTRAL_SERVICE,
+                                           from_line=current_log_lines + 1)
+        self.is_true(logs_found,
+                     msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
+                         log_constants.DELETE_CENTRAL_SERVICE,
+                         log_checker.found_lines))
         # Test if the service was deleted.
         service_row = get_central_service_row(self, central_service_name)
         self.is_none(service_row, msg='2.2.8-del Central service not deleted: {0}'.format(central_service_name))

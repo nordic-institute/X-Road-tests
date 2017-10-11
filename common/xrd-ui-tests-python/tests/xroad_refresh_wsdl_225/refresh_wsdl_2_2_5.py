@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 from helpers import ssh_client, xroad, soaptestclient, auditchecker
 from tests.xroad_add_to_acl_218 import add_to_acl_2_1_8
 from tests.xroad_configure_service_222 import configure_service_2_2_2
-from view_models import clients_table_vm, popups, messages
+from view_models import clients_table_vm, popups, messages, log_constants
 
 # These faults are checked when we need the result to be unsuccessful. Otherwise the checking function returns True.
 faults_unsuccessful = ['Server.ServerProxy.AccessDenied', 'Server.ServerProxy.UnknownService']
@@ -24,7 +24,7 @@ wsdl_replace_command = 'cp {0} {1}'  # {0} is replaced with source filename and 
 
 def webserver_set_wsdl(self, wsdl_source_filename, wsdl_target_filename):
     replace_commmand = wsdl_replace_command.format(wsdl_source_filename, wsdl_target_filename)
-    self.ssh_client.exec_command(replace_commmand)
+    out, err = self.ssh_client.exec_command(replace_commmand)
     return (self.ssh_client.exit_status() == 0)
 
 
@@ -120,6 +120,9 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
         # TEST PLAN 2.2.5 - refresh service WSDL
         self.log('*** 2.2.5 / XT-469')
 
+        '''Get log checker for security server'''
+        log_checker = auditchecker.AuditChecker(host=ss_ssh_host, username=ss_ssh_user, password=ss_ssh_pass)
+
         # Open an SSH connection to the webserver
         webserver_connect(self, ssh_host, ssh_username, ssh_password)
 
@@ -156,12 +159,15 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
         service_parameters = clients_table_vm.get_service_parameters(self, service_row)
         service_parameters_2 = clients_table_vm.get_service_parameters(self, service_row_2)
 
-        # TEST PLAN 2.2.5.1 - replace WSDL with a file that gives a validation error
-        self.log('2.2.5.1 - replace WSDL with a file that cannot be validated at all: {0}'.format(wsdl_error))
+        refresh_wsdl_failed_message = log_constants.REFRESH_WSDL_FAILED
+        current_log_lines = log_checker.get_line_count()
+
+        '''SERVICE_14 3b The process of validating the WSDL file was terminated with an error message'''
+        self.log('Replacing testwsdl with a one, which gives error')
         webserver_set_wsdl(self, wsdl_source_filename=wsdl_local_path.format(wsdl_error),
                            wsdl_target_filename=wsdl_local_path.format(wsdl_filename))
 
-        # Click "Refresh" and return status
+        self.log('Click "Refresh" and return status')
         warning, error, console = refresh_wsdl(self)
         self.is_not_none(error, msg='Invalid WSDL: no error shown for WSDL {0}'.format(wsdl_url))
         self.is_equal(error, messages.WSDL_REFRESH_ERROR_VALIDATION_FAILED.format(wsdl_url),
@@ -172,6 +178,13 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
         self.is_not_none(console, msg='Refresh invalid WSDL: no console output for WSDL {0}'
                          .format(wsdl_url))
         self.log('Error message: {0}'.format(warning))
+
+        self.log('Check if log contains expected message')
+        logs_found = log_checker.check_log(refresh_wsdl_failed_message, from_line=current_log_lines + 1)
+        self.is_true(logs_found,
+                     msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
+                         refresh_wsdl_failed_message,
+                         log_checker.found_lines))
 
         # TEST PLAN 2.2.5.2 - replace WSDL with a file that gives a validation warning
         self.log('2.2.5.2 - replace WSDL with a file that gives a validation warning: {0}'.format(wsdl_warning))
@@ -190,30 +203,6 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
         self.wait_until_visible(type=By.XPATH, element=popups.WARNING_POPUP_CANCEL_XPATH).click()
         self.wait_jquery()
 
-        # UC SERVICE 14 3c2. Refreshing process continues with WSDL, which gives warnings
-        # Refresh WSDL again with WSDL, which gives warnings(WSDL contains no services)
-        self.log('UC SERVICE 14 3c2. Refreshing process continues with WSDL, which gives warnings')
-        refresh_wsdl(self)
-        self.wait_jquery()
-
-        # Wait until service deletion confirmation dialogs popup and confirm them
-        self.wait_until_visible(type=By.XPATH, element=popups.WARNING_POPUP_CONTINUE_XPATH).click()
-        self.wait_jquery()
-        self.wait_until_visible(type=By.XPATH, element=popups.WARNING_POPUP_CONTINUE_XPATH).click()
-        self.wait_jquery()
-
-        self.log('WSDL without services, queries should fail')
-        case.is_true(testclient_http.check_fail(faults=True), msg='Test query passed, WSDL without services')
-        case.is_true(testclient_http_2.check_fail(faults=True), msg='Test query passed, WSDL without services')
-
-        # Replace WSDL with correct WSDL and restore its services
-        webserver_set_wsdl(self, wsdl_source_filename=wsdl_local_path.format(wsdl_correct),
-                           wsdl_target_filename=wsdl_local_path.format(wsdl_filename))
-        refresh_wsdl(self)
-        # Confirm adding service popup
-        self.wait_until_visible(type=By.XPATH, element=popups.WARNING_POPUP_CONTINUE_XPATH).click()
-        self.wait_jquery()
-
         # TEST PLAN 2.2.5-2 - replace WSDL with a correct file that doesn't include bodyMassIndex service.
         # In the test plan, there are two variants of how to delete the service (v1 and v2). One of them is commenting
         # out bodyMassIndex service and the second is to replace the WSDL with one that only contains service
@@ -223,7 +212,8 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
         # should be replaced or updated with one that specifies a file with commented-out bodyMassIndex.
         self.log(
             '2.2.5-2 - replace WSDL with a file that only contains xroadGetRandom: {0}'.format(wsdl_missing_service))
-
+        '''Get current line count'''
+        current_log_lines = log_checker.get_line_count()
         webserver_set_wsdl(self, wsdl_source_filename=wsdl_local_path.format(wsdl_missing_service),
                            wsdl_target_filename=wsdl_local_path.format(wsdl_filename))
 
@@ -253,6 +243,15 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
 
         # Wait until the settings are saved.
         self.wait_jquery()
+
+        self.log('SERVICE_14 7. Refresh WSDL is logged in audit log')
+        refresh_wsdl_message = log_constants.REFRESH_WSDL
+        self.log('Check if log contains expected message')
+        logs_found = log_checker.check_log(refresh_wsdl_message, from_line=current_log_lines + 1)
+        self.is_true(logs_found,
+                     msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
+                         refresh_wsdl_message,
+                         log_checker.found_lines))
 
         # TEST PLAN 2.2.5-3 test query from TS1 client CLIENT1:sub to service bodyMassIndex. Query should fail.
         self.log('2.2.5-3 test query {0} to service bodyMassIndex. Query should fail.'.format(query_filename))
@@ -306,12 +305,51 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
         new_service_parameters = clients_table_vm.get_service_parameters(self, service_row)
         new_service_parameters_2 = clients_table_vm.get_service_parameters(self, service_row_2)
 
+
         self.is_equal(service_parameters_2['url'], new_service_parameters_2['url'],
                       msg='Service URLs are not equal, old={0}, new={1}'.format(
                           service_parameters_2['url'], new_service_parameters_2['url']))
         self.is_equal(service_parameters_2['timeout'], new_service_parameters_2['timeout'],
                       msg='Service timeouts are not equal, old={0}, new={1}'.format(
                           service_parameters_2['timeout'], new_service_parameters_2['timeout']))
+
+        popups.close_all_open_dialogs(self)
+
+        # Reopen client popup using shortcut button to open it directly at Services tab.
+        clients_table_vm.open_client_popup_services(self, client_name=client_name, client_id=client_id)
+
+        # Find the table that lists all WSDL files and services
+        services_table = self.by_id(popups.CLIENT_DETAILS_POPUP_SERVICES_TABLE_ID)
+        # Wait until that table is visible (opened in a popup)
+        self.wait_until_visible(services_table)
+
+        # Set WSDL without any services
+        webserver_set_wsdl(self, wsdl_source_filename=wsdl_local_path.format(wsdl_warning),
+                           wsdl_target_filename=wsdl_local_path.format(wsdl_filename))
+        # UC SERVICE 14 3c2. Refreshing process continues with WSDL, which gives warnings
+        # Refresh WSDL again with WSDL, which gives warnings(WSDL contains no services)
+        self.log('UC SERVICE 14 3c2. Refreshing process continues with WSDL, which gives warnings')
+        refresh_wsdl(self)
+        self.wait_jquery()
+
+        # Wait until service deletion confirmation dialogs popup and confirm them
+        self.wait_until_visible(type=By.XPATH, element=popups.WARNING_POPUP_CONTINUE_XPATH).click()
+        self.wait_jquery()
+        self.wait_until_visible(type=By.XPATH, element=popups.WARNING_POPUP_CONTINUE_XPATH).click()
+        self.wait_jquery()
+
+        self.log('WSDL without services, queries should fail')
+        case.is_true(testclient_http.check_fail(faults=True), msg='Test query passed, WSDL without services')
+        case.is_true(testclient_http_2.check_fail(faults=True), msg='Test query passed, WSDL without services')
+
+        # Replace WSDL with correct WSDL and restore its services
+        webserver_set_wsdl(self, wsdl_source_filename=wsdl_local_path.format(wsdl_correct),
+                           wsdl_target_filename=wsdl_local_path.format(wsdl_filename))
+        refresh_wsdl(self)
+
+        # Confirm adding service popup
+        self.wait_until_visible(type=By.XPATH, element=popups.WARNING_POPUP_CONTINUE_XPATH).click()
+        self.wait_jquery()
 
         popups.close_all_open_dialogs(self)
 
@@ -353,17 +391,18 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
         # Get new WSDL service url
         new_wsdl_url = wsdl_path.format(new_wsdl)
         # Add new WSDL
-        configure_service_2_2_2.add_wsdl(self, new_wsdl_url)
+        console, warning, error = configure_service_2_2_2.add_wsdl(self, new_wsdl_url)
+        self.is_none(error)
 
         # Confirm WSDL adding
         self.wait_until_visible(type=By.XPATH, element=popups.WARNING_POPUP_CONTINUE_XPATH).click()
+        self.wait_jquery()
 
         # Replace new WSDL with WSDL, which contains only xroadgetrandom
         webserver_set_wsdl(self, wsdl_source_filename=wsdl_local_path.format(wsdl_correct),
                            wsdl_target_filename=wsdl_local_path.format(new_wsdl))
 
         # Connect to ss and get current log line count
-        log_checker = auditchecker.AuditChecker(host=ss_ssh_host, username=ss_ssh_user, password=ss_ssh_pass)
         current_log_lines = log_checker.get_line_count()
         # Refresh new WSDL services
         clients_table_vm.client_services_popup_select_wsdl(self, wsdl_url=new_wsdl_url)
@@ -377,13 +416,11 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
         self.is_equal(con1=error, con2=correct_error,
                       msg='Error message {0} is not correct, should be: {1}'.format(error, correct_error))
 
-        # Expected log message
-        wsdl_refresh_failed_log_message = 'Refresh WSDL failed'
         # Check if log contains expected message
-        logs_found = log_checker.check_log(wsdl_refresh_failed_log_message, from_line=current_log_lines + 1)
+        logs_found = log_checker.check_log(refresh_wsdl_failed_message, from_line=current_log_lines + 1)
         self.is_true(logs_found,
                      msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
-                         wsdl_refresh_failed_log_message,
+                         refresh_wsdl_failed_message,
                          log_checker.found_lines))
 
     return refresh_existing_wsdl

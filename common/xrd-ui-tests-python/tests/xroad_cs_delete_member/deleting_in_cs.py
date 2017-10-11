@@ -13,7 +13,6 @@ from tests.xroad_global_groups_tests import global_groups_tests
 from tests.xroad_logging_in_cs_2111.logging_in_cs_2_11_1 import add_member_to_cs, add_group, \
     add_client_to_group, delete_client
 from tests.xroad_ss_client_certification_213 import client_certification_2_1_3
-from tests.xroad_ss_client_certification_213.client_certification_2_1_3 import get_cert, import_cert
 from view_models import popups, sidebar, groups_table, cs_security_servers, members_table, keys_and_certificates_table, \
     messages, log_constants
 
@@ -29,6 +28,7 @@ def test_deleting_member_with_global_group(cs_ssh_host, cs_ssh_username, cs_ssh_
     :param test_group: - test group name
     :return:
     """
+
     def deleting_member_with_global_group(self):
         '''Central server ssh client'''
         ssh_client = ssh_server_actions.get_client(cs_ssh_host, cs_ssh_username, cs_ssh_password)
@@ -160,7 +160,7 @@ def test_deleting_member_with_security_server(case, cs_ssh_host, cs_ssh_user, cs
 
 
 def test_add_security_server_to_member(case, cs_host, cs_username, cs_password, cs_ssh_host, cs_ssh_user, cs_ssh_pass,
-                                       client, cert_path):
+                                       client, cert_path, check_inputs=False):
     """
     MEMBER_12 ALL steps , except 7
     Adds security server to member in central server
@@ -200,20 +200,63 @@ def test_add_security_server_to_member(case, cs_host, cs_username, cs_password, 
                                                                element=cs_security_servers.OWNED_SERVERS_UPLOAD_OWNER_CLASS_ID).text)
         self.is_equal(client['code'], self.wait_until_visible(type=By.ID,
                                                               element=cs_security_servers.OWNED_SERVERS_UPLOAD_OWNER_CODE_ID).text)
-        self.log('Insert server code to server code field')
+        self.wait_until_visible(type=By.ID, element=cs_security_servers.ADD_OWNED_SERVER_SUBMIT_BUTTON_ID).click()
         server_code_input = self.wait_until_visible(type=By.ID,
                                                     element=cs_security_servers.OWNED_SERVERS_SERVER_CODE_INPUT_ID)
-        self.input(element=server_code_input, text=client['name'])
+        self.log('Submit button disabled when fields are empty')
+        self.is_false(self.by_id(cs_security_servers.ADD_OWNED_SERVER_SUBMIT_BUTTON_ID).is_enabled())
         '''Upload button'''
         file_upload = self.by_id(cs_security_servers.OWNED_SERVERS_UPLOAD_CERT_BTN_ID)
         self.log('Uploading certificate to central server')
         xroad.fill_upload_input(self, file_upload, file_abs_path)
         self.wait_jquery()
+        notice_msg = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.NOTICE_MESSAGE_CSS).text
+        self.is_equal(messages.CERTIFICATE_IMPORT_SUCCESSFUL, notice_msg)
+        '''MEMBER_12 7, 7.a. System parses the user input '''
+        if check_inputs:
+            self.log('MEMBER_12 7, 7.a. System parses the user input ')
+            self.log('Submit button disabled when one field is empty')
+            self.is_false(self.by_id(cs_security_servers.ADD_OWNED_SERVER_SUBMIT_BUTTON_ID).is_enabled())
+            self.log('MEMBER_12 7.a. Error is shown when input is 256 char long')
+            self.input(element=server_code_input, text='A' * 256)
+            '''Submit server registration form'''
+            self.wait_until_visible(type=By.ID, element=cs_security_servers.ADD_OWNED_SERVER_SUBMIT_BUTTON_ID).click()
+            '''Expected error message'''
+            expected_error_msg = messages.INPUT_EXCEEDS_255_CHARS.format('serverCode')
+            self.log('MEMBER_12 7.a.1 System displays the "{0}" error message'.format(expected_error_msg))
+            error_msg = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
+            self.is_equal(expected_error_msg, error_msg)
+            '''Expected log message'''
+            expected_log_msg = log_constants.ADD_SECURITY_SERVER_FAILED
+            self.log('MEMBER_12 7a.2. System logs the event {0}'.format(expected_log_msg))
+            logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines)
+            self.is_true(logs_found)
+            self.log('MEMBER_12 7a.3. The server code is reinserted. '
+                     'This time 255 chars, starting and ending with whitespace')
+            name_255 = ' {0} '.format('A' * 255)
+            self.input(element=server_code_input, text=name_255)
+            '''Submit server registration form'''
+            self.wait_until_visible(type=By.ID, element=cs_security_servers.ADD_OWNED_SERVER_SUBMIT_BUTTON_ID).click()
+            '''Visible notice message text'''
+            notice_msg = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.NOTICE_MESSAGE_CSS).text
+            self.is_equal(messages.CERTIFICATE_ADDING_NEW_SERVER_REQUEST_ADDED_NOTICE.format(
+                '{0}/{1}/{2}/{3}'.format(client['instance'], client['class'], client['code'], name_255.strip())),
+                notice_msg)
+            '''Revoke added security server request'''
+            self.reload_webdriver(cs_host, cs_username, cs_password)
+            client_registration_in_ss_2_2_1.revoke_requests(self, auth=True)
+            '''Add server to member without input parsing check'''
+            test_add_security_server_to_member(self, cs_host, cs_username, cs_password, cs_ssh_host, cs_ssh_user,
+                                               cs_ssh_pass, client, cert_path)()
+            return
+
+        self.log('Insert server code to server code field')
+        self.input(element=server_code_input, text=client['name'])
         self.log('Click ok')
         self.wait_until_visible(type=By.ID, element=cs_security_servers.ADD_OWNED_SERVER_SUBMIT_BUTTON_ID).click()
         self.wait_jquery()
         self.log('Check if certificate adding request is present')
-        self.is_equal(messages.CERTIFICATE_ADDING_REQUEST_ADDED_NOTICE.format(
+        self.is_equal(messages.CERTIFICATE_ADDING_NEW_SERVER_REQUEST_ADDED_NOTICE.format(
             '{0}/{1}/{2}/{3}'.format(client['instance'], client['class'], client['code'], client['name'])),
             messages.get_notice_message(self))
         self.log('Check if log contains "Add security server" event"')
@@ -222,7 +265,7 @@ def test_add_security_server_to_member(case, cs_host, cs_username, cs_password, 
         '''Log line count after adding'''
         current_log_lines = log_checker.get_line_count()
         self.log('Approve registration requests')
-        approve_requests(self, step='MEMBER_36')
+        approve_requests(self, step='MEMBER_36 ')
         self.log('Check if log contains event about Client registration request approval')
         logs_found = log_checker.check_log(log_constants.APPROVE_CLIENT_REGISTRATION_REQUST,
                                            from_line=current_log_lines + 1)
@@ -237,9 +280,8 @@ def test_add_security_server_to_member(case, cs_host, cs_username, cs_password, 
 
 
 def restore_security_server_after_member_deletion(case, cs_ssh_host, cs_ssh_user, cs_ssh_pass,
-                                                  ca_ssh_host, ca_ssh_user, ca_ssh_pass,
                                                   client, ss2_host,
-                                                  ss2_username, ss2_password, ss2_ssh_host, cert_path, user):
+                                                  ss2_username, ss2_password, user):
     """
     MEMBER_01 steps 3(only auth cert part) - 7
     Restores security server after member being deleted in central server
@@ -281,43 +323,6 @@ def restore_security_server_after_member_deletion(case, cs_ssh_host, cs_ssh_user
         self.by_id(keys_and_certificates_table.DELETE_BTN_ID).click()
         popups.confirm_dialog_click(self)
         self.wait_jquery()
-        self.log('Click on the key, which certificate was just deleted')
-        self.by_css(keys_and_certificates_table.UNSAVED_KEY_CSS).click()
-        self.log('Generate new auth certificate for the key')
-        client_certification_2_1_3.generate_auth_csr(self, ca_name=ca_ssh_host, change_usage=False)
-        '''Current time'''
-        now_date = datetime.datetime.now()
-        '''Downloaded csr file name'''
-        file_name = 'auth_csr_' + now_date.strftime('%Y%m%d') + '_securityserver_{0}_{1}_{2}_{3}.der'. \
-            format(client['instance'], client['class'], client['code'], client['name'])
-        '''Downloaded csr file path'''
-        file_path = glob.glob(self.get_download_path('_'.join(['*']) + file_name))[0]
-        '''SSH client instance for ca'''
-        sshclient = ssh_server_actions.get_client(ca_ssh_host, ca_ssh_user, ca_ssh_pass)
-        '''Remote csr path'''
-        remote_csr_path = 'temp.der'
-        '''Local cert path'''
-        local_cert_path = self.get_download_path(cert_path)
-        self.log('Getting certificate from ca')
-        get_cert(sshclient, 'sign-auth', file_path, local_cert_path, cert_path, remote_csr_path)
-        self.log('Importing certificate')
-        import_cert(self, local_cert_path)
-        time.sleep(5)
-        self.wait_jquery()
-        self.log('Click on the imported certificate row')
-        self.wait_until_visible(type=By.XPATH, element=keys_and_certificates_table.SAVED_CERTIFICATE_ROW_XPATH).click()
-        self.log('Registering the imported certificate')
-        self.wait_until_visible(type=By.ID, element=keys_and_certificates_table.REGISTER_BTN_ID).click()
-        self.log('Inserting address to security server address input')
-        address_input = self.wait_until_visible(type=By.ID,
-                                                element=keys_and_certificates_table.REGISTER_DIALOG_ADDRESS_INPUT_ID)
-        self.input(element=address_input, text=ss2_ssh_host)
-        self.log('Click ok')
-        self.by_xpath(popups.REGISTRATION_DIALOG_OK_BUTTON_XPATH).click()
-        self.wait_jquery()
-        self.log('Activate added certificate')
-        self.wait_until_visible(type=By.ID, element=keys_and_certificates_table.ACTIVATE_BTN_ID).click()
-
     return restore_security_server
 
 
@@ -366,7 +371,8 @@ def setup_member_with_subsystem_as_ss_client(case, cs_host, cs_username, cs_pass
         self.log('Navigate to security server homepage')
         self.driver.get(ss1_host)
         self.log('Certificate added client')
-        client_certification_2_1_3.test_generate_csr_and_import_cert(client_code=ss_1_client['code'], client_class=ss_1_client['class'])(self)
+        client_certification_2_1_3.test_generate_csr_and_import_cert(client_code=ss_1_client['code'],
+                                                                     client_class=ss_1_client['class'])(self)
         self.log('Log out and log in to central server')
         login_with_logout(self, cs_host, cs_username, cs_password)
         self.log('Add subsystem to client')

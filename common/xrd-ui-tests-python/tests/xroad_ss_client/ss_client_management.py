@@ -4,6 +4,7 @@ from view_models import messages, log_constants, clients_table_vm, popups, sideb
 from selenium.webdriver.common.by import By
 from helpers import xroad, auditchecker
 from tests.xroad_parse_users_input_SS_41 import parse_user_input_SS_41 as parse_input
+import re
 
 
 def add_ss_client(self, member_code, member_class, subsystem_code):
@@ -245,7 +246,8 @@ def test_delete_client(case, client=None, client_id=None, ssh_host=None, ssh_use
         # Check if we have been asked to verify another confirmation.
         if signature_deletion is not None:
             # UC MEMBER_53 4 - system verifies that the signature certificates are not used any more and asks for confirmation
-            self.log('MEMBER_53 4 - system verifies that the signature certificates are not used any more and asks for confirmation')
+            self.log(
+                'MEMBER_53 4 - system verifies that the signature certificates are not used any more and asks for confirmation')
             self.is_true(popups.confirm_dialog_visible(self),
                          msg='Signature certificate deletion confirmation popup not shown')
 
@@ -282,6 +284,122 @@ def test_delete_client(case, client=None, client_id=None, ssh_host=None, ssh_use
                                                                                                    log_checker.log_output))
 
     return delete_client
+
+
+def test_register_client(case, client=None, client_id=None, system_exists=True, ssh_host=None, ssh_user=None,
+                         ssh_pass=None,
+                         test_cancel=False, check_errors=True):
+    """
+    MEMBER_48 main test function. Tries to register a security server client.
+    :param client: dict|None - client data; this or client_id is required
+    :param client_id: str|None - client data as string; this or client is required
+    :param system_exists: bool - True if the subsystem should exist in the global configuration; False otherwise
+    :param ssh_host: str|None - if set, Central Server SSH host for checking the audit.log; if None, no log check
+    :param ssh_user: str|None - CS SSH username, needed if cs_ssh_host is set
+    :param ssh_pass: str|None - CS SSH password, needed if cs_ssh_host is set
+    :param test_cancel: bool - add a step where the administrator does not confirm registration; used only when system_exists=False
+    :param check_errors: bool - expect an error when registering
+    """
+    self = case
+
+    def t_register_client():
+        # UC MEMBER_53 1 - select to delete a security server client
+        self.log('MEMBER_48 1 - select to delete a security server client')
+
+        self.logdata = []
+
+        if ssh_host is not None:
+            log_checker = auditchecker.AuditChecker(host=ssh_host, username=ssh_user, password=ssh_pass)
+            current_log_lines = log_checker.get_line_count()
+
+        if client is None:
+            client_data = xroad.split_xroad_subsystem(client_id)
+        else:
+            client_data = client
+
+        # Find the client and click on it
+        client_row = clients_table_vm.get_client_row_element(self, client=client_data)
+        edit_client(self, client_row)
+
+        # Click the "register" button
+        self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_REGISTER_BUTTON_ID).click()
+        self.wait_jquery()
+
+        # UC MEMBER_48 2 - system verifies that the selected subsystem exists in the global configuration
+        self.log('MEMBER_48 2 - system verifies that the selected subsystem exists in the global configuration')
+
+        # If the subsystem does not exist in the global configuration, we need to confirm submitting it.
+        if not system_exists:
+            # UC MEMBER_48 2a - system prompts for confirmation
+            self.log('MEMBER_48 2a - system prompts for confirmation')
+
+            if test_cancel:
+                # UC MEMBER_48 2a.2a - user cancels the deletion, nothing should be deleted
+                self.log('MEMBER_48 2a.2a - not confirming')
+                popups.close_all_open_dialogs(self)
+                self.wait_jquery()
+
+                # Start editing the client again; if the client was erroneously deleted, we will get an exception here
+                client_row = clients_table_vm.get_client_row_element(self, client=client_data)
+                edit_client(self, client_row)
+
+                # Click the "register" button
+                self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_REGISTER_BUTTON_ID).click()
+                self.wait_jquery()
+
+            # UC MEMBER_48 2a - confirm registration
+            self.log('MEMBER_48 2a - confirm submitting a new subsystem')
+            popups.confirm_dialog_click(self)
+
+        # UC MEMBER_48 3 - system creates an X-Road SOAP request
+        # UC MEMBER_48 4 - system sends the request to management services
+        self.log('MEMBER_48 3, 4 are done in the background and if they fail, step 5 will fail.')
+        self.log('MEMBER_48 5 - system receives a response and verifies that it was not an error message')
+
+        # Check for success scenario if not instructed to wait for an error
+        if not check_errors:
+            # UC MEMBER_48 6 - Check if client status is "registration in progress"
+            self.log('MEMBER_48 6 - Check if client status is "registration in progress"')
+            # client_row = clients_table_vm.get_client_row_element(self, client=client_data)
+            status_title = get_client_status(self, client=client_data)
+            self.is_equal(status_title, clients_table_vm.CLIENT_STATUS_REGISTRATION,
+                          msg='MEMBER_48 6 - Expected client status "{0}", found "{1}"'.format(
+                              clients_table_vm.CLIENT_STATUS_REGISTRATION, status_title))
+
+            # Remember that we need to look for a success message.
+            self.logdata.append(log_constants.REGISTER_CLIENT)
+        else:
+            # UC MEMBER_48 3-5a creating or sending the request failed, or the response was an error message
+            self.log('MEMBER_48 3-5a creating or sending the request failed, or the response was an error message')
+            error_message = messages.get_error_message(self)
+            self.is_not_none(error_message, msg='MEMBER_48 3-5a - error message was not displayed')
+            self.is_true(re.match(messages.CLIENT_REGISTRATION_FAIL_REGEX, error_message),
+                         msg='MEMBER_48 3-5a - got invalid error message: {0}'.format(error_message))
+
+        if ssh_host is not None:
+            # UC MEMBER_48 7 -  Check logs for entries
+            self.log('MEMBER_48 7 - checking logs for: {0}'.format(self.logdata))
+            logs_found = log_checker.check_log(self.logdata, from_line=current_log_lines + 1)
+            self.is_true(logs_found,
+                         msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(self.logdata,
+                                                                                                   log_checker.log_output))
+
+    return t_register_client
+
+
+def get_client_status(self, client):
+    """
+    Returns the client registration status (example: "saved")
+    :param self: MainController object
+    :param client: dict - client data
+    :return: str|None - client status, None if client not found
+    """
+    try:
+        client_row = clients_table_vm.get_client_row_element(self, client=client)
+        status_title = self.by_css('.status', parent=client_row).get_attribute('title')
+        return status_title
+    except RuntimeError:
+        return None
 
 
 def add_clients(self, check_values, instance=None, delete=False):
@@ -396,7 +514,7 @@ def add_clients(self, check_values, instance=None, delete=False):
             # UC MEMBER_47 6 - Check if client status is "saved"
             self.log('MEMBER_47 6 - Check if client status is "saved"')
             client_row = clients_table_vm.get_client_row_element(self, client=added_client_data)
-            status_title = self.by_css('.status', parent=client_row).get_attribute('title')
+            status_title = get_client_status(self, client=added_client_data)
 
             self.is_equal(status_title, clients_table_vm.CLIENT_STATUS_SAVED,
                           'MEMBER_47 6 - Expected client status "{0}", found "{1}"'.format(

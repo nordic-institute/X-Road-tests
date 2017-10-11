@@ -2,8 +2,8 @@ from __future__ import absolute_import
 
 import unittest
 
-from tests.xroad_parse_users_input_SS_41 import parse_user_input_SS_41
 from main.maincontroller import MainController
+from tests.xroad_parse_users_input_SS_41 import parse_user_input_SS_41
 
 
 class UserInputParse(unittest.TestCase):
@@ -38,6 +38,12 @@ class UserInputParse(unittest.TestCase):
         test_func = parse_user_input_SS_41.test_06()
         test_func(main)
 
+        test_func = parse_user_input_SS_41.test_12()
+        test_func(main)
+
+        test_func = parse_user_input_SS_41.test_13()
+        test_func(main)
+
         main.tearDown()
 
         main.url = main.config.get('cs.host')
@@ -60,6 +66,4 @@ class UserInputParse(unittest.TestCase):
         test_func = parse_user_input_SS_41.test_11()
         test_func(main)
 
-        test_func = parse_user_input_SS_41.test_12()
-        test_func(main)
         main.tearDown()

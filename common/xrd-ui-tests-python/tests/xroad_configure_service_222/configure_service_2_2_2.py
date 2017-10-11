@@ -247,6 +247,7 @@ def test_configure_service(case, client=None, client_name=None, client_id=None, 
 
         self.reload_webdriver(url=ss2_host, username=ss2_user, password=ss2_pass)
 
+        log_checker = auditchecker.AuditChecker(host=ss2_ssh_host, username=ss2_ssh_user, password=ss2_ssh_pass)
         # TEST PLAN 2.2.2-1 add test service WSDL
         self.log('2.2.2-1 add test service WSDL')
 
@@ -282,6 +283,7 @@ def test_configure_service(case, client=None, client_name=None, client_id=None, 
             # TEST PLAN 2.2.2.1 error 2 - trying to add WSDL with a URL that doesn't return a WSDL file
             self.log(
                 '2.2.2.1 error 2 add WSDL with a URL that doesn''t return a WSDL file: {0}'.format(wsdl_malformed_url))
+            current_log_lines = log_checker.get_line_count()
             warning, error, console = add_wsdl(self, wsdl_malformed_url)
             self.is_not_none(error, msg='Add duplicate WSDL: no error shown for WSDL {0}'.format(wsdl_malformed_url))
             self.is_equal(error, messages.WSDL_ERROR_INCORRECT_WSDL.format(wsdl_malformed_url),
@@ -292,6 +294,13 @@ def test_configure_service(case, client=None, client_name=None, client_id=None, 
             self.is_none(console, msg='Incorrect WSDL: got console output for WSDL {0} : {1}'
                          .format(wsdl_malformed_url, console))
             self.log('Error message: {0}'.format(warning))
+            '''SERVICE_08 5a. Downloading and parsing WSDL terminated with error is logged in audit log'''
+            self.log('Checking if audit log contains "Add WSDL Failed" event')
+            logs_found = log_checker.check_log(log_constants.ADD_WSDL_FAILED, from_line=current_log_lines + 1)
+            self.is_true(logs_found,
+                         msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
+                             log_constants.ADD_WSDL_FAILED,
+                             log_checker.found_lines))
 
             # TEST PLAN 2.2.2.1 error 3 - trying to add a WSDL with a URL that has already been added
 
@@ -306,8 +315,8 @@ def test_configure_service(case, client=None, client_name=None, client_id=None, 
                                                                                          console))
 
         if check_add_errors:
+            current_log_lines = log_checker.get_line_count()
             # TEST PLAN 2.2.2.1 error 3 - trying to add a WSDL with a URL that has already been added
-
             # Second, the same WSDL file. We should get an error.
             self.log('2.2.2.1 error 3 add a WSDL with a URL that has already been added: {0}'.format(wsdl_correct_url))
             warning, error, console = add_wsdl(self, wsdl_correct_url)  # This should give an error
@@ -320,7 +329,15 @@ def test_configure_service(case, client=None, client_name=None, client_id=None, 
             self.is_none(console, msg='Add duplicate WSDL: got console output for WSDL {0} : {1}'
                          .format(wsdl_correct_url, console))
             self.log('Error message: {0}'.format(warning))
+            '''SERVICE_08 3a. Adding WSDL with existing URL error is logged in audit log'''
+            self.log('Checking if audit log contains "Add WSDL Failed" event')
+            logs_found = log_checker.check_log(log_constants.ADD_WSDL_FAILED, from_line=current_log_lines + 1)
+            self.is_true(logs_found,
+                         msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
+                             log_constants.ADD_WSDL_FAILED,
+                             log_checker.found_lines))
 
+            current_log_lines = log_checker.get_line_count()
             # TEST PLAN 2.2.2.1 error 4 - trying to add a WSDL that is a different URL but the service is already defined
             self.log(
                 '2.2.2.1 error 4 add a WSDL that is a different URL but the service is already defined: {0}'.format(
@@ -338,7 +355,15 @@ def test_configure_service(case, client=None, client_name=None, client_id=None, 
             self.is_none(console, msg='Add duplicate service: got console output for WSDL {0} : {1}'
                          .format(wsdl_duplicate_url, console))
             self.log('Error message: {0}'.format(warning))
+            '''SERVICE_08 7a. Adding WSDL with existing service code and version error is logged in audit log'''
+            self.log('Checking if audit log contains "Add WSDL Failed" event')
+            logs_found = log_checker.check_log(log_constants.ADD_WSDL_FAILED, from_line=current_log_lines + 1)
+            self.is_true(logs_found,
+                         msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
+                             log_constants.ADD_WSDL_FAILED,
+                             log_checker.found_lines))
 
+            current_log_lines = log_checker.get_line_count()
             # TEST PLAN 2.2.2.1 error 5 - trying to add WSDL that cannot be validated at all
             self.log('2.2.2.1 error 5 add WSDL that cannot be validated at all: {0}'.format(wsdl_error_url))
             warning, error, console = add_wsdl(self, wsdl_error_url)
@@ -351,6 +376,13 @@ def test_configure_service(case, client=None, client_name=None, client_id=None, 
                              .format(wsdl_error_url, console))
             self.log('Error message: {0}'.format(error))
             self.log('Console output: {0}'.format(console))
+            '''SERVICE_08 5a. Adding WSDL with error failure is logged in audit log'''
+            self.log('Checking if audit log contains "Add WSDL Failed" event')
+            logs_found = log_checker.check_log(log_constants.ADD_WSDL_FAILED, from_line=current_log_lines + 1)
+            self.is_true(logs_found,
+                         msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
+                             log_constants.ADD_WSDL_FAILED,
+                             log_checker.found_lines))
 
             # TEST PLAN 2.2.2.1 error 6 - trying to add WSDL that gives a validator warning
             self.log('2.2.2.1 error 6 add WSDL that gives a validator warning: {0}'.format(wsdl_warning_url))
@@ -415,15 +447,16 @@ def test_configure_service(case, client=None, client_name=None, client_id=None, 
 
         # Open service parameters by finding the "Edit" button and clicking it.
         edit_wsdl_button = self.by_id(popups.CLIENT_DETAILS_POPUP_EDIT_WSDL_BTN_ID)
-        log_checker = auditchecker.AuditChecker(host=ss2_ssh_host, username=ss2_ssh_user, password=ss2_ssh_pass)
 
         if check_edit_errors:
             ssh_client = ssh_server_actions.get_client(wsdl_ssh_host, wsdl_ssh_user, wsdl_ssh_pass)
             self.log('Copy single wsdl file to test wsdl')
             ssh_server_actions.cp(ssh_client, wsdl_local_path.format(wsdl_single_service), target_wsdl_path)
-            self.log('Change {0} service to xroadTest123'.format(service_name))
-            ssh_client.exec_command('sed -i -e "s/{0}/xroadTest123/g" {1}'.format(service_name, target_wsdl_path),
-                                    sudo=True)
+            service_name_wo_version = service_name[:-3]
+            self.log('Change {0} service to xroadTest123'.format(service_name_wo_version))
+            ssh_client.exec_command(
+                'sed -i -e "s/{0}/xroadTest123/g" {1}'.format(service_name_wo_version, target_wsdl_path),
+                sudo=True)
             self.log('Add test wsdl to client')
             add_wsdl(self, wsdl_test_service_url)
             edit_wsdl_button = self.by_id(popups.CLIENT_DETAILS_POPUP_EDIT_WSDL_BTN_ID)
@@ -678,9 +711,10 @@ def check_wsdl_service_parameters(self, service_row, service_name, service_url):
     :return:
     """
     service_cols = service_row.find_elements_by_tag_name('td')
-    self.is_equal(service_cols[1].text[:-4], service_name)
-    self.is_equal(service_cols[2].text, service_name[:-3])
-    self.is_equal(service_cols[3].text, service_url)
+    self.is_equal(service_cols[1].text[:-4], service_name, msg='Expecting WSDL service name "{0}", got "{1}"'.
+                                                        format(service_name, service_cols[1].text[:-4]))
+    self.is_equal(service_cols[2].text, service_name[:-3], msg='Expecting WSDL service version "{0}", got "{1}"'.format(service_name[:-3], service_cols[2].text))
+    self.is_equal(service_cols[3].text, service_url, msg='Expecting WSDL service URL "{0}", got "{1}"'.format(service_url, service_cols[3].text))
 
 
 def test_enable_service(case, client=None, client_name=None, client_id=None, wsdl_index=None, wsdl_url=None):
@@ -738,7 +772,7 @@ def test_enable_service(case, client=None, client_name=None, client_id=None, wsd
 
 
 def test_delete_service(case, client=None, client_name=None, client_id=None, wsdl_index=None, wsdl_url=None,
-                        try_cancel=True):
+                        try_cancel=True, log_checker=None):
     '''
     MainController test function. Deletes a service from security server.
     :param case: TestCase object
@@ -746,6 +780,9 @@ def test_delete_service(case, client=None, client_name=None, client_id=None, wsd
     :param client_id: string | None - XRoad ID of the client whose ACL we modify
     :param wsdl_index: int | None - index (zero-based) for WSDL we select from the list
     :param wsdl_url: str | None - URL for WSDL we select from the list
+    :param client | None - client which service will be deleted
+    :param try_cancel | True - tries canceling deletion if True
+    :param log_checker | None - checks log for deletion if present
     :return:
     '''
 
@@ -759,24 +796,25 @@ def test_delete_service(case, client=None, client_name=None, client_id=None, wsd
         :return: None
         ''"""
 
-        self.log('2.2.8 delete_service')
+        self.log('SERVICE_15 Delete service')
+        if log_checker is not None:
+            current_log_lines = log_checker.get_line_count()
 
-        # Delete WSDL that we added to restore original state.
-
-        # Open client popup using shortcut button to open it directly at Services tab.
+        '''Open client popup using shortcut button to open it directly at Services tab.'''
         clients_table_vm.open_client_popup_services(self, client_name=client_name, client_id=client_id)
 
-        # Find the table that lists all WSDL files and services
+        '''Find the table that lists all WSDL files and services'''
         services_table = self.by_id(popups.CLIENT_DETAILS_POPUP_SERVICES_TABLE_ID)
-        # Wait until that table is visible (opened in a popup)
+        '''Wait until that table is visible (opened in a popup)'''
         self.wait_until_visible(services_table)
         self.wait_jquery()
         time.sleep(3)
-        # Find the service under the specified WSDL in service list (and expand the WSDL services list if not open yet)
+        '''Find the service under the specified WSDL in service list 
+        (and expand the WSDL services list if not open yet)'''''
         wsdl_element = clients_table_vm.client_services_popup_select_wsdl(self, wsdl_index=wsdl_index,
                                                                           wsdl_url=wsdl_url)
 
-        # Get the WSDL URL from wsdl_element text
+        '''Get the WSDL URL from wsdl_element text'''
         if wsdl_url is None:
             wsdl_text = wsdl_element.find_elements_by_tag_name('td')[1].text
 
@@ -787,31 +825,40 @@ def test_delete_service(case, client=None, client_name=None, client_id=None, wsd
         else:
             wsdl_found_url = wsdl_url
 
-        # Find and click the "Delete" button to delete the WSDL.
+        '''Find and click the "Delete" button to delete the WSDL.'''
         self.by_id(popups.CLIENT_DETAILS_POPUP_DELETE_WSDL_BTN_ID).click()
 
         if try_cancel:
-            # UC SERVICE 15 3a. When terminating deletion, the WSDL service remains
-            # A confirmation dialog should open. Cancel the deletion.
+            '''UC SERVICE 15 3a. When terminating deletion, the WSDL service remains
+            A confirmation dialog should open. Cancel the deletion.'''
             self.log("UC SERVICE 15 3a. When terminating deletion, the WSDL service remains")
             self.wait_until_visible(type=By.XPATH, element=popups.CONFIRM_POPUP_CANCEL_BTN_XPATH).click()
-            # Find the wsdl element again
+            '''Find the wsdl element again'''
             wsdl_element = clients_table_vm.client_services_popup_select_wsdl(self, wsdl_index=wsdl_index,
                                                                               wsdl_url=wsdl_url)
-            # Select the WSDL again
+            '''Select the WSDL again'''
             wsdl_element.click()
-            # Click "Delete" button to delete the WSDL
+            '''Click "Delete" button to delete the WSDL'''
             self.by_id(popups.CLIENT_DETAILS_POPUP_DELETE_WSDL_BTN_ID).click()
 
-        # A confirmation dialog should open. Confirm the deletion.
+        '''A confirmation dialog should open. Confirm the deletion.'''
         popups.confirm_dialog_click(self)
 
-        # Wait until ajax query finishes
+        '''Wait until ajax query finishes'''
         self.wait_jquery()
 
-        # Now check if we can find the same wsdl or not
+        '''Now check if we can find the same wsdl or not'''
         wsdl_found_index = clients_table_vm.find_wsdl_by_name(self, wsdl_found_url)
         self.is_none(wsdl_found_index, msg='WSDL {0} was not deleted.'
                      .format(wsdl_found_url))
+
+        '''SERVICE_15 5. System logs the "Delete WSDL" event in audit log'''
+        if log_checker is not None:
+            self.log('SERVICE_15 5. System logs the "Delete WSDL" event in audit log')
+            logs_found = log_checker.check_log(log_constants.DELETE_WSDL, from_line=current_log_lines + 1)
+            self.is_true(logs_found,
+                         msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
+                             log_constants.DELETE_WSDL,
+                             log_checker.found_lines))
 
     return delete_service

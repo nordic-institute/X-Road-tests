@@ -92,6 +92,7 @@ def set_ca_certificate(self, ca_certificate, close_errors=False):
     self.wait_until_visible(type=By.ID, element=certification_services.SUBMIT_CA_CERT_BTN_ID).click()
 
     # Clicking the button starts an ajax query. Wait until request is complete.
+    time.sleep(0.5)
     self.wait_jquery()
 
     # Get error messages if any
@@ -198,8 +199,9 @@ def configure_ca(self, certificate_classpath=None,
         checked = auth_checkbox.get_attribute('checked')
 
         # Click if the requested value is not already set
-        if ((checked != '' and checked is not None) and not auth_only_certs) or (
-                    (checked is None or checked == '') and auth_only_certs):
+        checkbox_checked_when_not_needed = not auth_only_certs and (checked != '' and checked is not None)
+        checkbox_not_checked_when_needed = auth_only_certs and (checked is None or checked == '')
+        if checkbox_checked_when_not_needed or checkbox_not_checked_when_needed:
             auth_checkbox.click()
 
     # Check user input parsing if instructed so
@@ -236,7 +238,7 @@ def configure_ca(self, certificate_classpath=None,
 
 
 def test_add_ca(case, ca_certificate, invalid_ca_certificate=None, certificate_classpath=None, cs_ssh_host=None,
-                cs_ssh_user=None, cs_ssh_pass=None):
+                cs_ssh_user=None, cs_ssh_pass=None, auth_only_certs=False, check_errors=False):
     '''
     UC TRUST_08 main test method. Tries to add a CA and check logs if cs_ssh_host is set.
     :param case: MainController object
@@ -274,17 +276,18 @@ def test_add_ca(case, ca_certificate, invalid_ca_certificate=None, certificate_c
                                  invalid_certificate_filename=invalid_ca_certificate)
 
         # Configure other CA settings
-        configure_ca(self, certificate_classpath=certificate_classpath, check_errors=True,
+        configure_ca(self, certificate_classpath=certificate_classpath, check_errors=check_errors,
                      log_success=log_constants.ADD_CA, log_fail=log_constants.ADD_CA_FAILED,
                      auth_only_element_xpath=certification_services.ADD_CA_AUTH_ONLY_CHECKBOX_XPATH,
                      classpath_element_xpath=certification_services.ADD_CERTIFICATE_PROFILE_INFO_AREA_XPATH,
-                     save_button_id=certification_services.SUBMIT_CA_SETTINGS_BTN_ID
+                     save_button_id=certification_services.SUBMIT_CA_SETTINGS_BTN_ID,
+                     auth_only_certs=auth_only_certs
                      )
 
         # UC TRUST_08 8 - check for correct confirmation message
         self.log('TRUST_08 8 - check for correct confirmation message')
 
-        confirmation_message = messages.get_notice_message(self)
+        confirmation_message = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.NOTICE_MESSAGE_CSS).text
         self.is_equal(confirmation_message, messages.CA_ADD_SUCCESSFUL,
                       msg='Expected message "{0}", got "{1}"'.format(messages.CA_ADD_SUCCESSFUL, confirmation_message))
 
@@ -295,6 +298,13 @@ def test_add_ca(case, ca_certificate, invalid_ca_certificate=None, certificate_c
             self.is_true(logs_found,
                          msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(self.logdata,
                                                                                                    log_checker.found_lines))
+        '''TRUST_08 5(a) certification service is marked for only authenticatication service'''
+        if auth_only_certs:
+            self.log('TRUST_08 5(a) certification service is marked for only authenticatication service')
+            self.wait_until_visible(type=By.XPATH, element=certification_services.CA_SETTINGS_TAB_XPATH).click()
+            auth_checkbox = self.wait_until_visible(certification_services.EDIT_CA_AUTH_ONLY_CHECKBOX_XPATH, By.XPATH)
+            checked = auth_checkbox.get_attribute('checked')
+            self.is_equal('true', checked)
 
     return add_ca
 
@@ -348,6 +358,17 @@ def test_edit_ca(case, ca_name, certificate_classpath=None, cs_ssh_host=None, cs
                                                                                                    log_checker.found_lines))
 
     return edit_ca
+
+
+def delete_last_ca(self):
+    self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.CERTIFICATION_SERVICES_CSS).click()
+    self.wait_jquery()
+    self.wait_until_visible(type=By.XPATH, element=certification_services.LAST_ADDED_CERT_XPATH).click()
+    self.wait_until_visible(type=By.ID, element=certification_services.DELETE_BTN_ID).click()
+    popups.confirm_dialog_click(self)
+
+    # Wait until the table is refreshed
+    self.wait_jquery()
 
 
 def test_delete_ca(case, ca_name, cs_ssh_host=None, cs_ssh_user=None, cs_ssh_pass=None, cancel_deletion=False):

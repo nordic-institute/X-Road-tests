@@ -4,10 +4,10 @@ import traceback
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
 
-from helpers import ssh_server_actions, auditchecker
+from helpers import ssh_server_actions, auditchecker, ssh_client
 from tests.xroad_ss_client_certification_213 import client_certification_2_1_3
 from view_models import members_table, clients_table_vm, sidebar, popups, \
-    keys_and_certificates_table as keyscertificates_constants, cs_security_servers, log_constants
+    keys_and_certificates_table as keyscertificates_constants, cs_security_servers, log_constants, messages
 
 SYSTEM_TYPE = 'SUBSYSTEM'
 
@@ -19,8 +19,9 @@ def test_remove(cs_host, cs_username, cs_password,
                 sec_2_host, sec_2_username, sec_2_password,
                 ss1_ssh_host=None, ss1_ssh_username=None, ss1_ssh_password=None,
                 ss2_ssh_host=None, ss2_ssh_username=None, ss2_ssh_password=None,
-                cs_new_member=None, ss1_client=None, ss2_client=None, ss2_client_2=None,
-                cs_member_name=None, ss1_client_name=None, ss2_client_name=None, ss2_client_2_name=None):
+                cs_new_member=None, ss1_client=None, ss1_client_2=None, ss2_client=None, ss2_client_2=None,
+                cs_member_name=None, ss1_client_name=None, ss1_client_2_name=None, ss2_client_name=None, ss2_client_2_name=None,
+                ca_ssh_host=None, ca_ssh_username=None, ca_ssh_password=None):
     '''
     Removes the data that was created when running the main test.
     :param ss2_ssh_host: str - security server 2 ssh hostname
@@ -46,6 +47,9 @@ def test_remove(cs_host, cs_username, cs_password,
     :param ss1_client_name: str - security server 1 client name
     :param ss2_client_name: str - security server 2 client name
     :param ss2_client_2_name: str - security server 2 second client name
+    :param ca_ssh_host: str - CA ssh host
+    :param ca_ssh_username: str - CA ssh username
+    :param ca_ssh_password: str - CA ssh password
     :return: None
     '''
 
@@ -63,6 +67,9 @@ def test_remove(cs_host, cs_username, cs_password,
         ss_1_client = {'name': ss1_client_name, 'class': ss1_client['class'], 'code': ss1_client['code'],
                        'subsystem_code': ss1_client['subsystem']}
 
+        ss_1_client_2 = {'name': ss1_client_2_name, 'class': ss1_client_2['class'], 'code': ss1_client_2['code'],
+                         'subsystem_code': ss1_client_2['subsystem']}
+
         ss_2_client = {'name': ss2_client_name, 'class': ss2_client['class'], 'code': ss2_client['code'],
                        'subsystem_code': ss2_client['subsystem']}
 
@@ -75,8 +82,8 @@ def test_remove(cs_host, cs_username, cs_password,
                         ss1_ssh_host, ss1_ssh_username, ss1_ssh_password,
                         sec_2_host, sec_2_username, sec_2_password,
                         ss2_ssh_host, ss2_ssh_username, ss2_ssh_password,
-                        cs_member, ss_1_client, ss_2_client,
-                        ss_2_client_2)
+                        cs_member, ss_1_client, ss_1_client_2, ss_2_client,
+                        ss_2_client_2, ca_ssh_host=ca_ssh_host, ca_ssh_username=ca_ssh_username, ca_ssh_password=ca_ssh_password)
         except:
             # Something went wrong
             self.log('Failed to remove client.')
@@ -89,9 +96,11 @@ def test_remove(cs_host, cs_username, cs_password,
 def test_test(case, cs_host, cs_username, cs_password,
               sec_1_host, sec_1_username, sec_1_password,
               sec_2_host, sec_2_username, sec_2_password,
-              cs_new_member=None, ss1_client=None, ss2_client=None, ss2_client_2=None,
-              cs_member_name=None, ss1_client_name=None, ss2_client_name=None, ss2_client_2_name=None,
-              remove_added_data=True):
+              cs_new_member=None, ss1_client=None, ss1_client_2=None, ss2_client=None, ss2_client_2=None,
+              cs_member_name=None, ss1_client_name=None, ss1_client_2_name=None, ss2_client_name=None,
+              ss2_client_2_name=None,
+              remove_added_data=True, ss2_ssh_host=None, ss2_ssh_user=None, ss2_ssh_pass=None, ss1_host=None,
+              ss1_server_name=None, ss2_server_name=None, ca_ssh_host=None, ca_ssh_username=None, ca_ssh_password=None):
     """
 
     :param case: MainController object
@@ -113,6 +122,9 @@ def test_test(case, cs_host, cs_username, cs_password,
     :param ss2_client_name: str - security server 2 client name
     :param ss2_client_2_name: str - security server 2 second client name
     :param remove_added_data: bool - True to remove the data after testing; False otherwise
+    :param ca_ssh_host: str - CA ssh host
+    :param ca_ssh_username: str - CA ssh username
+    :param ca_ssh_password: str - CA ssh password
     :return: None
     """
     self = case
@@ -135,6 +147,9 @@ def test_test(case, cs_host, cs_username, cs_password,
         ss_1_client = {'name': ss1_client_name, 'class': ss1_client['class'], 'code': ss1_client['code'],
                        'subsystem_code': ss1_client['subsystem']}
 
+        ss_1_client_2 = {'name': ss1_client_2_name, 'class': ss1_client_2['class'], 'code': ss1_client_2['code'],
+                         'subsystem_code': ss1_client_2['subsystem']}
+
         ss_2_client = {'name': ss2_client_name, 'class': ss2_client['class'], 'code': ss2_client['code'],
                        'subsystem_code': ss2_client['subsystem']}
 
@@ -153,8 +168,10 @@ def test_test(case, cs_host, cs_username, cs_password,
             # Log in to Central Server
             login(self, cs_host, cs_username, cs_password)
 
-            # Add member to Central Server
+            # Add members to Central Server
             add_member_to_cs(self, cs_member)
+            popups.close_all_open_dialogs(self)
+            add_member_to_cs(self, ss_1_client_2)
 
             # TEST PLAN 2.2.1-2 add the new member''s subsystem as a client to Security Server 1
             self.log('2.2.1-2 add the new member''s subsystem as a client to Security Server 1')
@@ -163,7 +180,20 @@ def test_test(case, cs_host, cs_username, cs_password,
 
             self.log('Wait {0} seconds for the change'.format(sync_timeout))
             time.sleep(sync_timeout)
+            '''Add client to Security Server 1'''
+            add_client_to_ss(self, ss_1_client_2, retry_interval=sync_retry, retry_timeout=sync_timeout,
+                             wait_input=wait_input, step='2.2.1-2: ')
+            self.driver.get(sec_1_host)
+            '''Certifiy added client'''
+            client_certification_2_1_3.test_generate_csr_and_import_cert(client_code=ss_1_client_2['code'],
+                                                                         client_class=ss_1_client_2['class'])(self)
+            login_with_logout(self, cs_host, cs_username, cs_password)
+            '''Add subsystem to member'''
+            add_sub_as_client_to_member(self, self.config.get('ss1.server_name'), ss_1_client_2, wait_input=wait_input)
+            '''Approve requests'''
+            approve_requests(self, cancel_confirmation=True)
 
+            login(self, sec_1_host, sec_1_username, sec_1_password)
             # Add client to Security Server 1
             add_client_to_ss(self, ss_1_client, retry_interval=sync_retry, retry_timeout=sync_timeout,
                              wait_input=wait_input, step='2.2.1-2: ')
@@ -172,7 +202,8 @@ def test_test(case, cs_host, cs_username, cs_password,
             self.log('2.2.1-3 certify the new member in Security Server 1')
             self.driver.get(sec_1_host)
             # Create signing certificate using helper scenario 2.1.3
-            client_certification_2_1_3.test_generate_csr_and_import_cert(client_code=ss_1_client['code'], client_class=ss_1_client['class'])(self)
+            client_certification_2_1_3.test_generate_csr_and_import_cert(client_code=ss_1_client['code'],
+                                                                         client_class=ss_1_client['class'])(self)
 
             # TEST PLAN 2.2.1-4 add a registration request for the newly added subsystem in Central Server
             self.log('2.2.1-4 add a registration request for the newly added subsystem in Central Server')
@@ -187,6 +218,23 @@ def test_test(case, cs_host, cs_username, cs_password,
             self.log('2.2.1-5 approve the registration requests')
             # Approve registration requests
             approve_requests(self, '2.2.1-5 ', cancel_confirmation=True)
+            self.reload_webdriver(url=cs_host, username=cs_username, password=cs_password)
+
+            '''MEMBER_39 waiting registration request is revoked'''
+            self.log('MEMBER_39 waiting registration request is revoked')
+            '''Make copy of ss1client to make another client, which gets revoked'''
+            revoke_client = ss_1_client.copy()
+            '''Replace subsystem information'''
+            revoke_client['subsystem'] = 'revoke'
+            revoke_client['subsystem_code'] = 'revoke'
+            '''Add new client to member'''
+            add_sub_as_client_to_member(self, self.config.get('ss1.server_name'), revoke_client, wait_input=wait_input,
+                                        check_request=False)
+            '''Revoke clients request'''
+            revoke_requests(self, try_cancel=True)
+            popups.close_all_open_dialogs(self)
+            '''Remove added client'''
+            remove_client_subsystem(self, revoke_client)
 
             # TEST PLAN 2.2.1-6 add a new subsystem as a client to Security Server 2
             self.log('2.2.1-6 add a new subsystem as a client to Security Server 2')
@@ -194,15 +242,25 @@ def test_test(case, cs_host, cs_username, cs_password,
             # Log in to Security Server 2
             login(self, sec_2_host, sec_2_username, sec_2_password)
 
-            # Add client to Security Server 2
-            add_client_to_ss_by_hand(self, ss_2_client)
+            '''Add client to Security Server 2'''
+            add_client_to_ss_by_hand(self, ss_2_client, ssh_host=ss2_ssh_host,
+                                     ssh_user=ss2_ssh_user, ssh_pass=ss2_ssh_pass)
+
+            '''Create client with different code for testing errors'''
+            fail_client = ss_2_client.copy()
+            fail_client['code'] = 'asd123'
+
+            '''MEMBER_48 4a. sending of the registration request failed'''
+            add_client_to_ss_by_hand(self, fail_client, check_send_errors=True, ssh_host=ss2_ssh_host,
+                                     ssh_user=ss2_ssh_user, ssh_pass=ss2_ssh_pass, ss_host=ss1_host)
 
             # TEST PLAN 2.2.1-7 certify the new member in Security Server 2
             self.log('2.2.1-7 certify the new member in Security Server 2')
 
             login_with_logout(self, sec_2_host, sec_2_username, sec_2_password)
             # Create signing certificate for the client using helper scenario 2.1.3
-            client_certification_2_1_3.test_generate_csr_and_import_cert(client_code=ss_2_client['code'], client_class=ss_2_client['class'])(self)
+            client_certification_2_1_3.test_generate_csr_and_import_cert(client_code=ss_2_client['code'],
+                                                                         client_class=ss_2_client['class'])(self)
 
             # TEST PLAN 2.2.1-8 add a registration request for the newly added subsystem (SS2) in Central Server
             self.log('2.2.1-8 add a registration request for the newly added subsystem (SS2) in Central Server')
@@ -305,7 +363,7 @@ def test_test(case, cs_host, cs_username, cs_password,
                     remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_username, sec_1_password,
                                 sec_2_host, sec_2_username, sec_2_password,
                                 cs_member=cs_member, ss_1_client=ss_1_client, ss_2_client=ss_2_client,
-                                ss_2_client_2=ss_2_client_2)
+                                ss_2_client_2=ss_2_client_2, ca_ssh_host=ca_ssh_host, ca_ssh_username=ca_ssh_username, ca_ssh_password=ca_ssh_password)
                 except:
                     self.log('2.2.1 Client deletion FAILED')
             # If we got an error previously, raise an exception
@@ -381,12 +439,12 @@ def add_client_to_ss(self, client, retry_interval=0, retry_timeout=0, wait_input
 
             table = self.wait_until_visible(type=By.ID, element=clients_table_vm.GLOBAL_CLIENTS_TABLE_ID)
             self.wait_jquery()
-            time.sleep(3)
+
             self.log(step + 'Searching for client row')
 
             # Try to get the row associated with the client. If not found, we'll get an exception.
             member_row = members_table.get_row_by_columns(table, [client['name'], client['class'], client['code']])
-            time.sleep(wait_input)
+
             self.wait_jquery()
             member_row.click()
             # If we got here, client was found
@@ -404,32 +462,28 @@ def add_client_to_ss(self, client, retry_interval=0, retry_timeout=0, wait_input
 
     # Click "OK"
     self.wait_jquery()
-    time.sleep(10)
+
     self.log(step + 'confirm popup')
     self.wait_until_visible(type=By.XPATH, element=clients_table_vm.SELECT_CLIENT_POPUP_OK_BTN_XPATH).click()
     self.wait_jquery()
 
     # Enter data to form
-    time.sleep(5)
     subsystem_input = self.wait_until_visible(type=By.XPATH,
                                               element=popups.ADD_CLIENT_POPUP_SUBSYSTEM_CODE_AREA_XPATH)
     self.wait_jquery()
-    time.sleep(5)
 
     self.input(subsystem_input, client['subsystem_code'], click=False)
 
     # Try to add client
-    time.sleep(5)
     self.wait_until_visible(type=By.XPATH, element=popups.ADD_CLIENT_POPUP_OK_BTN_XPATH).click()
     self.wait_jquery()
-
-    time.sleep(10)
 
     # Confirm the popup that should have opened
     warning = self.wait_until_visible(type=By.ID, element=popups.CONFIRM_POPUP_TEXT_AREA_ID).text
     self.wait_jquery()
 
-    # Check if we got a warning that we were expecting
+    '''MEMBER_48 2a. When adding client with not existing subsystem, a warning is shown'''
+    self.log('MEMBER_48 2a. When adding client with not existing subsystem, a warning is shown')
     self.is_true(warning in get_expected_warning_messages(client), test_name,
                  step + 'WARNING NOT CORRECT: {0}'.format(
                      warning),
@@ -450,62 +504,98 @@ def add_client_to_ss(self, client, retry_interval=0, retry_timeout=0, wait_input
                       step + 'EXPECTED STATUS TITLE: {0}'.format('registration in progress')
                       )
     except:
-        time.sleep(30)
+        time.sleep(5)
         pass
 
 
-def add_client_to_ss_by_hand(self, client):
+def add_client_to_ss_by_hand(self, client, check_send_errors=False, ss_host=None, ssh_host=None,
+                             ssh_user=None, ssh_pass=None):
     """
     Adds a client to security server without searching for it in lists.
     :param self: MainController object
     :param client: dict - client data
     :return: None
     """
-
-    # Start adding the client
-    self.log('2.2.1-6: Click on "ADD CLIENT" button')
+    '''MEMBER_47 1. Start adding the client'''
+    self.log('MEMBER_47 1. Start adding the client')
     self.wait_until_visible(type=By.ID, element=clients_table_vm.ADD_CLIENT_BTN_ID).click()
 
-    # Set the class, code, subsystem
-    self.log('2.2.1-6: Select ' + client['class'] + ' from  "MEMBER CLASS" dropdown')
+    '''MEMBER_47 2. Set the class, code, subsystem'''
+    client_class = client['class']
+    self.log('MEMBER_47 2. Set the class to {0}'.format(client_class))
     select = Select(self.wait_until_visible(type=By.ID, element=popups.ADD_CLIENT_POPUP_MEMBER_CLASS_DROPDOWN_ID))
-    select.select_by_visible_text(client['class'])
+    select.select_by_visible_text(client_class)
 
-    self.log('2.2.1-6: Enter ' + client['code'] + ' to  "MEMBER CODE AREA" dropdown')
+    client_code = client['code']
+    self.log('MEMBER_47 2. Set the member code to {0}'.format(client_code))
     input_code = self.wait_until_visible(type=By.ID, element=popups.ADD_CLIENT_POPUP_MEMBER_CODE_AREA_ID)
-    self.input(input_code, client['code'])
+    self.input(input_code, client_code)
 
-    self.log('2.2.1-6: Enter ' + client['subsystem_code'] + ' to  "SUBSYSTEM CODE AREA" dropdown')
+    client_subsystem_code = client['subsystem_code']
+    self.log('MEMBER_47 2. Set the subsystem code to {0}'.format(client_subsystem_code))
     subsystem_input = self.wait_until_visible(type=By.XPATH,
                                               element=popups.ADD_CLIENT_POPUP_SUBSYSTEM_CODE_AREA_XPATH)
-    self.input(subsystem_input, client['subsystem_code'])
+    self.input(subsystem_input, client_subsystem_code)
 
     self.wait_jquery()
+    if ssh_host is not None:
+        log_checker = auditchecker.AuditChecker(ssh_host, ssh_user, ssh_pass)
+        current_log_lines = log_checker.get_line_count()
 
-    # Try to save the client
-    self.log('2.2.1-6: click "OK"')
+    '''Try to save the client'''
+    self.log('Click "OK"')
     self.wait_until_visible(type=By.XPATH, element=popups.ADD_CLIENT_POPUP_OK_BTN_XPATH).click()
     self.wait_jquery()
-    time.sleep(10)
 
-    # Check if we got a warning that we were expecting.
+    if check_send_errors:
+        self.log('MEMBER_48 4a. sending of the registration request failed')
+        hosts_replacement = 'asd.asd'
+        try:
+            self.ssh_client = ssh_client.SSHClient(ssh_host, ssh_user, ssh_pass)
+            self.ssh_client.exec_command('sed -i -e "s/{0}/{1}/g" {2}'.format(ss_host, hosts_replacement,
+                                                                              '/etc/hosts'), sudo=True)
+            '''Continue warning popup when visible'''
+            self.wait_until_visible(type=By.XPATH, element=popups.WARNING_POPUP_CONTINUE_XPATH).click()
+            self.wait_jquery()
+            popups.confirm_dialog_click(self)
+
+            self.log('MEMBER_48 4a.1 System displays the error message: '
+                     '"Failed to send registration request: X", where X is description of the error')
+            '''Wait until error message is visible'''
+            error_msg = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
+            '''Check if error message is as expected'''
+            self.is_true(error_msg.startswith(messages.REGISTRATION_REQUEST_SENDING_FAILED))
+
+            self.log('MEMBER_48 4a.2 System logs the event "Register client failed" to the audit log')
+            '''Check if "Register client failed" is in audit log'''
+            logs_found = log_checker.check_log(log_constants.REGISTER_CLIENT_FAILED,
+                                               from_line=current_log_lines + 1)
+            self.is_true(logs_found, msg='"Register client failed" event not found in log"')
+        except:
+            self.log('Failure when checking client registration errors')
+            assert False
+        finally:
+            '''Restoring hosts file'''
+            self.ssh_client.exec_command(
+                'sed -i -e "s/{0}/{1}/g" {2}'.format(hosts_replacement, ss_host, '/etc/hosts'),
+                sudo=True)
+            '''Removing added client'''
+            remove_client(self=self, client=client)
+            return
+
     warning = self.wait_until_visible(type=By.ID, element=popups.CONFIRM_POPUP_TEXT_AREA_ID).text
-    self.is_equal(warning in get_expected_warning_messages(client), True, test_name,
-                  '2.2.1-6: CHECKING FOR WARNING MESSAGE FAILED',
-                  '2.2.1-6: CHECK FOR WARNING MESSAGE')
+    self.is_true(warning in get_expected_warning_messages(client))
 
-    # Confirm adding the client.
+    '''Confirm adding the client.'''
     self.log('2.2.1-6: Confirm message')
     popups.confirm_dialog_click(self)
-    time.sleep(2)
     self.wait_jquery()
-    time.sleep(10)
 
-    # Try to find the client in client list and check the status
+    '''Try to find the client in client list and check the status'''
     self.log('2.2.1-6: ADDING CLIENT TO SECURITY SERVER STATUS TEST')
     status_title = added_client_row(self, client).find_element_by_class_name('status').get_attribute('title')
     self.log('Status title: {0}'.format(status_title))
-    if status_title.lower() == 'saved':
+    if status_title.lower() == clients_table_vm.CLIENT_STATUS_SAVED:
         # Something is wrong, status should be "registration in progress". Set the exception to be raised
         # later but go on with the current test.
         self.log('2.2.1-6 WARNING: status should be "registration in progress" but is "saved"')
@@ -518,8 +608,15 @@ def add_client_to_ss_by_hand(self, client):
                   '2.2.1-6: EXPECTED MESSAGE: {0}'.format('registration in progress')
                   )
 
+    if log_checker is not None:
+        '''MEMBER_48 7. System logs the event "Register client" to the audit log'''
+        self.log('MEMBER_48 7. System logs the event "Register client" to the audit log')
+        logs_found = log_checker.check_log(log_constants.REGISTER_CLIENT,
+                                           from_line=current_log_lines + 1)
+        self.is_true(logs_found, msg='"Register client" event not found in log"')
 
-def add_sub_as_client_to_member(self, system_code, client, wait_input=2, step='x.x.x-y: '):
+
+def add_sub_as_client_to_member(self, system_code, client, wait_input=2, step='', check_request=True):
     """
     Adds a subsystem to member and as a client.
     :param self: MainController object
@@ -586,10 +683,9 @@ def add_sub_as_client_to_member(self, system_code, client, wait_input=2, step='x
 
     self.wait_until_visible(type=By.ID, element=members_table.SELECT_SECURITY_SERVER_BTN_ID).click()
     self.wait_jquery()
-    time.sleep(5)
+
     self.wait_until_visible(type=By.ID, element=members_table.CLIENT_REGISTRATION_SUBMIT_BTN_ID).click()
     self.wait_jquery()
-    time.sleep(15)
 
     # Reload main page
     self.driver.get(self.url)
@@ -601,15 +697,16 @@ def add_sub_as_client_to_member(self, system_code, client, wait_input=2, step='x
     # Get the table and wait for it to load
     requests_table = self.wait_until_visible(type=By.ID, element=members_table.MANAGEMENT_REQUEST_TABLE_ID)
     self.wait_jquery()
-    time.sleep(5)
 
     # Check if last requests have been submitted for approval
-    rows = requests_table.find_element_by_tag_name('tbody').find_elements_by_tag_name('tr')[0:1]
-    for row in rows:
-        self.is_true('SUBMITTED FOR APPROVAL' in row.text, test_name,
-                     step + 'CHECKING FOR "SUBMITTED FOR APPROVAL" FROM THE LATEST REQUEST ROW FAILED"',
-                     step + 'Look "SUBMITTED FOR APPROVAL" from the latest requests row: {0}'.format(
-                         'SUBMITTED FOR APPROVAL' in row.text))
+    if check_request:
+        rows = requests_table.find_element_by_tag_name('tbody').find_elements_by_tag_name('tr')[0:1]
+        for row in rows:
+            self.is_true(keyscertificates_constants.SUBMITTED_FOR_APPROVAL_STATE in row.text, test_name,
+                         step + 'CHECKING FOR "{0}" FROM THE LATEST REQUEST ROW FAILED"'.format(
+                             keyscertificates_constants.SUBMITTED_FOR_APPROVAL_STATE),
+                         step + 'Look "{0}" from the latest requests row: {0}'.format(
+                             keyscertificates_constants.SUBMITTED_FOR_APPROVAL_STATE in row.text))
 
 
 def add_subsystem_to_server_client(self, server_code, client, wait_input=3):
@@ -668,7 +765,7 @@ def add_subsystem_to_server_client(self, server_code, client, wait_input=3):
     self.wait_jquery()
 
 
-def approve_requests(self, step, cancel_confirmation=False):
+def approve_requests(self, step='', cancel_confirmation=False):
     """
     Approve the management requests.
     :param self: MainController object
@@ -685,11 +782,11 @@ def approve_requests(self, step, cancel_confirmation=False):
     self.log(step + 'Open management requests table')
     self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.MANAGEMENT_REQUESTS_CSS).click()
     self.wait_jquery()
-    time.sleep(10)
 
     # Find all requests that are submitted for approval
     try:
-        td = self.by_xpath(members_table.get_requests_row_by_td_text('SUBMITTED FOR APPROVAL'))
+        td = self.by_xpath(
+            members_table.get_requests_row_by_td_text(keyscertificates_constants.SUBMITTED_FOR_APPROVAL_STATE))
     except:
         td = None
 
@@ -699,7 +796,6 @@ def approve_requests(self, step, cancel_confirmation=False):
             self.log(step + 'Open management request details')
             self.wait_until_visible(type=By.ID, element=members_table.MANAGEMENT_REQUEST_DETAILS_BTN_ID).click()
             self.wait_jquery()
-            time.sleep(3)
 
             # Approve the requests
             '''MEMBER_37 request approval confirmation is cancelled'''
@@ -720,8 +816,8 @@ def approve_requests(self, step, cancel_confirmation=False):
 
             # Find the next request waiting to be approved
             try:
-                time.sleep(5)
-                td = self.by_xpath(members_table.get_requests_row_by_td_text('SUBMITTED FOR APPROVAL'))
+                td = self.by_xpath(
+                    members_table.get_requests_row_by_td_text(keyscertificates_constants.SUBMITTED_FOR_APPROVAL_STATE))
             except:
                 td = None
     except:
@@ -745,7 +841,7 @@ def check_expected_result_cs(self, ss_1_client, ss_2_client, ss_2_client_2, chec
     self.wait_jquery()
     table = self.wait_until_visible(type=By.ID, element=members_table.MEMBERS_TABLE_ID)
     self.wait_jquery()
-    time.sleep(5)
+
     client_row = members_table.get_row_by_columns(table, [ss_1_client['name'], ss_1_client['class'],
                                                           ss_1_client['code']])
     client_row.click()
@@ -753,13 +849,12 @@ def check_expected_result_cs(self, ss_1_client, ss_2_client, ss_2_client_2, chec
     # Open the client details and subsystem tab
     self.wait_until_visible(type=By.ID, element=members_table.MEMBERS_DETATILS_BTN_ID).click()
     self.wait_jquery()
-    time.sleep(5)
+
     self.wait_until_visible(type=By.XPATH, element=members_table.SUBSYSTEM_TAB).click()
     self.wait_jquery()
-    time.sleep(5)
+
     table = self.wait_until_visible(type=By.XPATH, element=members_table.SUBSYSTEM_TABLE_XPATH)
     self.wait_jquery()
-    time.sleep(3)
 
     # Check if security server 1 client subsystem exists
     self.is_not_none(
@@ -770,7 +865,6 @@ def check_expected_result_cs(self, ss_1_client, ss_2_client, ss_2_client_2, chec
 
     table = self.wait_until_visible(type=By.XPATH, element=members_table.SUBSYSTEM_TABLE_XPATH)
     self.wait_jquery()
-    time.sleep(3)
 
     # Check if security server 2 client subsystem exists
     self.is_not_none(
@@ -787,7 +881,6 @@ def check_expected_result_cs(self, ss_1_client, ss_2_client, ss_2_client_2, chec
     open_servers_clients(self, self.config.get('ss1.server_name'))
     clients_table = self.wait_until_visible(type=By.ID, element=cs_security_servers.SECURITY_SERVER_CLIENTS_TABLE_ID)
     self.wait_jquery()
-    time.sleep(3)
 
     # Check if clients exists
     self.is_not_none(members_table.get_row_by_columns(clients_table,
@@ -804,7 +897,7 @@ def check_expected_result_cs(self, ss_1_client, ss_2_client, ss_2_client_2, chec
     open_servers_clients(self, self.config.get('ss2.server_name'))
     clients_table = self.wait_until_visible(type=By.ID, element=cs_security_servers.SECURITY_SERVER_CLIENTS_TABLE_ID)
     self.wait_jquery()
-    time.sleep(3)
+
     self.is_not_none(members_table.get_row_by_columns(clients_table,
                                                       [ss_2_client['name'], ss_2_client['class'],
                                                        ss_2_client['code'],
@@ -1026,9 +1119,11 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
                 sec_1_ssh_host, sec_1_ssh_username, sec_1_ssh_password,
                 sec_2_host, sec_2_username, sec_2_password,
                 sec_2_ssh_host, sec_2_ssh_username, sec_2_ssh_password,
-                cs_member, ss_1_client, ss_2_client, ss_2_client_2):
+                cs_member, ss_1_client, ss_1_client_2, ss_2_client, ss_2_client_2,
+                ca_ssh_host = None, ca_ssh_username = None, ca_ssh_password = None):
     '''
     Removes the data that was created during tests.
+    :param ss_1_client_2: dict- security server 1 second client data
     :param sec_2_ssh_password: str - security server 2 ssh password
     :param sec_2_ssh_username: str - security server 2 ssh username
     :param sec_2_ssh_host: str - security server 2 ssh host
@@ -1049,6 +1144,9 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
     :param ss_1_client: dict - security server 1 new client data
     :param ss_2_client: dict - security server 2 new client data
     :param ss_2_client_2: dict - security server 2 second client data
+    :param ca_ssh_host: str|None - CA ssh host, used for revoking certificates in CA
+    :param ca_ssh_username: str|None - CA ssh username, used for revoking certificates in CA
+    :param ca_ssh_password: str|None - CA ssh password, used for revoking certificates in CA
     :return: None
     '''
     self.log('2.2.1-del Removing test data')
@@ -1059,6 +1157,7 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
 
     self.log('2.2.1-del removing member from central server')
     safe(self, remove_member, cs_member, '2.2.1-del Removing member failed')
+    safe(self, remove_member, ss_1_client_2, 'Removing member failed')
 
     # Reload the CS homepage
     self.reset_webdriver(cs_host, cs_username, cs_password)
@@ -1078,6 +1177,35 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
     login(self, sec_1_host, sec_1_username, sec_1_password)
     '''Try to remove client with canceling deletion and confirming certificate removal popup from ss1'''
     self.driver.get(self.url)
+    safe(self, remove_client_keep_cert, ss_1_client_2, 'Removing client from security server 1 failed')
+
+    safe(self, remove_certificate, ss_1_client_2, 'Removing certificate from security server 1 failed')
+
+    # Connect to CA over SSH
+    try:
+        ca_ssh_client = ssh_client.SSHClient(host=ca_ssh_host, username=ca_ssh_username, password=ca_ssh_password)
+    except:
+        ca_ssh_client = None
+
+    '''Revoke the certificates in CA'''
+    self.log('Revoking security server 1 added client certificates in CA')
+    self.log('Open "Keys and Certificates tab"')
+    try:
+        self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.KEYSANDCERTIFICATES_BTN_CSS).click()
+        self.wait_jquery()
+
+        # Wait for the generated key row to appear
+        self.wait_until_visible(type=By.XPATH,
+                                element=keyscertificates_constants.get_generated_key_row_xpath(ss_1_client['code'],
+                                                                                               ss_1_client['class']))
+        certs_to_revoke = get_certificates_to_revoke(self, ss_1_client)
+        if ssh_client is not None:
+            self.log('Revoking certificates in CA')
+            client_certification_2_1_3.revoke_certs(ca_ssh_client, certs_to_revoke)
+    except:
+        self.log('Failed to revoke security server 1 added client certificates')
+        traceback.print_exc()
+
     safe(self, remove_client_with_cert_and_cancelling, ss_1_client,
          '2.2.1-del Removing client from security server 1 failed')
     self.log('Check if log contains delete client event')
@@ -1086,8 +1214,14 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
                  msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
                      log_constants.DELETE_CLIENT,
                      log_checker.found_lines))
+
     '''Remove client key'''
-    safe(self, remove_certificate, ss_1_client, '2.2.1-del Removing certificate from security server 1 failed')
+    try:
+        remove_key_and_revoke_certificates(self, ss_1_client, ca_ssh_client)
+    except:
+        self.log('2.2.1-del Removing certificate from security server 1 failed')
+        traceback.print_exc()
+
     self.log('2.2.1-del removing client from security server 1')
 
     '''Logchecker for security server 2'''
@@ -1098,17 +1232,27 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
     self.log('2.2.1-del removing certificate from security server 2')
     login(self, sec_2_host, sec_2_username, sec_2_password)
     '''Try to remove certificate'''
-    error = safe(self, remove_certificate, ss_2_client, '2.2.1-del Removing certificate from security server 2 failed')
+    try:
+        remove_key_and_revoke_certificates(self, ss_2_client, ca_ssh_client)
+    except:
+        self.log('2.2.1-del Removing certificate from security server 2 failed')
+        traceback.print_exc()
+
+    if ca_ssh_client is not None:
+        ca_ssh_client.close()
 
     self.driver.get(self.url)
     '''Try to remove client from security server 2'''
     safe(self, remove_client, ss_2_client, '2.2.1-del Removing client from security server 2 failed')
     '''Check if log contains Delete client event'''
+    log_errors = []
     logs_found = log_checker.check_log(log_constants.DELETE_CLIENT, from_line=current_log_lines + 1)
-    self.is_true(logs_found,
-                 msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
+    if not logs_found:
+        log_error = 'SS2 client 1 delete: some log entries were missing. Expected: "{0}", found: "{1}"'.format(
                      log_constants.DELETE_CLIENT,
-                     log_checker.found_lines))
+                     log_checker.found_lines)
+        self.log(log_error)
+        log_errors.append(log_error)
     current_log_lines = log_checker.get_line_count()
 
     self.driver.get(self.url)
@@ -1116,12 +1260,16 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
     safe(self, remove_client, ss_2_client_2, '2.2.1-del Removing client 2 from security server 2 failed')
     '''Check if log contains delete client event'''
     logs_found = log_checker.check_log(log_constants.DELETE_CLIENT, from_line=current_log_lines + 1)
-    self.is_true(logs_found,
-                 msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
+    if not logs_found:
+        log_error = 'SS2 client 2 delete: some log entries were missing. Expected: "{0}", found: "{1}"'.format(
                      log_constants.DELETE_CLIENT,
-                     log_checker.found_lines))
+                     log_checker.found_lines)
+        self.log(log_error)
+        log_errors.append(log_error)
     login(self, cs_host, cs_username, cs_password)
     safe(self, remove_client_subsystem, ss_2_client_2, '2.2.1-del Removing security server 1 client subsystem failed')
+    if log_errors:
+        self.is_true(False, msg='2.2.1-del Log error count {0}, errors: {1}'.format(len(log_errors), log_errors))
 
 
 def remove_member(self, member):
@@ -1174,7 +1322,17 @@ def remove_client_with_cert_and_cancelling(self, client):
     remove_client(self, client, delete_cert=True, cancel_deletion=True)
 
 
-def remove_client(self, client, delete_cert=False, cancel_deletion=False):
+def remove_client_keep_cert(self, client):
+    """
+    Wrapper function for remove_client(), removes client without certificate
+    :param self: Maincontroller object
+    :param client: dict - client data
+    :return:
+    """
+    remove_client(self, client, cancel_deletion=True, deny_cert_deletion=True)
+
+
+def remove_client(self, client, delete_cert=False, cancel_deletion=False, deny_cert_deletion=False):
     """
     Removes a client.
     :param cancel_deletion: bool - cancel delete confirmation popup before confirming
@@ -1225,9 +1383,14 @@ def remove_client(self, client, delete_cert=False, cancel_deletion=False):
                 expected_next_tr = self.by_xpath(keyscertificates_constants.get_generated_key_row_cert_xpath(
                     client['code'],
                     client['class']))
-                '''Check if tr has not cert-active class, 
+                '''Check if tr has not cert-active class,
                 which means that the key has no cert and deletion was successful'''
                 self.is_true('cert-active' not in expected_next_tr.get_attribute('class').split(' '))
+            elif deny_cert_deletion:
+                '''MEMBER_53 5a. Deny certificate deletion'''
+                self.log('MEMBER_53 5a. Deny certificate deletion')
+                self.wait_until_visible(type=By.XPATH, element=popups.YESNO_POPUP_XPATH)
+                self.by_xpath(popups.YESNO_POPUP_NO_BTN_XPATH).click()
         except:
             '''Didn't get another dialog. This is not a problem.'''
             pass
@@ -1291,7 +1454,6 @@ def remove_client_subsystem(self, client):
 
     table = self.wait_until_visible(type=By.XPATH, element=members_table.SUBSYSTEM_TABLE_XPATH)
     self.wait_jquery()
-    time.sleep(3)
 
     # Try to find leftover subsystem (without server ID) in the table.
     subsys_row = members_table.get_row_by_columns(table, [client['subsystem_code']])
@@ -1339,43 +1501,164 @@ def remove_certificate(self, client):
     except:
         pass
 
-
-def revoke_requests(self):
+def get_certificates_to_revoke(self, client):
     '''
-    Revoke management requests that are waiting for approval.
+    Gets a list of the client's certificates that need to be revoked.
+    :param self: MainController object
+    :param client: dict - client data
+    :return: [str] - list of certificate filenames to revoke
+    '''
+    # Initialize the list of certificates to revoke. Because we are deleting the key, we need to revoke all certificates
+    # under it.
+    certs_to_revoke = []
+
+    # Try to get the certificates under the generated keys
+    key_num = 1
+    newcerts_base = './newcerts'
+    while True:
+        try:
+            key_friendly_name_xpath = keyscertificates_constants.get_generated_key_row_active_cert_friendly_name_xpath(
+                                        client['code'], client['class'], key_num)
+            key_name_element = self.by_xpath(key_friendly_name_xpath)
+            element_text = key_name_element.text.strip()
+            # Split the element by space and get the last part of it as this is the key id as a decimal
+            cert_id = int(element_text.rsplit(' ', 1)[-1])
+            cert_hex = '{0:02x}'.format(cert_id).upper()
+            # Key filenames are of even length (zero-padded) so we'll generate one like that
+            if len(cert_hex) % 2 == 1:
+                cert_filename = '{0}/0{1}.pem'.format(newcerts_base, cert_hex)
+            else:
+                cert_filename = '{0}/{1}.pem'.format(newcerts_base, cert_hex)
+            certs_to_revoke.append(cert_filename)
+        except:
+            # Exit loop if element not found (= no certificates listed)
+            break
+        key_num += 1
+
+    return certs_to_revoke
+
+
+def remove_key_and_revoke_certificates(self, client, ssh_client = None):
+    '''
+    Removes a certificate from a client and revokes the associated certificate in the CA.
+    :param self: MainController object
+    :param client: dict - client data
+    :param ssh_client: SSHClient object connected to CA | None to disable
+    :return: None
+    '''
+    self.log('REMOVE AND REVOKE CERTIFICATE')
+    self.log('Open "Keys and Certificates tab"')
+    self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.KEYSANDCERTIFICATES_BTN_CSS).click()
+    self.wait_jquery()
+
+    # Wait for the generated key row to appear
+    generated_key_row = self.wait_until_visible(type=By.XPATH,
+                            element=keyscertificates_constants.get_generated_key_row_xpath(client['code'],
+                                                                                           client['class']))
+    certs_to_revoke = get_certificates_to_revoke(self, client)
+
+    print 'certs to revoke', certs_to_revoke
+
+    # Click the key row
+    self.log('Click on generated key row')
+    generated_key_row.click()
+    self.wait_jquery()
+
+    # Click "Delete"
+    self.wait_until_visible(type=By.ID, element=keyscertificates_constants.DELETE_BTN_ID).click()
+    self.wait_jquery()
+
+    # Confirm the removal
+    popups.confirm_dialog_click(self)
+
+    # Check if table doesn't contain deleted key
+    try:
+        self.by_xpath(keyscertificates_constants.get_generated_key_row_xpath(client['code'], client['class']))
+        assert False
+    except:
+        pass
+
+    if ssh_client is not None:
+        self.log('Revoking certificates in CA')
+        client_certification_2_1_3.revoke_certs(ssh_client, certs_to_revoke)
+
+
+def revoke_requests(self, try_cancel=False, auth=False):
+    '''
+    Revoke management requests that are in waiting state.
+    :param try_cancel:  bool|False - cancels revoke before confirming
     :param self: MainController object
     :return: None
     '''
+    '''Client/cert successful revoke message'''
+    success_message = messages.AUTH_REQUEST_REVOKE_SUCCESSFUL_NOTICE if auth \
+        else messages.REQUEST_REVOKE_SUCCESSFUL_NOTICE
+    '''Client/cert delete request selector'''
+    deletion_request_selector = cs_security_servers.MANAGEMENT_REQUESTS_CERT_DELETION_XPATH if auth \
+        else cs_security_servers.MANAGEMENT_REQUESTS_CLIENT_DELETION_XPATH
+    '''Client/cert details dialog selector'''
+    details_dialog_selector = cs_security_servers.CERT_DELETION_REQUEST_DETAILS_DIALOG_ID if auth \
+        else cs_security_servers.CLIENT_DELETION_REQUEST_DETAILS_DIALOG_ID
+    '''Client/cert details dialog comment selector'''
+    delete_request_comment = cs_security_servers.REVOKE_CERT_DELETE_REQUEST_COMMENT if auth \
+        else cs_security_servers.REVOKE_CLIENT_DELETE_REQUEST_COMMENT
+    '''Client/cert registration request selector'''
+    reg_request_selector = cs_security_servers.REVOKE_CERT_MANAGEMENT_REQUEST_BTN_XPATH if auth \
+        else cs_security_servers.REVOKE_CLIENT_MANAGEMENT_REQUEST_BTN_XPATH
     self.log('REVOKING REQUESTS')
     self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.MANAGEMENT_REQUESTS_CSS).click()
     self.wait_jquery()
-    time.sleep(5)
 
-    # Find all requests and revoke them
-    try:
-        td = self.by_xpath(members_table.get_requests_row_by_td_text('SUBMITTED FOR APPROVAL'))
-    except:
-        td = None
+    td = self.by_xpath(members_table.get_requests_row_by_td_text(keyscertificates_constants.WAITING_STATE))
+    '''Waiting request id'''
+    request_id = td.find_elements_by_tag_name('td')[0].text
+    self.log('Click on waiting request')
+    td.click()
+    self.log('Open request details')
+    self.wait_until_visible(type=By.ID, element=members_table.MANAGEMENT_REQUEST_DETAILS_BTN_ID).click()
+    self.wait_jquery()
 
-    try:
-        while td is not None:
-            td.click()
-            self.wait_until_visible(type=By.ID, element=members_table.MANAGEMENT_REQUEST_DETAILS_BTN_ID).click()
-            self.wait_jquery()
-            time.sleep(1)
-            self.log('Revoke requests')
-            self.wait_until_visible(type=By.XPATH, element=members_table.DECLINE_REQUEST_BTN_XPATH).click()
-            self.wait_jquery()
+    self.log('Click on revoke button')
+    self.wait_until_visible(type=By.XPATH,
+                            element=reg_request_selector).click()
+    self.wait_jquery()
 
-            # Confirm
-            popups.confirm_dialog_click(self)
-            time.sleep(5)
-            try:
-                td = self.by_xpath(members_table.get_requests_row_by_td_text('SUBMITTED FOR APPROVAL'))
-            except:
-                td = None
-    except:
-        traceback.print_exc()
+    '''MEMBER_39 3a request revoking is canceled'''
+    if try_cancel:
+        self.log('MEMBER_39 3a request revoking is canceled')
+        self.wait_until_visible(type=By.XPATH, element=popups.CONFIRM_POPUP_CANCEL_BTN_XPATH).click()
+        self.wait_jquery()
+        self.log('Click on revoke button again')
+        self.wait_until_visible(type=By.XPATH,
+                                element=reg_request_selector).click()
+        self.wait_jquery()
+
+    self.log('Confirm request revokation')
+    popups.confirm_dialog_click(self)
+    self.wait_jquery()
+    self.log('Check revocation notice message')
+    notice_msg = messages.get_notice_message(self)
+    self.is_equal(success_message.format(request_id), notice_msg)
+    '''MEMBER_39 5. System sets the state of registration request to revoked'''
+    self.log('Find first revoked request id in table')
+    first_revoked_request_id = self.by_xpath(members_table.get_requests_row_by_td_text(
+        keyscertificates_constants.REVOKED_STATE)).find_element_by_tag_name('td').text
+    self.log('Check if request id is same as the one revoked')
+    self.is_equal(request_id, first_revoked_request_id)
+    '''MEMBER_39 5. System creates a deletion request with revoked request info'''
+    self.log('Find first deletion request in table')
+    self.by_xpath(deletion_request_selector).click()
+    self.log('Open deletion request details')
+    self.wait_until_visible(type=By.ID, element=members_table.MANAGEMENT_REQUEST_DETAILS_BTN_ID).click()
+
+    '''Request details dialog element'''
+    client_deletion_details_dialog = self.wait_until_visible(type=By.ID, element=details_dialog_selector)
+
+    '''Request details comment field text'''
+    comment = client_deletion_details_dialog.find_element_by_class_name(
+        cs_security_servers.CLIENT_DELETION_REQUEST_DETAILS_DIALOG_COMMENTS_INPUT_CLASS).text
+    self.log('Check if request deletion comment contains information about request revocation')
+    self.is_equal(comment, delete_request_comment.format(request_id), msg='Deletion comment not correct')
 
 
 def safe(self, func, member, message):
@@ -1395,4 +1678,4 @@ def safe(self, func, member, message):
         if self.debug:
             self.log('Got an exception in safe(): {0}'.format(message))
         traceback.print_exc()
-        raise AssertionError
+        #raise AssertionError

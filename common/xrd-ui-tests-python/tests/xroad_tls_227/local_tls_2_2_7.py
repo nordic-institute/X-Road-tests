@@ -5,7 +5,7 @@ import time
 from requests.exceptions import SSLError
 from selenium.webdriver.common.by import By
 
-from helpers import xroad, soaptestclient, auditchecker
+from helpers import xroad, soaptestclient, auditchecker, ssh_client, ssh_server_actions
 from tests.xroad_configure_service_222 import configure_service_2_2_2
 from view_models import popups, clients_table_vm, sidebar, ss_system_parameters, messages, log_constants
 
@@ -248,14 +248,80 @@ def test_tls(case, client, provider):
         # Click "System Parameters" in sidebar
         self.by_css(sidebar.SYSTEM_PARAMETERS_BTN_CSS).click()
 
-        # Click "Generate New TLS Key" button
-        self.wait_until_visible(ss_system_parameters.GENERATE_INTERNAL_TLS_KEY_BUTTON_ID, type=By.ID).click()
+        '''Get auditcheker instance for ss1'''
+        log_checker = auditchecker.AuditChecker(host=ss1_ssh_host, username=ss1_ssh_user, password=ss1_ssh_pass)
+        '''Get current audit.log line count'''
+        current_log_lines = log_checker.get_line_count()
 
-        # A confirmation dialog should open. Confirm the question.
+        '''Get TLS hash before generating process'''
+        tls_hash_before_generating = self.wait_until_visible(type=By.ID,
+                                                             element=ss_system_parameters.INTERNAL_TLS_CERT_HASH_ID).text
+        '''Verify "Certificate Details" button'''
+        certificate_details_btn = self.wait_until_visible(self.by_id(ss_system_parameters.CERTIFICATE_DETAILS_BUTTON_ID)).is_enabled()
+        self.is_true(certificate_details_btn,
+                     msg='Certificate Details not enabled')
+
+        '''Click "Generate New TLS Key" button'''
+        self.wait_until_visible(ss_system_parameters.GENERATE_INTERNAL_TLS_KEY_BUTTON_ID, type=By.ID).click()
+        ssh_client = ssh_server_actions.get_client(ss1_ssh_host, ss1_ssh_user, ss1_ssh_pass)
+        '''SS_11 3a Generating TLS key is canceled'''
+        self.log('SS_11 3a Generating TLS key is canceled')
+        self.wait_until_visible(type=By.XPATH, element=popups.CONFIRM_POPUP_CANCEL_BTN_XPATH).click()
+        '''Get TLS hash after canceling generation'''
+        tls_hash_after_canceling = self.wait_until_visible(type=By.ID,
+                                                           element=ss_system_parameters.INTERNAL_TLS_CERT_HASH_ID).text
+        '''Check if TLS hash is same as before after canceling'''
+        self.is_equal(tls_hash_before_generating, tls_hash_after_canceling)
+        '''Click "Generate New TLS Key" button again'''
+        self.wait_until_visible(ss_system_parameters.GENERATE_INTERNAL_TLS_KEY_BUTTON_ID, type=By.ID).click()
+        '''Script which generates TLS key'''
+        cert_gen_script_path = '/usr/share/xroad/scripts/generate_certificate.sh'
+        '''Script new name'''
+        cert_gen_scipt_new_path = cert_gen_script_path + '.backup'
+        '''Rename script'''
+        ssh_server_actions.mv(ssh_client, src=cert_gen_script_path,
+                              destination=cert_gen_scipt_new_path, sudo=True)
+
+        '''A confirmation dialog should open. Confirm the question.'''
         popups.confirm_dialog_click(self)
 
-        # Wait until the TLS certificate has been generated.
+        '''Wait until the TLS certificate has been generated.'''
         self.wait_jquery()
+
+        '''SS_11 4a.1 system failed to generate key error check'''
+        try:
+            self.log('Check if "Certificate generation script not found" error is equal to expected')
+            error_message = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
+            self.is_equal(messages.GENERATE_CERTIFICATE_NOT_FOUND_ERROR.format(cert_gen_script_path), error_message)
+        except:
+            self.log('"Certificate generation script not found" error not present')
+            assert False
+        finally:
+            self.log('Rename generation script back to original')
+            ssh_server_actions.mv(ssh_client, src=cert_gen_scipt_new_path,
+                                  destination=cert_gen_script_path, sudo=True)
+
+        self.wait_until_visible(ss_system_parameters.GENERATE_INTERNAL_TLS_KEY_BUTTON_ID, type=By.ID).click()
+        popups.confirm_dialog_click(self)
+
+        '''Wait until the TLS certificate has been generated.'''
+        self.wait_jquery()
+
+        '''Get TLS hash after confirming generation'''
+        tls_hash_after_confirming = self.wait_until_visible(type=By.ID,
+                                                            element=ss_system_parameters.INTERNAL_TLS_CERT_HASH_ID).text
+        '''Check if TLS hash is not same as before'''
+        self.not_equal(tls_hash_before_generating, tls_hash_after_confirming)
+
+        '''Log message expected to present after changing Service consumer connection type'''
+        expected_log_msg = log_constants.GENERATE_TLS_KEY_AND_CERT
+        '''Checks if expected log message present in log'''
+        logs_found = log_checker.check_log(expected_log_msg,
+                                           from_line=current_log_lines + 1)
+        self.is_true(logs_found,
+                     msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
+                         expected_log_msg,
+                         log_checker.found_lines))
 
         self.log('2.2.7-1 new key has been generated, downloading certificate')
 
@@ -269,15 +335,18 @@ def test_tls(case, client, provider):
         # Check if file exists every 0.5 seconds or until limit has passed.
         start_time = time.time()
         while True:
-            if os.path.isfile(certs_filename):
-                break
             if time.time() - start_time > download_time_limit:
                 # Raise AssertionError
                 raise AssertionError('Download time limit of {0} seconds passed for file {1}'.format(
                     download_time_limit, certs_download_filename))
+            if os.path.isfile(certs_filename):
+                try:
+                    os.rename(certs_filename, ss1_filename)
+                    break
+                except OSError:
+                    pass
             time.sleep(download_check_interval)
 
-        os.rename(certs_filename, ss1_filename)
 
         created_files.append(ss1_filename)
         self.log('2.2.7-1 certificate archive has been downloaded, extracting')
@@ -308,8 +377,6 @@ def test_tls(case, client, provider):
         # Open client popup using shortcut button to open it directly at Services tab.
         clients_table_vm.open_client_popup_internal_servers(self, client_id=client_id)
 
-        '''Get auditcheker instance for ss1'''
-        log_checker = auditchecker.AuditChecker(host=ss1_ssh_host, username=ss1_ssh_user, password=ss1_ssh_pass)
         '''Get current audit.log line count'''
         current_log_lines = log_checker.get_line_count()
 
@@ -373,6 +440,14 @@ def test_tls(case, client, provider):
                       msg='Already existing certificate message not correct')
         '''Cancel uploading'''
         self.by_xpath(popups.FILE_UPLOAD_CANCEL_BTN_XPATH).click()
+        '''Checks if expected log message present in log'''
+        expected_log_msg=log_constants.ADD_INTERNAL_TLS_CERT_FAILED
+        logs_found = log_checker.check_log(expected_log_msg,
+                                           from_line=current_log_lines + 1)
+        self.is_true(logs_found,
+                     msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
+                         expected_log_msg,
+                         log_checker.found_lines))
 
         '''Find the "Add" button and click it.'''
         self.by_id(popups.CLIENT_DETAILS_POPUP_INTERNAL_SERVERS_ADD_CERTIFICATE_BTN_ID).click()
@@ -399,6 +474,7 @@ def test_tls(case, client, provider):
                      msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
                          expected_log_msg,
                          log_checker.found_lines))
+        current_log_lines=log_checker.get_line_count()
         '''Find the "Add" button and click it.'''
         self.by_id(popups.CLIENT_DETAILS_POPUP_INTERNAL_SERVERS_ADD_CERTIFICATE_BTN_ID).click()
 
@@ -419,6 +495,15 @@ def test_tls(case, client, provider):
                       msg='Already existing certificate message not correct')
         '''Cancel TLS adding'''
         self.by_xpath(popups.FILE_UPLOAD_CANCEL_BTN_XPATH).click()
+
+        '''Checks if expected log message present in log'''
+        expected_log_msg=log_constants.ADD_INTERNAL_TLS_CERT_FAILED
+        logs_found = log_checker.check_log(expected_log_msg,
+                                           from_line=current_log_lines + 1)
+        self.is_true(logs_found,
+                     msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
+                         expected_log_msg,
+                         log_checker.found_lines))
 
         # TEST PLAN 2.2.7-9 test query to test service using SSL and client certificate. Query should succeed.
         self.log('2.2.7-9 test query to test service using SSL and client certificate. Query should succeed.')

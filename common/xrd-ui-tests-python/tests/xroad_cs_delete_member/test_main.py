@@ -5,6 +5,7 @@ from main.maincontroller import MainController
 from tests.xroad_changing_database_rows_with_cs_gui_291.changing_database_rows_with_cs_gui_2_9_1 import USERNAME
 from tests.xroad_cs_delete_member import deleting_in_cs
 from tests.xroad_global_groups_tests import global_groups_tests
+from tests.xroad_ss_client_certification_213 import client_certification_2_1_3
 
 
 class XroadCsDeleteMemberWithSubSystem(unittest.TestCase):
@@ -132,6 +133,8 @@ class XroadCsDeleteMemberWithSecurityServer(unittest.TestCase):
         ss2_password = main.config.get('ss2.pass')
 
         ss2_ssh_host = main.config.get('ss2.ssh_host')
+        ss2_ssh_user = main.config.get('ss2.ssh_user')
+        ss2_ssh_pass = main.config.get('ss2.ssh_pass')
 
         ca_ssh_host = main.config.get('ca.ssh_host')
         ca_ssh_user = main.config.get('ca.ssh_user')
@@ -164,22 +167,25 @@ class XroadCsDeleteMemberWithSecurityServer(unittest.TestCase):
             cs_ssh_host=cs_ssh_host,
             cs_ssh_user=cs_ssh_user,
             cs_ssh_pass=cs_ssh_pass,
-            ca_ssh_host=ca_ssh_host,
-            ca_ssh_user=ca_ssh_user,
-            ca_ssh_pass=ca_ssh_pass,
             client=client,
             ss2_host=ss2_host,
             ss2_username=ss2_username,
             ss2_password=ss2_password,
-            ss2_ssh_host=ss2_ssh_host,
-            cert_path=cert_path,
             user=user)
 
         test_add_ss_to_cs_member = deleting_in_cs.test_add_security_server_to_member(main, cs_host, cs_username,
                                                                                      cs_password,
                                                                                      cs_ssh_host, cs_ssh_user,
                                                                                      cs_ssh_pass,
-                                                                                     client, cert_path=cert_path)
+                                                                                     client, cert_path=cert_path,
+                                                                                     check_inputs=True)
+        test_register_cert = client_certification_2_1_3.register_cert(main, ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass,
+                                                                      cs_host=cs_ssh_host, client=client,
+                                                                      ca_ssh_host=ca_ssh_host, ca_ssh_user=ca_ssh_user,
+                                                                      ca_ssh_pass=ca_ssh_pass,
+                                                                      check_inputs=True, cert_path=cert_path)
+        test_activate_cert = client_certification_2_1_3.activate_cert(main, ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass,
+                                                                      registered=True)
         try:
             main.reload_webdriver(url=cs_host, username=cs_username, password=cs_password)
             test_deleting_member_with_security_server()
@@ -187,5 +193,8 @@ class XroadCsDeleteMemberWithSecurityServer(unittest.TestCase):
             assert False
         finally:
             restore_security_server()
+            test_register_cert()
             test_add_ss_to_cs_member()
+            main.reload_webdriver(ss2_host, ss2_username, ss2_password)
+            test_activate_cert()
             main.tearDown()

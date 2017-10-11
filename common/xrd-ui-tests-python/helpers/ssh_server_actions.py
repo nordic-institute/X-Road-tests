@@ -1,7 +1,14 @@
 import datetime
 import json
 import re
+
 import ssh_client
+
+
+def refresh_ocsp(sshclient):
+    sshclient.exec_command(command='rm /var/cache/xroad/*ocsp', sudo=True)
+    sshclient.exec_command(command='service xroad-signer restart', sudo=True)
+    sshclient.exec_command(command='service xroad-proxy restart', sudo=True)
 
 
 def get_server_time(ssh_host, ssh_username, ssh_password):
@@ -69,3 +76,8 @@ def get_client(ssh_host, ssh_username, ssh_password):
 def cp(ssh_client_instance, src, destination, sudo=False):
     cp_command = 'cp {0} {1}'.format(src, destination)
     return ssh_client_instance.exec_command(cp_command, sudo)
+
+
+def mv(ssh_client_instance, src, destination, sudo=False):
+    mv_command = 'mv {0} {1}'.format(src, destination)
+    return ssh_client_instance.exec_command(mv_command, sudo)

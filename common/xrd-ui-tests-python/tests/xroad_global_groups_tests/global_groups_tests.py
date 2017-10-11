@@ -3,82 +3,97 @@ from datetime import datetime
 
 from selenium.webdriver.common.by import By
 
-from helpers import ssh_server_actions, ssh_user_actions
-from view_models import members_table, sidebar, groups_table, popups, messages, log_constants, \
-    sidebar as sidebar_constants
-from view_models.log_constants import *
 import tests.xroad_parse_users_input_SS_41.parse_user_input_SS_41 as user_input_check
 from helpers import auditchecker
+from helpers import ssh_server_actions, xroad
+from tests.xroad_add_to_acl_218 import add_to_acl_2_1_8
+from tests.xroad_add_to_acl_218.add_to_acl_2_1_8 import restore_original_subject_list
+from view_models import members_table, sidebar, groups_table, popups, messages, log_constants, \
+    sidebar as sidebar_constants, clients_table_vm
+from view_models.log_constants import *
 
-USERNAME = 'username'
-PASSWORD = 'password'
 
-test_name = 'GLOBAL GROUP USER INPUTS TESTS'
-
-
-def test_test(ssh_host, ssh_username, ssh_password, users, group, check_global_groups_inputs=False, cs_ssh_host=None,
-              cs_ssh_user=None, cs_ssh_pass=None):
+def add_member_to_group(self, client, group, ss2_host, ss2_user, ss2_pass, testclient,
+                        wsdl_url, service_name, identifier):
     """
-    MainController test function. Tests maintentance actions and logging in central server.
-    :param ssh_host: str - SSH server hostname
-    :param ssh_username: str - SSH username
-    :param ssh_password: str - SSH password
-    :param users: dict - dictionary of users to be added
+    SERVICE_33 Add Members to a Global Group
+    :param wsdl_url: str - wsdl url
+    :param service_name: str - service name
+    :param identifier: str - central server identifier
+    :param testclient: obj - soapclient instance
+    :param ss2_pass: str - security server password
+    :param ss2_user: str - security server username
+    :param ss2_host: str - security server host
+    :param client: dict - client information
+    :param self: mainController instance
+    :param client_name: str - client name
+    :param client_subsystem: str - client subsystem
     :param group: str - group name
-    :param check_global_groups_inputs: bool - condition for user inputs
-    :param cs_ssh_host: str|None - if set, Central Server SSH host for checking the audit.log; if None, no log check
-    :param cs_ssh_user: str|None - CS SSH username, needed if cs_ssh_host is set
-    :param cs_ssh_pass: str|None - CS SSH password, needed if cs_ssh_host is set
     :return:
     """
+    subject_list = ['GLOBALGROUP : {0} : {1}'.format(identifier, group)]
+    client_name = client['name']
+    client_subsystem = client['subsystem']
+    '''Open group details'''
+    self.wait_until_visible(type=By.XPATH,
+                            element=groups_table.GLOBAL_GROUP_ROW_BY_TD_TEXT_XPATH.format(group)).click()
+    self.wait_until_visible(type=By.ID, element=groups_table.GROUP_DETAILS_BTN_ID).click()
+    self.wait_jquery()
+    self.log('SERVICE_33 1. Add members to global group button is pressed')
+    self.wait_until_visible(type=By.ID, element=groups_table.GLOBAL_GROUP_ADD_MEMBERS_BTN_ID).click()
+    self.wait_jquery()
+    self.log('SERVICE_33 2. Addable subject is selected from subjects list')
+    srch_input = self.wait_until_visible(type=By.XPATH,
+                                         element=groups_table.GROUP_MEMBERS_ADD_SEARCH_INPUT_XPATH)
+    self.input(element=srch_input, text=client_subsystem)
+    self.wait_until_visible(type=By.XPATH, element=groups_table.GROUP_MEMBERS_ADD_SEARCH_BUTTON_XPATH).click()
 
-    def test_case(self):
+    self.wait_jquery()
+    self.wait_until_visible(
+        type=By.XPATH, element=groups_table.MEMBER_ROW_BY_TWO_COLUMNS_XPATH.format(client_name,
+                                                                                   client_subsystem)).click()
+    self.log('SERVICE_33 2. Add button is clicked')
+    self.wait_until_visible(type=By.ID, element=groups_table.GROUP_MEMBERS_ADD_BUTTON_ID).click()
+    test_configure_service_acl = add_to_acl_2_1_8.test_add_subjects(case=self, client=client,
+                                                                    client_name=client_name,
+                                                                    wsdl_url=wsdl_url,
+                                                                    service_name=service_name,
+                                                                    service_subjects=subject_list,
+                                                                    remove_data=False,
+                                                                    allow_remove_all=False,
+                                                                    remove_current=True)
+    self.log('Wait until servers synced')
+    time.sleep(120)
+    self.log('Add global group to {0} service ACL'.format(service_name))
+    self.reload_webdriver(ss2_host, ss2_user, ss2_pass)
+    current_subjects = test_configure_service_acl()
 
-        """EST PLAN SERVICE_32 3, 3a, 4a, 6 """
-        self.log('*** SERVICE_32 3, 3a, 4a, 6 / XTKB-37')
+    self.log('Check if test query as global group member succeeds')
+    self.is_true(testclient.check_success(), msg='Query as global group member failed')
 
-        '''Save users to MainController'''
-        self.users = users
+    clients_table_vm.open_client_popup_services(self, client_name=client_name,
+                                                client_id=xroad.get_xroad_id(client))
 
-        '''Get the first user'''
-        user = users['user1']
+    services_table = self.by_id(popups.CLIENT_DETAILS_POPUP_SERVICES_TABLE_ID)
+    '''Wait until that table is visible (opened in a popup)'''
+    self.wait_until_visible(services_table)
 
-        '''Create SSH session'''
-        ssh_client = ssh_server_actions.get_client(ssh_host, ssh_username, ssh_password)
-        self.log('Adding users to system')
+    '''Find the WSDL, expand it and select service'''
+    clients_table_vm.client_services_popup_open_wsdl_acl(self, services_table=services_table,
+                                                         service_name=service_name,
+                                                         wsdl_url=wsdl_url)
 
-        '''By default, there is no error.'''
-        error = False
-
-        try:
-            # TEST PLAN 2.11.1-1 log in to central server UI as user1
-            self.log('2.11.1-1 logging in to central server as user1')
-            check_login(self, ssh_client, None, users['user1'])
-
-            # TEST PLAN 2.11.1-7, 2.11.1-8 add new group (failure and success test)
-            self.log('2.11.1-7, 2.11.1-8 add new group (failure and success test)')
-            add_group(self, ssh_client, user, group, check_global_groups_inputs=check_global_groups_inputs,
-                      cs_ssh_host=cs_ssh_host, cs_ssh_user=cs_ssh_user, cs_ssh_pass=cs_ssh_pass)
-
-        finally:
-            try:
-                self.log('2.11.1-del Deleting group')
-                remove_group(self, group)
-            except:
-                self.log('2.11.1-del Deleting group failed')
-            self.log('2.11.1-del closing SSH connection')
-            ssh_client.close()
-            if error:
-                # Got an error before, fail the test
-                assert False, '2.11.1 failed'
-
-    return test_case
+    self.wait_until_visible(popups.CLIENT_DETAILS_POPUP_EXISTING_ACL_SUBJECTS_ADD_SUBJECTS_BTN_CSS, type=By.ID,
+                            timeout=20)
+    self.log('Restore {0} acl'.format(service_name))
+    restore_original_subject_list(self, current_subjects, subject_list, allow_remove_all=False,
+                                  remove_duplicates=True)
 
 
-def add_group(self, ssh_client, user, group, check_global_groups_inputs=False, cs_ssh_host=None, cs_ssh_user=None,
+def add_group(self, group, check_global_groups_inputs=False, cs_ssh_host=None, cs_ssh_user=None,
               cs_ssh_pass=None):
     """
-    Adds a new global group to the system. First tries to add with empty values, then with the correct ones.
+    SERVICE_32 Adds a new global group to the system. First tries to add with empty values, then with the correct ones.
     Checks if the action was logged.
     :param self: MainController object
     :param ssh_client: SSHClient object
@@ -112,15 +127,19 @@ def add_group(self, ssh_client, user, group, check_global_groups_inputs=False, c
         '''SERVICE_32 step 3 System verifies global groups inputs in the central server'''
 
         # TEST PLAN SERVICE_32 step 3 System verifies global groups inputs in the central server
-        self.log('*** SERVICE_33_3 / XTKB-56')
+        self.log('*** SERVICE_32_3 / XTKB-56')
         # Open global groups
         self.log('Open Global Groups tab')
         self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar_constants.GLOBAL_GROUPS_CSS).click()
         self.wait_jquery()
+        if cs_ssh_host is not None:
+            log_checker = auditchecker.AuditChecker(host=cs_ssh_host, username=cs_ssh_user, password=cs_ssh_pass)
 
         # Loop through data from the groups_table.py
         counter = 1
         for group_data in groups_table.GROUP_DATA:
+            if cs_ssh_host is not None:
+                current_log_lines = log_checker.get_line_count()
             # Set necessary parameters
             code = group_data[0]
             description = group_data[1]
@@ -134,10 +153,14 @@ def add_group(self, ssh_client, user, group, check_global_groups_inputs=False, c
                                cs_ssh_pass=cs_ssh_pass)
 
             # Verify group code and description
-            parse_user_input(self, error, error_message, error_message_label)
+            user_input_check.parse_user_input(self, error, error_message, error_message_label)
 
             if error:
                 # Close a pop-up window , if there is a error message
+                if cs_ssh_host is not None:
+                    logs_found = log_checker.check_log(log_constants.ADD_GLOBAL_GROUP_FAILED,
+                                                       from_line=current_log_lines + 1)
+                    self.is_true(logs_found)
                 self.log('Click on "Cancel" button')
                 self.wait_until_visible(type=By.XPATH,
                                         element=groups_table.NEW_GROUP_POPUP_CANCEL_BTN_XPATH).click()
@@ -160,8 +183,8 @@ def add_group(self, ssh_client, user, group, check_global_groups_inputs=False, c
                 self.log('Found global group description - ' + description)
 
                 if whitespaces:
-                    find_text_with_whitespaces(self, code, global_croup_code)
-                    find_text_with_whitespaces(self, description, global_croup_description)
+                    user_input_check.find_text_with_whitespaces(self, code, global_croup_code)
+                    user_input_check.find_text_with_whitespaces(self, description, global_croup_description)
                 else:
                     assert code in global_croup_code
                     assert description in global_croup_description
@@ -170,9 +193,10 @@ def add_group(self, ssh_client, user, group, check_global_groups_inputs=False, c
                 delete_global_group(self, code)
 
             counter += 1
+        if log_checker is not None:
+            current_log_lines = log_checker.get_line_count()
 
         '''SERVICE_32 step 4a insert a group code that already exists'''
-
         '''Start adding new group'''
         enter_global_group_data()
         self.log('Click on "OK" to add new group')
@@ -190,10 +214,6 @@ def add_group(self, ssh_client, user, group, check_global_groups_inputs=False, c
 
         '''We're looking for "Add global group failed" log'''
         self.logdata = [log_constants.ADD_GLOBAL_GROUP_FAILED]
-
-        if cs_ssh_host is not None:
-            log_checker = auditchecker.AuditChecker(host=cs_ssh_host, username=cs_ssh_user, password=cs_ssh_pass)
-            current_log_lines = log_checker.get_line_count()
 
         self.log('Click on "OK" to add new group')
         self.wait_until_visible(type=By.XPATH, element=groups_table.NEW_GROUP_POPUP_OK_BTN_XPATH).click()
@@ -242,125 +262,50 @@ def add_group(self, ssh_client, user, group, check_global_groups_inputs=False, c
                      msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(self.logdata,
                                                                                                log_checker.found_lines))
 
-    # TEST PLAN 2.11.1-14 check if adding group actions have been logged
-    bool_value, data, date_time = check_logs_for(ssh_client, ADD_GLOBAL_GROUP, user[USERNAME])
-    self.is_true(bool_value, test_name,
-                 '2.11.1-8/2.11.1-14 log check for added group - check failed',
-                 '2.11.1-8/2.11.1-14 log check for added group')
 
-
-def remove_group(self, group):
+def remove_group(self, group, cs_ssh_host=None, cs_ssh_user=None, cs_ssh_pass=None):
     """
-    Removes a global group from the system.
+    SERVICE_39 Removes a global group from the system.
+    :param cs_ssh_pass: central server ssh password
+    :param cs_ssh_user: central server ssh user
+    :param cs_ssh_host: central server ssh host
     :param self: MainController object
     :param group: str - group name
     :return: None
     """
-    # Open global groups
+    '''Auditchecker instance'''
+    current_log_lines = None
+    if cs_ssh_host is not None:
+        log_checker = auditchecker.AuditChecker(cs_ssh_host, cs_ssh_user, cs_ssh_pass)
+        current_log_lines = log_checker.get_line_count()
+    '''Open global groups'''
     self.log('Open Global Groups tab')
     self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.GLOBAL_GROUPS_CSS).click()
     self.wait_jquery()
 
-    # Find and select the group
+    '''Find and select the group'''
     self.log('Select added group')
-    table = self.wait_until_visible(type=By.ID, element=groups_table.GROUP_TABLE_ID)
-    rows = table.find_elements_by_tag_name('tr')
-    for row in rows:
-        if row.text != '':
-            if row.find_element_by_tag_name('td').text == group:
-                row.click()
-                self.wait_jquery()
-
-    # Open group details and delete the group
+    self.wait_until_visible(type=By.XPATH,
+                            element=groups_table.GLOBAL_GROUP_ROW_BY_TD_TEXT_XPATH.format(group)).click()
+    '''Open group details and delete the group'''
     self.log('Open group details')
     self.wait_until_visible(type=By.ID, element=groups_table.GROUP_DETAILS_BTN_ID).click()
     self.wait_jquery()
-    self.log('Click on "DELETE GROUP" button')
+    self.log('SERVICE_39 1. Click on "DELETE GROUP" button')
     self.wait_until_visible(type=By.XPATH, element=groups_table.DELETE_GROUP_BTN_ID).click()
     self.wait_jquery()
-    self.log('Confirm deletion')
-    popups.confirm_dialog_click(self)
-
-
-def delete_client(self, ssh_client, user, member):
-    """
-    Deletes a member from the system. Checks if the action was logged.
-    :param self: MainController object
-    :param ssh_client: SSHClient object
-    :param user: dict - user data
-    :param member: dict - member data
-    :return: None
-    """
-    self.driver.get(self.url)
+    self.log('SERVICE_39 3a. Group deletion is canceled')
+    self.wait_until_visible(type=By.XPATH, element=popups.CONFIRM_POPUP_CANCEL_BTN_XPATH).click()
+    self.log('SERVICE_39 1. Click on "DELETE GROUP" button')
+    self.wait_until_visible(type=By.XPATH, element=groups_table.DELETE_GROUP_BTN_ID).click()
     self.wait_jquery()
-    # Open member details
-    open_member_details(self, member=member)
-    # Delete the member
-    self.wait_until_visible(type=By.XPATH, element=members_table.MEMBER_EDIT_DELETE_BTN_XPATH).click()
-    self.wait_jquery()
-    # Confirm deletion
+    self.log('SERVICE_39 3. Confirm group deletion')
     popups.confirm_dialog_click(self)
-    time.sleep(10)
-
-    # TEST PLAN 2.11.1-13/2.11.1-14 check if deleting the member was logged
-    bool_value, data, date_time = check_logs_for(ssh_client, DELETE_MEMBER, user[USERNAME])
-    self.is_true(bool_value, test_name,
-                 '2.11.1-13/2.11.1-14 log check for deleting the member - check failed',
-                 '2.11.1-13/2.11.1-14 log check for deleting the member')
-
-
-def add_users_to_system(self, ssh_client):
-    """
-    Adds test users to system over SSH connection.
-    :param self: MainController object
-    :param ssh_client: SSHClient object
-    :return:
-    """
-    user = self.users['user1']
-    ssh_user_actions.add_user(client=ssh_client, username=user[USERNAME], password=user[PASSWORD],
-                              group=user['group'])
-    user = self.users['user2']
-    ssh_user_actions.add_user(client=ssh_client, username=user[USERNAME], password=user[PASSWORD],
-                              group=user['group'])
-    user = self.users['user3']
-    ssh_user_actions.add_user(client=ssh_client, username=user[USERNAME], password=user[PASSWORD],
-                              group=user['group'])
-
-
-def check_login(self, ssh_client, logout_user=None, login_user=None):
-    """
-    Login function that also checks if it succeeded. If specified, first logs the user out from existing session.
-    :param self: MainController object
-    :param ssh_client: SSHClient object
-    :param logout_user: dict|None - user data for user that should be logged out; None if logout is not necessary
-    :param login_user: dict|None - user data for user logging in; None if login not necessary
-    :return: None
-    """
-    # TEST PLAN 2.11.1-14 login and logout checks (all users)
-
-    if logout_user is not None:
-        self.log('Checking logout')
-        self.logout()
-
-        # Check logs
-        bool_value, data, date_time = check_logs_for(ssh_client, LOGOUT, logout_user[USERNAME])
-        self.is_true(bool_value, test_name,
-                     'Log check for logging out - check failed', 'Log check for logging out',
-                     )
-    if login_user is not None:
-        self.log('Checking login')
-        if logout_user is None:
-            # Log out the previous user if not yet logged out
-            self.logout()
-
-        # Log in the new user
-        self.login(login_user[USERNAME], login_user[PASSWORD])
-
-        # Check logs
-        bool_value, data, date_time = check_logs_for(ssh_client=ssh_client, event=LOGIN, user=login_user[USERNAME])
-        self.is_true(bool_value, test_name,
-                     'Log check for logging in - check failed',
-                     'Log check for logging in')
+    expected_log_msg = log_constants.DELETE_GLOBAL_GROUP
+    self.log('SERVICE_39 4. System logs the event "{0}"'.format(expected_log_msg))
+    if current_log_lines is not None:
+        logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
+        self.is_true(logs_found, msg='{} not found in logs'.format(expected_log_msg))
 
 
 def check_logs_for(ssh_client, event, user):
@@ -454,40 +399,6 @@ def enter_global_group(self, code, description, cs_ssh_host=None, cs_ssh_user=No
         pass
 
 
-def parse_user_input(self, error, error_message, error_message_label):
-    """
-    Function Check for the error messages
-    :param self: MainController object
-    :param error: bool - Must there be a error message, True if there is and False if not
-    :param error_message: str - Expected error message
-    :param error_message_label: str - label for a expected error message
-    :return:
-    """
-    if error:
-        # Get a error message, compare it with expected error message and close error message
-
-        self.log('Get the error message')
-        self.wait_jquery()
-        get_error_message = messages.get_error_message(self)
-        self.log('Found error message - ' + get_error_message)
-        self.log('Expected error message  - ' + error_message.format(error_message_label))
-
-        self.log('Compare error message to the expected error message')
-        assert get_error_message in error_message.format(error_message_label)
-
-        self.log('Close the error message')
-        messages.close_error_messages(self)
-    else:
-        # Verify that there is not error messages
-        self.log('Verify that there is not error messages')
-        get_error_message = messages.get_error_message(self)
-        if get_error_message is None:
-            error = False
-        else:
-            error = True
-        assert error is False
-
-
 def delete_global_group(self, code):
     """
     :param self: MainController object
@@ -507,26 +418,3 @@ def delete_global_group(self, code):
                             element=groups_table.DELETE_GROUP_BTN_ID).click()
     self.log('Click on "CONFIRM" button')
     popups.confirm_dialog_click(self)
-
-
-def find_text_with_whitespaces(self, added_text, expected_text):
-    """
-    Verifies, that there is not inputs with whitespaces
-    :param self: MainController object
-    :param added_text: str - added text
-    :param expected_text: str - expected text
-    :return: None
-    """
-    try:
-        # Compare added text with whitespaces and displayed text
-        self.log('Compare added text with whitespaces and displayed text')
-        self.log("'" + added_text + "' != '" + expected_text + "'")
-        assert added_text in expected_text
-        whitespace = True
-    except:
-        # Compare added text without whitespaces and displayed text
-        self.log('Compare added text without whitespaces and displayed text')
-        self.log("'" + added_text.strip() + "' == '" + expected_text + "'")
-        assert added_text.strip() in expected_text
-        whitespace = False
-    assert whitespace is False

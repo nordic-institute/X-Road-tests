@@ -33,11 +33,13 @@ class XroadSecurityServerClientDeletion(unittest.TestCase):
         main.management_services = xroad.split_xroad_subsystem(main.config.get('ss1.management_id'))
         cs_member = xroad.split_xroad_id(main.config.get('ss1.client_id'))
         ss1_client = xroad.split_xroad_id(main.config.get('ss1.client_id'))
+        ss1_client_2 = xroad.split_xroad_id(main.config.get('ss1.client2_id'))
         ss2_client = xroad.split_xroad_id(main.config.get('ss2.client_id'))
         ss2_client_2 = xroad.split_xroad_id(main.config.get('ss2.client2_id'))
 
         cs_member_name = main.config.get('ss1.client_name')
         ss1_client_name = main.config.get('ss1.client_name')
+        ss1_client_2_name = main.config.get('ss1.client2_name')
         ss2_client_name = main.config.get('ss2.client_name')
         ss2_client_2_name = main.config.get('ss2.client2_name')
 
@@ -53,6 +55,7 @@ class XroadSecurityServerClientDeletion(unittest.TestCase):
                                                                 main.config.get('ss2.pass'),
                                                                 cs_new_member=cs_member, cs_member_name=cs_member_name,
                                                                 ss1_client=ss1_client, ss1_client_name=ss1_client_name,
+                                                                ss1_client_2=ss1_client_2, ss1_client_2_name=ss1_client_2_name,
                                                                 ss1_ssh_host=ss1_ssh_host,
                                                                 ss1_ssh_username=ss1_ssh_username,
                                                                 ss1_ssh_password=ss1_ssh_password,
@@ -61,6 +64,10 @@ class XroadSecurityServerClientDeletion(unittest.TestCase):
                                                                 ss2_ssh_password=ss2_ssh_password,
                                                                 ss2_client=ss2_client, ss2_client_name=ss2_client_name,
                                                                 ss2_client_2=ss2_client_2,
-                                                                ss2_client_2_name=ss2_client_2_name)
+                                                                ss2_client_2_name=ss2_client_2_name,
+                                                                ca_ssh_host=main.config.get('ca.ssh_host'),
+                                                                ca_ssh_username=main.config.get('ca.ssh_user'),
+                                                                ca_ssh_password=main.config.get('ca.ssh_pass')
+                                                                )
         test_func(main)
         main.tearDown()

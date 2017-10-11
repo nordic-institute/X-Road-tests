@@ -88,6 +88,9 @@ class XroadAddCentralService(unittest.TestCase):
 
         # Delete central service (undo changes we made for 2.2.8)
         delete_central_service = add_central_service_2_2_8.test_delete_central_service(main,
+                                                                                       cs_ssh_host=cs_ssh_host,
+                                                                                       cs_ssh_user=cs_ssh_user,
+                                                                                       cs_ssh_pass=cs_ssh_pass,
                                                                                        central_service_name=central_service_name,
                                                                                        provider=provider_2,
                                                                                        requester=requester,
@@ -169,6 +172,10 @@ class XroadDeleteCentralService(unittest.TestCase):
         cs_user = main.config.get('cs.user')
         cs_pass = main.config.get('cs.pass')
 
+        cs_ssh_host = main.config.get('cs.ssh_host')
+        cs_ssh_user = main.config.get('cs.ssh_user')
+        cs_ssh_pass = main.config.get('cs.ssh_pass')
+
         ss2_host = main.config.get('ss2.host')
         ss2_user = main.config.get('ss2.user')
         ss2_pass = main.config.get('ss2.pass')
@@ -187,6 +194,9 @@ class XroadDeleteCentralService(unittest.TestCase):
         delete_service = configure_service_2_2_2.test_delete_service(main, client=provider_2, wsdl_url=wsdl_url)
 
         delete_central_service = add_central_service_2_2_8.test_delete_central_service(main,
+                                                                                       cs_ssh_host=cs_ssh_host,
+                                                                                       cs_ssh_user=cs_ssh_user,
+                                                                                       cs_ssh_pass=cs_ssh_pass,
                                                                                        provider=provider_2,
                                                                                        requester=requester,
                                                                                        central_service_name=central_service_name,

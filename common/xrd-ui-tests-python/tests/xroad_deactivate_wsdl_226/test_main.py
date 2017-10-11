@@ -3,7 +3,7 @@ import unittest
 
 import deactivate_wsdl_2_2_6
 from main.maincontroller import MainController
-from helpers import xroad
+from helpers import xroad, auditchecker
 
 
 class XroadDeactivateWsdl(unittest.TestCase):
@@ -18,14 +18,19 @@ class XroadDeactivateWsdl(unittest.TestCase):
         ss_user = main.config.get('ss2.user')
         ss_pass = main.config.get('ss2.pass')
 
+        ss_ssh_host = main.config.get('ss2.ssh_host')
+        ss_ssh_user = main.config.get('ss2.ssh_user')
+        ss_ssh_pass = main.config.get('ss2.ssh_pass')
+
         client = xroad.split_xroad_id(main.config.get('ss2.client_id'))
         requester = xroad.split_xroad_id(main.config.get('ss1.client_id'))
 
         wsdl_url = main.config.get('wsdl.remote_path').format(main.config.get('wsdl.service_wsdl'))
 
+        log_checker = auditchecker.AuditChecker(ss_ssh_host, ss_ssh_user, ss_ssh_pass)
         # Configure the service
         test_deactivate_wsdl = deactivate_wsdl_2_2_6.test_disable_wsdl(main, client=client, wsdl_url=wsdl_url,
-                                                                       requester=requester)
+                                                                       requester=requester, log_checker=log_checker)
 
         test_reactivate_wsdl = deactivate_wsdl_2_2_6.test_enable_wsdl(main, client=client, wsdl_url=wsdl_url,
                                                                       requester=requester)

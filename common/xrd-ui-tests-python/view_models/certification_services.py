@@ -9,6 +9,13 @@ TSDELETE_BTN_ID = 'tsp_delete'
 TSADD_BTN_ID = 'tsp_add'
 TSEDIT_BTN_ID = 'tsp_details'
 
+TS_SETTINGS_POPUP = '//div[@aria-describedby="tsp_url_and_cert_dialog"]'
+TS_SETTINGS_POPUP_CANCEL_BTN_XPATH = TS_SETTINGS_POPUP + '//div[@class="ui-dialog-buttonset"]//button[span="Cancel"]'
+
+IMPORT_TS_CERT_BTN_ID = 'tsp_cert_button'
+SUBMIT_TS_CERT_BTN_ID = 'tsp_url_and_cert_submit'
+TIMESTAMP_SERVICES_URL_ID = 'tsp_url'
+
 IMPORT_CA_CERT_BTN_ID = 'ca_cert_button'
 ADD_CA_AUTH_ONLY_CHECKBOX_XPATH = '//div[@id="ca_settings_dialog"]//input[@name="authentication_only"]'
 EDIT_CA_AUTH_ONLY_CHECKBOX_XPATH = '//div[@id="ca_settings_tab"]//input[@name="authentication_only"]'
@@ -38,6 +45,8 @@ SUBMIT_OCSP_CERT_AND_URL_BTN_ID = 'ocsp_responder_url_and_cert_submit'
 OCSP_SETTINGS_POPUP = '//div[@aria-describedby="ocsp_responder_url_and_cert_dialog"]'
 OCSP_SETTINGS_POPUP_OK_BTN_XPATH = OCSP_SETTINGS_POPUP + '//div[@class="ui-dialog-buttonset"]//button[span="OK"]'
 OCSP_SETTINGS_POPUP_CANCEL_BTN_XPATH = OCSP_SETTINGS_POPUP + '//div[@class="ui-dialog-buttonset"]//button[span="Cancel"]'
+
+LAST_ADDED_CERT_XPATH = '//table[@id="cas"]//tbody//tr[last()]'
 
 
 def get_ca_by_td_text(text):

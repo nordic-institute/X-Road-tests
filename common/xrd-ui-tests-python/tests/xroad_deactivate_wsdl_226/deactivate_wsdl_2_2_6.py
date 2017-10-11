@@ -1,5 +1,5 @@
 from helpers import xroad, soaptestclient
-from view_models import clients_table_vm, popups
+from view_models import clients_table_vm, popups, log_constants
 from selenium.webdriver.common.by import By
 import re
 import time
@@ -12,7 +12,7 @@ faults_successful = ['Server.ServerProxy.AccessDenied', 'Server.ServerProxy.Unkn
 
 
 def test_disable_wsdl(case, client=None, client_name=None, client_id=None, wsdl_index=None, wsdl_url=None,
-                      requester=None):
+                      requester=None, log_checker=None):
     '''
     MainController test function. Disables a WSDL for a client and tests if queries fail after.
     :param client: dict | None - client XRoad data
@@ -68,6 +68,8 @@ def test_disable_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
 
         # TEST PLAN 2.2.6 deactivate WSDL
         self.log('*** 2.2.6 / XT-470')
+        if log_checker is not None:
+            current_log_lines = log_checker.get_line_count()
 
         # Create an out of order message with timestamp and milliseconds. We need to compare the error we get later.
         out_of_order_message = 'Out of order: {0}'.format(int(round(time.time() * 1000)))
@@ -133,6 +135,16 @@ def test_disable_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
 
         # Wait until ajax query finishes
         self.wait_jquery()
+
+        if log_checker is not None:
+            expected_log_msg = log_constants.DISABLE_WSDL
+            '''Log message expected to be present in audit.log after deletion'''
+            logs_found = log_checker.check_log(expected_log_msg,
+                                               from_line=current_log_lines + 1)
+            self.is_true(logs_found,
+                         msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
+                             expected_log_msg,
+                             log_checker.found_lines))
 
         # TEST PLAN 2.2.6-2 sub: check that the WSDL is written in red text (class "disabled") and starts with
         # "WSDL DISABLED"
@@ -285,6 +297,6 @@ def test_enable_wsdl(case, client=None, client_name=None, client_id=None, wsdl_i
 
         # TEST PLAN 2.2.6-5 test query from TS1 client CLIENT1:sub to service bodyMassIndex. Query should succeed.
         self.log('2.2.6-5 test query {0} to bodyMassIndex. Query should succeed.'.format(query_filename))
-        # case.is_true(testclient_http.check_success(), msg='2.2.6-5 test query failed')
+        case.is_true(testclient_http.check_success(), msg='2.2.6-5 test query failed')
 
     return enable_wsdl

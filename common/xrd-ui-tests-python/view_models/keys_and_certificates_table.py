@@ -2,6 +2,9 @@ KEY_LABEL_TEXT = "test_certificate_keys"
 
 KEY_CONFIG_FILE = '/etc/xroad/signer/keyconf.xml'
 
+OCSP_RESPONSE_CLASS_NAME = 'cert-ocsp-response'
+OCSP_DISABLED_RESPONSE = 'disabled'
+OCSP_DISABLED_CERT_ROW = '//td[contains(@class, {0}) and text()="{1}"]'.format(OCSP_RESPONSE_CLASS_NAME, OCSP_DISABLED_RESPONSE)
 KEY_LABEL_TEXT_AND_RESULTS = [[256 * 'S', True, "Parameter '{0}' input exceeds 255 characters", 'label', False],
                               ['   ' + KEY_LABEL_TEXT + '   ', False, None, None, True],
                               ['z', False, None, None, False],
@@ -24,11 +27,16 @@ FILE_IMPORT_OK_BTN_ID = 'file_upload_submit'
 FILEPATH_INPUT_AREA_CSS = '.selected_file'
 FILEPATH_FORM_INPUT_ID = 'file_upload'
 UNSAVED_KEY_CSS = '.unsaved'
+SUBMITTED_FOR_APPROVAL_STATE = 'SUBMITTED FOR APPROVAL'
+WAITING_STATE = 'WAITING'
+REVOKED_STATE = 'REVOKED'
 
 KEYS_AND_CERTIFICATES_TABLE_ID = 'keys'
 KEYS_AND_CERTIFICATES_TABLE_ROWS_CSS = '.keys tbody tr'
 GLOBAL_ERROR_CERTIFICATE_ROW_XPATH = '//td[text()="global error"]'
 SAVED_CERTIFICATE_ROW_XPATH = '//td[text()="saved"]'
+REG_IN_PROGRESS_CERTIFICATE_ROW_XPATH = '//td[text()="registration in progress"]'
+DEL_IN_PROGRESS_CERTIFICATE_ROW_XPATH = '//td[text()="deletion in progress"]'
 
 REGISTER_DIALOG_ADDRESS_INPUT_ID = 'address'
 
@@ -36,6 +44,25 @@ GENERATED_KEYS_TABLE_ROW_CSS = '.key'
 CERT_REQUESTS_TABLE_ROW_CSS = ".cert-request"
 GENERATED_KEY_TABLE_ROW_XPATH = '//table[contains(@id, "keys")]//tr[contains(@class, "key")]//td[contains(text(), \"' + KEY_LABEL_TEXT + '\")]'
 SOFTTOKEN_TABLE_ROW_XPATH = '//table[contains(@id, "keys")]//tr[contains(@class, "token")]/td[div="Token: softToken-0"]'
+SOFTTOKEN_TABLE_XPATH = '//table[contains(@id, "keys")]//tr[contains(@class, "token")]/td'
+TOKEN_NAMES_CLASS = "token-name"
+CERT_BY_KEY_LABEL = '//tr[contains(., "{0}")]/following::tr[2]'
+TOKEN_DETAILS_ERROR_PARAMETER = 'friendly_name'
+TOKEN_DETAILS_MISSING_PARAMETER = 'Missing parameter: friendly_name'
+SOFTTOKEN_FRIENDLY_NAME = 'softToken-0'
+SOFTTOKEN_TABLE_ROW_XPATH2 = "//div[@class='left token-name']"
+SOFTTOKEN_KEY_ROW = "//tr[@class='key token-available token-inactive key-unavailable']"
+SOFTTOKEN_FRIENDLY_NAME_WHITESPACES = '           test               '
+SOFTTOKEN_LOGOUT = '//button[@class="deactivate_token"]'
+SOFTTOKEN_LOGIN = '//button[@class="activate_token"]'
+SOFTTOKEN_PIN_WHITESPACES = '  1234  '
+SOFTTOKEN_LOGOUT_TEXT = 'LOGOUT'
+SOFTTOKEN_PIN = '1234'
+SOFTTOKEN_PIN_ERROR_PARAMETER = 'pin'
+
+
+
+
 
 IMPORT_CERTIFICATE_POPUP_XPATH = '//div[@aria-describedby="file_upload_dialog"]'
 
@@ -48,6 +75,7 @@ GENERATE_CSR_SIGNING_REQUEST_POPUP_OK_BTN_XPATH = GENERATE_CSR_SIGNING_REQUEST_P
 GENERATE_CSR_SIGNING_REQUEST_POPUP_CANCEL_BTN_XPATH = GENERATE_CSR_SIGNING_REQUEST_POPUP_XPATH + '//button[@data-name="cancel"]'
 
 SUBJECT_DISTINGUISHED_NAME_POPUP_XPATH = '//div[@data-name="subject_dn_dialog"]'
+SUBJECT_DISTINGUISHED_NAME_POPUP_SERIAL_NUMBER_XPATH = '//input[@name="serialNumber"]'
 SUBJECT_DISTINGUISHED_NAME_POPUP_C_XPATH = '//input[@name="C"]'
 SUBJECT_DISTINGUISHED_NAME_POPUP_O_XPATH = '//input[@name="O"]'
 SUBJECT_DISTINGUISHED_NAME_POPUP_CN_XPATH = '//input[@name="CN"]'
@@ -71,6 +99,10 @@ def get_generated_key_row_cert_xpath(client_code, client_class):
     return '//table[contains(@id, "keys")]//tr[contains(@class, "key")]//td[contains(text(), \"' + \
            KEY_LABEL_TEXT + '_' + client_code + '_' + client_class + '\")]/../following::tr[2]'
 
+def get_generated_key_row_active_cert_friendly_name_xpath(client_code, client_class, key_num = 1):
+    return '(//table[contains(@id, "keys")]//tr[contains(@class, "key")]//td[contains(text(), \"' + \
+           KEY_LABEL_TEXT + '_' + client_code + '_' + client_class + '\")]/..' + \
+           '/following::tr[{0}])[contains(@class, "cert-active")]//td[contains(@class, "friendly-name")]'.format(key_num+1)
 
 def get_text(text):
     return ".//*[text()[contains(.,'" + text + "')]]"

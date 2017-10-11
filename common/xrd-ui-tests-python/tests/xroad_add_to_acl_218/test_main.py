@@ -19,7 +19,7 @@ class XroadAddToAcl(unittest.TestCase):
         ss_pass = main.config.get('ss2.pass')
 
         client = xroad.split_xroad_id(main.config.get('ss2.client_id'))
-        requester = xroad.split_xroad_id(main.config.get('ss1.client_id'))
+        requester = xroad.split_xroad_id(main.config.get('ss2.client_id'))
 
         wsdl_url = main.config.get('wsdl.remote_path').format(main.config.get('wsdl.service_wsdl'))
 

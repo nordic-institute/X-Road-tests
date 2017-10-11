@@ -98,7 +98,7 @@ def remove_all_subjects_from_acl(self):
 
     # Wait until first ACL row is visible (this means that the data has been parsed and loaded into a table)
     self.wait_until_visible(popups.CLIENT_DETAILS_POPUP_EXISTING_ACL_SUBJECTS_FIRST_SUBJECT_ROW_CSS,
-                            type=By.CSS_SELECTOR)
+                            type=By.CSS_SELECTOR, timeout=20)
 
     # Find the "Remove all" button and click it
     remove_all_button = self.by_id(popups.CLIENT_DETAILS_POPUP_ACL_SUBJECTS_REMOVE_ALL_BTN_ID)
@@ -261,6 +261,13 @@ def restore_original_subject_list(case, current_subjects, added_subjects, allow_
 
     # True if original ACL list matches restored ACL list (restore successful)
     original_list_restored = (sorted(current_subjects) == sorted(restored_subject_list))
+    if not original_list_restored:
+        missing = list(set(current_subjects) - set(restored_subject_list))
+        search_all_subjects(self)
+        add_subjects_to_acl(self, service_subjects=missing)
+        self.wait_jquery()
+        restored_subject_list = get_current_acl_subjects(self)
+        original_list_restored = (sorted(current_subjects) == sorted(restored_subject_list))
 
     # Test assertion for if the original list was successfully restored or not.
     self.is_true(original_list_restored, msg='Original subject list was not restored')
@@ -272,7 +279,8 @@ def test_add_subjects(case, client=None, client_name=None, client_id=None, wsdl_
                       service_index=None,
                       service_name=None, service_subjects=[],
                       remove_data=True,
-                      allow_remove_all=True):
+                      allow_remove_all=True,
+                      remove_current=False):
     '''
     Test function. Adds specified subjects to a specified client's ACL.
     :param client_name: string | None - name of the client whose ACL we modify (this or client_id must be set)
@@ -330,6 +338,9 @@ def test_add_subjects(case, client=None, client_name=None, client_id=None, wsdl_
         current_subjects = get_current_acl_subjects(self)
         self.log('Current ACL subjects: {0}'.format(', '.join(current_subjects)))
 
+        if remove_current:
+            remove_all_subjects_from_acl(self)
+
         #
         # TEST PLAN 2.1.8-2. Do an empty search to show all subjects that are registered in the system.
         #
@@ -370,6 +381,7 @@ def test_add_subjects(case, client=None, client_name=None, client_id=None, wsdl_
         self.is_true(all_subjects_added,
                       msg='2.1.8 Some subjects were not added, tried to add {0}, succeeded {1}'.format(
                           len(self.added_subjects), added_subjects_count))
+        return current_subjects
 
     return add_to_acl
 

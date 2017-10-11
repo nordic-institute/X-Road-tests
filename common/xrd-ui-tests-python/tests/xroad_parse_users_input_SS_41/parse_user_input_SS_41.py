@@ -106,6 +106,7 @@ def test_04():
         # Add client
         add_ss_client(self, member_code, subsystem_code)
 
+        self.wait_jquery()
         self.log('Click on "CONTINUE" button')
         self.wait_until_visible(type=By.XPATH, element=popups.WARNING_POPUP_CONTINUE_XPATH).click()
         self.log('Click on "CONFIRM" button')
@@ -213,11 +214,11 @@ def test_04():
 def test_05():
     def test_case(self):
         """
-        SERVICE_13 step 34Verifies WSDL url
+        SERVICE_13 step 4 Verifies WSDL url
         :param self: MainController object
         :return: None
         """
-        # TEST PLAN SERVICE 9 step 3 System verifies clients member and subsystem code
+        # TEST PLAN SERVICE 13 step 4 System verifies clients member and subsystem code
         self.log('*** SERVICE_13_4 / XTKB-54')
         # Open security server clients tab
         self.log('Open security server clients tab')
@@ -591,12 +592,12 @@ def test_09():
 def test_10():
     def test_case(self):
         """
-        SERVICE_42 step 3 System verifies added central services
+        SERVICE_41 step 3 System verifies added central services
         :param self: MainController object
         :return: None
         """
-        # TEST PLAN MEMBER_42 step 3 System verifies added central services
-        self.log('*** MEMBER_42_3 / XTKB-57')
+        # TEST PLAN SERVICE_41 step 3 System verifies added central services
+        self.log('*** SERVICE_41_3 / XTKB-57')
 
         cs_ssh_host = self.config.get('cs.ssh_host')
         cs_ssh_user = self.config.get('cs.ssh_user')
@@ -721,12 +722,12 @@ def test_10():
 def test_11():
     def test_case(self):
         """
-        MEMBER_42 step 3 System verifies changed Implementing Service
+        SERVICE_42 step 3 System verifies changed Implementing Service
         :param self: MainController object
         :return: None
         """
-        # TEST PLAN MEMBER_42 step 3 System verifies changed Implementing Service
-        self.log('*** MEMBER_42_3 / XTKB-58')
+        # TEST PLAN SERVICE_42 step 3 System verifies changed Implementing Service
+        self.log('*** SERVICE_42_3 / XTKB-58')
 
         cs_ssh_host = self.config.get('cs.ssh_host')
         cs_ssh_user = self.config.get('cs.ssh_user')
@@ -1046,6 +1047,104 @@ def test_12():
     return test_case
 
 
+def test_13():
+    def test_case(self):
+        """
+        SERVICE_08 step 3 Add WSDL input parsing
+        :param self: MainController object
+        :return: None
+        """
+        ss_2_ssh_host = self.config.get('ss2.ssh_host')
+        ss_2_ssh_user = self.config.get('ss2.ssh_user')
+        ss_2_ssh_pass = self.config.get('ss2.ssh_pass')
+        # TEST PLAN SERVICE 8 step 3 System verifies wsdl inputs
+        self.log('*** SERVICE_08_3 / XTKB-23')
+        # Open security server clients tab
+        self.log('Open security server clients tab')
+        self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar_constants.CLIENTS_BTN_CSS).click()
+
+        member_code = clients_table_vm.ONE_SS_CLIENT[0]
+        subsystem_code = clients_table_vm.ONE_SS_CLIENT[1]
+
+        # Add client
+        add_ss_client(self, member_code, subsystem_code)
+
+        self.log('Click on "CONTINUE" button')
+        self.wait_until_visible(type=By.XPATH, element=popups.WARNING_POPUP_CONTINUE_XPATH).click()
+        self.log('Click on "CONFIRM" button')
+        popups.confirm_dialog_click(self)
+
+        self.log('Find added Member Code == "' + member_code + ', Subsystem Code == ' + subsystem_code)
+        client_id = self.wait_until_visible(type=By.XPATH, element=clients_table_vm.
+                                            get_client_id_by_member_code_subsystem_code(self, member_code,
+                                                                                        subsystem_code))
+        counter = 1
+        management_wsdl_url = self.config.get('wsdl.management_service_wsdl_url')
+        cs_host = self.config.get('cs.ssh_host')
+
+        log_checker = auditchecker.AuditChecker(host=ss_2_ssh_host, username=ss_2_ssh_user, password=ss_2_ssh_pass)
+        # Loop through wsdl url's
+        for wsdl_data in clients_table_vm.WSDL_DATA_ADDING:
+            current_log_lines = log_checker.get_line_count()
+            wsdl_url = wsdl_data[0].format(management_wsdl_url, cs_host)
+            error = wsdl_data[1]
+            error_message = wsdl_data[2]
+            error_message_label = wsdl_data[3]
+            whitespaces = wsdl_data[4]
+
+            '''Generate long inputs'''
+            long_wsdl_url = wsdl_url.split('#')
+            try:
+                if long_wsdl_url[1] == '255':
+                    multiplier = int(long_wsdl_url[1]) - len(long_wsdl_url[0]) - len(long_wsdl_url[2])
+                    wsdl_url = long_wsdl_url[0] + multiplier * 'A' + long_wsdl_url[2]
+                elif long_wsdl_url[1] == '256':
+                    multiplier = int(long_wsdl_url[1]) - len(long_wsdl_url[0]) - len(long_wsdl_url[2])
+                    wsdl_url = long_wsdl_url[0] + multiplier * 'A' + long_wsdl_url[2]
+            except:
+                pass
+
+            self.log('Test-' + str(counter) + '. WSDL URL == "' + wsdl_url + '"')
+
+            self.log("Open client details")
+            self.double_click(client_id)
+
+            add_wsdl_url(self, wsdl_url)
+
+            parse_user_input(self, error, error_message, error_message_label)
+
+            self.wait_jquery()
+            if error:
+                '''Check if log contains info about service adding failure'''
+                logs_found = log_checker.check_log(log_constants.ADD_WSDL_FAILED,
+                                                   from_line=current_log_lines + 1)
+                self.is_true(logs_found, msg="Add WSDL failed not found in audit log")
+                self.wait_until_visible(type=By.XPATH, element=popups.ADD_WSDL_POPUP_CANCEL_BTN_XPATH).click()
+            else:
+                # Verify that the added WSDL URL exists
+                self.log('Find added WSDL URL row number - ' + wsdl_url)
+                found_wsdl_url = self.wait_until_visible(type=By.CSS_SELECTOR,
+                                                         element=popups.CLIENT_DETAILS_POPUP_WSDL_CSS)
+                found_wsdl_url = found_wsdl_url.text
+                if whitespaces:
+                    find_text_with_whitespaces(self, wsdl_url, found_wsdl_url)
+                else:
+                    assert wsdl_url in found_wsdl_url
+                    self.log('Found WSDL URL - ' + found_wsdl_url)
+
+            self.log('Click on "CLOSE" button')
+            self.wait_until_visible(type=By.XPATH, element=popups.CLIENT_DETAILS_POPUP_CLOSE_BTN_XPATH).click()
+
+        client_id = self.wait_until_visible(type=By.XPATH, element=clients_table_vm.
+                                            get_client_id_by_member_code_subsystem_code(self, member_code,
+                                                                                        subsystem_code))
+        self.log('Delete added client')
+        delete_added_client(self, client_id)
+        counter += 1
+
+    return test_case
+
+
 def parse_user_selection(self, element, start_nr):
     """
     Verify user selections
@@ -1064,7 +1163,7 @@ def parse_user_selection(self, element, start_nr):
             element_text = element_text.text
             element_without_whitespaces = element_text.strip()
 
-            if element_text == '' or len(element_text) > 255 or len(element_text) != len(element_without_whitespaces):
+            if element_text == '' or len(element_text) > 265 or len(element_text) != len(element_without_whitespaces):
                 condition = False
             else:
                 condition = True
@@ -1219,6 +1318,7 @@ def add_ss_client(self, member_code, subsystem_code):
                                               element=popups.ADD_CLIENT_POPUP_SUBSYSTEM_CODE_AREA_XPATH)
     self.input(subsystem_input, subsystem_code)
 
+    self.wait_jquery()
     # Save the client data
     self.log('Click on "OK" button')
     self.wait_until_visible(type=By.XPATH, element=popups.ADD_CLIENT_POPUP_OK_BTN_XPATH).click()
@@ -1245,11 +1345,12 @@ def add_wsdl_url(self, wsdl_url):
 
 def get_provider_parameters(self):
     '''Get provider class and code fromm config.ini'''
-    central_service_provider_2_id = self.config.get('services.central_service_provider_2_id')
+    central_service_provider_2_id = self.config.get('services.central_service_provider_id')
     central_service_provider_2_id = central_service_provider_2_id.split(' : ')
     provider_code = central_service_provider_2_id[2]
     provider_class = central_service_provider_2_id[1]
 
+    self.wait_jquery()
     # Open central services
     self.log('Open MEMBERS tab')
     self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar_constants.MEMBERS_CSS).click()
@@ -1414,6 +1515,10 @@ def parse_key_label_inputs(self):
     :return: None
     """
 
+    ss_2_ssh_host = self.config.get('ss2.ssh_host')
+    ss_2_ssh_user = self.config.get('ss2.ssh_user')
+    ss_2_ssh_pass = self.config.get('ss2.ssh_pass')
+
     # TEST PLAN SS_28_4 System verifies entered key label
     self.log('*** SS_28_4 / XTKB-18')
 
@@ -1426,7 +1531,10 @@ def parse_key_label_inputs(self):
 
     # Loop through different key label names and expected results
     counter = 1
+    log_checker = auditchecker.AuditChecker(host=ss_2_ssh_host, username=ss_2_ssh_user, password=ss_2_ssh_pass)
     for key_name in keyscertificates_constants.KEY_LABEL_TEXT_AND_RESULTS:
+        current_log_lines = log_checker.get_line_count()
+
         input_text = key_name[0]
         error = key_name[1]
         error_message = key_name[2]
@@ -1441,6 +1549,10 @@ def parse_key_label_inputs(self):
         # Verify key label
         parse_user_input(self, error, error_message, error_message_label)
         if error:
+            '''Check if log contains info about key generation failure'''
+            logs_found = log_checker.check_log(log_constants.GENERATE_KEY_FAILED,
+                                               from_line=current_log_lines + 1)
+            self.is_true(logs_found, msg="Key generation failed not found in audit log")
             self.log('Click on "Cancel" button')
             self.wait_until_visible(type=By.XPATH, element=popups.GENERATE_KEY_POPUP_CANCEL_BTN_XPATH).click()
         else:
@@ -1491,7 +1603,7 @@ def parse_csr_inputs(self):
     :return: None
     """
 
-    # TEST PLAN SS_28_4 System verifies entered CSR
+    # TEST PLAN SS_29_5 System verifies entered CSR
     self.log('*** SS_29_5 / XTKB-63')
 
     self.log('SS_29_5 System verifies entered CSR')
@@ -1515,7 +1627,7 @@ def parse_csr_inputs(self):
     parse_user_selection(self, keyscertificates_constants.GENERATE_CSR_SIGNING_REQUEST_CLIENT_DROPDOWN_ID, 1)
     self.log('Verify Certification Service: selections')
     parse_user_selection(self, keyscertificates_constants.GENERATE_CSR_SIGNING_REQUEST_APPROVED_CA_DROPDOWN_ID, 2)
-    self.log('Verify SCR Format: selections')
+    self.log('Verify CSR Format: selections')
     parse_user_selection(self, keyscertificates_constants.GENERATE_CSR_SIGNING_REQUEST_CSR_FORMAT_DROPDOWN_ID, 1)
 
     self.log('Click on "CANCEL" button')
@@ -1581,7 +1693,7 @@ def parse_global_groups_inputs(self):
     :return: None
     """
     # TEST PLAN SERVICE_32 step 3 System verifies global groups inputs in the central server
-    self.log('*** SERVICE_33_3 / XTKB-56')
+    self.log('*** SERVICE_32_3 / XTKB-56')
     # Open global groups
     self.wait_jquery()
     self.log('Open Global Groups tab')

@@ -27,7 +27,10 @@ class SecurityServerCertImportGlobalConfExpired(unittest.TestCase):
                                                                                                               ss_host,
                                                                                                               ss_username,
                                                                                                               ss_pass,
-                                                                                                              ss2_client)
+                                                                                                              ss2_client,
+                                                                                                              ss2_ssh_host,
+                                                                                                              ss2_ssh_user,
+                                                                                                              ss2_ssh_pass)
 
         start_xroad_conf_client = client_certification_2_1_3.start_xroad_conf_client(main,
                                                                                      ss2_ssh_host,

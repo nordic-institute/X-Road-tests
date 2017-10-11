@@ -31,6 +31,10 @@ class SecurityServerClientRegistration(unittest.TestCase):
         member_name = client['code']
         member_class = client['class']
 
+        ss2_ssh_host = main.config.get('ss2.ssh_host')
+        ss2_ssh_user = main.config.get('ss2.ssh_user')
+        ss2_ssh_pass = main.config.get('ss2.ssh_pass')
+
         main.log('TEST: CERTIFYING SECURITY SERVER CLIENTS')
 
         try:
@@ -38,7 +42,12 @@ class SecurityServerClientRegistration(unittest.TestCase):
             main.reset_webdriver(main.url, main.username, main.password)
 
             # TODO: check_inputs=True
-            test_func = client_certification_2_1_3.test_generate_csr_and_import_cert(member_name, member_class, check_inputs=False)
+            test_func = client_certification_2_1_3.test_generate_csr_and_import_cert(member_name, member_class,
+                                                                                     check_inputs=False,
+                                                                                     ss2_ssh_host=ss2_ssh_host,
+                                                                                     ss2_ssh_user=ss2_ssh_user,
+                                                                                     ss2_ssh_pass=ss2_ssh_pass,
+                                                                                     delete_csr_before_import=True)
             test_func(main)
 
             main.log('Waiting {0} seconds for configuration update'.format(config_wait_time))
@@ -46,7 +55,8 @@ class SecurityServerClientRegistration(unittest.TestCase):
 
             main.test_number = '2.1.3 / SS_29-9'
 
-            test_configuration_update = client_certification_2_1_3.test_configuration(ssh_host, ssh_username, ssh_password,
+            test_configuration_update = client_certification_2_1_3.test_configuration(ssh_host, ssh_username,
+                                                                                      ssh_password,
                                                                                       member_name, member_class)
             test_configuration_update(main)
         except AssertionError:

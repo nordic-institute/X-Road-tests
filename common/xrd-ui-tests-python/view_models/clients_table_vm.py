@@ -10,12 +10,9 @@ import messages
 MEMBER_SUBSYSTEM_CODE_AND_RESULTS = [['', '', True, 'Missing parameter: {0}', 'add_member_code', False],
                                      ['', 'SUB_TEST', True, 'Missing parameter: {0}', 'add_member_code', False],
                                      ['SUB_TEST', '', True, 'Missing parameter: {0}', 'add_subsystem_code', False],
-                                     [256 * 'A', 'SUB_TEST', True, "Parameter '{0}' input exceeds 255 characters",
-                                      'add_member_code', False],
-                                     ['SUB_TEST', 256 * 'A', True, "Parameter '{0}' input exceeds 255 characters",
-                                      'add_subsystem_code', False],
-                                     [256 * 'A', 256 * 'A', True, "Parameter '{0}' input exceeds 255 characters",
-                                      'add_member_code', False],
+                                     [256 * 'A', 'SUB_TEST', True, "Parameter '{0}' input exceeds 255 characters", 'add_member_code', False],
+                                     ['SUB_TEST', 256 * 'A', True, "Parameter '{0}' input exceeds 255 characters", 'add_subsystem_code', False],
+                                     [256 * 'A', 256 * 'A', True, "Parameter '{0}' input exceeds 255 characters", 'add_member_code', False],
                                      ['SUB_TEST', 'TEST_SUB', False, None, None, False],
                                      ['Z', 'Y', False, None, None, False],
                                      ['   SUB_TEST   ', '   TEST_SUB   ', False, None, None, True]
@@ -26,11 +23,17 @@ ONE_SS_CLIENT = ['CL_TEST', 'TEST_CL']
 WSDL_DATA = [['   {0}   ', False, None, None, True],
              ['{0}', False, None, None, False],
              ['', True, 'Missing parameter: {0}', 'new_url', None],
-             ['http://{1}/' + 237 * 'A' + '.wsdl', True, "Parameter '{0}' input exceeds 255 characters", 'new_url',
-              None],
-             ['http://{1}/#255#.wsdl', True,
-              "Failed to edit WSDL: Downloading WSDL failed. WSDL URL must point to a WSDL file.", None, None],
+             ['http://{1}/#256#.wsdl', True, "Parameter '{0}' input exceeds 255 characters", 'new_url', None],
+             ['http://{1}/#255#.wsdl', True, "Failed to edit WSDL: Downloading WSDL failed. WSDL URL must point to a WSDL file.", None, None],
              ]
+
+WSDL_DATA_ADDING = [['   {0}   ', False, None, None, True],
+                    ['', True, 'Missing parameter: {0}', 'wsdl_add_url', None],
+                    ['http://{1}/#256#.wsdl', True, "Parameter '{0}' input exceeds 255 characters",
+                     'wsdl_add_url', None],
+                    ['http://{1}/#255#.wsdl', True,
+                     "Failed to add WSDL: Downloading WSDL failed. WSDL URL must point to a WSDL file.", None, None],
+                    ]
 
 WSDL_DISABLE_NOTICES = [[256 * 'A', True, "Parameter '{0}' input exceeds 255 characters", 'wsdl_disabled_notice'],
                         [255 * 'A', False, None, None],
@@ -41,8 +44,7 @@ WSDL_DISABLE_NOTICES = [[256 * 'A', True, "Parameter '{0}' input exceeds 255 cha
                         ]
 
 SERVICE_URLS_DATA = [['', True, 'Missing parameter: {0}', 'params_url', False],
-                     ['{0}#256#/managementservice/', True, "Parameter '{0}' input exceeds 255 characters", 'params_url',
-                      False],
+                     ['{0}#256#/managementservice/', True, "Parameter '{0}' input exceeds 255 characters", 'params_url', False],
                      ['{0}#255#/managementservice/', False, None, None, False],
                      ['{0}managementservice/', False, None, None, False],
                      ['    {0}managementservice/    ', False, None, None, True]
@@ -74,15 +76,18 @@ SELECT_CLIENT_POPUP_XPATH = '//div[@aria-describedby = "client_select_dialog"]'
 SELECT_CLIENT_POPUP_OK_BTN_XPATH = SELECT_CLIENT_POPUP_XPATH + '//div[@class="ui-dialog-buttonset"]//button[span="OK"]'
 
 CLIENT_STATUS_SAVED = 'saved'
+CLIENT_STATUS_REGISTRATION = 'registration in progress'
 
-def open_acl_subjects_popup(self):
+
+def open_acl_subjects_popup(self, client_name):
     print('Open clients view')
     # Wait for the element and click
     self.wait_until_visible(self.by_css(sidebar_vm.CLIENTS_BTN_CSS)).click()
     print('Open Service clients dialog')
     self.wait_jquery()
+    self.wait_until_visible(type=By.CSS_SELECTOR, element=CLIENT_ROW_CSS)
     table_rows = self.by_css(CLIENT_ROW_CSS, multiple=True)
-    client_row_index = find_row_by_client(table_rows, client_id='SUBSYSTEM : ee-dev : COM : 11389751 : SUBSYSTEM')
+    client_row_index = find_row_by_client(table_rows, client_name=client_name)
     table_rows[client_row_index].find_element_by_css_selector(ACL_SUBJECTS_TAB_CSS).click()
 
 
@@ -226,14 +231,12 @@ def get_client_row_element(self, client=None, client_name=None, client_id=None):
 
 
 def open_client_popup_services(self, client=None, client_name=None, client_id=None):
-    return open_client_popup_tab(self, client=client, client_name=client_name, client_id=client_id,
-                                 selector=SERVICES_TAB_CSS,
+    return open_client_popup_tab(self, client=client, client_name=client_name, client_id=client_id, selector=SERVICES_TAB_CSS,
                                  type=By.CSS_SELECTOR)
 
 
 def open_client_popup_internal_servers(self, client=None, client_name=None, client_id=None):
-    return open_client_popup_tab(self, client=client, client_name=client_name, client_id=client_id,
-                                 selector=INTERNAL_CERTS_TAB_CSS,
+    return open_client_popup_tab(self, client=client, client_name=client_name, client_id=client_id, selector=INTERNAL_CERTS_TAB_CSS,
                                  type=By.CSS_SELECTOR)
 
 
@@ -534,9 +537,12 @@ def get_client_id_by_member_code_subsystem_code(self, member_code, subsystem_cod
     return '//span[text()= "SUBSYSTEM : ' + instance + ' : ' + client_class + ' : ' + member_code + ' : ' + \
            subsystem_code + '"]'
 
+
 def get_client_subsystem_xpath(self, client):
-    return '//span[text()= "SUBSYSTEM : ' + client['instance'] + ' : ' + client['class'] + ' : ' + client['code'] + ' : ' + \
+    return '//span[text()= "SUBSYSTEM : ' + client['instance'] + ' : ' + client['class'] + ' : ' + client[
+        'code'] + ' : ' + \
            client['subsystem'] + '"]'
+
 
 def find_service_url_by_text(self, text):
     return self.wait_until_visible(type=By.XPATH, element='//table[@id="services"]//td[text()="' + text + '"]')

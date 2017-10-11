@@ -464,6 +464,27 @@ def add_services_to_client(self, ssh_host, ssh_username, ssh_password, sec_host,
                  '2.11.2-11/2.11.2-14 log check for editing service parameters - check failed',
                  '2.11.2-11/2.11.2-14 log check for editing service parameters')
 
+    self.log('Change service url protocol to https, so TLS checkbox can be changed')
+    self.wait_jquery()
+    self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_EDIT_WSDL_BTN_ID).click()
+    self.log('Editing service parameters')
+    service_url_input = self.wait_until_visible(type=By.ID, element=popups.EDIT_SERVICE_POPUP_URL_ID)
+    self.input(service_url_input, self.config.get('services.test_service_url_ssl'))
+    self.wait_until_visible(type=By.XPATH, element=popups.EDIT_SERVICE_POPUP_OK_BTN_XPATH).click()
+    self.wait_jquery()
+
+    '''SERVICE_20 System logs "Edit service parameters" when TLS option changed'''
+    self.log('SERVICE_20 System logs "Edit service parameters" when TLS option changed')
+    self.log('Open edit wsdl service popup')
+    self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_EDIT_WSDL_BTN_ID).click()
+    self.log('Editing service parameters')
+    self.wait_until_visible(type=By.ID, element=popups.EDIT_SERVICE_POPUP_TLS_ID).click()
+    self.wait_until_visible(type=By.XPATH, element=popups.EDIT_SERVICE_POPUP_OK_BTN_XPATH).click()
+    '''Log check for editing service parameters'''
+    bool_value, log_data, date_time = check_logs_for(self, ssh_host, ssh_username, ssh_password, EDIT_SERVICE_PARAMS,
+                                                     sec_username)
+    self.is_true(bool_value)
+
     # TEST PLAN 2.11.2-12 set service access rights
     self.log('2.11.2-12 set service access rights')
     self.driver.get(sec_host)

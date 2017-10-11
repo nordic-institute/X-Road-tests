@@ -1,7 +1,9 @@
 import unittest
-from main.maincontroller import MainController
+
 import ca_management
+from main.maincontroller import MainController
 from tests.xroad_cs_ocsp_responder import ocsp_responder
+from view_models import popups
 
 
 class XroadAddCa(unittest.TestCase):
@@ -41,28 +43,43 @@ class XroadAddCa(unittest.TestCase):
         test_add_ca = ca_management.test_add_ca(case=main, ca_certificate=ca_certificate,
                                                 invalid_ca_certificate=invalid_ca_certificate,
                                                 certificate_classpath=certificate_classpath, cs_ssh_host=cs_ssh_host,
-                                                cs_ssh_user=cs_ssh_user, cs_ssh_pass=cs_ssh_pass)
+                                                cs_ssh_user=cs_ssh_user, cs_ssh_pass=cs_ssh_pass, check_errors=True)
+
+        test_add_ca1 = ca_management.test_add_ca(case=main, ca_certificate=ca_certificate,
+                                                 invalid_ca_certificate=invalid_ca_certificate,
+                                                 certificate_classpath=certificate_classpath, cs_ssh_host=cs_ssh_host,
+                                                 cs_ssh_user=cs_ssh_user, cs_ssh_pass=cs_ssh_pass,
+                                                 auth_only_certs=True
+                                                 )
 
         test_delete_ca = ca_management.test_delete_ca(case=main, ca_name=ca_name)
 
+        '''Auth only certification service adding test passed, if it did, then removing its added service'''
+        auth_only_test_passed = False
         try:
             # Open webdriver
             main.reload_webdriver(url=cs_host, username=cs_user, password=cs_pass)
 
             # Run the test
             test_add_ca()
+            popups.close_all_open_dialogs(main)
+            test_add_ca1()
+            auth_only_test_passed = True
         except:
             main.log('XroadAddCa: Failed to add CA')
             main.save_exception_data()
             try:
                 # Delete service
                 main.reload_webdriver(url=cs_host, username=cs_user, password=cs_pass)
-
                 test_delete_ca()
             except:
                 main.log('XroadAddCa: Failed to delete added data.')
                 main.save_exception_data()
             assert False
         finally:
+            if auth_only_test_passed:
+                main.log('Deleting auth only certification service')
+                main.reload_webdriver(url=cs_host, username=cs_user, password=cs_pass)
+                ca_management.delete_last_ca(main)
             # Test teardown
             main.tearDown()

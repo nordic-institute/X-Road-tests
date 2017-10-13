@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 from variables import flags
 from webframework import TESTDATA
 from selenium.webdriver.common.by import By
@@ -51,7 +52,7 @@ class Component_cs_backup(CommonUtils):
         ## Generate backup
         self.cs_backup_restore.click_button_id_backup()
         self.cs_backup_restore_dlg_back_up_config.click_button_ok()
-        flags.set_testdata_flag(flags.backup_running, True)
+        flags.set_testdata_flag(flags.restore_backup, True)
 
     def restore_backup(self):
         """
@@ -70,25 +71,14 @@ class Component_cs_backup(CommonUtils):
         self.cs_backup_restore.click_element_newest_restore()
         self.cs_backup_restore_dlg_restore_confirm.click_button_ui_buttonset_confirm()
         self.cs_backup_restore_dlg_back_up_config.click_button_ok()
-        flags.set_testdata_flag(flags.backup_running, False)
-
-        # Deletion takes long time otherwise
-        sleep(6)
-        self.cs_backup_restore.click_element_newest_delete()
-        self.cs_backup_restore_dlg_delete_confirm.click_button_ui_buttonset_confirm()
-
-    def delete_all_backups(self):
-        while True:
-            try:
-                self.cs_backup_restore.click_element_newest_delete()
-                self.cs_backup_restore_dlg_delete_confirm.click_button_ui_buttonset_confirm()
-            except:
-                break
-
-        pass
+        flags.set_testdata_flag(flags.restore_backup, False)
 
     def download_backup(self):
         self.cs_backup_restore.click_element_newest_download()
+
+    def delete_backup(self):
+        self.cs_backup_restore.click_element_newest_delete()
+        self.cs_backup_restore_dlg_delete_confirm.click_button_ui_buttonset_confirm()
 
     def upload_backup(self):
         self.cs_backup_restore.click_element_upload_backup_file()

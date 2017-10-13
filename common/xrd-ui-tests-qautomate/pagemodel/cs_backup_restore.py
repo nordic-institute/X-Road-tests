@@ -67,6 +67,7 @@ class Cs_backup_restore(CommonUtils):
         # AutoGen method
         self.click_element(self.ID_BACKUP)
         self.wait_until_jquery_ajax_loaded()
+        TESTDATA[u'paths'][u'backup_file'] = self.get_text(self.NEWEST_BACKUP_NAME)
 
     def click_element_newest_restore(self):
         """
@@ -92,8 +93,6 @@ class Cs_backup_restore(CommonUtils):
         backup_file = self.get_text(self.NEWEST_BACKUP_NAME)
         if not backup_file:
             self.fail(errors.backup_name_is_empty)
-        else:
-            TESTDATA[u'paths'][u'backup_file'] = backup_file
         self.element_should_be_present(self.NEWEST_RESTORE)
         self.element_should_be_present(self.NEWEST_DELETE)
         self.element_should_be_present(self.NEWEST_DOWNLOAD)

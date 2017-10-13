@@ -114,6 +114,18 @@ class Common_lib_ssh(CommonUtils):
             command = formated_command.format(server, log_file, log_file.split("/")[-1])
             self.run_bash_command(command, True)
 
+    def delete_files_from_directory(self, section="cs_url", path=u'/var/lib/xroad/backup'):
+        server = TESTDATA[section][u'server_address']
+        if strings.server_environment_type() == strings.lxd_type_environment:
+            server = server.split(".lxd")[0]
+            command = "lxc exec {} -- sudo rm -rf {}".format(server, path)
+        elif strings.server_environment_type() == strings.ssh_type_environment:
+            command = "ssh {} sudo rm -rf {}".format(server, path)
+        else:
+            raise Exception(errors.enviroment_type_not_valid)
+
+        self.run_bash_command(command, True)
+
     def run_bash_command(self, command, to_print=True):
         """
         Runs bash command

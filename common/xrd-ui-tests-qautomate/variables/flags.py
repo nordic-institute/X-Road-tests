@@ -1,9 +1,7 @@
 from webframework import TESTDATA
 
-# Test data section
 section = u'flags'
-# Backup_running
-backup_running = u'backup_running'
+restore_backup = u'restore_backup'
 
 
 def set_testdata_flag(flag, value):

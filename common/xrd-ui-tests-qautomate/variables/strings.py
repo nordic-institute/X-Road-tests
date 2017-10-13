@@ -58,6 +58,9 @@ lxd_type_environment = "lxd"
 sign_key_usage = "Sign"
 auth_key_usage = "Auth"
 
+# Backup paths
+backup_directory = u'/var/lib/xroad/backup'
+
 # Log file names and paths
 audit_log = "/var/log/xroad/audit.log"
 jetty_log = "/var/log/xroad/jetty/jetty.log"
@@ -114,9 +117,3 @@ def server_request_comment(section=u'member1_configuration'):
         request_comment = u'\'SERVER:{}/{}/{}/{}\' deletion'.format(instance_identifier, member_class,
                                                                     member_code, member_server)
         return request_comment
-
-
-if __name__== "__main__":
-    from webframework.extension.parsers.parameter_parser import get_parameter, get_all_parameters, set_parameter_file
-    set_parameter_file("C:/rnd/github/xroad-utils/ui-integration-tests/xrd-ui-tests-qautomate/data/stage_parameters/common_configuration.xml")
-    generate_member_id_short()

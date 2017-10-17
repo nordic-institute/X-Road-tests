@@ -214,14 +214,14 @@
     <wsdl:service name="xroadGetRandom">
         <wsdl:port name="xroadGetRandomPortSoap11"
                 binding="tns:xroadGetRandomPortSoap11">
-            <soap:address location="http://xtee2.ci.kit:8088/xroadGetRandom" />
+            <soap:address location="http://xroad-lxd-web.lxd:8088/xroadGetRandom" />
         </wsdl:port>
     </wsdl:service>
 	
     <wsdl:service name="bodyMassIndex">
         <wsdl:port name="bodyMassIndexPortSoap11"
                 binding="tns:bodyMassIndexPortSoap11">
-            <soap:address location="http://xtee2.ci.kit:8088/bodyMassIndex" />
+            <soap:address location="http://xroad-lxd-web.lxd:8088/bodyMassIndex" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

@@ -397,7 +397,7 @@
     <wsdl:service name="asd">
         <wsdl:port name="mockPortSoap11"
                 binding="tns:mockPortSoap11">
-            <soap:address location="http://localhost:8088/xrd-mock" />
+            <soap:address location="http://xroad-lxd-web.lxd:8088/xrd-mock" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

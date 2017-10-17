@@ -3,6 +3,7 @@ import json
 import re
 
 import ssh_client
+from view_models import keys_and_certificates_table
 
 
 def refresh_ocsp(sshclient):
@@ -65,6 +66,38 @@ def get_log_lines(client, file_name, lines):
             }
 
 
+def get_key_conf_keys_count(sshclient, key_type):
+    """
+    Gets count of keys of specified type in system configuration
+    :param sshclient: obj - sshclient instance
+    :param key_type: str - key type
+    :return:
+    """
+    return sshclient.exec_command(command='grep "key usage=\\\"{0}\\\"" {1} | wc -l'.format(key_type,
+                                                                                            keys_and_certificates_table.KEY_CONFIG_FILE),
+                                  sudo=True)[0][0]
+
+
+def get_key_conf_token_count(sshclient):
+    """
+    Gets count of device objects in system configuration
+    :param sshclient: obj - sshclient instance
+    :return:
+    """
+    return \
+        sshclient.exec_command(command='grep "<device>" {0} | wc -l'.format(keys_and_certificates_table.KEY_CONFIG_FILE),
+                               sudo=True)[0][0]
+
+
+def get_key_conf_csr_count(sshclient):
+    """
+    Gets count of csr objects in system configuration
+    :param sshclient: sshclient instance
+    :return:
+    """
+    return sshclient.exec_command(
+        command='grep "<certRequest.*>" {0} | wc -l'.format(keys_and_certificates_table.KEY_CONFIG_FILE), sudo=True)[0][
+        0]
 def get_server_name(self):
     return self.by_id('server-info').get_attribute('data-instance')
 

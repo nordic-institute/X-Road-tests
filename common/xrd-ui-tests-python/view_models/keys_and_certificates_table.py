@@ -14,6 +14,7 @@ KEY_LABEL_TEXT_AND_RESULTS = [[256 * 'S', True, "Parameter '{0}' input exceeds 2
 
 KEY_USAGE_TYPE_SIGN = 'sign'
 DETAILS_BTN_ID = 'details'
+CERT_ACTIVE_CSS = '.cert-active'
 GENERATEKEY_BTN_ID = 'generate_key'
 GENERATECSR_BTN_ID = 'generate_csr'
 ACTIVATE_BTN_ID = 'activate'
@@ -26,7 +27,7 @@ FILEPATH_IMPORT_BTN_ID = 'file_upload_button'
 FILE_IMPORT_OK_BTN_ID = 'file_upload_submit'
 FILEPATH_INPUT_AREA_CSS = '.selected_file'
 FILEPATH_FORM_INPUT_ID = 'file_upload'
-UNSAVED_KEY_CSS = '.unsaved'
+UNSAVED_KEY_CSS = '.key.unsaved'
 SUBMITTED_FOR_APPROVAL_STATE = 'SUBMITTED FOR APPROVAL'
 WAITING_STATE = 'WAITING'
 REVOKED_STATE = 'REVOKED'
@@ -42,6 +43,8 @@ REGISTER_DIALOG_ADDRESS_INPUT_ID = 'address'
 
 GENERATED_KEYS_TABLE_ROW_CSS = '.key'
 CERT_REQUESTS_TABLE_ROW_CSS = ".cert-request"
+KEY_TABLE_ROW_BY_LABEL_XPATH = '//table[contains(@id, "keys")]//tr[contains(@class, "key")]//td[contains(text(), \"{0}\")]'
+KEY_TABLE_CERT_ROW_BY_LABEL_XPATH = KEY_TABLE_ROW_BY_LABEL_XPATH + '/../following::tr[contains(@class, "cert-active")]'
 GENERATED_KEY_TABLE_ROW_XPATH = '//table[contains(@id, "keys")]//tr[contains(@class, "key")]//td[contains(text(), \"' + KEY_LABEL_TEXT + '\")]'
 SOFTTOKEN_TABLE_ROW_XPATH = '//table[contains(@id, "keys")]//tr[contains(@class, "token")]/td[div="Token: softToken-0"]'
 SOFTTOKEN_TABLE_XPATH = '//table[contains(@id, "keys")]//tr[contains(@class, "token")]/td'
@@ -81,6 +84,8 @@ SUBJECT_DISTINGUISHED_NAME_POPUP_O_XPATH = '//input[@name="O"]'
 SUBJECT_DISTINGUISHED_NAME_POPUP_CN_XPATH = '//input[@name="CN"]'
 SUBJECT_DISTINGUISHED_NAME_POPUP_OK_BTN_XPATH = SUBJECT_DISTINGUISHED_NAME_POPUP_XPATH + '//button[@data-name="ok"]'
 SUBJECT_DISTINGUISHED_NAME_POPUP_CANCEL_BTN_XPATH = SUBJECT_DISTINGUISHED_NAME_POPUP_XPATH + '//button[@data-name="cancel"]'
+SIGNING_KEY_LABEL = 'signingkey'
+AUTH_KEY_LABEL = 'authkey'
 
 
 def get_generated_row_row_by_td_text(text):
@@ -98,6 +103,10 @@ def get_generated_key_row_key_usage_xpath(client_code, client_class):
 def get_generated_key_row_cert_xpath(client_code, client_class):
     return '//table[contains(@id, "keys")]//tr[contains(@class, "key")]//td[contains(text(), \"' + \
            KEY_LABEL_TEXT + '_' + client_code + '_' + client_class + '\")]/../following::tr[2]'
+
+def get_generated_key_row_csr_xpath(client_code, client_class):
+    return '//table[contains(@id, "keys")]//tr[contains(@class, "key")]//td[contains(text(), \"' + \
+           KEY_LABEL_TEXT + '_' + client_code + '_' + client_class + '\")]/../following::tr[contains(@class, "cert-request")]'
 
 def get_generated_key_row_active_cert_friendly_name_xpath(client_code, client_class, key_num = 1):
     return '(//table[contains(@id, "keys")]//tr[contains(@class, "key")]//td[contains(text(), \"' + \

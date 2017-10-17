@@ -40,6 +40,7 @@ SERVICE_EDIT_INVALID_URL = INVALID_URL
 SERVICE_EDIT_INVALID_TIMEOUT = 'Timeout value must be a positive integer.'
 SERVICE_EDIT_INFINITE_TIMEOUT_WARNING = 'A timeout value of zero is interpreted as an infinite timeout.'
 
+AUTH_CERT_IMPORT_FILE_FORMAT_ERROR = 'Failed to import authentication certificate: Incorrect file format. Only PEM and DER files allowed.'
 INVALID_URL = SERVICE_EDIT_INVALID_URL
 
 TSL_CERTIFICATE_ALREADY_EXISTS = "Certificate already exists"
@@ -103,10 +104,12 @@ FAILED_TO_REGISTER_HOST_NOT_KNOWN_ERROR = 'Failed to register certificate: Unkno
 UPLOAD_CONTAIN_INVALID_CHARACTERS = 'Failed to upload new backup file: Filename \'{0}\' contains invalid characters. Valid characters include: (A-Z), (a-z), (0-9), (_), (.), (-).'
 UPLOAD_WRONG_EXTENSION = 'Failed to upload new backup file: Uploaded file name \'{0}\' has an invalid extension, the only valid one is \'tar\''
 
+CERT_ALREADY_SUBMITTED_ERROR_BEGINNING = 'Failed to add authentication certificate adding request: Certificate is already submitted for registration with request'
 UPLOAD_WRONG_FORMAT = 'Failed to upload new backup file: Content of uploaded file must be in tar format'
 UPLOAD_EXISTS = 'Backup file with name \'{0}\' already exists, do you want to overwrite it?'
 TOKEN_DETAILS_MISSING_PARAMETER = 'Missing parameter: friendly_name'
 TOKEN_PIN_INCORRECT = 'PIN incorrect'
+
 
 
 def get_error_message(self):

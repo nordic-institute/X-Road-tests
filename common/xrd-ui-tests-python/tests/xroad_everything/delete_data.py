@@ -43,7 +43,7 @@ class Test(unittest.TestCase):
 
     # Delete client (undo 2.2.1)
     def test_05_xroad_security_server_client_deletion(self):
-        from tests.xroad_client_registration_in_ss_221.client_registration_in_ss_deletion import \
+        from tests.xroad_client_registration_in_ss_221.XroadSecurityServerClientDeletion import \
             XroadSecurityServerClientDeletion
         print('\n test_11_xroad_security_server_client_deletion STARTED\n')
         suite = unittest.TestLoader().loadTestsFromTestCase(XroadSecurityServerClientDeletion)

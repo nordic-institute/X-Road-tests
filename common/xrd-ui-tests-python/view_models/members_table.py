@@ -80,6 +80,12 @@ CLIENT_REQUEST_CLASS_AREA_XPATH = CLIENT_REGISTRATION_REQUEST_EDIT_POPUP_XPATH +
 CLIENT_REQUEST_CODE_AREA_XPATH = CLIENT_REGISTRATION_REQUEST_EDIT_POPUP_XPATH + '//p[not(contains(@style,"display:none")) and contains(@class, "client_details_code")]'
 CLIENT_REQUEST_SUB_CODE_AREA_XPATH = CLIENT_REGISTRATION_REQUEST_EDIT_POPUP_XPATH + '//p[not(contains(@style,"display:none")) and contains(@class, "client_details_subsystem_code")]'
 
+MEMBER_FIRST_OWNED_SERVER_DETAILS_CSS = '.open_details'
+SS_DETAILS_AUTH_CERT_TAB_XPATH = '//*[@href="#server_auth_certs_tab"]'
+SS_DETAILS_ADD_AUTH_CERT_BTN_ID = 'securityserver_authcert_add'
+ADD_AUTH_CERT_UPLOAD_BTN_ID = 'securityserver_auth_cert_upload_button'
+ADD_AUTH_CERT_SUBMIT_BTN_ID = 'auth_cert_add_submit'
+ADD_AUTH_CERT_CANCEL_BTN_XPATH = '//div[@aria-describedby="auth_cert_add_dialog"]//span[contains(text(), "Cancel")]'
 
 def get_requests_row_by_td_text(text):
     return '//table[@id = "management_requests_all"]//tbody//tr//td[contains(text(), "' + text + '")]/parent:: *'

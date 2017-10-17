@@ -9,17 +9,25 @@ from selenium.webdriver.support.select import Select
 
 import tests.xroad_parse_users_input_SS_41.parse_user_input_SS_41 as user_input_check
 from helpers import ssh_client, ssh_server_actions, xroad, login, auditchecker
+from helpers.ssh_server_actions import get_key_conf_keys_count, get_key_conf_token_count, get_key_conf_csr_count
 from tests.xroad_configure_service_222.wsdl_validator_errors import wait_until_server_up
 from tests.xroad_global_groups_tests import global_groups_tests
-from tests.xroad_logging_in_cs_2111.logging_in_cs_2_11_1 import delete_client
 from view_models import sidebar as sidebar_constants, keys_and_certificates_table as keyscertificates_constants, \
     popups as popups, certification_services, clients_table_vm, messages, keys_and_certificates_table, \
     ss_system_parameters, log_constants, cs_security_servers
+from view_models.log_constants import ADD_AUTH_CERTIFICATE_FOR_SECURITY_SERVER_FAILED
+from view_models.members_table import SS_DETAILS_AUTH_CERT_TAB_XPATH, MEMBER_FIRST_OWNED_SERVER_DETAILS_CSS, \
+    SS_DETAILS_ADD_AUTH_CERT_BTN_ID, ADD_AUTH_CERT_UPLOAD_BTN_ID, ADD_AUTH_CERT_SUBMIT_BTN_ID, \
+    ADD_AUTH_CERT_CANCEL_BTN_XPATH
+from view_models.messages import ERROR_MESSAGE_CSS, AUTH_CERT_IMPORT_FILE_FORMAT_ERROR, \
+    CERT_ALREADY_SUBMITTED_ERROR_BEGINNING
 
 
-def test_generate_csr_and_import_cert(client_code, client_class, check_inputs=False, check_success=True,
+def test_generate_csr_and_import_cert(client_code, client_class, usage_auth=False, key_label=None, check_inputs=False,
+                                      check_success=True,
                                       ss2_ssh_host=None, ss2_ssh_user=None, ss2_ssh_pass=None,
-                                      delete_csr_before_import=False):
+                                      delete_csr_before_import=False, generate_key=True, cancel_key_generation=True,
+                                      cancel_csr_generation=True, generate_same_csr_twice=True):
     def test_case(self):
         '''
         Test 2.1.3 success scenarios. Failure scenarios are tested in another function.
@@ -53,20 +61,25 @@ def test_generate_csr_and_import_cert(client_code, client_class, check_inputs=Fa
         if ss2_ssh_host is not None:
             log_checker = auditchecker.AuditChecker(ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass)
             current_log_lines = log_checker.get_line_count()
-        generate_csr(self, client_code, client_class, server_name, check_inputs=check_inputs,
-                     cancel_key_generation=True,
-                     cancel_csr_generation=True,
-                     generate_same_csr_twice=True,
+        generate_csr(self, client_code=client_code, client_class=client_class,
+                     server_name=server_name,
+                     key_label=key_label, check_inputs=check_inputs,
+                     cancel_key_generation=cancel_key_generation,
+                     cancel_csr_generation=cancel_csr_generation,
+                     generate_same_csr_twice=generate_same_csr_twice,
+                     generate_key=generate_key,
                      log_checker=log_checker)
 
         '''SS_30 15a No CSR notice corresponding to imported cert exist in system configuration'''
         if delete_csr_before_import:
             self.log('SS_30 15a No CSR notice corresponding to imported cert exist in system configuration')
-            delete_csr(self, client_code, client_class, log_checker)
+            sshclient = ssh_client.SSHClient(ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass)
+            delete_csr(self, client_code, client_class, log_checker, sshclient)
 
         # Get the certificate request path
-        file_path = glob.glob(self.get_download_path('_'.join(['*', server_name, client_class, client_code]) + '.der'))[
-            0]
+        file_path = \
+            glob.glob(self.get_download_path('_'.join(['*', server_name, client_class, client_code]) + '.der'))[
+                0]
 
         # Create an SSH connection to CA
         client = ssh_client.SSHClient(self.config.get('ca.ssh_host'), self.config.get('ca.ssh_user'),
@@ -124,23 +137,39 @@ def test_configuration(ssh_host, ssh_username, ssh_password, client_code, client
     return check_configuration
 
 
-def delete_csr(self, client_code, client_class, log_checker=None):
+def delete_csr(self, sshclient, log_checker=None, client_code=None, client_class=None, key_has_other_cert_or_csr=False,
+               only_item_and_key=False):
     """
     SS_39 Delete CSR from System Configuration
+    :param sshclient:
+    :param ss_ssh_pass: security server ssh pass
+    :param ss_ssh_user: security server ssh user
+    :param ss_ssh_host: security server ssh host
     :param self: main instance
     :param client_code: client code of the key, which csr will be deleted
     :param client_class: client class of the key, which csr will be deleted
     :param log_checker: log checker instance for checking audit log
     :return:
     """
+    self.log('Wait until keyconf is updated')
+    time.sleep(120)
+    self.log('Get signing keys count in system configuration')
+    signing_keys_count = get_key_conf_keys_count(sshclient, "SIGNING")
+    self.log('Get token count in system configuration')
+    token_count = get_key_conf_token_count(sshclient)
+    self.log('Get csr count in system configuration')
+    csr_count = get_key_conf_csr_count(sshclient)
     if log_checker is not None:
         current_log_lines = log_checker.get_line_count()
     '''Row, which is in table after key row'''
-    csr_row = self.wait_until_visible(type=By.XPATH,
-                                      element=keys_and_certificates_table.get_generated_key_row_cert_xpath(client_code,
-                                                                                                           client_class))
-    '''Make sure the row we got is CSR row'''
-    self.is_true('cert-request' in csr_row.get_attribute('class'))
+    if client_class is not None and client_code is not None:
+        csr_row = self.wait_until_visible(type=By.XPATH,
+                                          element=keys_and_certificates_table.get_generated_key_row_csr_xpath(
+                                              client_code,
+                                              client_class))
+    else:
+        csr_row = self.wait_until_visible(type=By.CSS_SELECTOR,
+                                          element=keys_and_certificates_table.CERT_REQUESTS_TABLE_ROW_CSS)
     '''Click on the csr row'''
     csr_row.click()
     self.log('SS_39 1. Click on the delete button to delete CSR')
@@ -148,16 +177,31 @@ def delete_csr(self, client_code, client_class, log_checker=None):
     self.log('SS_39 2. System prompts for confirmation')
     self.log('SS_39 3. Confirmation popup is confirmed')
     popups.confirm_dialog_click(self)
-    try:
-        self.log('SS_39 4. System deletes the CSR from system configuration')
-        csr_row = self.by_xpath(keys_and_certificates_table.get_generated_key_row_cert_xpath(client_code, client_class))
-        self.is_false('cert-request' in csr_row.get_attribute('class'))
-    except:
-        pass
     if log_checker is not None:
         self.log('SS_39 5. System logs the event "Delete CSR" in the audit log')
         logs_found = log_checker.check_log(log_constants.DELETE_CSR, from_line=current_log_lines + 1)
         self.is_true(logs_found, msg="{0} not found in audit log".format(log_constants.DELETE_CSR))
+    self.log('Wait until System Configuration is updated')
+    time.sleep(120)
+    self.log('SS_39 4. System deletes the CSR from system configuration')
+    signing_keys_count_after_deletion = get_key_conf_keys_count(sshclient, "SIGNING")
+    self.log('Get token count in system configuration')
+    token_count_after_deletion = get_key_conf_token_count(sshclient)
+    self.log('Get key count in system configuration')
+    csr_count_after = get_key_conf_csr_count(sshclient)
+    if key_has_other_cert_or_csr:
+        self.log('SS_39 4. System deletes only CSR when key has more certificates or csrs')
+        self.is_equal(signing_keys_count, signing_keys_count_after_deletion)
+        self.is_true(csr_count_after < csr_count)
+    elif only_item_and_key:
+        self.log('SS_39 4b.1 System deletes CSR, key and cert when csr is keys last item and key is last token item')
+        self.is_true(signing_keys_count_after_deletion < signing_keys_count)
+        self.is_true(token_count_after_deletion < token_count)
+        self.is_true(csr_count_after < csr_count)
+    else:
+        self.log('SS_39 4a.1 System deletes the CSR and key from system when key has no more certificates and csrs')
+        self.is_true(signing_keys_count > signing_keys_count_after_deletion)
+        self.is_true(csr_count_after < csr_count)
 
 
 def register_cert(self, ssh_host, ssh_user, ssh_pass, cs_host, client, ca_ssh_host, ca_ssh_user, ca_ssh_pass, cert_path,
@@ -181,12 +225,13 @@ def register_cert(self, ssh_host, ssh_user, ssh_pass, cs_host, client, ca_ssh_ho
     def register():
         log_checker = auditchecker.AuditChecker(ssh_host, ssh_user, ssh_pass)
         current_log_lines = log_checker.get_line_count()
+        time.sleep(3)
         self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar_constants.KEYSANDCERTIFICATES_BTN_CSS).click()
         self.wait_jquery()
         self.log('Click on the key, which certificate was just deleted')
         self.wait_until_visible(type=By.CSS_SELECTOR, element=keys_and_certificates_table.UNSAVED_KEY_CSS).click()
         self.log('Generate new auth certificate for the key')
-        generate_auth_csr(self, ca_name=ca_ssh_host, change_usage=False)
+        generate_auth_csr(self, ca_name=ca_ssh_host, change_usage=True)
         '''Current time'''
         now_date = datetime.datetime.now()
         '''Downloaded csr file name'''
@@ -202,6 +247,7 @@ def register_cert(self, ssh_host, ssh_user, ssh_pass, cs_host, client, ca_ssh_ho
         local_cert_path = self.get_download_path(cert_path)
         self.log('Getting certificate from ca')
         get_cert(sshclient, 'sign-auth', file_path, local_cert_path, cert_path, remote_csr_path)
+        time.sleep(6)
         import_cert(self, local_cert_path)
         self.log('Click on the imported certificate row')
         self.log('SS_30 14a.1. Imported auth cert is disabled and its state is "saved" ')
@@ -304,7 +350,8 @@ def register_cert(self, ssh_host, ssh_user, ssh_pass, cs_host, client, ca_ssh_ho
 
 
 def test_add_cert_to_ss(self, cs_host, cs_username, cs_password, client, cert_path, cs_ssh_host, cs_ssh_user,
-                        cs_ssh_pass):
+                        cs_ssh_pass, cancel_cert_registration=False, file_format_errors=False,
+                        add_existing_error=False):
     """
     MEMBER_23 Create an Authentication Certificate Registration Request
     :param self: mainController instance
@@ -324,23 +371,53 @@ def test_add_cert_to_ss(self, cs_host, cs_username, cs_password, client, cert_pa
     self.wait_jquery()
     self.log('Open owned servers tab')
     self.by_xpath(cs_security_servers.SERVER_MANAGEMENT_OWNED_SERVERS_TAB).click()
-    self.wait_until_visible(type=By.CSS_SELECTOR, element='.open_details').click()
+    self.log('Open owned server details')
+    self.wait_until_visible(type=By.CSS_SELECTOR, element=MEMBER_FIRST_OWNED_SERVER_DETAILS_CSS).click()
     self.wait_jquery()
-    self.wait_until_visible(type=By.XPATH, element='//*[@href="#server_auth_certs_tab"]').click()
+
+    self.wait_until_visible(type=By.XPATH, element=SS_DETAILS_AUTH_CERT_TAB_XPATH).click()
     self.log('MEMBER_23 1. Add authentication cert button is clicked')
-    self.wait_until_visible(type=By.ID, element='securityserver_authcert_add').click()
+    self.wait_until_visible(type=By.ID, element=SS_DETAILS_ADD_AUTH_CERT_BTN_ID).click()
+    if cancel_cert_registration:
+        self.log('MEMBER_23 3a. Authentication cert registration creation is canceled')
+        self.wait_until_visible(type=By.XPATH, element=ADD_AUTH_CERT_CANCEL_BTN_XPATH).click()
+        self.log('MEMBER_23 1. Add authentication cert button is clicked again')
+        self.wait_until_visible(type=By.ID, element=SS_DETAILS_ADD_AUTH_CERT_BTN_ID).click()
     self.log('MEMBER_23 3. Authentication cert is uploaded from local filesystem')
-    upload = self.wait_until_visible(type=By.ID, element='securityserver_auth_cert_upload_button')
+    upload = self.wait_until_visible(type=By.ID, element=ADD_AUTH_CERT_UPLOAD_BTN_ID)
     local_cert_path = self.get_download_path(cert_path)
     file_abs_path = os.path.abspath(local_cert_path)
+    if file_format_errors:
+        self.log('MEMBER_23 4a. The uploaded file is not in PEM or DER format')
+        not_existing_file_with_wrong_extension = 'C:\\file.asd'
+        xroad.fill_upload_input(self, upload, not_existing_file_with_wrong_extension)
+        expected_msg = AUTH_CERT_IMPORT_FILE_FORMAT_ERROR
+        self.log('MEMBER 23 4a.1 System displays the error message {0}'.format(expected_msg))
+        error_msg = self.wait_until_visible(type=By.CSS_SELECTOR, element=ERROR_MESSAGE_CSS).text
+        self.is_equal(expected_msg, error_msg)
+        messages.close_error_messages(self)
     xroad.fill_upload_input(self, upload, file_abs_path)
+    if add_existing_error:
+        self.log(
+            'MEMBER 23 5a. The auth certificate is already registered or submitted for registration with authenticaion registration request')
+        self.wait_until_visible(type=By.ID, element=ADD_AUTH_CERT_SUBMIT_BTN_ID).click()
+        self.wait_jquery()
+        expected_msg = CERT_ALREADY_SUBMITTED_ERROR_BEGINNING
+        self.log('MEMBER 23 5a.1 System displays the error message {0}'.format(expected_msg))
+        error_msg = self.wait_until_visible(type=By.CSS_SELECTOR, element=ERROR_MESSAGE_CSS).text
+        self.is_true(error_msg.startswith(expected_msg))
+        expected_log_msg = ADD_AUTH_CERTIFICATE_FOR_SECURITY_SERVER_FAILED
+        self.log('MEMBER 23 5a.2 System logs the event {0}'.format(expected_log_msg))
+        logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
+        self.is_true(logs_found)
+        return
     self.wait_jquery()
     expected_msg = messages.CERTIFICATE_IMPORT_SUCCESSFUL
     self.log('MEMBER_23 4. System displays the message {0}'.format(expected_msg))
     import_msg = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.NOTICE_MESSAGE_CSS).text
     self.is_equal(expected_msg, import_msg)
     self.log('Submit authentication cert button is pressed')
-    self.wait_until_visible(type=By.ID, element='auth_cert_add_submit').click()
+    self.wait_until_visible(type=By.ID, element=ADD_AUTH_CERT_SUBMIT_BTN_ID).click()
     self.wait_jquery()
     expected_msg = messages.get_cert_adding_existing_server_req_added_notice(client)
     self.log('MEMBER_23 7. System displays the message {0}'.format(expected_msg))
@@ -383,6 +460,7 @@ def activate_cert(self, ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass, registered=Fal
         registration_in_progress_row.click()
         self.log('SS_32 1. "Activate a certificate" button is clicked')
         self.wait_until_visible(type=By.ID, element=keys_and_certificates_table.ACTIVATE_BTN_ID).click()
+        self.log('Waiting until keyconf is updated')
         time.sleep(120)
         '''Find not active certs in keyconf file'''
         keyconf_after = get_disabled_certs(sshclient)
@@ -402,11 +480,13 @@ def activate_cert(self, ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass, registered=Fal
                 len(activated_cert.find_element_by_class_name(
                     keys_and_certificates_table.OCSP_RESPONSE_CLASS_NAME).text) > 0)
         self.log('SS_32 3. System logs the event "{0}" to the audit log'.format(log_constants.ENABLE_CERTIFICATE))
+        time.sleep(1.5)
         logs_found = log_checker.check_log(log_constants.ENABLE_CERTIFICATE, from_line=current_log_lines + 1,
                                            strict=False)
         self.is_true(logs_found)
         self.log('Hard refresh server OCSP')
         ssh_server_actions.refresh_ocsp(sshclient)
+
     return activate
 
 
@@ -1259,6 +1339,7 @@ def get_cert(client, service, file_path, local_path, remote_cert_path, remote_cs
     sftp.close()
     client.close()
 
+
 def revoke_certs(client, certs, ca_path='/home/ca/CA', revoke_script='./revoke.sh'):
     '''
     Revokes specified certificates in CA.
@@ -1276,7 +1357,10 @@ def revoke_certs(client, certs, ca_path='/home/ca/CA', revoke_script='./revoke.s
         client.exec_command('cd {0} && {1} {2}'.format(ca_path, revoke_script, cert_path))
 
 
-def generate_csr(self, client_code, client_class, server_name, client_ss_name=None, check_inputs=False, cancel_key_generation=False,
+def generate_csr(self, server_name, key_label=None, client_code=None, client_class=None,
+                 client_ss_name=None,
+                 check_inputs=False,
+                 cancel_key_generation=False,
                  cancel_csr_generation=False, generate_same_csr_twice=False, generate_key=True, log_checker=None):
     """
     Generates the CSR (certificate request) for a client.
@@ -1294,7 +1378,8 @@ def generate_csr(self, client_code, client_class, server_name, client_ss_name=No
     if log_checker is not None:
         current_log_lines = log_checker.get_line_count()
     '''Key label'''
-    key_label = keyscertificates_constants.KEY_LABEL_TEXT + '_' + client_code + '_' + client_class
+    if key_label is None:
+        key_label = keyscertificates_constants.KEY_LABEL_TEXT + '_' + client_code + '_' + client_class
     # TEST PLAN SS_28_4 System verifies entered key label
     if check_inputs:
         user_input_check.parse_key_label_inputs(self)
@@ -1363,8 +1448,7 @@ def generate_csr(self, client_code, client_class, server_name, client_ss_name=No
     # Key should be generated now. Click on it.
     self.log('Click on generated key row')
     self.wait_until_visible(type=By.XPATH,
-                            element=keyscertificates_constants.get_generated_key_row_xpath(client_code,
-                                                                                           client_class)).click()
+                            element=keyscertificates_constants.KEY_TABLE_ROW_BY_LABEL_XPATH.format(key_label)).click()
     # Number of csr before generation and cancelling
     number_of_cert_requests_before = len(
         self.by_css(keyscertificates_constants.CERT_REQUESTS_TABLE_ROW_CSS,
@@ -1461,7 +1545,7 @@ def generate_csr(self, client_code, client_class, server_name, client_ss_name=No
 
         self.log('Fill organization name field: {0}'.format(client_class))
         o_field = self.wait_until_visible(type=By.XPATH,
-                                        element=keyscertificates_constants.SUBJECT_DISTINGUISHED_NAME_POPUP_O_XPATH)
+                                          element=keyscertificates_constants.SUBJECT_DISTINGUISHED_NAME_POPUP_O_XPATH)
         self.input(o_field, client_class)
     else:
         # For testing previous versions without harmonized environment
@@ -1481,9 +1565,10 @@ def generate_csr(self, client_code, client_class, server_name, client_ss_name=No
 
     # TEST PLAN 2.1.3-2 check 3: Check that the member code matches
     self.log('Check Member Code')
-    assert self.wait_until_visible(type=By.XPATH,
-                                   element=keyscertificates_constants.SUBJECT_DISTINGUISHED_NAME_POPUP_CN_XPATH).get_attribute(
-        'value') == check_field_CN
+    cn_value = self.wait_until_visible(type=By.XPATH,
+                                       element=keyscertificates_constants.SUBJECT_DISTINGUISHED_NAME_POPUP_CN_XPATH).get_attribute(
+        'value')
+    self.is_equal(check_field_CN, cn_value)
     self.log('2.1.3-2 check 3 client data correct')
 
     self.wait_until_visible(type=By.XPATH,
@@ -1986,7 +2071,6 @@ def unregister_cert(self, ss2_host, ss2_username, ss2_password, ss2_ssh_host, ss
             logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
             self.is_true(logs_found)
             return
-
         notice_msg = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.NOTICE_MESSAGE_CSS).text
         self.log('SS_38 8. System displays the message "{0}"'.format(messages.REQUEST_SENT_NOTICE))
         self.is_equal(messages.REQUEST_SENT_NOTICE, notice_msg)
@@ -2020,12 +2104,114 @@ def log_in_token(self):
     return log_in
 
 
+def delete_all_auth_keys(self):
+    def delete_auth_certs():
+        while True:
+            try:
+                auth_key = self.by_xpath(keys_and_certificates_table.KEY_TABLE_ROW_BY_LABEL_XPATH.format('auth'))
+                auth_key.click()
+                self.wait_until_visible(type=By.ID, element=keys_and_certificates_table.DELETE_BTN_ID).click()
+                popups.confirm_dialog_click(self)
+                self.wait_jquery()
+            except:
+                return
+
+    return delete_auth_certs
+
+
+def delete_active_cert(self):
+    def del_active():
+        certs = self.by_css('.cert-active', multiple=True)
+        for cert in certs:
+            cert.click()
+            self.wait_until_visible(type=By.ID, element=keys_and_certificates_table.DELETE_BTN_ID).click()
+            popups.confirm_dialog_click(self)
+            self.wait_jquery()
+
+    return del_active
+
+
+def delete_all_but_one_sign_keys(self):
+    def delete_sign_certs():
+        sign_keys = self.by_css('.key', multiple=True)
+        for sign_key in sign_keys[:-1]:
+            sign_key.click()
+            self.wait_until_visible(type=By.ID, element=keys_and_certificates_table.DELETE_BTN_ID).click()
+            popups.confirm_dialog_click(self)
+            self.wait_jquery()
+
+    return delete_sign_certs
+
+
 def delete_cert(self):
     def del_cert():
         self.wait_until_visible(type=By.XPATH,
                                 element=keys_and_certificates_table.DEL_IN_PROGRESS_CERTIFICATE_ROW_XPATH).click()
         self.wait_until_visible(type=By.ID, element=keys_and_certificates_table.DELETE_BTN_ID).click()
         popups.confirm_dialog_click(self)
+
+    return del_cert
+
+
+def delete_cert_from_key(self, ssh_host, ssh_user, ssh_pass, one_cert=False, auth=False, client_code=None,
+                         client_class=None,
+                         cancel_deleting=False, only_cert=False):
+    """
+    SS_39 Delete Certificate from System Configuration
+    :param self: mainController instance
+    :param ssh_host: ssh host
+    :param ssh_user: ssh user
+    :param ssh_pass: ssh pass
+    :return:
+    """
+
+    def del_cert():
+        sshclient = ssh_client.SSHClient(ssh_host, ssh_user, ssh_pass)
+        time.sleep(120)
+        self.log('Get all keys count in system configuration')
+        keys_before = get_key_conf_keys_count(sshclient, '.*')
+        self.log('Get token count in system configuration')
+        token_count = get_key_conf_token_count(sshclient)
+        log_checker = auditchecker.AuditChecker(ssh_host, ssh_user, ssh_pass)
+        current_log_lines = log_checker.get_line_count()
+        if auth:
+            self.wait_until_visible(type=By.XPATH,
+                                    element=keys_and_certificates_table.DEL_IN_PROGRESS_CERTIFICATE_ROW_XPATH).click()
+        elif one_cert:
+            self.wait_until_visible(type=By.CSS_SELECTOR, element=keys_and_certificates_table.CERT_ACTIVE_CSS).click()
+        elif client_code is not None and client_class is not None:
+            self.wait_until_visible(type=By.XPATH,
+                                    element=keys_and_certificates_table.get_generated_key_row_cert_xpath(client_code,
+                                                                                                         client_class)).click()
+        self.log('SS_39 1. Certificate deletion button is pressed')
+        self.wait_until_visible(type=By.ID, element=keys_and_certificates_table.DELETE_BTN_ID).click()
+        self.log('SS_39 2. System prompts for confirmation')
+        if cancel_deleting:
+            self.log('SS_39 3a. Confirmation popup is canceled')
+            self.wait_until_visible(type=By.XPATH, element=popups.CONFIRM_POPUP_CANCEL_BTN_XPATH).click()
+            self.wait_until_visible(type=By.ID, element=keys_and_certificates_table.DELETE_BTN_ID).click()
+        self.log('SS_39 3. Confirmation popup is confirmed')
+        popups.confirm_dialog_click(self)
+        expected_log_msg = log_constants.DELETE_CERT
+        self.log('SS_39 5. System logs the event {}'.format(expected_log_msg))
+        logs_found = log_checker.check_log(log_constants.DELETE_CERT, from_line=current_log_lines + 1)
+        self.is_true(logs_found)
+        self.log('Waiting until keyconf updated')
+        time.sleep(120)
+        self.log('Get all keys count in system configuration')
+        keys_after = get_key_conf_keys_count(sshclient, '.*')
+        if only_cert:
+            self.log(
+                'SS_39 4a. The key, which had no more certificates and/or CSR-s is deleted from system configuration')
+            self.is_true(keys_after < keys_before)
+        elif one_cert:
+            self.log('SS_39 4b. The key, the token and cert is deleted from system configuration')
+            self.log('Get token count in system configuration')
+            token_count_after = get_key_conf_token_count(sshclient)
+            self.is_true(token_count_after < token_count)
+        else:
+            self.log('SS_39 4. Only the cert is deleted from system configuration')
+            self.is_equal(keys_before, keys_after)
 
     return del_cert
 

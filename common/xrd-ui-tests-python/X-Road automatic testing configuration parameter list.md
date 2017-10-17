@@ -39,6 +39,7 @@
 |   | global\_group |   |   |   |   |   |   |   |   |   |   |   |   |   | x |   |
 | **ca** |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 |   | host |   | x |   |   |   |   |   |   |   |   |   |   |   |   |   |
+|   | name |   | x |   |   |   |   |   |   |   |   |   |   |   |   |   |
 |   | ocs\_host |   | x |   |   |   |   |   |   |   |   |   |   |   |   |   |
 |   | ssh\_host |   | x |   |   |   |   |   |   |   |   |   |   |   |   |   |
 |   | ssh\_user |   | x |   |   |   |   |   |   |   |   |   |   |   |   |   |
@@ -56,6 +57,7 @@
 |   | service\_single\_service\_filename |   |   |   |   |   |   | x |   |   |   |   |   |   |   |   |
 |   | service\_wsdl\_error\_filename |   |   |   |   |   |   | x |   |   |   |   |   |   |   |   |
 |   | service\_wsdl\_warning\_filename |   |   |   |   |   |   | x |   |   |   |   |   |   |   |   |
+|   | service\_wsdl\_test\_service1 |   |   |   |   |   |   | x |   |   |   |   |   |   |   |   |
 | **mockrunner** |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 |   | enabled | x |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 |   | ssh\_host | x |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
@@ -115,6 +117,7 @@
 |   | save\_exceptions | x |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 |   | save\_screenshots | x |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 |   | load\_custom\_config | x |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+|   | harmonized\_environment |  | x |   |   |   |   |   |   |   |   |   |   |   |   |   |
 |   | debug | x |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 
 ![Logo](https://raw.githubusercontent.com/ria-ee/X-Road/develop/doc/Manuals/img/eu_regional_development_fund_horizontal_div_15.png "EU logo")

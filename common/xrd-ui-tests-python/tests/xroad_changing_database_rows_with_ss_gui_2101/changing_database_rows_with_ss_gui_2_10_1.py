@@ -161,13 +161,15 @@ def user_1_actions(self, user, client):
     self.wait_jquery()
     time.sleep(5)
 
-    self.log('Warning message: {0}'.format(messages.get_warning_message(self)))
-    self.log('Ignore warning and click continue')
-    self.wait_until_visible(type=By.XPATH, element=popups.WARNING_POPUP_CONTINUE_XPATH).click()
+    warning_message = messages.get_warning_message(self)
+    self.log('Warning message: {0}'.format(warning_message))
+    if warning_message is not None:
+        self.log('Ignore warning and click continue')
+        self.wait_until_visible(type=By.XPATH, element=popups.WARNING_POPUP_CONTINUE_XPATH).click()
+        self.wait_jquery()
     self.log('Client created')
 
     self.log('Cancel client registration')
-    self.wait_jquery()
     time.sleep(2)
     self.wait_until_visible(type=By.XPATH, element=popups.CONFIRM_POPUP_CANCEL_BTN_XPATH).click()
     self.wait_jquery()

@@ -1245,6 +1245,7 @@ def add_key_label(self, key_label):
     # Generate key from softtoken
     self.wait_jquery()
     self.log('Click on softtoken row')
+    time.sleep(3)
     self.wait_until_visible(type=By.XPATH, element=keyscertificates_constants.SOFTTOKEN_TABLE_ROW_XPATH).click()
 
     self.wait_jquery()

@@ -6,6 +6,8 @@ from main.maincontroller import MainController
 from tests.xroad_client_registration_in_ss_221 import client_registration_in_ss_2_2_1
 from tests.xroad_configure_service_222.wsdl_validator_errors import wait_until_server_up
 from tests.xroad_ss_client_certification_213 import client_certification_2_1_3
+from tests.xroad_ss_client_certification_213.client_certification_2_1_3 import test_add_cert_to_ss, register_cert, \
+    delete_cert_from_key, activate_cert, unregister_cert
 from view_models import popups
 
 
@@ -86,11 +88,20 @@ class XroadUnregisterAuthCert(unittest.TestCase):
 
         cert_path = 'temp.pem'
 
-        test_unregister_cert = client_certification_2_1_3.unregister_cert(main, ss2_host, ss2_username, ss2_password,
-                                                                          ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass)
-        test_activate_cert = client_certification_2_1_3.activate_cert(main, ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass,
-                                                                      registered=True)
-        delete_unregistered_cert = client_certification_2_1_3.delete_cert(main)
+        test_unregister_cert = unregister_cert(main, ss2_host, ss2_username, ss2_password,
+                                               ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass)
+        test_activate_cert = activate_cert(main, ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass,
+                                           registered=True)
+        delete_unregistered_cert = delete_cert_from_key(main, auth=True,
+                                                        ssh_host=ss2_ssh_host,
+                                                        ssh_user=ss2_ssh_user,
+                                                        ssh_pass=ss2_ssh_pass,
+                                                        cancel_deleting=True,
+                                                        only_cert=True)
+        test_register_cert = register_cert(main, ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass,
+                                           cs_host=cs_ssh_host, client=client, cert_path=cert_path,
+                                           check_inputs=False, ca_ssh_host=ca_ssh_host,
+                                           ca_ssh_user=ca_ssh_user, ca_ssh_pass=ca_ssh_pass)()
         try:
             main.reload_webdriver(ss2_host, ss2_username, ss2_password)
             test_unregister_cert()
@@ -99,14 +110,16 @@ class XroadUnregisterAuthCert(unittest.TestCase):
             assert False
         finally:
             delete_unregistered_cert()
-            client_certification_2_1_3.register_cert(main, ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass,
-                                                     cs_host=cs_ssh_host, client=client, cert_path=cert_path,
-                                                     check_inputs=False, ca_ssh_host=ca_ssh_host,
-                                                     ca_ssh_user=ca_ssh_user, ca_ssh_pass=ca_ssh_pass)()
+            test_register_cert()
             test_activate_cert()
-            client_certification_2_1_3.test_add_cert_to_ss(main, cs_host, cs_username, cs_password, client, cert_path,
-                                                           cs_ssh_host, cs_ssh_user, cs_ssh_pass)
+            test_add_cert_to_ss(main, cs_host, cs_username, cs_password, client, cert_path,
+                                cs_ssh_host, cs_ssh_user, cs_ssh_pass,
+                                cancel_cert_registration=True, file_format_errors=True)
+            test_add_cert_to_ss(main, cs_host, cs_username, cs_password, client, cert_path,
+                                cs_ssh_host, cs_ssh_user, cs_ssh_pass,
+                                add_existing_error=True)
             client_registration_in_ss_2_2_1.approve_requests(main)
+            main.log('Wait until servers synced')
             time.sleep(120)
             main.tearDown()
 
@@ -217,7 +230,6 @@ class XroadUnregisterAuthCertFailsWhenNoValidAuthCert(unittest.TestCase):
         test_unregister_cert = client_certification_2_1_3.unregister_cert(main, ss2_host, ss2_username, ss2_password,
                                                                           ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass,
                                                                           no_valid_cert=True)
-        #TODO: Temporary functions until token specific tests are done
         log_out_token = client_certification_2_1_3.log_out_token(main)
         log_in_token = client_certification_2_1_3.log_in_token(main)
         try:

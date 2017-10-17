@@ -444,9 +444,11 @@ def test_configure_service(case, client=None, client_name=None, client_id=None, 
                       msg='Disable message not equal to {0}'.format(messages.SERVICE_DISABLED_MESSAGE))
         # confirm disable message
         self.by_xpath(popups.DISABLE_WSDL_POPUP_OK_BTN_XPATH).click()
+        self.wait_jquery()
 
         # Open service parameters by finding the "Edit" button and clicking it.
         edit_wsdl_button = self.by_id(popups.CLIENT_DETAILS_POPUP_EDIT_WSDL_BTN_ID)
+        self.wait_jquery()
 
         if check_edit_errors:
             ssh_client = ssh_server_actions.get_client(wsdl_ssh_host, wsdl_ssh_user, wsdl_ssh_pass)

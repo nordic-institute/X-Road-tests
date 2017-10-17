@@ -97,8 +97,12 @@ class XroadConfigureService(unittest.TestCase):
                 main.save_exception_data()
             assert False
         finally:
-            main.reload_webdriver(url=ss_host, username=ss_user, password=ss_pass)
-            test_delete_service1()
+            try:
+                main.reload_webdriver(url=ss_host, username=ss_user, password=ss_pass)
+                test_delete_service1()
+            except:
+                main.log('XroadConfigureService: Failed to delete added data (2).')
+                main.save_exception_data()
             # Test teardown
             main.tearDown()
 

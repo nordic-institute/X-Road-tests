@@ -25,11 +25,16 @@ class XroadDeleteService(unittest.TestCase):
         log_checker = auditchecker.AuditChecker(ss_ssh_host, ss_ssh_user, ss_ssh_pass)
 
         wsdl_url = main.config.get('wsdl.remote_path').format(main.config.get('wsdl.service_wsdl'))
+        wsdl_test_service = main.config.get('wsdl.service_wsdl_test_service1')
 
         # Delete the added service
         test_delete_service = configure_service_2_2_2.test_delete_service(case=main, client=client, wsdl_url=wsdl_url,
                                                                           log_checker=log_checker)
 
+        # Delete the other added service
+        wsdl_test_service_url = main.config.get('wsdl.remote_path').format(wsdl_test_service)
+        test_delete_service1 = configure_service_2_2_2.test_delete_service(case=main, client=client,
+                                                                           wsdl_url=wsdl_test_service_url)
         try:
             # Delete service
             main.reload_webdriver(url=ss_host, username=ss_user, password=ss_pass)
@@ -38,6 +43,12 @@ class XroadDeleteService(unittest.TestCase):
             main.log('XroadDeleteService: Failed to delete service')
             assert False
         finally:
+            try:
+                main.reload_webdriver(url=ss_host, username=ss_user, password=ss_pass)
+                test_delete_service1()
+            except:
+                main.log('XroadDeleteService: Failed to delete service (2).')
+                main.save_exception_data()
             # Test teardown
             main.tearDown()
 

@@ -72,7 +72,7 @@ class Test(unittest.TestCase):
         del XroadLocalTls
 
     def test_06_xroad_delete_local_tls(self):
-        from tests.xroad_tls_227.test_main import XroadDeleteLocalTls
+        from tests.xroad_tls_227.XroadDeleteLocalTls import XroadDeleteLocalTls
         print('\n test_06_xroad_delete_local_tls STARTED\n')
         suite = unittest.TestLoader().loadTestsFromTestCase(XroadDeleteLocalTls)
         ret = unittest.TextTestRunner(verbosity=0).run(suite)
@@ -111,7 +111,7 @@ class Test(unittest.TestCase):
 
     # Delete central service (undo 2.2.8)
     def test_09_xroad_delete_central_service(self):
-        from tests.xroad_add_central_service_228.test_main import XroadDeleteCentralService
+        from tests.xroad_add_central_service_228.XroadDeleteCentralService import XroadDeleteCentralService
         print('\n test_09_xroad_delete_central_service STARTED\n')
         suite = unittest.TestLoader().loadTestsFromTestCase(XroadDeleteCentralService)
         ret = unittest.TextTestRunner(verbosity=0).run(suite)
@@ -124,7 +124,7 @@ class Test(unittest.TestCase):
 
     # Delete test service (undo 2.2.2)
     def test_10_xroad_delete_service(self):
-        from tests.xroad_configure_service_222.test_main import XroadDeleteService
+        from tests.xroad_configure_service_222.XroadDeleteService import XroadDeleteService
         print('\n test_10_xroad_delete_service STARTED\n')
         suite = unittest.TestLoader().loadTestsFromTestCase(XroadDeleteService)
         ret = unittest.TextTestRunner(verbosity=0).run(suite)
@@ -137,7 +137,7 @@ class Test(unittest.TestCase):
 
     # Delete client (undo 2.2.1)
     def test_11_xroad_security_server_client_deletion(self):
-        from tests.xroad_client_registration_in_ss_221.client_registration_in_ss_deletion import \
+        from tests.xroad_client_registration_in_ss_221.XroadSecurityServerClientDeletion import \
             XroadSecurityServerClientDeletion
         print('\n test_11_xroad_security_server_client_deletion STARTED\n')
         suite = unittest.TestLoader().loadTestsFromTestCase(XroadSecurityServerClientDeletion)

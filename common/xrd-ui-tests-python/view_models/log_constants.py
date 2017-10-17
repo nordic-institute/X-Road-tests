@@ -19,6 +19,7 @@ EDIT_MEMBER_NAME = 'Edit member name'
 DELETE_MEMBER = 'Delete member'
 
 ADD_AUTH_CERTIFICATE_FOR_SECURITY_SERVER = 'Add authentication certificate for security server'
+ADD_AUTH_CERTIFICATE_FOR_SECURITY_SERVER_FAILED = 'Add authentication certificate for security server failed'
 REGISTER_CLIENT = 'Register client'
 REGISTER_CLIENT_FAILED = 'Register client failed'
 REGISTER_AUTH_CERT = 'Register authentication certificate'
@@ -111,5 +112,6 @@ SOFTTOKEN_LOG_OUT = 'Log out from token'
 SKIP_UNREG_OF_AUTH_CERT = 'Skip unregistration of authentication certificate'
 
 DELETE_AUTH_CERT = 'Delete authentication certificate of security server'
+DELETE_CERT = 'Delete certificate from configuration'
 
 DELETE_GLOBAL_GROUP = 'Delete global group'

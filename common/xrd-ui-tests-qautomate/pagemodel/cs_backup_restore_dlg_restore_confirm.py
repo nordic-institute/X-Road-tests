@@ -46,15 +46,22 @@ class Cs_backup_restore_dlg_restore_confirm(CommonUtils):
     MENUBAR_CLOSE = (By.XPATH, u'//div[7]/div[1]/div[1]/button[2]') # x: 1161 y: 405 width: 51 height: 49, tag: button, type: submit, name: None, form_id: , checkbox: , table_id: backup_files, href:
     TITLE = (By.ID, u'ui-id-3') # x: 718 y: 420 width: 167 height: 21, tag: span, type: , name: None, form_id: , checkbox: , table_id: , href: None
     DIALOG_CONTENT = (By.CSS_SELECTOR, u'div.ui-dialog.ui-widget.ui-widget-content.ui-corner-all.ui-front.ui-dialog-buttons.ui-draggable.ui-resizable>#confirm') # x: 708 y: 456 width: 504 height: 53, tag: div, type: , name: None, form_id: , checkbox: , table_id: , href:
-    BUTTON_CANCEL = (By.XPATH, u'//div[7]/div[3]/div[1]/button[2]') # x: 1037 y: 514 width: 75 height: 36, tag: button, type: button, name: None, form_id: , checkbox: , table_id: backup_files, href:
     BUTTON_CONFIRM = (By.CSS_SELECTOR, u'div.ui-dialog-buttonset>#confirm') # x: 1122 y: 514 width: 85 height: 36, tag: button, type: button, name: None, form_id: , checkbox: , table_id: , href:
+    # Dynamic objects:
+    BUTTON_CANCEL = (By.XPATH, u'//div[8]/div[3]/div[1]/button[2]') # x: 1037 y: 461 width: 75 height: 36, tag: button, type: button, name: None, form_id: , checkbox: , table_id: , href:
 
     def click_button_ui_buttonset_confirm(self):
         """
         Click confirm button
-        
+
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_CONFIRM*
         """
-        # AutoGen method
         self.click_element(self.BUTTON_CONFIRM)
+
+    def click_button_cancel(self):
+        """
+        Click confirm cancel
+
+        """
+        self.click_element(self.BUTTON_CANCEL)

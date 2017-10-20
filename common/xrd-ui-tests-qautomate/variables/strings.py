@@ -1,3 +1,4 @@
+import os
 from webframework.extension.parsers.parameter_parser import get_parameter, get_all_parameters, set_parameter_file
 
 # audit log events
@@ -27,6 +28,14 @@ generate_external_config_signing_key = u'Generate external configuration signing
 activate_external_config_signing_key = u'Activate external configuration signing key'
 delete_external_config_signing_key = u'Delete external configuration signing key'
 
+restore_backup_failed_audit_log = u'Restore configuration failed'
+restore_configuration_audit_log = u'Restore configuration'
+delete_backup_audit_log = u'Delete backup file'
+upload_backup_audit_log = u'Upload backup file'
+upload_backup_failed_audit_log = u'Upload backup file failed'
+generate_backup_audit_log = u'Back up configuration'
+failed_generate_backup_audit_log = u'Back up configuration failed'
+
 # Ui strings
 authentication_failed = u'Authentication failed'
 login_restore_in_progress = u'Restore in progress, try again later'
@@ -34,19 +43,23 @@ message_failed_to_add_timestamping = u'Failed to add timestamping service: times
 request_cert_deletion = u'Certificate deletion'
 request_client_deletion = u'Client deletion'
 security_server_version = u'Security Server version 6'
-
 reg_auth_cert_deletion = u'Authentication certificate deletion'
 
 # Messages
 key_success_deleted_from_cs = u'Key successfully deleted from central server configuration'
-
 internal_conf_anchor_generated_success = u'Internal configuration anchor generated successfully'
 token_key_removed = u'Key successfully deleted from token'
-
 change_address_error = u'Central server address must be DNS name or IP address'
-
-
 external_conf_anchor_generated_success = u'External configuration anchor generated successfully'
+restore_failed = u"Failed to restore configuration: Restoring configuration from file '{}' failed."
+backup_restored = u"Configuration restored successfully from file '{}'."
+backup_deleted = u'Selected backup deleted successfully'
+backup_created = u'Configuration backup created'
+backup_created_error = u"Failed to back up configuration: Error making configuration backup, script exited with status code '{}'"
+backup_file_uploaded = u'New backup file uploaded successfully'
+backup_file_upload_invalid_char = u"Failed to upload new backup file: Filename '{}' contains invalid characters. Valid characters include: (A-Z), (a-z), (0-9), (_), (.), (-)."
+backup_file_uploaded_invalid_extension = u"Failed to upload new backup file: Uploaded file name '{}' has an invalid extension, the only valid one is 'tar'"
+backup_file_uploaded_invalid_format = u"Failed to upload new backup file: Content of uploaded file must be in tar format"
 
 lanquage_eng = u'ENGLISH (EN)'
 
@@ -59,9 +72,15 @@ sign_key_usage = "Sign"
 auth_key_usage = "Auth"
 
 # Backup paths
-backup_directory = u'/var/lib/xroad/backup'
 
 # Log file names and paths
+backup_directory = "/var/lib/xroad/backup"
+
+invalid_backup_file_name = "invalid.tar"
+invalid_backup_file = os.path.join(backup_directory, invalid_backup_file_name)
+
+devices_file = "/etc/xroad/devices.ini"
+
 audit_log = "/var/log/xroad/audit.log"
 jetty_log = "/var/log/xroad/jetty/jetty.log"
 signer_log = "/var/log/xroad/signer.log"
@@ -76,6 +95,7 @@ sign_key_label = "ta_generated_key_sign"
 auth_key_label = "ta_generated_key_auth"
 sign_key_label_2 = "ta_generated_key_sign_b"
 auth_key_label_2 = "ta_generated_key_auth_b"
+
 
 def generate_subject_name(section=u'member1_configuration'):
     parameters = get_all_parameters()

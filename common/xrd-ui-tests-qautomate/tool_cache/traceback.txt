@@ -8,3 +8,71 @@ Traceback (most recent call last):
   File "C:\projects\QAutomate\webframework\extension\util\common_methods_helpers.py", line 124, in log
     print "* %s %s" % (DebugLog.get_timestamp(), msg)
 IOError: [Errno 22] Invalid argument
+
+Method run
+Traceback (most recent call last):
+  File "webframework/extension/ui/pmv/method_runner.py", line 78, in webframework.extension.ui.pmv.method_runner.MethodRunner.debug_run (webframework/extension/ui/pmv/method_runner.c:2250)
+  File "/home/jenkins/github/X-Road-tests/common/xrd-ui-tests-qautomate/component_cs_backup_temp.py", line 115, in restore_invalid_backup
+    save_content_to_file("", invalid_backup_file)
+  File "/home/jenkins/.local/lib/python2.7/site-packages/qautomate/webframework/extension/util/file_utils.py", line 74, in save_content_to_file
+    with __open(path_to_file, WRITING_MODE) as file_:
+  File "/home/jenkins/.local/lib/python2.7/site-packages/qautomate/webframework/extension/util/file_utils.py", line 36, in __open
+    return codecs.open(path_to_file, mode, _DEFAULT_ENCODING)
+  File "/usr/lib/python2.7/codecs.py", line 896, in open
+    file = __builtin__.open(filename, mode, buffering)
+IOError: [Errno 2] No such file or directory: u'/var/lib/xroad/backup/invalid.tar'
+
+Method run
+Traceback (most recent call last):
+  File "webframework/extension/ui/pmv/method_runner.py", line 78, in webframework.extension.ui.pmv.method_runner.MethodRunner.debug_run (webframework/extension/ui/pmv/method_runner.c:2250)
+  File "/home/jenkins/github/X-Road-tests/common/xrd-ui-tests-qautomate/component_cs_backup_temp.py", line 114, in restore_invalid_backup
+    self.common_lib_ssh.generate_empty_file(u'cs_url', invalid_backup_file)
+AttributeError: 'Component_cs_backup_temp' object has no attribute 'common_lib_ssh'
+
+Method run
+Traceback (most recent call last):
+  File "webframework/extension/ui/pmv/method_runner.py", line 69, in webframework.extension.ui.pmv.method_runner.MethodRunner.debug_run (webframework/extension/ui/pmv/method_runner.c:2055)
+  File "/home/jenkins/github/X-Road-tests/common/xrd-ui-tests-qautomate/component_cs_backup_temp.py", line 15, in <module>
+    from common_lib.common_lib.common_lib_ssh import Common_lib_ssh
+ImportError: No module named common_lib_ssh
+
+Method run
+Traceback (most recent call last):
+  File "webframework/extension/ui/pmv/method_runner.py", line 69, in webframework.extension.ui.pmv.method_runner.MethodRunner.debug_run (webframework/extension/ui/pmv/method_runner.c:2055)
+  File "/home/jenkins/github/X-Road-tests/common/xrd-ui-tests-qautomate/component_cs_backup_temp.py", line 15, in <module>
+    from common_lib.common_lib.common_lib_ssh import Common_lib_ssh
+ImportError: No module named common_lib_ssh
+
+Method run
+Traceback (most recent call last):
+  File "webframework/extension/ui/pmv/method_runner.py", line 69, in webframework.extension.ui.pmv.method_runner.MethodRunner.debug_run (webframework/extension/ui/pmv/method_runner.c:2055)
+  File "/home/jenkins/github/X-Road-tests/common/xrd-ui-tests-qautomate/component_cs_backup_temp.py", line 15, in <module>
+    from common_lib.common_lib.common_lib_ssh import Common_lib_ssh
+ImportError: No module named common_lib_ssh
+
+Method run
+Traceback (most recent call last):
+  File "webframework/extension/ui/pmv/method_runner.py", line 69, in webframework.extension.ui.pmv.method_runner.MethodRunner.debug_run (webframework/extension/ui/pmv/method_runner.c:2055)
+  File "/home/jenkins/github/X-Road-tests/common/xrd-ui-tests-qautomate/component_cs_backup_temp.py", line 15, in <module>
+    from common_lib.common_lib.common_lib_ssh import Common_lib_ssh
+ImportError: No module named common_lib_ssh
+
+Browser start failed
+Traceback (most recent call last):
+  File "webframework/extension/ui/pmg/generator.py", line 1125, in webframework.extension.ui.pmg.generator.PagemodelGeneratorUI._create_driver (webframework/extension/ui/pmg/generator.c:31348)
+  File "/home/jenkins/.local/lib/python2.7/site-packages/qautomate/webframework/extension/util/common_utils.py", line 1013, in open_browser
+    driver = create_driver(browser_name)
+  File "/home/jenkins/.local/lib/python2.7/site-packages/qautomate/webframework/extension/webdriver_cache/browser.py", line 297, in create_driver
+    raise e
+WebDriverException: Message: connection refused
+
+
+Browser start failed
+Traceback (most recent call last):
+  File "webframework/extension/ui/pmg/generator.py", line 1125, in webframework.extension.ui.pmg.generator.PagemodelGeneratorUI._create_driver (webframework/extension/ui/pmg/generator.c:31348)
+  File "/home/jenkins/.local/lib/python2.7/site-packages/qautomate/webframework/extension/util/common_utils.py", line 1013, in open_browser
+    driver = create_driver(browser_name)
+  File "/home/jenkins/.local/lib/python2.7/site-packages/qautomate/webframework/extension/webdriver_cache/browser.py", line 297, in create_driver
+    raise e
+WebDriverException: Message: connection refused
+

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from webframework import TESTDATA
 from variables import strings
+from webframework import TESTDATA
 from webframework.extension.base.baseTest import BaseTest
 from webframework.extension.parsers.parameter_parser import get_all_parameters
 from webframework.extension.util.common_utils import *

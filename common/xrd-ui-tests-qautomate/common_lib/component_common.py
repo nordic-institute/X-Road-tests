@@ -24,8 +24,6 @@ class Component_common(CommonUtils):
         """
         Initilization method for moving test data to class
 
-        *Updated: 11.07.2017*
-
         :param parameters:  Test data section dictionary
         """
         CommonUtils.__init__(self)
@@ -33,8 +31,6 @@ class Component_common(CommonUtils):
     def open_select_language_dlg(self):
         """
         Open select language dialog
-
-        *Updated: 11.07.2017*
 
         **Test steps:**
                 * **Step 1:** :func:`~common_lib.common_elements.Common_elements.click_user_info`
@@ -47,8 +43,6 @@ class Component_common(CommonUtils):
         """
         Accept select languege dialog
 
-        *Updated: 11.07.2017*
-
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.dlg_change_language.Dlg_change_language.click_button_ok`
         """
@@ -57,8 +51,6 @@ class Component_common(CommonUtils):
     def change_language_in_dlg(self, text=None):
         """
         Input text to change langueage dialog
-
-        *Updated: 11.07.2017*
 
         :param text:  String value for text
         
@@ -70,8 +62,6 @@ class Component_common(CommonUtils):
     def verify_notice_message(self, message=u'Internal configuration anchor generated successfully'):
         """
         Verify notice message
-
-        *Updated: 11.07.2017*
 
         :param message:  String value for message
         

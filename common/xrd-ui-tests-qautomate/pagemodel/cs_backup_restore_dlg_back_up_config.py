@@ -72,5 +72,10 @@ class Cs_backup_restore_dlg_back_up_config(CommonUtils):
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
         """
-        # AutoGen method
         self.click_element(self.BUTTON_OK)
+
+    def click_button_cancel(self):
+        """
+        Click cancel button
+        """
+        self.click_element(self.MENUBAR_CLOSE)

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
-from variables import strings, flags
+from variables import strings
 from webframework import TESTDATA
 from webframework.extension.base.setupTest import SetupTest
 from webframework.extension.util.common_utils import *
@@ -16,6 +16,7 @@ from pagemodel.cs_backup_restore import Cs_backup_restore
 from common_lib.component_cs_backup import Component_cs_backup
 from pagemodel.ss_login import Ss_login
 from pagemodel.cs_login import Cs_login
+from pagemodel.cs_backup_restore_dlg_back_up_config import Cs_backup_restore_dlg_back_up_config
 
 class Xroad_cs_server_management(SetupTest):
     """
@@ -38,14 +39,23 @@ class Xroad_cs_server_management(SetupTest):
         * `2.6`_: View the Installed Software Version
         * `2.7`_: View the List of Configuration Backup Files
         * `2.8`_: Back Up Configuration
+            * 3a. Backing up the central server configuration failed.
         * `2.9`_: Restore Configuration from a Backup File
+            * 3a. CS administrator cancels the restoring of the configuration from the backup file.
+            * 4a. Restoring the central server configuration failed.
         * `2.10`_: Download a Backup File
         * `2.11`_: Delete a Backup File
+            * 3a. CS administrator cancels the deleting of the backup file.
         * `2.12`_: Upload a Backup File
+            * 3a. The file name contains invalid characters.
+            * 4a. The file extension is not .tar.
+            * 5a. The content of the file is not in valid format.
+            * 6a. A backup file with the same file name is saved in the system configuration.
 
     **Changelog:**
-
-    * 15.05.2017
+    * 19.10.2017
+        | All cases done
+    * 15.09.2017
         | Test set created and cases + documentation links added
     """
     common_utils = CommonUtils()
@@ -60,6 +70,7 @@ class Xroad_cs_server_management(SetupTest):
     component_cs_backup = Component_cs_backup()
     ss_login = Ss_login()
     cs_login = Cs_login()
+    cs_backup_restore_dlg_back_up_config = Cs_backup_restore_dlg_back_up_config()
 
     @classmethod
     def setUpTestSet(self):
@@ -84,6 +95,7 @@ class Xroad_cs_server_management(SetupTest):
     def setUp(self):
         """
         Method that runs before every test case
+
         """
         self.start_log_time = self.common_lib.get_log_utc_time()
         self.common_lib_ssh.empty_all_logs_from_server("cs_url")
@@ -91,20 +103,15 @@ class Xroad_cs_server_management(SetupTest):
     def tearDown(self):
         """
         Method that runs after every test case
+
         """
         # Step Find exceptions from log files
         stop_log_time = self.common_lib.get_log_utc_time()
         if not self.is_last_test_passed():
             _, copy_log = self.get_log_file_paths()
             self.common_lib_ssh.get_all_logs_from_server(u'cs_url')
-            self.common_lib_ssh.find_exception_from_logs_and_save(self.start_log_time, stop_log_time, u'cs_url', copy_log)
-
-        # Step restore backup if not restored during run
-        if flags.get_testdata_flag(flags.restore_backup):
-            # Step Login to page if logged out
-            if self.cs_login.verify_is_login_page():
-                self.component_cs.login(u'cs_url', False)
-            self.component_cs_backup.restore_backup()
+            self.common_lib_ssh.find_exception_from_logs_and_save(self.start_log_time, stop_log_time,
+                                                                  u'cs_url', copy_log)
 
         # Step log out if logged in
         if not self.cs_login.verify_is_login_page():
@@ -182,12 +189,16 @@ class Xroad_cs_server_management(SetupTest):
 
         **Use cases:**
             * `2.8`_: Back Up Configuration
+                * 3a. Backing up the central server configuration failed.
         """
         # Step Login to central server
         self.component_cs.login(u'cs_url', False)
 
         # Step Open backup view
         self.component_cs_sidebar.open_backup_restore_view()
+
+        # Step Generate backup
+        self.component_cs_backup.generate_invalid_backup()
 
         # Step Generate backup
         self.component_cs_backup.generate_backup()
@@ -201,6 +212,8 @@ class Xroad_cs_server_management(SetupTest):
 
         **Use cases:**
             * `2.9`_: Restore Configuration from a Backup File
+                * 3a. CS administrator cancels the restoring of the configuration from the backup file.
+                * 4a. Restoring the central server configuration failed.
         """
         # Step Login to central server
         self.component_cs.login(u'cs_url', False)
@@ -208,8 +221,14 @@ class Xroad_cs_server_management(SetupTest):
         # Step Open backup view
         self.component_cs_sidebar.open_backup_restore_view()
 
+        # Step Restore invalid backup
+        self.component_cs_backup.restore_invalid_backup()
+
         # Step Generate backup
         self.component_cs_backup.generate_backup()
+
+        # Step Cancel restore backup
+        self.component_cs_backup.cancel_restore_backup()
 
         # Step Restore backup
         self.component_cs_backup.restore_backup()
@@ -245,6 +264,7 @@ class Xroad_cs_server_management(SetupTest):
 
         **Use cases:**
             * `2.11`_: Delete a Backup File
+                * 3a. CS administrator cancels the deleting of the backup file.
         """
         # Step Login to central server
         self.component_cs.login(u'cs_url', False)
@@ -254,6 +274,9 @@ class Xroad_cs_server_management(SetupTest):
 
         # Step Generate backup
         self.component_cs_backup.generate_backup()
+
+        # Step Cancel delete backup
+        self.component_cs_backup.cancel_delete_backup()
 
         # Step Delete backup
         self.component_cs_backup.delete_backup()
@@ -267,6 +290,10 @@ class Xroad_cs_server_management(SetupTest):
 
         **Use cases:**
             * `2.12`_: Upload a Backup File
+                * 3a. The file name contains invalid characters.
+                * 4a. The file extension is not .tar.
+                * 5a. The content of the file is not in valid format.
+                * 6a. A backup file with the same file name is saved in the system configuration.
         """
         # Step Login to central server
         self.component_cs.login(u'cs_url', False)
@@ -285,6 +312,18 @@ class Xroad_cs_server_management(SetupTest):
 
         # Step Upload backup
         self.component_cs_backup.upload_backup()
+
+        # Step Upload backup that already exists
+        self.component_cs_backup.upload_backup_already_exists()
+
+        # Step Upload backup with invalid characters in name
+        self.component_cs_backup.upload_backup_invalid_char()
+
+        # Step Upload backup with invalid extension
+        self.component_cs_backup.upload_backup_invalid_extension()
+
+        # Step Upload backup with invalid format
+        self.component_cs_backup.upload_backup_invalid_format()
 
         # Step Log out of central server
         self.common_lib.log_out()

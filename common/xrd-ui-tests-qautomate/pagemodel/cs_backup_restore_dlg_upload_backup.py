@@ -41,18 +41,19 @@ class Cs_backup_restore_dlg_upload_backup(CommonUtils):
     UNKNOWN_0 = (By.XPATH, u'//div[4]/div[1]/div[1]/button[1]/i[1]') # x: 1224 y: 386 width: 21 height: 21, tag: i, type: , name: None, form_id: upload_new, checkbox: , table_id: 2, href:
     UNKNOWN = (By.XPATH, u'//div[4]/div[1]/div[1]/button[2]/i[1]') # x: 1279 y: 389 width: 12 height: 15, tag: i, type: , name: None, form_id: upload_new, checkbox: , table_id: 2, href:
     SELECTED_FILE_TEXT = (By.CSS_SELECTOR, u'.selected_file') # x: 630 y: 442 width: 569 height: 32, tag: input, type: text, name: None, form_id: , checkbox: , table_id: 2, href:
-    CANCEL_0 = (By.XPATH, u'//div[4]/div[3]/div[1]/button[2]') # x: 1176 y: 561 width: 75 height: 36, tag: button, type: button, name: cancel, form_id: upload_new, checkbox: , table_id: 2, href:
     ID_FILE_UPLOAD_SUBMIT = (By.ID, u'file_upload_submit') # x: 1261 y: 561 width: 44 height: 36, tag: button, type: button, name: ok, form_id: , checkbox: , table_id: , href:
-    CANCEL = (By.XPATH, u'//div[4]/div[3]/div[1]/button[2]/span[1]') # x: 1189 y: 570 width: 49 height: 18, tag: span, type: , name: None, form_id: upload_new, checkbox: , table_id: 2, href: None
     OK = (By.XPATH, u'//div[4]/div[3]/div[1]/button[1]/span[1]') # x: 1274 y: 570 width: 18 height: 18, tag: span, type: , name: None, form_id: upload_new, checkbox: , table_id: 2, href: None
     DATA_NAME_FILE_UPLOAD_UI_ICON_GRIPSMALL_DIAGONAL_SE = (By.CSS_SELECTOR, u'div[data-name="file_upload_dialog"]>.ui-icon-gripsmall-diagonal-se') # x: 1303 y: 595 width: 12 height: 12, tag: div, type: , name: None, form_id: , checkbox: , table_id: , href:
     DATA_NAME_FILE_UPLOAD_UI_RESIZABLE_SW = (By.CSS_SELECTOR, u'div[data-name="file_upload_dialog"]>.ui-resizable-sw') # x: 605 y: 598 width: 9 height: 9, tag: div, type: , name: None, form_id: , checkbox: , table_id: , href:
-    DATA_NAME_FILE_UPLOAD_UI_RESIZABLE = (By.CSS_SELECTOR, u'div[data-name="file_upload_dialog"]>.ui-resizable-s') # x: 610 y: 600 width: 700 height: 7, tag: div, type: , name: None, form_id: , checkbox: , table_id: , href:
     # Dynamic objects:
     FILE_UPLOAD_BUTTON = (By.ID, u'file_upload_button') # x: 1206 y: 442 width: 84 height: 33, tag: label, type: , name: None, form_id: , checkbox: , table_id: , href:
+    CANCEL_0 = (By.XPATH, u'//div[4]/div[1]/button[2]') # x: 1176 y: 501 width: 75 height: 36, tag: button, type: button, name: cancel, form_id: , checkbox: , table_id: , href: 
 
     def click_element_upload_button(self, parameters=None):
         self.click_element(self.FILE_UPLOAD_BUTTON)
 
     def click_dialog_confirm(self, parameters=None):
         self.click_element(self.ID_FILE_UPLOAD_SUBMIT)
+
+    def click_button_cancel(self, parameters=None):
+        self.click_element(self.CANCEL_0)

@@ -73,7 +73,7 @@ def test_test(ssh_host, ssh_username, ssh_password, users, client_id, client_nam
 
             # TEST PLAN 2.11.1-3 adding new subsystem to the member
             self.log('2.11.1-3 adding new subsystem to the member')
-            add_subsystem_to_member(self, ssh_client, user, member=client)
+            add_subsystem_to_member(self, ssh_client=ssh_client, user=user, member=client)
 
             # TEST PLAN 2.11.1-4, 2.11.1-5 change member name (empty and non-empty)
             self.log('2.11.1-4, 2.11.1-5 change member name (empty and non-empty)')
@@ -274,7 +274,7 @@ def add_member_to_cs(self, ssh_client, user, member, existing_client=None, with_
                  '2.11.1-2/2.11.1-14 checking logs for added member')
 
 
-def add_subsystem_to_member(self, ssh_client, user, member):
+def add_subsystem_to_member(self, member, user=None, ssh_client=None):
     '''
     Adds a subsystem to an existing member. Checks if the action was logged.
     :param self: MainController object
@@ -307,11 +307,12 @@ def add_subsystem_to_member(self, ssh_client, user, member):
     self.log('Confirm adding subsystem, click on "OK" button')
     self.wait_until_visible(type=By.XPATH, element=members_table.SUBSYSTEM_POPUP_OK_BTN_XPATH).click()
 
-    # TEST PLAN 2.11.1-14 check logs for added subsystem
-    bool_value, data, date_time = check_logs_for(ssh_client, ADD_SUBSYSTEM, user[USERNAME])
-    self.is_true((bool_value & (str(data['data']['memberCode']) == member['code'])), test_name,
-                 '2.11.1-3/2.11.1-14 check logs for added subsystem - check failed',
-                 '2.11.1-3/2.11.1-14 check logs for added subsystem')
+    if ssh_client is not None:
+        # TEST PLAN 2.11.1-14 check logs for added subsystem
+        bool_value, data, date_time = check_logs_for(ssh_client, ADD_SUBSYSTEM, user[USERNAME])
+        self.is_true((bool_value & (str(data['data']['memberCode']) == member['code'])), test_name,
+                     '2.11.1-3/2.11.1-14 check logs for added subsystem - check failed',
+                     '2.11.1-3/2.11.1-14 check logs for added subsystem')
 
 
 def change_member_name(self, ssh_client, user, member):

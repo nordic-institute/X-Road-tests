@@ -41,9 +41,8 @@ class SecurityServerClientRegistration(unittest.TestCase):
             # Create webdriver and go to main URL
             main.reset_webdriver(main.url, main.username, main.password)
 
-            # TODO: check_inputs=True
             test_func = client_certification_2_1_3.test_generate_csr_and_import_cert(member_name, member_class,
-                                                                                     check_inputs=False,
+                                                                                     check_inputs=True,
                                                                                      ss2_ssh_host=ss2_ssh_host,
                                                                                      ss2_ssh_user=ss2_ssh_user,
                                                                                      ss2_ssh_pass=ss2_ssh_pass,

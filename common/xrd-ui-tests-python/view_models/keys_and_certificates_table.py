@@ -5,6 +5,14 @@ KEY_CONFIG_FILE = '/etc/xroad/signer/keyconf.xml'
 OCSP_RESPONSE_CLASS_NAME = 'cert-ocsp-response'
 OCSP_DISABLED_RESPONSE = 'disabled'
 OCSP_DISABLED_CERT_ROW = '//td[contains(@class, {0}) and text()="{1}"]'.format(OCSP_RESPONSE_CLASS_NAME, OCSP_DISABLED_RESPONSE)
+OCSP_CERT_FRIENDLY_NAME = 'cert-friendly-name'
+OCSP_DISABLED_CERT_ROW2 = '//td[contains(@class, {0}) and text()="{1}"]/..'.format(OCSP_RESPONSE_CLASS_NAME, OCSP_DISABLED_RESPONSE)
+
+
+def get_cert_row(text):
+    return '//td[contains(@class, {0}) and text()="{1}"]'.format(OCSP_CERT_FRIENDLY_NAME, text)
+
+
 KEY_LABEL_TEXT_AND_RESULTS = [[256 * 'S', True, "Parameter '{0}' input exceeds 255 characters", 'label', False],
                               ['   ' + KEY_LABEL_TEXT + '   ', False, None, None, True],
                               ['z', False, None, None, False],
@@ -28,9 +36,11 @@ FILE_IMPORT_OK_BTN_ID = 'file_upload_submit'
 FILEPATH_INPUT_AREA_CSS = '.selected_file'
 FILEPATH_FORM_INPUT_ID = 'file_upload'
 UNSAVED_KEY_CSS = '.key.unsaved'
+APPROVED = 'APPROVED'
 SUBMITTED_FOR_APPROVAL_STATE = 'SUBMITTED FOR APPROVAL'
 WAITING_STATE = 'WAITING'
 REVOKED_STATE = 'REVOKED'
+DECLINED_STATE = 'DECLINED'
 
 KEYS_AND_CERTIFICATES_TABLE_ID = 'keys'
 KEYS_AND_CERTIFICATES_TABLE_ROWS_CSS = '.keys tbody tr'

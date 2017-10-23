@@ -4,7 +4,8 @@ import unittest
 
 from helpers import xroad, soaptestclient
 from main.maincontroller import MainController
-from tests.xroad_global_groups_tests.global_groups_tests import add_group, add_member_to_group, remove_group
+from tests.xroad_global_groups_tests.global_groups_tests import add_group, add_member_to_group
+from view_models.popups import close_all_open_dialogs
 
 
 class XroadGlobalGroups(unittest.TestCase):
@@ -75,14 +76,9 @@ class XroadGlobalGroups(unittest.TestCase):
             add_group(main, group, check_global_groups_inputs=True,
                       cs_ssh_host=cs_ssh_host, cs_ssh_user=cs_ssh_user, cs_ssh_pass=cs_ssh_pass)
             main.log('SERVICE_34 Add Members to a Global Group')
-            add_member_to_group(main, client, group, ss2_host, ss2_user, ss2_pass, testclient, wsdl_url, service_name,
-                                identifier)
+            add_member_to_group(main, client, group, ss2_host, ss2_user, ss2_pass, wsdl_url, service_name,
+                                identifier, testclient=testclient)
+            close_all_open_dialogs(main)
 
         finally:
-            try:
-                main.log('SERVICE_39 Delete a Global Group')
-                main.reload_webdriver(cs_host, cs_user, cs_pass)
-                remove_group(main, group, cs_ssh_host=cs_ssh_host, cs_ssh_user=cs_ssh_user, cs_ssh_pass=cs_ssh_pass)
-            except:
-                main.log('2.11.1-del Deleting group failed')
             main.tearDown()

@@ -1,5 +1,3 @@
-import datetime
-import glob
 import os
 import time
 
@@ -15,6 +13,8 @@ from tests.xroad_logging_in_cs_2111.logging_in_cs_2_11_1 import add_member_to_cs
 from tests.xroad_ss_client_certification_213 import client_certification_2_1_3
 from view_models import popups, sidebar, groups_table, cs_security_servers, members_table, keys_and_certificates_table, \
     messages, log_constants
+from view_models.cs_security_servers import SECURITY_SERVER_TABLE_CSS
+from view_models.log_constants import APPROVE_CLIENT_REGISTRATION_REQUST
 
 
 def test_deleting_member_with_global_group(cs_ssh_host, cs_ssh_username, cs_ssh_password, client, user, test_group):
@@ -160,7 +160,8 @@ def test_deleting_member_with_security_server(case, cs_ssh_host, cs_ssh_user, cs
 
 
 def test_add_security_server_to_member(case, cs_host, cs_username, cs_password, cs_ssh_host, cs_ssh_user, cs_ssh_pass,
-                                       client, cert_path, check_inputs=False):
+                                       client, cert_path, check_inputs=False, verify_cert=False,
+                                       cert_used_already=False, check_server=False):
     """
     MEMBER_12 ALL steps , except 7
     Adds security server to member in central server
@@ -173,6 +174,9 @@ def test_add_security_server_to_member(case, cs_host, cs_username, cs_password, 
     :param cs_ssh_pass:  str - central server ssh password
     :param client:  dict - client info
     :param cert_path:  str - cert filename
+    :param verify_cert:  for cert verification
+    :param cert_used_already:  for checking cert error
+    :param check_server:  for checking server error
     :return:
     """
     self = case
@@ -208,6 +212,28 @@ def test_add_security_server_to_member(case, cs_host, cs_username, cs_password, 
         '''Upload button'''
         file_upload = self.by_id(cs_security_servers.OWNED_SERVERS_UPLOAD_CERT_BTN_ID)
         self.log('Uploading certificate to central server')
+        if verify_cert:
+            wrong_local_cert_path = self.get_download_path('test')
+            wrong_file_abs_path = os.path.abspath(wrong_local_cert_path)
+
+            xroad.fill_upload_input(self, file_upload, wrong_file_abs_path)
+            expected_error_msg = messages.AUTH_CERT_IMPORT_FILE_FORMAT_ERROR
+            self.log('MEMBER_12 6a.1 System displays the "{0}" error message'.format(expected_error_msg))
+            error_msg = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
+            self.is_equal(expected_error_msg, error_msg)
+
+            error_local_cert_path = self.get_download_path(os.getcwd() + '/error.pem')
+            error_file_abs_path = os.path.abspath(error_local_cert_path)
+
+            xroad.fill_upload_input(self, file_upload, error_file_abs_path)
+            expected_error_msg = messages.AUTH_CERT_IMPORT_FILE_CANNOT_BE_USED
+            self.log('MEMBER_12 6b.1 System displays the "{0}" error message'.format(expected_error_msg))
+            error_msg = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
+            self.is_equal(expected_error_msg, error_msg)
+            test_add_security_server_to_member(self, cs_host, cs_username, cs_password, cs_ssh_host, cs_ssh_user,
+                                               cs_ssh_pass, client, cert_path, check_inputs=True)()
+            return
+
         xroad.fill_upload_input(self, file_upload, file_abs_path)
         self.wait_jquery()
         notice_msg = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.NOTICE_MESSAGE_CSS).text
@@ -250,6 +276,48 @@ def test_add_security_server_to_member(case, cs_host, cs_username, cs_password, 
                                                cs_ssh_pass, client, cert_path)()
             return
 
+        if cert_used_already:
+            current_log_lines = log_checker.get_line_count()
+            self.input(element=server_code_input, text='test')
+            self.log('Click ok')
+            self.wait_until_visible(type=By.ID, element=cs_security_servers.ADD_OWNED_SERVER_SUBMIT_BUTTON_ID).click()
+            self.wait_jquery()
+            'Get error message'
+            error_msg = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
+            expected_error_msg = messages.AUTH_CERT_ALREADY_REGISTRED.format(self.number)
+            self.is_equal(expected_error_msg, error_msg)
+
+            '''Expected log message'''
+            expected_log_msg = log_constants.ADD_SECURITY_SERVER_FAILED
+            self.log('MEMBER_12 8a.2. System logs the event {0}'.format(expected_log_msg))
+            logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines)
+            self.is_true(logs_found)
+
+            test_add_security_server_to_member(self, cs_host, cs_username, cs_password, cs_ssh_host, cs_ssh_user,
+                                               cs_ssh_pass, client, cert_path, check_server=True)()
+            return
+
+        if check_server:
+            current_log_lines = log_checker.get_line_count()
+            self.log('Insert server code to server code field')
+            self.input(element=server_code_input, text=client['name'])
+            self.log('Click ok')
+            self.wait_until_visible(type=By.ID, element=cs_security_servers.ADD_OWNED_SERVER_SUBMIT_BUTTON_ID).click()
+            self.wait_jquery()
+            'Get error message'
+            error_msg = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
+            expected_error_msg = messages.SECURITY_SERVER_CODE_ALREADY_REGISTRED.format(client['class'], client['code'],
+                                                                                        client['name'])
+            self.is_equal(expected_error_msg, error_msg)
+
+            '''Expected log message'''
+            expected_log_msg = log_constants.ADD_SECURITY_SERVER_FAILED
+            self.log('MEMBER_12 9a.2. System logs the event {0}'.format(expected_log_msg))
+            logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines)
+            self.is_true(logs_found)
+
+            return
+
         self.log('Insert server code to server code field')
         self.input(element=server_code_input, text=client['name'])
         self.log('Click ok')
@@ -264,17 +332,19 @@ def test_add_security_server_to_member(case, cs_host, cs_username, cs_password, 
         self.is_true(logs_found, msg="Add security server log message not found")
         '''Log line count after adding'''
         current_log_lines = log_checker.get_line_count()
-        self.log('Approve registration requests')
-        approve_requests(self, step='MEMBER_36 ')
-        self.log('Check if log contains event about Client registration request approval')
-        logs_found = log_checker.check_log(log_constants.APPROVE_CLIENT_REGISTRATION_REQUST,
-                                           from_line=current_log_lines + 1)
+        approve_requests(self, use_case='MEMBER_36 ', cancel_confirmation=True)
+        expected_log_msg = APPROVE_CLIENT_REGISTRATION_REQUST
+        self.log('MEMBER_36 7. System logs the event {0}'.format(expected_log_msg))
+        logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
         self.is_true(logs_found, msg='"Approve client registration request" event not found in log"')
         self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.SECURITY_SERVERS_CSS).click()
         self.wait_until_visible(type=By.ID, element=cs_security_servers.SECURITY_SERVER_TABLE_ID)
         self.wait_jquery()
-        self.log('Check if added security server is visible in security servers table')
-        self.is_not_none(self.by_xpath(members_table.get_row_by_td_text(client['name'])))
+        self.log('MEMBER_36 4a. System saves the security server information found in the registration request to the '
+                 'system configuration as an owned security server of the X-Road member')
+        ss_table = self.wait_until_visible(type=By.CSS_SELECTOR, element=SECURITY_SERVER_TABLE_CSS)
+        self.is_not_none(members_table.get_row_by_columns(ss_table, [client['name'], client['name'], client['class'],
+                                                                     client['code']]))
 
     return add_security_server_to_member
 
@@ -323,6 +393,7 @@ def restore_security_server_after_member_deletion(case, cs_ssh_host, cs_ssh_user
         self.by_id(keys_and_certificates_table.DELETE_BTN_ID).click()
         popups.confirm_dialog_click(self)
         self.wait_jquery()
+
     return restore_security_server
 
 

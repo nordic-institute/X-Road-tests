@@ -31,6 +31,7 @@ GROUP_MEMBERS_ADD_SEARCH_BUTTON_XPATH = '//div[@data-name="group_members_add_dia
 MEMBER_ROW_BY_TWO_COLUMNS_XPATH = '//tr[contains(.,"{0}") and contains(., "{1}")]'
 GROUP_MEMBERS_ADD_BUTTON_ID = 'add_selected_members_to_group'
 GLOBAL_GROUP_ROW_BY_TD_TEXT_XPATH = '//table[@id="global_groups"]//td[contains(., {0})]'
+GLOBAL_GROUP_TR_BY_TD_TEXT_XPATH = GLOBAL_GROUP_ROW_BY_TD_TEXT_XPATH + '/..'
 GLOBAL_GROUP_ADD_MEMBERS_BTN_ID = 'group_details_add_members'
 
 def get_clobal_group_code_description_by_text(text):

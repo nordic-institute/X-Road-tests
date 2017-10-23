@@ -178,7 +178,20 @@ class XroadCsDeleteMemberWithSecurityServer(unittest.TestCase):
                                                                                      cs_ssh_host, cs_ssh_user,
                                                                                      cs_ssh_pass,
                                                                                      client, cert_path=cert_path,
-                                                                                     check_inputs=True)
+                                                                                     check_inputs=True,
+                                                                                     verify_cert=True)
+
+        test_add_ss_to_cs_member_check_server = deleting_in_cs.test_add_security_server_to_member(main, cs_host,
+                                                                                                  cs_username,
+                                                                                                  cs_password,
+                                                                                                  cs_ssh_host,
+                                                                                                  cs_ssh_user,
+                                                                                                  cs_ssh_pass,
+                                                                                                  client,
+                                                                                                  cert_path=cert_path,
+                                                                                                  cert_used_already=True,
+                                                                                                  check_server=False)
+
         test_register_cert = client_certification_2_1_3.register_cert(main, ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass,
                                                                       cs_host=cs_ssh_host, client=client,
                                                                       ca_ssh_host=ca_ssh_host, ca_ssh_user=ca_ssh_user,
@@ -195,6 +208,7 @@ class XroadCsDeleteMemberWithSecurityServer(unittest.TestCase):
             restore_security_server()
             test_register_cert()
             test_add_ss_to_cs_member()
+            test_add_ss_to_cs_member_check_server()
             main.reload_webdriver(ss2_host, ss2_username, ss2_password)
             test_activate_cert()
             main.tearDown()

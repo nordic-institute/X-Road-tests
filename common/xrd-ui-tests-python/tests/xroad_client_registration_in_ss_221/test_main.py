@@ -59,6 +59,9 @@ class XroadSecurityServerClientRegistration(unittest.TestCase):
                                                               ss2_client_2=ss2_client_2,
                                                               ss2_client_2_name=ss2_client_2_name,
                                                               remove_added_data=remove_added_data,
+                                                              ss1_ssh_host=main.config.get('ss1.ssh_host'),
+                                                              ss1_ssh_user=main.config.get('ss1.ssh_user'),
+                                                              ss1_ssh_pass=main.config.get('ss1.ssh_pass'),
                                                               ss2_ssh_host=ss2_ssh_host,
                                                               ss2_ssh_user=ss2_ssh_user,
                                                               ss2_ssh_pass=ss2_ssh_pass,
@@ -67,7 +70,10 @@ class XroadSecurityServerClientRegistration(unittest.TestCase):
                                                               ss2_server_name=ss2_server_name,
                                                               ca_ssh_host=main.config.get('ca.ssh_host'),
                                                               ca_ssh_username=main.config.get('ca.ssh_user'),
-                                                              ca_ssh_password=main.config.get('ca.ssh_pass')
-                                                              )
+                                                              ca_ssh_password=main.config.get('ca.ssh_pass'),
+                                                              global_group=main.config.get('cs.global_group'),
+                                                              cs_ssh_host=main.config.get('cs.ssh_host'),
+                                                              cs_ssh_user=main.config.get('cs.ssh_user'),
+                                                              cs_ssh_pass=main.config.get('cs.ssh_pass'))
         test_func()
         main.tearDown()

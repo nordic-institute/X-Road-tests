@@ -1,5 +1,5 @@
 import time
-
+import urllib3
 import requests
 from selenium.webdriver.common.by import By
 
@@ -258,6 +258,7 @@ def restore_wsdl_validator_wrapper(case, ssh_host, ssh_username, ssh_password, w
 
 def wait_until_server_up(ss_host):
     '''Wait until reloading process has started'''
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     time.sleep(5)
     '''Make get request on ss server, without cert verification'''
     response = requests.get(ss_host, verify=False)

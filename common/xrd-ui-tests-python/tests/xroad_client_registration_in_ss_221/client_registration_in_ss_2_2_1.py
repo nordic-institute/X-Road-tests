@@ -7,7 +7,11 @@ from selenium.webdriver.support.select import Select
 from helpers import ssh_server_actions, auditchecker, ssh_client
 from tests.xroad_ss_client_certification_213 import client_certification_2_1_3
 from view_models import members_table, clients_table_vm, sidebar, popups, \
-    keys_and_certificates_table as keyscertificates_constants, cs_security_servers, log_constants, messages
+    keys_and_certificates_table as keyscertificates_constants, cs_security_servers, log_constants, messages, \
+    groups_table
+from view_models.keys_and_certificates_table import APPROVED
+from view_models.log_constants import DELETE_SUBSYSTEM
+from view_models.members_table import MANAGEMENT_REQUEST_TABLE_ID
 
 SYSTEM_TYPE = 'SUBSYSTEM'
 
@@ -20,10 +24,18 @@ def test_remove(cs_host, cs_username, cs_password,
                 ss1_ssh_host=None, ss1_ssh_username=None, ss1_ssh_password=None,
                 ss2_ssh_host=None, ss2_ssh_username=None, ss2_ssh_password=None,
                 cs_new_member=None, ss1_client=None, ss1_client_2=None, ss2_client=None, ss2_client_2=None,
-                cs_member_name=None, ss1_client_name=None, ss1_client_2_name=None, ss2_client_name=None, ss2_client_2_name=None,
-                ca_ssh_host=None, ca_ssh_username=None, ca_ssh_password=None):
-    '''
+                cs_member_name=None, ss1_client_name=None, ss1_client_2_name=None, ss2_client_name=None,
+                ss2_client_2_name=None,
+                ca_ssh_host=None, ca_ssh_username=None, ca_ssh_password=None,
+                cs_ssh_host=None, cs_ssh_username=None, cs_ssh_password=None, global_group=None):
+    """
     Removes the data that was created when running the main test.
+    :param global_group: str - global group name
+    :param cs_ssh_password: str - central server ssh password
+    :param cs_ssh_username: str - central server ssh username
+    :param cs_ssh_host: str - central server ssh host
+    :param ss1_client_2_name: str - security server 1 client 2 name
+    :param ss1_client_2: dict - security server 1 client 2 data
     :param ss2_ssh_host: str - security server 2 ssh hostname
     :param ss2_ssh_username: str - security server 2 ssh username
     :param ss2_ssh_password: str - security server 2 ssh password
@@ -51,7 +63,7 @@ def test_remove(cs_host, cs_username, cs_password,
     :param ca_ssh_username: str - CA ssh username
     :param ca_ssh_password: str - CA ssh password
     :return: None
-    '''
+    """
 
     def test_case(self):
         '''
@@ -75,7 +87,6 @@ def test_remove(cs_host, cs_username, cs_password,
 
         ss_2_client_2 = {'name': ss2_client_2_name, 'class': ss2_client_2['class'], 'code': ss2_client_2['code'],
                          'subsystem_code': ss2_client_2['subsystem']}
-
         try:
             # Remove the members and subsystems
             remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_username, sec_1_password,
@@ -83,7 +94,9 @@ def test_remove(cs_host, cs_username, cs_password,
                         sec_2_host, sec_2_username, sec_2_password,
                         ss2_ssh_host, ss2_ssh_username, ss2_ssh_password,
                         cs_member, ss_1_client, ss_1_client_2, ss_2_client,
-                        ss_2_client_2, ca_ssh_host=ca_ssh_host, ca_ssh_username=ca_ssh_username, ca_ssh_password=ca_ssh_password)
+                        ss_2_client_2, ca_ssh_host=ca_ssh_host, ca_ssh_username=ca_ssh_username,
+                        ca_ssh_password=ca_ssh_password, cs_ssh_host=cs_ssh_host, cs_ssh_username=cs_ssh_username,
+                        cs_ssh_password=cs_ssh_password, global_group=global_group)
         except:
             # Something went wrong
             self.log('Failed to remove client.')
@@ -98,11 +111,21 @@ def test_test(case, cs_host, cs_username, cs_password,
               sec_2_host, sec_2_username, sec_2_password,
               cs_new_member=None, ss1_client=None, ss1_client_2=None, ss2_client=None, ss2_client_2=None,
               cs_member_name=None, ss1_client_name=None, ss1_client_2_name=None, ss2_client_name=None,
-              ss2_client_2_name=None,
+              ss2_client_2_name=None, ss1_ssh_host=None, ss1_ssh_user=None, ss1_ssh_pass=None,
               remove_added_data=True, ss2_ssh_host=None, ss2_ssh_user=None, ss2_ssh_pass=None, ss1_host=None,
-              ss1_server_name=None, ss2_server_name=None, ca_ssh_host=None, ca_ssh_username=None, ca_ssh_password=None):
+              ss1_server_name=None, ss2_server_name=None, ca_ssh_host=None, ca_ssh_username=None, ca_ssh_password=None,
+              global_group=None, cs_ssh_host=None, cs_ssh_user=None, cs_ssh_pass=None):
     """
 
+    :param ss2_ssh_user: str - security server 2 ssh user
+    :param ss2_ssh_host: str - security server 2 ssh host
+    :param ss1_host: str - security server 1 host
+    :param ss2_ssh_pass: str - security server 2 ssh pass
+    :param ss1_ssh_pass: str - security server 1 ssh pass
+    :param ss1_ssh_host: str - security server 1 ssh host
+    :param ssl_ssh_user: str - security server 1 ssh user
+    :param ss1_client_2_name: str - security server 1 client 2 name
+    :param ss1_client_2: dict - security server 1 client 2 data
     :param case: MainController object
     :param cs_host: str - central server hostname
     :param cs_username: str - central server UI username
@@ -191,7 +214,7 @@ def test_test(case, cs_host, cs_username, cs_password,
             '''Add subsystem to member'''
             add_sub_as_client_to_member(self, self.config.get('ss1.server_name'), ss_1_client_2, wait_input=wait_input)
             '''Approve requests'''
-            approve_requests(self, cancel_confirmation=True)
+            approve_requests(self, cancel_confirmation=True, use_case='MEMBER_37')
 
             login(self, sec_1_host, sec_1_username, sec_1_password)
             # Add client to Security Server 1
@@ -360,10 +383,18 @@ def test_test(case, cs_host, cs_username, cs_password,
                 self.log('2.2.1-del Deleting client')
                 # Remove all data we created
                 try:
-                    remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_username, sec_1_password,
-                                sec_2_host, sec_2_username, sec_2_password,
+                    remove_data(self, cs_host=cs_host, cs_username=cs_username, cs_password=cs_password,
+                                sec_1_host=sec_1_host,
+                                sec_1_username=sec_1_username, sec_1_password=sec_1_password,
+                                sec_1_ssh_host=ss1_ssh_host, sec_1_ssh_username=ss1_ssh_user,
+                                sec_1_ssh_password=ss1_ssh_pass,
+                                sec_2_ssh_host=ss2_ssh_host, sec_2_ssh_username=ss2_ssh_user,
+                                sec_2_ssh_password=ss2_ssh_pass,
+                                sec_2_host=sec_2_host, sec_2_username=sec_2_username, sec_2_password=sec_2_password,
                                 cs_member=cs_member, ss_1_client=ss_1_client, ss_2_client=ss_2_client,
-                                ss_2_client_2=ss_2_client_2, ca_ssh_host=ca_ssh_host, ca_ssh_username=ca_ssh_username, ca_ssh_password=ca_ssh_password)
+                                ss_2_client_2=ss_2_client_2, ca_ssh_host=ca_ssh_host, ca_ssh_username=ca_ssh_username,
+                                ca_ssh_password=ca_ssh_password, cs_ssh_host=cs_ssh_host, cs_ssh_username=cs_ssh_user,
+                                cs_ssh_password=cs_ssh_pass, ss_1_client_2=ss_1_client_2, global_group=global_group)
                 except:
                     self.log('2.2.1 Client deletion FAILED')
             # If we got an error previously, raise an exception
@@ -765,7 +796,7 @@ def add_subsystem_to_server_client(self, server_code, client, wait_input=3):
     self.wait_jquery()
 
 
-def approve_requests(self, step='', cancel_confirmation=False):
+def approve_requests(self, use_case='', step='', cancel_confirmation=False):
     """
     Approve the management requests.
     :param self: MainController object
@@ -773,17 +804,18 @@ def approve_requests(self, step='', cancel_confirmation=False):
     :return: None
     """
 
-    # Open main page
+    '''Open main page'''
     self.log(step + 'Open central server')
     self.driver.get(self.url)
     self.wait_jquery()
 
-    # Go to management requests
+    '''Go to management requests'''
     self.log(step + 'Open management requests table')
     self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.MANAGEMENT_REQUESTS_CSS).click()
     self.wait_jquery()
+    self.wait_until_visible(type=By.ID, element=MANAGEMENT_REQUEST_TABLE_ID)
 
-    # Find all requests that are submitted for approval
+    '''Find all requests that are submitted for approval'''
     try:
         td = self.by_xpath(
             members_table.get_requests_row_by_td_text(keyscertificates_constants.SUBMITTED_FOR_APPROVAL_STATE))
@@ -792,29 +824,33 @@ def approve_requests(self, step='', cancel_confirmation=False):
 
     try:
         while td is not None:
+            request_id = td.find_elements_by_tag_name('td')[0].text
             td.click()
             self.log(step + 'Open management request details')
             self.wait_until_visible(type=By.ID, element=members_table.MANAGEMENT_REQUEST_DETAILS_BTN_ID).click()
             self.wait_jquery()
 
-            # Approve the requests
             '''MEMBER_37 request approval confirmation is cancelled'''
-            self.log(step + 'Approve request')
+            self.log(use_case + '1. Approve request button is pressed')
             self.wait_until_visible(type=By.XPATH, element=members_table.APPROVE_REQUEST_BTN_XPATH).click()
             self.wait_jquery()
+            self.log(use_case + '2. System prompts for confirmation')
             if cancel_confirmation:
-                self.log("Cancel request approval confirmation")
+                self.log(use_case + '3a. Approval process is canceled')
                 self.wait_until_visible(type=By.XPATH, element=popups.CONFIRM_POPUP_CANCEL_BTN_XPATH).click()
                 self.wait_jquery()
 
                 '''As the state shouldn't change after canceling, then we can approve the request'''
-                self.log(step + 'Approve request again')
+                self.log(step + 'Press approve button again')
                 self.wait_until_visible(type=By.XPATH, element=members_table.APPROVE_REQUEST_BTN_XPATH).click()
                 self.wait_jquery()
-            self.log(step + 'Confirm request approval')
+            self.log(step + '3. Confirm request approval')
             popups.confirm_dialog_click(self)
-
-            # Find the next request waiting to be approved
+            td = self.by_xpath(members_table.get_requests_row_by_td_text(APPROVED))
+            last_approved_request_id = td.find_elements_by_tag_name('td')[0].text
+            self.log(step + '6. System sets the state of the request to "{0}"'.format(APPROVED))
+            self.is_equal(request_id, last_approved_request_id)
+            '''Find the next request waiting to be approved'''
             try:
                 td = self.by_xpath(
                     members_table.get_requests_row_by_td_text(keyscertificates_constants.SUBMITTED_FOR_APPROVAL_STATE))
@@ -1120,9 +1156,15 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
                 sec_2_host, sec_2_username, sec_2_password,
                 sec_2_ssh_host, sec_2_ssh_username, sec_2_ssh_password,
                 cs_member, ss_1_client, ss_1_client_2, ss_2_client, ss_2_client_2,
-                ca_ssh_host = None, ca_ssh_username = None, ca_ssh_password = None):
+                ca_ssh_host=None, ca_ssh_username=None, ca_ssh_password=None,
+                cs_ssh_host=None, cs_ssh_username=None, cs_ssh_password=None,
+                global_group=None):
     '''
     Removes the data that was created during tests.
+    :param global_group: str - global group name
+    :param cs_ssh_password: str - central server ssh password
+    :param cs_ssh_username: str - central server ssh username
+    :param cs_ssh_host: str -central server ssh host
     :param ss_1_client_2: dict- security server 1 second client data
     :param sec_2_ssh_password: str - security server 2 ssh password
     :param sec_2_ssh_username: str - security server 2 ssh username
@@ -1152,15 +1194,53 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
     self.log('2.2.1-del Removing test data')
     self.logout(cs_host)
 
-    # Log in to central server
-    self.login(username=cs_username, password=cs_password)
+    '''Delete client from ss1'''
+    log_checker_ss1 = auditchecker.AuditChecker(host=sec_1_ssh_host, username=sec_1_ssh_username,
+                                                password=sec_1_ssh_password)
+    current_log_lines = log_checker_ss1.get_line_count()
+    self.reload_webdriver(sec_1_host, sec_1_password, sec_1_password)
+    safe(self, remove_client_with_cert_and_cancelling, ss_1_client,
+         '2.2.1-del Removing client from security server 1 failed')
+    logs_found = log_checker_ss1.check_log(log_constants.DELETE_CLIENT, from_line=current_log_lines + 1, strict=False)
+    self.is_true(logs_found,
+                 msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
+                     log_constants.DELETE_CLIENT,
+                     log_checker_ss1.found_lines))
 
+    '''Delete subsystem with global group from member'''
+    self.reload_webdriver(cs_host, cs_username, cs_password)
+    group = global_group
+    self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.GLOBAL_GROUPS_CSS).click()
+    group_member_count = self.wait_until_visible(type=By.XPATH,
+                                                 element=groups_table.GLOBAL_GROUP_TR_BY_TD_TEXT_XPATH.format(
+                                                     group)).find_elements_by_tag_name('td')[2].text
+    log_checker = auditchecker.AuditChecker(host=cs_ssh_host,
+                                            username=cs_ssh_username,
+                                            password=cs_ssh_password)
+    current_log_lines = log_checker.get_line_count()
+    expected_log_msg = DELETE_SUBSYSTEM
+    self.reload_webdriver(cs_host, cs_username, cs_password)
+    safe(self, remove_client_subsystem_with_canceling, ss_1_client,
+         '2.2.1-del Removing security server 1 client subsystem failed')
+    self.log('MEMBER_14 6. System logs the event {0}'.format(expected_log_msg))
+    logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
+    self.is_true(logs_found)
+    popups.close_all_open_dialogs(self)
+    self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.GLOBAL_GROUPS_CSS).click()
+    self.log('MEMBER_14 4. Subsystem, which was deleted is removed from global group')
+    group_member_count_after = self.wait_until_visible(type=By.XPATH,
+                                                       element=groups_table.GLOBAL_GROUP_TR_BY_TD_TEXT_XPATH.format(
+                                                           group)).find_elements_by_tag_name('td')[2].text
+    self.is_true(group_member_count > group_member_count_after)
+
+    '''Removing members from central server'''
     self.log('2.2.1-del removing member from central server')
     safe(self, remove_member, cs_member, '2.2.1-del Removing member failed')
     safe(self, remove_member, ss_1_client_2, 'Removing member failed')
 
-    # Reload the CS homepage
+    '''Reload the CS homepage'''
     self.reset_webdriver(cs_host, cs_username, cs_password)
+    '''Revoke waiting management requests'''
     try:
         self.log('2.2.1-del revoking management requests')
         revoke_requests(self)
@@ -1168,17 +1248,14 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
         self.log('2.2.1-del revoking requests failed')
         traceback.print_exc()
 
-    '''Logchecker for security server 1'''
-    log_checker = auditchecker.AuditChecker(host=sec_1_ssh_host, username=sec_1_ssh_username,
-                                            password=sec_1_ssh_password)
-    current_log_lines = log_checker.get_line_count()
+    '''Remove client 2 from ss1'''
     '''Go to security server 1'''
     self.log('2.2.1-del removing certificate from security server 1')
     login(self, sec_1_host, sec_1_username, sec_1_password)
     '''Try to remove client with canceling deletion and confirming certificate removal popup from ss1'''
     self.driver.get(self.url)
     safe(self, remove_client_keep_cert, ss_1_client_2, 'Removing client from security server 1 failed')
-
+    '''Remove client 2 certificate from ss1'''
     safe(self, remove_certificate, ss_1_client_2, 'Removing certificate from security server 1 failed')
 
     # Connect to CA over SSH
@@ -1206,16 +1283,9 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
         self.log('Failed to revoke security server 1 added client certificates')
         traceback.print_exc()
 
-    safe(self, remove_client_with_cert_and_cancelling, ss_1_client,
-         '2.2.1-del Removing client from security server 1 failed')
     self.log('Check if log contains delete client event')
-    logs_found = log_checker.check_log(log_constants.DELETE_CLIENT, from_line=current_log_lines + 1, strict=False)
-    self.is_true(logs_found,
-                 msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
-                     log_constants.DELETE_CLIENT,
-                     log_checker.found_lines))
 
-    '''Remove client key'''
+    '''Remove client1 key from ss1'''
     try:
         remove_key_and_revoke_certificates(self, ss_1_client, ca_ssh_client)
     except:
@@ -1249,8 +1319,8 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
     logs_found = log_checker.check_log(log_constants.DELETE_CLIENT, from_line=current_log_lines + 1)
     if not logs_found:
         log_error = 'SS2 client 1 delete: some log entries were missing. Expected: "{0}", found: "{1}"'.format(
-                     log_constants.DELETE_CLIENT,
-                     log_checker.found_lines)
+            log_constants.DELETE_CLIENT,
+            log_checker.found_lines)
         self.log(log_error)
         log_errors.append(log_error)
     current_log_lines = log_checker.get_line_count()
@@ -1262,12 +1332,13 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
     logs_found = log_checker.check_log(log_constants.DELETE_CLIENT, from_line=current_log_lines + 1)
     if not logs_found:
         log_error = 'SS2 client 2 delete: some log entries were missing. Expected: "{0}", found: "{1}"'.format(
-                     log_constants.DELETE_CLIENT,
-                     log_checker.found_lines)
+            log_constants.DELETE_CLIENT,
+            log_checker.found_lines)
         self.log(log_error)
         log_errors.append(log_error)
     login(self, cs_host, cs_username, cs_password)
-    safe(self, remove_client_subsystem, ss_2_client_2, '2.2.1-del Removing security server 1 client subsystem failed')
+    safe(self, remove_client_subsystem, ss_2_client_2,
+         '2.2.1-del Removing security server 1 client subsystem failed')
     if log_errors:
         self.is_true(False, msg='2.2.1-del Log error count {0}, errors: {1}'.format(len(log_errors), log_errors))
 
@@ -1425,9 +1496,13 @@ def remove_client(self, client, delete_cert=False, cancel_deletion=False, deny_c
     self.is_none(added_client_row(self, client))
 
 
-def remove_client_subsystem(self, client):
+def remove_client_subsystem_with_canceling(self, client):
+    remove_client_subsystem(self, client, try_cancel=True)
+
+
+def remove_client_subsystem(self, client, try_cancel=False):
     '''
-    Removes a leftover subsystem from the system.
+    MEMBER_14 Delete a X-Road Member's Subsystem
     :param self: MainController object
     :param client: dict - client data
     :return: None
@@ -1455,14 +1530,22 @@ def remove_client_subsystem(self, client):
     table = self.wait_until_visible(type=By.XPATH, element=members_table.SUBSYSTEM_TABLE_XPATH)
     self.wait_jquery()
 
+    subsys_row = self.wait_until_visible(type=By.XPATH, element=members_table.SUBSYSTEM_TR_BY_CODE_XPATH.format(
+        client['subsystem_code']))
     # Try to find leftover subsystem (without server ID) in the table.
-    subsys_row = members_table.get_row_by_columns(table, [client['subsystem_code']])
+    # subsys_row = members_table.get_row_by_columns(table, client['subsystem_code'])
     subsys_row.click()
 
     # Click "Delete"
+    self.log('MEMBER_14 1. Subsystem delete button is clicked')
     self.wait_until_visible(type=By.XPATH, element=members_table.DELETE_SUBSYSTEM_BTN_ID).click()
+    self.log('MEMBER_14 2. System prompts for confirmation')
+    if try_cancel:
+        self.log('MEMBER_14 3a. Subsystem deletion is canceled')
+        self.wait_until_visible(type=By.XPATH, element=popups.CONFIRM_POPUP_CANCEL_BTN_XPATH).click()
+        self.wait_until_visible(type=By.XPATH, element=members_table.DELETE_SUBSYSTEM_BTN_ID).click()
 
-    # Confirm deletion
+    self.log('MEMBER_14 3. Subsystem deletion is confirmed')
     popups.confirm_dialog_click(self)
     self.wait_jquery()
 
@@ -1501,6 +1584,7 @@ def remove_certificate(self, client):
     except:
         pass
 
+
 def get_certificates_to_revoke(self, client):
     '''
     Gets a list of the client's certificates that need to be revoked.
@@ -1518,7 +1602,7 @@ def get_certificates_to_revoke(self, client):
     while True:
         try:
             key_friendly_name_xpath = keyscertificates_constants.get_generated_key_row_active_cert_friendly_name_xpath(
-                                        client['code'], client['class'], key_num)
+                client['code'], client['class'], key_num)
             key_name_element = self.by_xpath(key_friendly_name_xpath)
             element_text = key_name_element.text.strip()
             # Split the element by space and get the last part of it as this is the key id as a decimal
@@ -1538,7 +1622,7 @@ def get_certificates_to_revoke(self, client):
     return certs_to_revoke
 
 
-def remove_key_and_revoke_certificates(self, client, ssh_client = None):
+def remove_key_and_revoke_certificates(self, client, ssh_client=None):
     '''
     Removes a certificate from a client and revokes the associated certificate in the CA.
     :param self: MainController object
@@ -1553,8 +1637,9 @@ def remove_key_and_revoke_certificates(self, client, ssh_client = None):
 
     # Wait for the generated key row to appear
     generated_key_row = self.wait_until_visible(type=By.XPATH,
-                            element=keyscertificates_constants.get_generated_key_row_xpath(client['code'],
-                                                                                           client['class']))
+                                                element=keyscertificates_constants.get_generated_key_row_xpath(
+                                                    client['code'],
+                                                    client['class']))
     certs_to_revoke = get_certificates_to_revoke(self, client)
 
     print 'certs to revoke', certs_to_revoke
@@ -1609,7 +1694,8 @@ def revoke_requests(self, try_cancel=False, auth=False):
     self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.MANAGEMENT_REQUESTS_CSS).click()
     self.wait_jquery()
 
-    td = self.by_xpath(members_table.get_requests_row_by_td_text(keyscertificates_constants.WAITING_STATE))
+    td = self.wait_until_visible(type=By.XPATH, element=members_table.get_requests_row_by_td_text(
+        keyscertificates_constants.WAITING_STATE))
     '''Waiting request id'''
     request_id = td.find_elements_by_tag_name('td')[0].text
     self.log('Click on waiting request')
@@ -1678,4 +1764,4 @@ def safe(self, func, member, message):
         if self.debug:
             self.log('Got an exception in safe(): {0}'.format(message))
         traceback.print_exc()
-        #raise AssertionError
+        # raise AssertionError

@@ -41,6 +41,7 @@ SERVICE_EDIT_INVALID_TIMEOUT = 'Timeout value must be a positive integer.'
 SERVICE_EDIT_INFINITE_TIMEOUT_WARNING = 'A timeout value of zero is interpreted as an infinite timeout.'
 
 AUTH_CERT_IMPORT_FILE_FORMAT_ERROR = 'Failed to import authentication certificate: Incorrect file format. Only PEM and DER files allowed.'
+AUTH_CERT_IMPORT_FILE_CANNOT_BE_USED = 'Failed to import authentication certificate: This certificate cannot be used for authentication.'
 INVALID_URL = SERVICE_EDIT_INVALID_URL
 
 TSL_CERTIFICATE_ALREADY_EXISTS = "Certificate already exists"
@@ -48,6 +49,7 @@ TSL_CERTIFICATE_INCORRECT_FILE_FORMAT = "Incorrect file format. Only PEM and DER
 CERTIFICATE_IMPORT_SUCCESSFUL = 'Certificate imported successfully'
 CA_ADD_SUCCESSFUL = 'Certification service added successfully'
 
+AUTHCERT_DELETION_DISABLED = 'Services/authCertDeletion is disabled: Out of order'
 CERTIFICATE_NOT_VALID = 'Failed to import certificate: Certificate is not valid'
 CERTIFICATE_NOT_SIGNING_KEY = 'Failed to import certificate: Authentication certificate cannot be imported to signing keys'
 NO_KEY_FOR_CERTIFICATE = 'Failed to import certificate: Could not find key corresponding to the certificate'
@@ -110,7 +112,12 @@ UPLOAD_EXISTS = 'Backup file with name \'{0}\' already exists, do you want to ov
 TOKEN_DETAILS_MISSING_PARAMETER = 'Missing parameter: friendly_name'
 TOKEN_PIN_INCORRECT = 'PIN incorrect'
 
+MANAGEMENT_SERVICE_REGISTERED = 'Management service provider \'.*\' registered as security server \'.*\' client'
+MANAGEMENT_SERVICE_ADDED_COMMENT = 'Management service provider registration'
+DECLINED_REQUEST_NOTICE = 'Successfully declined request with id \'{0}\''
 
+SECURITY_SERVER_CODE_ALREADY_REGISTRED = 'Failed to add new owned server request: Server with owner class \'{0}\', owner code \'{1}\' and server code \'{2}\' already exists.'
+AUTH_CERT_ALREADY_REGISTRED = "Failed to add new owned server request: Certificate is already registered, request id \'{}"
 
 def get_error_message(self):
     '''

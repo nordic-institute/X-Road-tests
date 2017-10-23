@@ -13,8 +13,8 @@ from view_models import members_table, sidebar, groups_table, popups, messages, 
 from view_models.log_constants import *
 
 
-def add_member_to_group(self, client, group, ss2_host, ss2_user, ss2_pass, testclient,
-                        wsdl_url, service_name, identifier):
+def add_member_to_group(self, client, group, ss2_host, ss2_user, ss2_pass,
+                        wsdl_url, service_name, identifier, testclient=None):
     """
     SERVICE_33 Add Members to a Global Group
     :param wsdl_url: str - wsdl url
@@ -54,40 +54,41 @@ def add_member_to_group(self, client, group, ss2_host, ss2_user, ss2_pass, testc
                                                                                    client_subsystem)).click()
     self.log('SERVICE_33 2. Add button is clicked')
     self.wait_until_visible(type=By.ID, element=groups_table.GROUP_MEMBERS_ADD_BUTTON_ID).click()
-    test_configure_service_acl = add_to_acl_2_1_8.test_add_subjects(case=self, client=client,
-                                                                    client_name=client_name,
-                                                                    wsdl_url=wsdl_url,
-                                                                    service_name=service_name,
-                                                                    service_subjects=subject_list,
-                                                                    remove_data=False,
-                                                                    allow_remove_all=False,
-                                                                    remove_current=True)
-    self.log('Wait until servers synced')
-    time.sleep(120)
-    self.log('Add global group to {0} service ACL'.format(service_name))
-    self.reload_webdriver(ss2_host, ss2_user, ss2_pass)
-    current_subjects = test_configure_service_acl()
+    if testclient is not None:
+        test_configure_service_acl = add_to_acl_2_1_8.test_add_subjects(case=self, client=client,
+                                                                        client_name=client_name,
+                                                                        wsdl_url=wsdl_url,
+                                                                        service_name=service_name,
+                                                                        service_subjects=subject_list,
+                                                                        remove_data=False,
+                                                                        allow_remove_all=False,
+                                                                        remove_current=True)
+        self.log('Wait until servers synced')
+        time.sleep(120)
+        self.log('Add global group to {0} service ACL'.format(service_name))
+        self.reload_webdriver(ss2_host, ss2_user, ss2_pass)
+        current_subjects = test_configure_service_acl()
 
-    self.log('Check if test query as global group member succeeds')
-    self.is_true(testclient.check_success(), msg='Query as global group member failed')
+        self.log('Check if test query as global group member succeeds')
+        self.is_true(testclient.check_success(), msg='Query as global group member failed')
 
-    clients_table_vm.open_client_popup_services(self, client_name=client_name,
-                                                client_id=xroad.get_xroad_id(client))
+        clients_table_vm.open_client_popup_services(self, client_name=client_name,
+                                                    client_id=xroad.get_xroad_id(client))
 
-    services_table = self.by_id(popups.CLIENT_DETAILS_POPUP_SERVICES_TABLE_ID)
-    '''Wait until that table is visible (opened in a popup)'''
-    self.wait_until_visible(services_table)
+        services_table = self.by_id(popups.CLIENT_DETAILS_POPUP_SERVICES_TABLE_ID)
+        '''Wait until that table is visible (opened in a popup)'''
+        self.wait_until_visible(services_table)
 
-    '''Find the WSDL, expand it and select service'''
-    clients_table_vm.client_services_popup_open_wsdl_acl(self, services_table=services_table,
-                                                         service_name=service_name,
-                                                         wsdl_url=wsdl_url)
+        '''Find the WSDL, expand it and select service'''
+        clients_table_vm.client_services_popup_open_wsdl_acl(self, services_table=services_table,
+                                                             service_name=service_name,
+                                                             wsdl_url=wsdl_url)
 
-    self.wait_until_visible(popups.CLIENT_DETAILS_POPUP_EXISTING_ACL_SUBJECTS_ADD_SUBJECTS_BTN_CSS, type=By.ID,
-                            timeout=20)
-    self.log('Restore {0} acl'.format(service_name))
-    restore_original_subject_list(self, current_subjects, subject_list, allow_remove_all=False,
-                                  remove_duplicates=True)
+        self.wait_until_visible(popups.CLIENT_DETAILS_POPUP_EXISTING_ACL_SUBJECTS_ADD_SUBJECTS_BTN_CSS, type=By.ID,
+                                timeout=20)
+        self.log('Restore {0} acl'.format(service_name))
+        restore_original_subject_list(self, current_subjects, subject_list, allow_remove_all=False,
+                                      remove_duplicates=True)
 
 
 def add_group(self, group, check_global_groups_inputs=False, cs_ssh_host=None, cs_ssh_user=None,
@@ -190,7 +191,7 @@ def add_group(self, group, check_global_groups_inputs=False, cs_ssh_host=None, c
                     assert description in global_croup_description
 
                 # Delete added global group
-                delete_global_group(self, code)
+                remove_group(self, group, cs_ssh_host=cs_ssh_host, cs_ssh_user=cs_ssh_user, cs_ssh_pass=cs_ssh_pass)
 
             counter += 1
         if log_checker is not None:
@@ -235,7 +236,7 @@ def add_group(self, group, check_global_groups_inputs=False, cs_ssh_host=None, c
                          format(self.logdata, log_checker.found_lines))
 
         '''Delete added global group'''
-        user_input_check.delete_global_group(self, group)
+        remove_group(self, group, cs_ssh_host=cs_ssh_host, cs_ssh_user=cs_ssh_user, cs_ssh_pass=cs_ssh_pass)
 
     self.log('Open Global Groups tab')
     self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.GLOBAL_GROUPS_CSS).click()
@@ -397,24 +398,3 @@ def enter_global_group(self, code, description, cs_ssh_host=None, cs_ssh_user=No
             self.log('SERVICE_32 6 - checking logs for: {0}'.format(self.logdata))
     except:
         pass
-
-
-def delete_global_group(self, code):
-    """
-    :param self: MainController object
-    :param code: str - Group code
-    :return:
-    """
-    # Delete added global group
-    self.log('Delete added global group')
-    self.log('Click on added global group row')
-    self.wait_until_visible(type=By.XPATH, element=groups_table.
-                            get_clobal_group_code_description_by_text(code.strip())).click()
-    self.log('Click on "DETAILS" button')
-    self.wait_until_visible(type=By.ID,
-                            element=groups_table.GROUP_DETAILS_BTN_ID).click()
-    self.log('Click on "DELETE" button')
-    self.wait_until_visible(type=By.XPATH,
-                            element=groups_table.DELETE_GROUP_BTN_ID).click()
-    self.log('Click on "CONFIRM" button')
-    popups.confirm_dialog_click(self)

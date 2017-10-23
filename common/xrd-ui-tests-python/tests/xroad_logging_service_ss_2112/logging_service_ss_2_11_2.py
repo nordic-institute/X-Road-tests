@@ -78,8 +78,8 @@ def test_test(ssh_host, ssh_username, ssh_password,
 
             # TEST PLAN 2.11.2-6, 2.11.2-7 log in as user2, certify client
             self.log('2.11.2-6, 2.11.2-7 log in as user2, certify client')
-            certify_client_in_ss(self, ssh_host, ssh_username, ssh_password, sec_host, user[USERNAME], user[PASSWORD],
-                                 users, client)
+            certify_client_in_ss(self, sec_host, user[USERNAME], user[PASSWORD],
+                                 client, users, ssh_host, ssh_username, ssh_password)
             self.url = cs_host
 
             self.logout(sec_host)
@@ -331,8 +331,8 @@ def add_group_to_client(self, sec_host, sec_username, sec_password, ssh_host, ss
                  msg='Add group not found in log')
 
 
-def certify_client_in_ss(self, ssh_host, ssh_username, ssh_password, sec_host, sec_username, sec_password, users,
-                         client):
+def certify_client_in_ss(self, sec_host, sec_username, sec_password,
+                         client, users=None, ssh_host=None, ssh_username=None, ssh_password=None):
     '''
     Logs out and in, checks logs for these actions; certifies a client in security server.
     :param self: MainController object
@@ -347,16 +347,18 @@ def certify_client_in_ss(self, ssh_host, ssh_username, ssh_password, sec_host, s
     :return: None
     '''
     self.logout(sec_host)
-    bool_value, log_data, date_time = check_logs_for(self, ssh_host, ssh_username, ssh_password, LOGOUT,
-                                                     users['user1'][USERNAME])
-    self.is_true(bool_value, test_name, '2.11.2-6/2.11.2-14 log check for logout - check failed',
-                 '2.11.2-6/2.11.2-14 log check for logout')
+    if ssh_host is not None:
+        bool_value, log_data, date_time = check_logs_for(self, ssh_host, ssh_username, ssh_password, LOGOUT,
+                                                         users['user1'][USERNAME])
+        self.is_true(bool_value, test_name, '2.11.2-6/2.11.2-14 log check for logout - check failed',
+                     '2.11.2-6/2.11.2-14 log check for logout')
 
     self.driver.get(sec_host)
     self.login(username=sec_username, password=sec_password)
-    bool_value, log_data, date_time = check_logs_for(self, ssh_host, ssh_username, ssh_password, LOGIN, sec_username)
-    self.is_true(bool_value, test_name, '2.11.2-6/2.11.2-14 log check for login - check failed',
-                 '2.11.2-6/2.11.2-14 log check for login')
+    if ssh_host is not None:
+        bool_value, log_data, date_time = check_logs_for(self, ssh_host, ssh_username, ssh_password, LOGIN, sec_username)
+        self.is_true(bool_value, test_name, '2.11.2-6/2.11.2-14 log check for login - check failed',
+                     '2.11.2-6/2.11.2-14 log check for login')
 
     # TEST PLAN 2.11.2-7 certification
     self.log('2.11.2-7 Create sign certificate')

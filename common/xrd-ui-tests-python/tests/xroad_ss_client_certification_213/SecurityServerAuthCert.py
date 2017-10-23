@@ -101,7 +101,7 @@ class XroadUnregisterAuthCert(unittest.TestCase):
         test_register_cert = register_cert(main, ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass,
                                            cs_host=cs_ssh_host, client=client, cert_path=cert_path,
                                            check_inputs=False, ca_ssh_host=ca_ssh_host,
-                                           ca_ssh_user=ca_ssh_user, ca_ssh_pass=ca_ssh_pass)()
+                                           ca_ssh_user=ca_ssh_user, ca_ssh_pass=ca_ssh_pass)
         try:
             main.reload_webdriver(ss2_host, ss2_username, ss2_password)
             test_unregister_cert()

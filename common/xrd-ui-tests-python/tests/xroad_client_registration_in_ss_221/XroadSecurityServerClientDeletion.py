@@ -55,7 +55,8 @@ class XroadSecurityServerClientDeletion(unittest.TestCase):
                                                                 main.config.get('ss2.pass'),
                                                                 cs_new_member=cs_member, cs_member_name=cs_member_name,
                                                                 ss1_client=ss1_client, ss1_client_name=ss1_client_name,
-                                                                ss1_client_2=ss1_client_2, ss1_client_2_name=ss1_client_2_name,
+                                                                ss1_client_2=ss1_client_2,
+                                                                ss1_client_2_name=ss1_client_2_name,
                                                                 ss1_ssh_host=ss1_ssh_host,
                                                                 ss1_ssh_username=ss1_ssh_username,
                                                                 ss1_ssh_password=ss1_ssh_password,
@@ -67,7 +68,11 @@ class XroadSecurityServerClientDeletion(unittest.TestCase):
                                                                 ss2_client_2_name=ss2_client_2_name,
                                                                 ca_ssh_host=main.config.get('ca.ssh_host'),
                                                                 ca_ssh_username=main.config.get('ca.ssh_user'),
-                                                                ca_ssh_password=main.config.get('ca.ssh_pass')
+                                                                ca_ssh_password=main.config.get('ca.ssh_pass'),
+                                                                cs_ssh_host=main.config.get('cs.ssh_host'),
+                                                                cs_ssh_username=main.config.get('cs.ssh_user'),
+                                                                cs_ssh_password=main.config.get('cs.ssh_pass'),
+                                                                global_group=main.config.get('cs.global_group')
                                                                 )
         test_func(main)
         main.tearDown()

@@ -1,5 +1,6 @@
 CLIENTS_BTN_CSS = 'a[href="/clients"]'
 SYSTEM_PARAMETERS_BTN_CSS = 'a[href="/sysparams"]'
+SYSTEM_SETTINGS_BTN_CSS = 'a[href="/system_settings"]'
 KEYSANDCERTIFICATES_BTN_CSS = 'a[href="/keys"]'
 BACKUP_AND_RESTORE_BTN_CSS = 'a[href="/backup"]'
 BACKUP_AND_UPLOAD_BTN_CSS = 'a[href="/backup_upload"]'

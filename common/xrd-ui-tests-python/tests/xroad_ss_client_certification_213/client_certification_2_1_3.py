@@ -737,7 +737,7 @@ def failing_tests(file_client_name, file_client_class, file_client_code, file_cl
                 os.remove(fpath)
 
             '''Generate CSR for the client'''
-            generate_csr(self, client['code'], client['class'], ssh_server_actions.get_server_name(self),
+            generate_csr(self, client_code=client['code'], client_class=client['class'], server_name=ssh_server_actions.get_server_name(self),
                          check_inputs=False)
             file_path = \
                 glob.glob(
@@ -800,7 +800,7 @@ def failing_tests(file_client_name, file_client_class, file_client_code, file_cl
 
             # Generate CSR for the client
             self.log('2.1.3.1-1 Generate CSR for the client')
-            generate_csr(self, client['code'], client['class'], ssh_server_actions.get_server_name(self),
+            generate_csr(self, client_code=client['code'], client_class=client['class'], server_name=ssh_server_actions.get_server_name(self),
                          check_inputs=False)
             file_path = \
                 glob.glob(
@@ -978,7 +978,7 @@ def failing_tests(file_client_name, file_client_class, file_client_code, file_cl
 
         # Generate CSR for the client
         self.log('2.1.3.1-2 generate CSR for the client')
-        generate_csr(self, client['code'], client['class'], ssh_server_actions.get_server_name(self),
+        generate_csr(self, client_code=client['code'], client_class=client['class'], server_name=ssh_server_actions.get_server_name(self),
                      check_inputs=False)
         file_path = \
             glob.glob(self.get_download_path('_'.join(['*', server_name, client['class'], client['code']]) + '.der'))[0]
@@ -1030,7 +1030,7 @@ def failing_tests(file_client_name, file_client_class, file_client_code, file_cl
 
         # Generate CSR
         self.log('2.1.3.1-3 generate CSR for the client')
-        generate_csr(self, client['code'], client['class'], ssh_server_actions.get_server_name(self),
+        generate_csr(self, client_code=client['code'], client_class=client['class'], server_name=ssh_server_actions.get_server_name(self),
                      check_inputs=False)
         file_path = \
             glob.glob(self.get_download_path('_'.join(['*', server_name, client['class'], client['code']]) + '.der'))[0]
@@ -1085,7 +1085,7 @@ def failing_tests(file_client_name, file_client_class, file_client_code, file_cl
 
         # Generate CSR for the client
         self.log('2.1.3.1-4 generate CSR for the client')
-        generate_csr(self, client['code'], client['class'], ssh_server_actions.get_server_name(self),
+        generate_csr(self, client_code=client['code'], client_class=client['class'], server_name=ssh_server_actions.get_server_name(self),
                      check_inputs=False)
         file_path = \
             glob.glob(self.get_download_path('_'.join(['*', server_name, client['class'], client['code']]) + '.der'))[0]
@@ -1184,7 +1184,7 @@ def failing_tests(file_client_name, file_client_class, file_client_code, file_cl
 
         # Generate CSR for the client
         self.log('2.1.3.1-6 generate CSR for the client')
-        generate_csr(self, client['code'], client['class'], ssh_server_actions.get_server_name(self),
+        generate_csr(self, client_code=client['code'], client_class=client['class'], server_name=ssh_server_actions.get_server_name(self),
                      check_inputs=False)
         file_path = \
             glob.glob(self.get_download_path('_'.join(['*', server_name, client['class'], client['code']]) + '.der'))[0]
@@ -1357,11 +1357,8 @@ def revoke_certs(client, certs, ca_path='/home/ca/CA', revoke_script='./revoke.s
         client.exec_command('cd {0} && {1} {2}'.format(ca_path, revoke_script, cert_path))
 
 
-def generate_csr(self, server_name, key_label=None, client_code=None, client_class=None,
-                 client_ss_name=None,
-                 check_inputs=False,
-                 cancel_key_generation=False,
-                 cancel_csr_generation=False, generate_same_csr_twice=False, generate_key=True, log_checker=None):
+def generate_csr(self, client_code, client_class, server_name, client_ss_name=None, check_inputs=False, cancel_key_generation=False,
+                 cancel_csr_generation=False, generate_same_csr_twice=False, generate_key=True, key_label=None, log_checker=None):
     """
     Generates the CSR (certificate request) for a client.
     :param self: MainController object
@@ -1601,7 +1598,7 @@ def generate_csr(self, server_name, key_label=None, client_code=None, client_cla
         self.is_equal(keys_and_certificates_table.KEY_USAGE_TYPE_SIGN, key_usage)
 
         self.log('Generate CSR again')
-        generate_csr(self, client_code, client_class, server_name, check_inputs=False, cancel_key_generation=False,
+        generate_csr(self, client_code=client_code, client_class=client_class, server_name=server_name, check_inputs=False, cancel_key_generation=False,
                      cancel_csr_generation=False, generate_same_csr_twice=False, generate_key=False)
 
         self.log('Check if CSR requests in table is same as before')
@@ -2227,7 +2224,7 @@ def delete_cert_from_ss(self, client, cs_ssh_host, cs_ssh_user, cs_ssh_pass):
     def del_cert_from_ss():
         log_checker = auditchecker.AuditChecker(cs_ssh_host, cs_ssh_user, cs_ssh_pass)
         current_log_lines = log_checker.get_line_count()
-        self.log('Open added member details')
+        self.log('open added member details')
         global_groups_tests.open_member_details(self, client)
         self.wait_jquery()
         self.log('Open owned servers tab')

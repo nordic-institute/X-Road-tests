@@ -49,6 +49,7 @@ NEW_CLIENT_REGISTRATION_REQUEST_POPUP_XPATH = '//div[@aria-describedby="member_u
 CLIENT_REGISTRATION_SUBSYSTEM_CODE_AREA_ID = 'used_server_subsystem_code'
 USED_SERVERS_SEARCH_BTN_ID = 'used_server_server_search'
 CLIENT_REGISTRATION_SUBMIT_BTN_ID = 'member_used_server_register_submit'
+CLIENT_REGISTRATION_CANCEL_BTN_XPATH = NEW_CLIENT_REGISTRATION_REQUEST_POPUP_XPATH + '//span[text()="Cancel"]'
 SECURITY_SERVERS_TABLE_ROWS_XPATH = '//div[@id ="used_server_search_all_wrapper"]//table//tbody'
 SELECT_SECURITY_SERVER_BTN_ID = 'member_securityserver_search_select'
 
@@ -86,6 +87,7 @@ SS_DETAILS_ADD_AUTH_CERT_BTN_ID = 'securityserver_authcert_add'
 ADD_AUTH_CERT_UPLOAD_BTN_ID = 'securityserver_auth_cert_upload_button'
 ADD_AUTH_CERT_SUBMIT_BTN_ID = 'auth_cert_add_submit'
 ADD_AUTH_CERT_CANCEL_BTN_XPATH = '//div[@aria-describedby="auth_cert_add_dialog"]//span[contains(text(), "Cancel")]'
+SUBSYSTEM_TR_BY_CODE_XPATH = '//tr[contains(., "{0}")]'
 
 def get_requests_row_by_td_text(text):
     return '//table[@id = "management_requests_all"]//tbody//tr//td[contains(text(), "' + text + '")]/parent:: *'

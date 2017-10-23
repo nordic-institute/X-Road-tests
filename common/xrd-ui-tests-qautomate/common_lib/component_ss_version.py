@@ -16,16 +16,6 @@ class Component_ss_version(CommonUtils):
     """
     ss_version = Ss_version()
 
-    def __init__(self):
-        """
-        Initilization method for moving test data to class
-
-        *Updated: 11.07.2017*
-
-        :param parameters:  Test data section dictionary
-        """
-        CommonUtils.__init__(self)
-
     def verify_version(self, text=u'Security Server version 6'):
         """
         Verify version view contains right version

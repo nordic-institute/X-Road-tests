@@ -1,0 +1,866 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Xroad cs server management &#8212; qautomate  documentation</title>
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Xroad deletion of registered object" href="xroad_deletion_of_registered_object.html" />
+    <link rel="prev" title="Lxd help scripts" href="lxd_help_scripts.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="xroad_deletion_of_registered_object.html" title="Xroad deletion of registered object"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="lxd_help_scripts.html" title="Lxd help scripts"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">qautomate  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../tests.html" accesskey="U">tests</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="xroad-cs-server-management">
+<h1>Xroad cs server management<a class="headerlink" href="#xroad-cs-server-management" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="tests.xroad_cs_server_management.Xroad_cs_server_management">
+<em class="property">class </em><code class="descclassname">tests.xroad_cs_server_management.</code><code class="descname">Xroad_cs_server_management</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.xroad_cs_server_management.Xroad_cs_server_management" title="Permalink to this definition">¶</a></dt>
+<dd><p>Xroad cases for central management test cases</p>
+<p>Use cases <a class="reference external" href="https://github.com/vrk-kpa/X-Road/blob/develop/doc/UseCases/uc-cs_x-road_use_case_model_for_central_server_management_1.2_Y-883-6.md">document</a></p>
+<dl class="docutils">
+<dt><strong>Use cases:</strong></dt>
+<dd><ul class="first last simple">
+<li><a class="reference external" href="https://github.com/vrk-kpa/X-Road/blob/develop/doc/UseCases/uc-cs_x-road_use_case_model_for_central_server_management_1.2_Y-883-6.md#25-uc-cs_04-change-the-graphical-user-interface-language">2.5</a>: Change the Graphical User Interface Language</li>
+<li><a class="reference external" href="https://github.com/vrk-kpa/X-Road/blob/develop/doc/UseCases/uc-cs_x-road_use_case_model_for_central_server_management_1.2_Y-883-6.md#26-uc-cs_05-view-the-installed-software-version">2.6</a>: View the Installed Software Version</li>
+<li><a class="reference external" href="https://github.com/vrk-kpa/X-Road/blob/develop/doc/UseCases/uc-cs_x-road_use_case_model_for_central_server_management_1.2_Y-883-6.md#27-uc-cs_06-view-the-list-of-configuration-backup-files">2.7</a>: View the List of Configuration Backup Files</li>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="https://github.com/vrk-kpa/X-Road/blob/develop/doc/UseCases/uc-cs_x-road_use_case_model_for_central_server_management_1.2_Y-883-6.md#28-uc-cs_07-back-up-configuration">2.8</a>: Back Up Configuration</dt>
+<dd><ul class="first last">
+<li>3a. Backing up the central server configuration failed.</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="https://github.com/vrk-kpa/X-Road/blob/develop/doc/UseCases/uc-cs_x-road_use_case_model_for_central_server_management_1.2_Y-883-6.md#29-uc-cs_08-restore-configuration-from-a-backup-file">2.9</a>: Restore Configuration from a Backup File</dt>
+<dd><ul class="first last">
+<li>3a. CS administrator cancels the restoring of the configuration from the backup file.</li>
+<li>4a. Restoring the central server configuration failed.</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><a class="reference external" href="https://github.com/vrk-kpa/X-Road/blob/develop/doc/UseCases/uc-cs_x-road_use_case_model_for_central_server_management_1.2_Y-883-6.md#210-uc-cs_09-download-a-backup-file">2.10</a>: Download a Backup File</li>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="https://github.com/vrk-kpa/X-Road/blob/develop/doc/UseCases/uc-cs_x-road_use_case_model_for_central_server_management_1.2_Y-883-6.md#211-uc-cs_10-delete-a-backup-file">2.11</a>: Delete a Backup File</dt>
+<dd><ul class="first last">
+<li>3a. CS administrator cancels the deleting of the backup file.</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="https://github.com/vrk-kpa/X-Road/blob/develop/doc/UseCases/uc-cs_x-road_use_case_model_for_central_server_management_1.2_Y-883-6.md#212-uc-cs_11-upload-a-backup-file">2.12</a>: Upload a Backup File</dt>
+<dd><ul class="first last">
+<li>3a. The file name contains invalid characters.</li>
+<li>4a. The file extension is not .tar.</li>
+<li>5a. The content of the file is not in valid format.</li>
+<li>6a. A backup file with the same file name is saved in the system configuration.</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+<dt><strong>Changelog:</strong></dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt>19.10.2017</dt>
+<dd><div class="first last line-block">
+<div class="line">All cases done</div>
+</div>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>15.09.2017</dt>
+<dd><div class="first last line-block">
+<div class="line">Test set created and cases + documentation links added</div>
+</div>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="section" id="setup-and-teardown">
+<h2>Setup and teardown<a class="headerlink" href="#setup-and-teardown" title="Permalink to this headline">¶</a></h2>
+<dl class="classmethod">
+<dt id="tests.xroad_cs_server_management.Xroad_cs_server_management.setUpTestSet">
+<em class="property">classmethod </em><code class="descclassname">Xroad_cs_server_management.</code><code class="descname">setUpTestSet</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.xroad_cs_server_management.Xroad_cs_server_management.setUpTestSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method that runs before every unittest</p>
+<dl class="docutils">
+<dt><strong>Test steps:</strong></dt>
+<dd><ul class="first last simple">
+<li><strong>Step 1:</strong> <code class="xref py py-func docutils literal"><span class="pre">common_utils()</span></code></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="tests.xroad_cs_server_management.Xroad_cs_server_management.tearDownTestSet">
+<em class="property">classmethod </em><code class="descclassname">Xroad_cs_server_management.</code><code class="descname">tearDownTestSet</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.xroad_cs_server_management.Xroad_cs_server_management.tearDownTestSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method that runs after every unittest</p>
+<dl class="docutils">
+<dt><strong>Test steps:</strong></dt>
+<dd><ul class="first last simple">
+<li><strong>Step 1:</strong> <a class="reference internal" href="../common_utils.html#webframework.extension.util.common_utils.CommonUtils.close_all_browsers" title="webframework.extension.util.common_utils.CommonUtils.close_all_browsers"><code class="xref py py-func docutils literal"><span class="pre">close_all_browsers()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.xroad_cs_server_management.Xroad_cs_server_management.setUp">
+<code class="descclassname">Xroad_cs_server_management.</code><code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.xroad_cs_server_management.Xroad_cs_server_management.setUp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method that runs before every test case</p>
+<dl class="docutils">
+<dt><strong>Test steps:</strong></dt>
+<dd><ul class="first last simple">
+<li><strong>Step 1:</strong> <code class="xref py py-func docutils literal"><span class="pre">common_lib()</span></code></li>
+<li><strong>Step 2:</strong> <a class="reference internal" href="../common_lib/common_lib_ssh.html#common_lib.common_lib_ssh.Common_lib_ssh.empty_all_logs_from_server" title="common_lib.common_lib_ssh.Common_lib_ssh.empty_all_logs_from_server"><code class="xref py py-func docutils literal"><span class="pre">empty_all_logs_from_server()</span></code></a>, <em>“cs_url”</em></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tests.xroad_cs_server_management.Xroad_cs_server_management.tearDown">
+<code class="descclassname">Xroad_cs_server_management.</code><code class="descname">tearDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.xroad_cs_server_management.Xroad_cs_server_management.tearDown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method that runs after every test case</p>
+<dl class="docutils">
+<dt><strong>Test steps:</strong></dt>
+<dd><ul class="first last simple">
+<li><dl class="first docutils">
+<dt><strong>Step 1: find exceptions from log files</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/common_lib_ssh.html#common_lib.common_lib_ssh.Common_lib_ssh.get_all_logs_from_server" title="common_lib.common_lib_ssh.Common_lib_ssh.get_all_logs_from_server"><code class="xref py py-func docutils literal"><span class="pre">get_all_logs_from_server()</span></code></a>, <em>u’cs_url’</em></li>
+<li><a class="reference internal" href="../common_lib/common_lib_ssh.html#common_lib.common_lib_ssh.Common_lib_ssh.find_exception_from_logs_and_save" title="common_lib.common_lib_ssh.Common_lib_ssh.find_exception_from_logs_and_save"><code class="xref py py-func docutils literal"><span class="pre">find_exception_from_logs_and_save()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 2: log out if logged in</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.log_out" title="common_lib.common_lib.Common_lib.log_out"><code class="xref py py-func docutils literal"><span class="pre">log_out()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 3: return server to defaults</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.delete_files_with_extension" title="common_lib.common_lib.Common_lib.delete_files_with_extension"><code class="xref py py-func docutils literal"><span class="pre">delete_files_with_extension()</span></code></a>, <em>TESTDATA.get_parameter(u’paths’</em>, <em>u’downloads_folder’</em></li>
+<li><a class="reference internal" href="../common_lib/common_lib_ssh.html#common_lib.common_lib_ssh.Common_lib_ssh.delete_files_from_directory" title="common_lib.common_lib_ssh.Common_lib_ssh.delete_files_from_directory"><code class="xref py py-func docutils literal"><span class="pre">delete_files_from_directory()</span></code></a>, <em>u’cs_url’</em>, <em>strings.backup_directory</em></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="change-the-graphical-user-interface-language">
+<h2>Change the graphical user interface language<a class="headerlink" href="#change-the-graphical-user-interface-language" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="tests.xroad_cs_server_management.Xroad_cs_server_management.test_change_the_graphical_user_interface_language">
+<code class="descclassname">Xroad_cs_server_management.</code><code class="descname">test_change_the_graphical_user_interface_language</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.xroad_cs_server_management.Xroad_cs_server_management.test_change_the_graphical_user_interface_language" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test case for changeing the graphical user interface language</p>
+<dl class="docutils">
+<dt><strong>Use cases:</strong></dt>
+<dd><ul class="first last simple">
+<li><a class="reference external" href="https://github.com/vrk-kpa/X-Road/blob/develop/doc/UseCases/uc-cs_x-road_use_case_model_for_central_server_management_1.2_Y-883-6.md#25-uc-cs_04-change-the-graphical-user-interface-language">2.5</a>: Change the Graphical User Interface Language</li>
+</ul>
+</dd>
+<dt><strong>Test steps:</strong></dt>
+<dd><ul class="first last simple">
+<li><dl class="first docutils">
+<dt><strong>Step 1: open central server</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs.html#common_lib.component_cs.Component_cs.login" title="common_lib.component_cs.Component_cs.login"><code class="xref py py-func docutils literal"><span class="pre">login()</span></code></a>, <em>u’cs_url’</em>, <em>False</em></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 2: change language</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_common.html#common_lib.component_common.Component_common.open_select_language_dlg" title="common_lib.component_common.Component_common.open_select_language_dlg"><code class="xref py py-func docutils literal"><span class="pre">open_select_language_dlg()</span></code></a></li>
+<li><a class="reference internal" href="../common_lib/component_common.html#common_lib.component_common.Component_common.change_language_in_dlg" title="common_lib.component_common.Component_common.change_language_in_dlg"><code class="xref py py-func docutils literal"><span class="pre">change_language_in_dlg()</span></code></a>, <em>strings.lanquage_eng</em></li>
+<li><a class="reference internal" href="../common_lib/component_common.html#common_lib.component_common.Component_common.accept_select_language_dlg" title="common_lib.component_common.Component_common.accept_select_language_dlg"><code class="xref py py-func docutils literal"><span class="pre">accept_select_language_dlg()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 3: verify audit log for language change</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/common_lib_ssh.html#common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log" title="common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log"><code class="xref py py-func docutils literal"><span class="pre">verify_audit_log()</span></code></a>, <em>u’cs_url’</em>, <em>strings.set_ui_language</em></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 4: log out of central server</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.log_out" title="common_lib.common_lib.Common_lib.log_out"><code class="xref py py-func docutils literal"><span class="pre">log_out()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="view-the-installed-software-version">
+<h2>View the installed software version<a class="headerlink" href="#view-the-installed-software-version" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="tests.xroad_cs_server_management.Xroad_cs_server_management.test_view_the_installed_software_version">
+<code class="descclassname">Xroad_cs_server_management.</code><code class="descname">test_view_the_installed_software_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.xroad_cs_server_management.Xroad_cs_server_management.test_view_the_installed_software_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test case for viewing the installed software version</p>
+<dl class="docutils">
+<dt><strong>Use cases:</strong></dt>
+<dd><ul class="first last simple">
+<li><a class="reference external" href="https://github.com/vrk-kpa/X-Road/blob/develop/doc/UseCases/uc-cs_x-road_use_case_model_for_central_server_management_1.2_Y-883-6.md#26-uc-cs_05-view-the-installed-software-version">2.6</a>: View the Installed Software Version</li>
+</ul>
+</dd>
+<dt><strong>Test steps:</strong></dt>
+<dd><ul class="first last simple">
+<li><dl class="first docutils">
+<dt><strong>Step 1: login to central server</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs.html#common_lib.component_cs.Component_cs.login" title="common_lib.component_cs.Component_cs.login"><code class="xref py py-func docutils literal"><span class="pre">login()</span></code></a>, <em>u’cs_url’</em>, <em>False</em></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 2: open version view</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs_sidebar.html#common_lib.component_cs_sidebar.Component_cs_sidebar.open_version_view" title="common_lib.component_cs_sidebar.Component_cs_sidebar.open_version_view"><code class="xref py py-func docutils literal"><span class="pre">open_version_view()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 3: verify version</strong></dt>
+<dd><ul class="first last">
+<li><code class="xref py py-func docutils literal"><span class="pre">verify_version()</span></code>, <em>u’Central Server version 6’</em></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 4: log out of central server</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.log_out" title="common_lib.common_lib.Common_lib.log_out"><code class="xref py py-func docutils literal"><span class="pre">log_out()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="view-backup-list">
+<h2>View backup list<a class="headerlink" href="#view-backup-list" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="tests.xroad_cs_server_management.Xroad_cs_server_management.test_view_backup_list">
+<code class="descclassname">Xroad_cs_server_management.</code><code class="descname">test_view_backup_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.xroad_cs_server_management.Xroad_cs_server_management.test_view_backup_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test case view list of configuration back up files</p>
+<dl class="docutils">
+<dt><strong>Use cases:</strong></dt>
+<dd><ul class="first last simple">
+<li><a class="reference external" href="https://github.com/vrk-kpa/X-Road/blob/develop/doc/UseCases/uc-cs_x-road_use_case_model_for_central_server_management_1.2_Y-883-6.md#27-uc-cs_06-view-the-list-of-configuration-backup-files">2.7</a>: View the List of Configuration Backup Files</li>
+</ul>
+</dd>
+<dt><strong>Test steps:</strong></dt>
+<dd><ul class="first last simple">
+<li><dl class="first docutils">
+<dt><strong>Step 1: login to central server</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs.html#common_lib.component_cs.Component_cs.login" title="common_lib.component_cs.Component_cs.login"><code class="xref py py-func docutils literal"><span class="pre">login()</span></code></a>, <em>u’cs_url’</em>, <em>False</em></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 2: open backup view</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs_sidebar.html#common_lib.component_cs_sidebar.Component_cs_sidebar.open_backup_restore_view" title="common_lib.component_cs_sidebar.Component_cs_sidebar.open_backup_restore_view"><code class="xref py py-func docutils literal"><span class="pre">open_backup_restore_view()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 3: generate backup</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs_backup.html#common_lib.component_cs_backup.Component_cs_backup.generate_backup" title="common_lib.component_cs_backup.Component_cs_backup.generate_backup"><code class="xref py py-func docutils literal"><span class="pre">generate_backup()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 4: verify backup view user actions</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../pagemodel/cs_backup_restore.html#pagemodel.cs_backup_restore.Cs_backup_restore.verify_contains_all_user_actions" title="pagemodel.cs_backup_restore.Cs_backup_restore.verify_contains_all_user_actions"><code class="xref py py-func docutils literal"><span class="pre">verify_contains_all_user_actions()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 5: log out of central server</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.log_out" title="common_lib.common_lib.Common_lib.log_out"><code class="xref py py-func docutils literal"><span class="pre">log_out()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="backup-configuration">
+<h2>Backup configuration<a class="headerlink" href="#backup-configuration" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="tests.xroad_cs_server_management.Xroad_cs_server_management.test_backup_configuration">
+<code class="descclassname">Xroad_cs_server_management.</code><code class="descname">test_backup_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.xroad_cs_server_management.Xroad_cs_server_management.test_backup_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test generate backup</p>
+<dl class="docutils">
+<dt><strong>Use cases:</strong></dt>
+<dd><ul class="first last simple">
+<li><dl class="first docutils">
+<dt><a class="reference external" href="https://github.com/vrk-kpa/X-Road/blob/develop/doc/UseCases/uc-cs_x-road_use_case_model_for_central_server_management_1.2_Y-883-6.md#28-uc-cs_07-back-up-configuration">2.8</a>: Back Up Configuration</dt>
+<dd><ul class="first last">
+<li>3a. Backing up the central server configuration failed.</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+<dt><strong>Test steps:</strong></dt>
+<dd><ul class="first last simple">
+<li><dl class="first docutils">
+<dt><strong>Step 1: login to central server</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs.html#common_lib.component_cs.Component_cs.login" title="common_lib.component_cs.Component_cs.login"><code class="xref py py-func docutils literal"><span class="pre">login()</span></code></a>, <em>u’cs_url’</em>, <em>False</em></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 2: open backup view</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs_sidebar.html#common_lib.component_cs_sidebar.Component_cs_sidebar.open_backup_restore_view" title="common_lib.component_cs_sidebar.Component_cs_sidebar.open_backup_restore_view"><code class="xref py py-func docutils literal"><span class="pre">open_backup_restore_view()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 3: generate backup</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs_backup.html#common_lib.component_cs_backup.Component_cs_backup.generate_invalid_backup" title="common_lib.component_cs_backup.Component_cs_backup.generate_invalid_backup"><code class="xref py py-func docutils literal"><span class="pre">generate_invalid_backup()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 4: generate backup</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs_backup.html#common_lib.component_cs_backup.Component_cs_backup.generate_backup" title="common_lib.component_cs_backup.Component_cs_backup.generate_backup"><code class="xref py py-func docutils literal"><span class="pre">generate_backup()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 5: log out of central server</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.log_out" title="common_lib.common_lib.Common_lib.log_out"><code class="xref py py-func docutils literal"><span class="pre">log_out()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="restore-backup">
+<h2>Restore backup<a class="headerlink" href="#restore-backup" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="tests.xroad_cs_server_management.Xroad_cs_server_management.test_restore_backup">
+<code class="descclassname">Xroad_cs_server_management.</code><code class="descname">test_restore_backup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.xroad_cs_server_management.Xroad_cs_server_management.test_restore_backup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test restore backup</p>
+<dl class="docutils">
+<dt><strong>Use cases:</strong></dt>
+<dd><ul class="first last simple">
+<li><dl class="first docutils">
+<dt><a class="reference external" href="https://github.com/vrk-kpa/X-Road/blob/develop/doc/UseCases/uc-cs_x-road_use_case_model_for_central_server_management_1.2_Y-883-6.md#29-uc-cs_08-restore-configuration-from-a-backup-file">2.9</a>: Restore Configuration from a Backup File</dt>
+<dd><ul class="first last">
+<li>3a. CS administrator cancels the restoring of the configuration from the backup file.</li>
+<li>4a. Restoring the central server configuration failed.</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+<dt><strong>Test steps:</strong></dt>
+<dd><ul class="first last simple">
+<li><dl class="first docutils">
+<dt><strong>Step 1: login to central server</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs.html#common_lib.component_cs.Component_cs.login" title="common_lib.component_cs.Component_cs.login"><code class="xref py py-func docutils literal"><span class="pre">login()</span></code></a>, <em>u’cs_url’</em>, <em>False</em></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 2: open backup view</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs_sidebar.html#common_lib.component_cs_sidebar.Component_cs_sidebar.open_backup_restore_view" title="common_lib.component_cs_sidebar.Component_cs_sidebar.open_backup_restore_view"><code class="xref py py-func docutils literal"><span class="pre">open_backup_restore_view()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 3: restore invalid backup</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs_backup.html#common_lib.component_cs_backup.Component_cs_backup.restore_invalid_backup" title="common_lib.component_cs_backup.Component_cs_backup.restore_invalid_backup"><code class="xref py py-func docutils literal"><span class="pre">restore_invalid_backup()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 4: generate backup</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs_backup.html#common_lib.component_cs_backup.Component_cs_backup.generate_backup" title="common_lib.component_cs_backup.Component_cs_backup.generate_backup"><code class="xref py py-func docutils literal"><span class="pre">generate_backup()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 5: cancel restore backup</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs_backup.html#common_lib.component_cs_backup.Component_cs_backup.cancel_restore_backup" title="common_lib.component_cs_backup.Component_cs_backup.cancel_restore_backup"><code class="xref py py-func docutils literal"><span class="pre">cancel_restore_backup()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 6: restore backup</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs_backup.html#common_lib.component_cs_backup.Component_cs_backup.restore_backup" title="common_lib.component_cs_backup.Component_cs_backup.restore_backup"><code class="xref py py-func docutils literal"><span class="pre">restore_backup()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 7: log out of central server</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.log_out" title="common_lib.common_lib.Common_lib.log_out"><code class="xref py py-func docutils literal"><span class="pre">log_out()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="download-backup">
+<h2>Download backup<a class="headerlink" href="#download-backup" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="tests.xroad_cs_server_management.Xroad_cs_server_management.test_download_backup">
+<code class="descclassname">Xroad_cs_server_management.</code><code class="descname">test_download_backup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.xroad_cs_server_management.Xroad_cs_server_management.test_download_backup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test download backup</p>
+<dl class="docutils">
+<dt><strong>Use cases:</strong></dt>
+<dd><ul class="first last simple">
+<li><a class="reference external" href="https://github.com/vrk-kpa/X-Road/blob/develop/doc/UseCases/uc-cs_x-road_use_case_model_for_central_server_management_1.2_Y-883-6.md#210-uc-cs_09-download-a-backup-file">2.10</a>: Download a Backup File</li>
+</ul>
+</dd>
+<dt><strong>Test steps:</strong></dt>
+<dd><ul class="first last simple">
+<li><dl class="first docutils">
+<dt><strong>Step 1: login to central server</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs.html#common_lib.component_cs.Component_cs.login" title="common_lib.component_cs.Component_cs.login"><code class="xref py py-func docutils literal"><span class="pre">login()</span></code></a>, <em>u’cs_url’</em>, <em>False</em></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 2: open backup view</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs_sidebar.html#common_lib.component_cs_sidebar.Component_cs_sidebar.open_backup_restore_view" title="common_lib.component_cs_sidebar.Component_cs_sidebar.open_backup_restore_view"><code class="xref py py-func docutils literal"><span class="pre">open_backup_restore_view()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 3: generate backup</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs_backup.html#common_lib.component_cs_backup.Component_cs_backup.generate_backup" title="common_lib.component_cs_backup.Component_cs_backup.generate_backup"><code class="xref py py-func docutils literal"><span class="pre">generate_backup()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 4: download backup</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs_backup.html#common_lib.component_cs_backup.Component_cs_backup.download_backup" title="common_lib.component_cs_backup.Component_cs_backup.download_backup"><code class="xref py py-func docutils literal"><span class="pre">download_backup()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 5: log out of central server</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.log_out" title="common_lib.common_lib.Common_lib.log_out"><code class="xref py py-func docutils literal"><span class="pre">log_out()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="delete-backup">
+<h2>Delete backup<a class="headerlink" href="#delete-backup" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="tests.xroad_cs_server_management.Xroad_cs_server_management.test_delete_backup">
+<code class="descclassname">Xroad_cs_server_management.</code><code class="descname">test_delete_backup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.xroad_cs_server_management.Xroad_cs_server_management.test_delete_backup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test delete backup</p>
+<dl class="docutils">
+<dt><strong>Use cases:</strong></dt>
+<dd><ul class="first last simple">
+<li><dl class="first docutils">
+<dt><a class="reference external" href="https://github.com/vrk-kpa/X-Road/blob/develop/doc/UseCases/uc-cs_x-road_use_case_model_for_central_server_management_1.2_Y-883-6.md#211-uc-cs_10-delete-a-backup-file">2.11</a>: Delete a Backup File</dt>
+<dd><ul class="first last">
+<li>3a. CS administrator cancels the deleting of the backup file.</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+<dt><strong>Test steps:</strong></dt>
+<dd><ul class="first last simple">
+<li><dl class="first docutils">
+<dt><strong>Step 1: login to central server</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs.html#common_lib.component_cs.Component_cs.login" title="common_lib.component_cs.Component_cs.login"><code class="xref py py-func docutils literal"><span class="pre">login()</span></code></a>, <em>u’cs_url’</em>, <em>False</em></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 2: open backup view</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs_sidebar.html#common_lib.component_cs_sidebar.Component_cs_sidebar.open_backup_restore_view" title="common_lib.component_cs_sidebar.Component_cs_sidebar.open_backup_restore_view"><code class="xref py py-func docutils literal"><span class="pre">open_backup_restore_view()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 3: generate backup</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs_backup.html#common_lib.component_cs_backup.Component_cs_backup.generate_backup" title="common_lib.component_cs_backup.Component_cs_backup.generate_backup"><code class="xref py py-func docutils literal"><span class="pre">generate_backup()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 4: cancel delete backup</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs_backup.html#common_lib.component_cs_backup.Component_cs_backup.cancel_delete_backup" title="common_lib.component_cs_backup.Component_cs_backup.cancel_delete_backup"><code class="xref py py-func docutils literal"><span class="pre">cancel_delete_backup()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 5: delete backup</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs_backup.html#common_lib.component_cs_backup.Component_cs_backup.delete_backup" title="common_lib.component_cs_backup.Component_cs_backup.delete_backup"><code class="xref py py-func docutils literal"><span class="pre">delete_backup()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 6: log out of central server</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.log_out" title="common_lib.common_lib.Common_lib.log_out"><code class="xref py py-func docutils literal"><span class="pre">log_out()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="upload-backup">
+<h2>Upload backup<a class="headerlink" href="#upload-backup" title="Permalink to this headline">¶</a></h2>
+<dl class="method">
+<dt id="tests.xroad_cs_server_management.Xroad_cs_server_management.test_upload_backup">
+<code class="descclassname">Xroad_cs_server_management.</code><code class="descname">test_upload_backup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.xroad_cs_server_management.Xroad_cs_server_management.test_upload_backup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test upload backup</p>
+<dl class="docutils">
+<dt><strong>Use cases:</strong></dt>
+<dd><ul class="first last simple">
+<li><dl class="first docutils">
+<dt><a class="reference external" href="https://github.com/vrk-kpa/X-Road/blob/develop/doc/UseCases/uc-cs_x-road_use_case_model_for_central_server_management_1.2_Y-883-6.md#212-uc-cs_11-upload-a-backup-file">2.12</a>: Upload a Backup File</dt>
+<dd><ul class="first last">
+<li>3a. The file name contains invalid characters.</li>
+<li>4a. The file extension is not .tar.</li>
+<li>5a. The content of the file is not in valid format.</li>
+<li>6a. A backup file with the same file name is saved in the system configuration.</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+<dt><strong>Test steps:</strong></dt>
+<dd><ul class="first last simple">
+<li><dl class="first docutils">
+<dt><strong>Step 1: login to central server</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs.html#common_lib.component_cs.Component_cs.login" title="common_lib.component_cs.Component_cs.login"><code class="xref py py-func docutils literal"><span class="pre">login()</span></code></a>, <em>u’cs_url’</em>, <em>False</em></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 2: open backup view</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs_sidebar.html#common_lib.component_cs_sidebar.Component_cs_sidebar.open_backup_restore_view" title="common_lib.component_cs_sidebar.Component_cs_sidebar.open_backup_restore_view"><code class="xref py py-func docutils literal"><span class="pre">open_backup_restore_view()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 3: generate backup</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs_backup.html#common_lib.component_cs_backup.Component_cs_backup.generate_backup" title="common_lib.component_cs_backup.Component_cs_backup.generate_backup"><code class="xref py py-func docutils literal"><span class="pre">generate_backup()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 4: download backup</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs_backup.html#common_lib.component_cs_backup.Component_cs_backup.download_backup" title="common_lib.component_cs_backup.Component_cs_backup.download_backup"><code class="xref py py-func docutils literal"><span class="pre">download_backup()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 5: delete backup</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs_backup.html#common_lib.component_cs_backup.Component_cs_backup.delete_backup" title="common_lib.component_cs_backup.Component_cs_backup.delete_backup"><code class="xref py py-func docutils literal"><span class="pre">delete_backup()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 6: upload backup</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs_backup.html#common_lib.component_cs_backup.Component_cs_backup.upload_backup" title="common_lib.component_cs_backup.Component_cs_backup.upload_backup"><code class="xref py py-func docutils literal"><span class="pre">upload_backup()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 7: upload backup that already exists</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs_backup.html#common_lib.component_cs_backup.Component_cs_backup.upload_backup_already_exists" title="common_lib.component_cs_backup.Component_cs_backup.upload_backup_already_exists"><code class="xref py py-func docutils literal"><span class="pre">upload_backup_already_exists()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 8: upload backup with invalid characters in name</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs_backup.html#common_lib.component_cs_backup.Component_cs_backup.upload_backup_invalid_char" title="common_lib.component_cs_backup.Component_cs_backup.upload_backup_invalid_char"><code class="xref py py-func docutils literal"><span class="pre">upload_backup_invalid_char()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 9: upload backup with invalid extension</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs_backup.html#common_lib.component_cs_backup.Component_cs_backup.upload_backup_invalid_extension" title="common_lib.component_cs_backup.Component_cs_backup.upload_backup_invalid_extension"><code class="xref py py-func docutils literal"><span class="pre">upload_backup_invalid_extension()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 10: upload backup with invalid format</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/component_cs_backup.html#common_lib.component_cs_backup.Component_cs_backup.upload_backup_invalid_format" title="common_lib.component_cs_backup.Component_cs_backup.upload_backup_invalid_format"><code class="xref py py-func docutils literal"><span class="pre">upload_backup_invalid_format()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>Step 11: log out of central server</strong></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.log_out" title="common_lib.common_lib.Common_lib.log_out"><code class="xref py py-func docutils literal"><span class="pre">log_out()</span></code></a></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../tests.html">tests</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="lxd_help_scripts.html">Lxd help scripts</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Xroad cs server management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#setup-and-teardown">Setup and teardown</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#change-the-graphical-user-interface-language">Change the graphical user interface language</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#view-the-installed-software-version">View the installed software version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#view-backup-list">View backup list</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#backup-configuration">Backup configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#restore-backup">Restore backup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#download-backup">Download backup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#delete-backup">Delete backup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#upload-backup">Upload backup</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="xroad_deletion_of_registered_object.html">Xroad deletion of registered object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xroad_global_configuration.html">Xroad global configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xroad_install_ui_configuration.html">Xroad install ui configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xroad_keys_and_certs.html">Xroad keys and certs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xroad_ss_server_management.html">Xroad ss server management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xroad_test_service.html">Xroad test service</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../common_parameters.html">common_parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lxd_parameters.html">lxd_parameters</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../common_lib.html">common_lib</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../pagemodel.html">pagemodel</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../common_utils.html">Qautomate keyword library</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="xroad_deletion_of_registered_object.html" title="Xroad deletion of registered object"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="lxd_help_scripts.html" title="Lxd help scripts"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">qautomate  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../tests.html" >tests</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, qautomate.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+    </div>
+  </body>
+</html>

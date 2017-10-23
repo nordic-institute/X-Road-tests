@@ -56,7 +56,7 @@
 <span id="component-cs"></span><h1>Component cs<a class="headerlink" href="#module-common_lib.component_cs" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="common_lib.component_cs.Component_cs">
-<em class="property">class </em><code class="descclassname">common_lib.component_cs.</code><code class="descname">Component_cs</code><span class="sig-paren">(</span><em>parameters=None</em><span class="sig-paren">)</span><a class="headerlink" href="#common_lib.component_cs.Component_cs" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">common_lib.component_cs.</code><code class="descname">Component_cs</code><a class="headerlink" href="#common_lib.component_cs.Component_cs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Common components to central server</p>
 <p>Changelog:</p>
 <ul>
@@ -71,7 +71,7 @@
 </ul>
 <dl class="method">
 <dt id="common_lib.component_cs.Component_cs.login">
-<code class="descname">login</code><span class="sig-paren">(</span><em>section=u'cs_static_url'</em>, <em>initial_conf=False</em><span class="sig-paren">)</span><a class="headerlink" href="#common_lib.component_cs.Component_cs.login" title="Permalink to this definition">¶</a></dt>
+<code class="descname">login</code><span class="sig-paren">(</span><em>section=u'cs_url'</em>, <em>initial_conf=False</em><span class="sig-paren">)</span><a class="headerlink" href="#common_lib.component_cs.Component_cs.login" title="Permalink to this definition">¶</a></dt>
 <dd><p>Login to central server</p>
 <p><em>Updated: 11.07.2017</em></p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -89,8 +89,8 @@
 <dl class="docutils">
 <dt><strong>Test steps:</strong></dt>
 <dd><ul class="first last simple">
-<li><strong>Step 1:</strong> <a class="reference internal" href="../pagemodel/open_application.html#pagemodel.open_application.Open_application.open_application_url" title="pagemodel.open_application.Open_application.open_application_url"><code class="xref py py-func docutils literal"><span class="pre">open_application_url()</span></code></a>, <em>self.parameters[section]</em></li>
-<li><strong>Step 2:</strong> <a class="reference internal" href="../pagemodel/cs_login.html#pagemodel.cs_login.Cs_login.login_dev_cs" title="pagemodel.cs_login.Cs_login.login_dev_cs"><code class="xref py py-func docutils literal"><span class="pre">login_dev_cs()</span></code></a>, <em>self.parameters[section]</em></li>
+<li><strong>Step 1:</strong> <a class="reference internal" href="../pagemodel/open_application.html#pagemodel.open_application.Open_application.open_application_url" title="pagemodel.open_application.Open_application.open_application_url"><code class="xref py py-func docutils literal"><span class="pre">open_application_url()</span></code></a>, <em>TESTDATA[section]</em></li>
+<li><strong>Step 2:</strong> <a class="reference internal" href="../pagemodel/cs_login.html#pagemodel.cs_login.Cs_login.login_dev_cs" title="pagemodel.cs_login.Cs_login.login_dev_cs"><code class="xref py py-func docutils literal"><span class="pre">login_dev_cs()</span></code></a>, <em>TESTDATA[section]</em></li>
 <li><strong>Step 3:</strong> <a class="reference internal" href="../pagemodel/cs_sidebar.html#pagemodel.cs_sidebar.Cs_sidebar.verify_central_server_title" title="pagemodel.cs_sidebar.Cs_sidebar.verify_central_server_title"><code class="xref py py-func docutils literal"><span class="pre">verify_central_server_title()</span></code></a></li>
 </ul>
 </dd>
@@ -113,7 +113,7 @@
 <dl class="docutils">
 <dt><strong>Test steps:</strong></dt>
 <dd><ul class="first last simple">
-<li><strong>Step 1:</strong> <a class="reference internal" href="../pagemodel/open_application.html#pagemodel.open_application.Open_application.open_application_url" title="pagemodel.open_application.Open_application.open_application_url"><code class="xref py py-func docutils literal"><span class="pre">open_application_url()</span></code></a>, <em>self.parameters[section]</em></li>
+<li><strong>Step 1:</strong> <a class="reference internal" href="../pagemodel/open_application.html#pagemodel.open_application.Open_application.open_application_url" title="pagemodel.open_application.Open_application.open_application_url"><code class="xref py py-func docutils literal"><span class="pre">open_application_url()</span></code></a>, <em>TESTDATA[section]</em></li>
 </ul>
 </dd>
 </dl>
@@ -152,6 +152,7 @@
 <li class="toctree-l2"><a class="reference internal" href="component_cs_sidebar.html">Component cs sidebar</a></li>
 <li class="toctree-l2"><a class="reference internal" href="component_cs_system_settings.html">Component cs system settings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="component_cs_tsp_services.html">Component cs tsp services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="component_cs_version.html">Component cs version</a></li>
 <li class="toctree-l2"><a class="reference internal" href="component_ss.html">Component ss</a></li>
 <li class="toctree-l2"><a class="reference internal" href="component_ss_backup.html">Component ss backup</a></li>
 <li class="toctree-l2"><a class="reference internal" href="component_ss_clients.html">Component ss clients</a></li>

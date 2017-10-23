@@ -32,16 +32,6 @@ class Component_ss_clients(CommonUtils):
     ss_client_dlg_unregister = Ss_client_dlg_unregister()
     ss_client_dlg_delete_unregister = Ss_client_dlg_delete_unregister()
 
-    def __init__(self):
-        """
-        Initilization method for moving test data to class
-
-        *Updated: 11.07.2017*
-
-        :param parameters:  Test data section dictionary
-        """
-        CommonUtils.__init__(self)
-
     def add_new_subsystem_to_ss(self, section=u'member_mgm_configuration'):
         """
         Add new subsystem to security server
@@ -52,7 +42,7 @@ class Component_ss_clients(CommonUtils):
         
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.ss_clients.Ss_clients.click_client_add_subsystem_server`
-                * **Step 2:** :func:`~pagemodel.ss_clients_add_client.Ss_clients_add_client.fill_and_submit_client_details`, *self.parameters[section]*
+                * **Step 2:** :func:`~pagemodel.ss_clients_add_client.Ss_clients_add_client.fill_and_submit_client_details`, *TESTDATA[section]*
                 * **Step 3:** :func:`~pagemodel.ss_clients_add_client_conf.Ss_clients_add_client_conf.click_confirm_client_registration_request`
         """
         self.ss_clients.click_client_add_subsystem_server()
@@ -82,7 +72,7 @@ class Component_ss_clients(CommonUtils):
                 * **Step 1:** :func:`~pagemodel.ss_clients.Ss_clients.click_client_add_subsystem_server`
                 * **Step 2:** :func:`~pagemodel.ss_clients_add_client.Ss_clients_add_client.click_element_id_client_select`
                 * **Step 3:** :func:`~pagemodel.ss_clients_add_search_client_dlg.Ss_clients_add_search_client_dlg.click_element_id_search_filter`
-                * **Step 4:** :func:`~pagemodel.ss_clients_add_search_client_dlg.Ss_clients_add_search_client_dlg.click_client_from_table_clientsglobal`, *self.parameters[section]*
+                * **Step 4:** :func:`~pagemodel.ss_clients_add_search_client_dlg.Ss_clients_add_search_client_dlg.click_client_from_table_clientsglobal`, *TESTDATA[section]*
                 * **Step 5:** :func:`~pagemodel.ss_clients_add_search_client_dlg.Ss_clients_add_search_client_dlg.click_button_id_client_select_ok`
                 * **Step 6:** :func:`~pagemodel.ss_clients_add_client.Ss_clients_add_client.click_element_ok`
         """
@@ -102,7 +92,7 @@ class Component_ss_clients(CommonUtils):
         :param section:  Test data section name
         
         **Test steps:**
-                * **Step 1:** :func:`~pagemodel.ss_clients.Ss_clients.find_and_open_by_text_dlg_by_subsystem_code`, *self.parameters[section]*
+                * **Step 1:** :func:`~pagemodel.ss_clients.Ss_clients.find_and_open_by_text_dlg_by_subsystem_code`, *TESTDATA[section]*
                 * **Step 2:** :func:`~pagemodel.ss_clients_dlg_services.Ss_clients_dlg_services.verify_client_dlg_open`
         """
         #step Open services dialog from dynamic list
@@ -118,7 +108,7 @@ class Component_ss_clients(CommonUtils):
         :param section:  Test data section name
         
         **Test steps:**
-                * **Step 1:** :func:`~pagemodel.ss_clients.Ss_clients.click_and_open_details_of_client_in_table`, *self.parameters[section]*
+                * **Step 1:** :func:`~pagemodel.ss_clients.Ss_clients.click_and_open_details_of_client_in_table`, *TESTDATA[section]*
                 * **Step 2:** :func:`~pagemodel.ss_clients_dlg_services.Ss_clients_dlg_services.verify_client_dlg_open`
         """
         self.ss_clients.click_and_open_details_of_client_in_table(TESTDATA[section])

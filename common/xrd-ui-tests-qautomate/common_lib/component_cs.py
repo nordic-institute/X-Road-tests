@@ -22,16 +22,6 @@ class Component_cs(CommonUtils):
     open_application = Open_application()
     cs_sidebar = Cs_sidebar()
 
-    def __init__(self):
-        """
-        Initilization method for moving test data to class
-
-        *Updated: 11.07.2017*
-
-        :param parameters:  Test data section dictionary
-        """
-        CommonUtils.__init__(self)
-
     def login(self, section=u'cs_url', initial_conf=False):
         """
         Login to central server
@@ -40,10 +30,10 @@ class Component_cs(CommonUtils):
 
         :param section:  Test data section name
         :param initial_conf:  If true server is in configurations state
-
+        
         **Test steps:**
-                * **Step 1:** :func:`~pagemodel.open_application.Open_application.open_application_url`, *self.parameters[section]*
-                * **Step 2:** :func:`~pagemodel.cs_login.Cs_login.login_dev_cs`, *self.parameters[section]*
+                * **Step 1:** :func:`~pagemodel.open_application.Open_application.open_application_url`, *TESTDATA[section]*
+                * **Step 2:** :func:`~pagemodel.cs_login.Cs_login.login_dev_cs`, *TESTDATA[section]*
                 * **Step 3:** :func:`~pagemodel.cs_sidebar.Cs_sidebar.verify_central_server_title`
         """
         ## Login
@@ -59,8 +49,8 @@ class Component_cs(CommonUtils):
         *Updated: 11.07.2017*
 
         :param section:  Test data section name
-
+        
         **Test steps:**
-                * **Step 1:** :func:`~pagemodel.open_application.Open_application.open_application_url`, *self.parameters[section]*
+                * **Step 1:** :func:`~pagemodel.open_application.Open_application.open_application_url`, *TESTDATA[section]*
         """
         self.open_application.open_application_url(TESTDATA[section])

@@ -58,8 +58,9 @@
 <dt id="tests.xroad_test_service.Xroad_test_service">
 <em class="property">class </em><code class="descclassname">tests.xroad_test_service.</code><code class="descname">Xroad_test_service</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.xroad_test_service.Xroad_test_service" title="Permalink to this definition">¶</a></dt>
 <dd><p>Xroad cases for testing enabling wsdl services and sending messages</p>
-<p><strong>Changelog:</strong></p>
-<ul>
+<dl class="docutils">
+<dt><strong>Changelog:</strong></dt>
+<dd><ul class="first last">
 <li><dl class="first docutils">
 <dt>11.07.2017</dt>
 <dd><div class="first last line-block">
@@ -69,6 +70,8 @@
 </dl>
 </li>
 </ul>
+</dd>
+</dl>
 </dd></dl>
 
 <div class="section" id="setup-and-teardown">
@@ -108,10 +111,10 @@
 <dd><ul class="first last simple">
 <li><strong>Step 1:</strong> <a class="reference internal" href="../pagemodel/ss_clients_add_client.html#pagemodel.ss_clients_add_client.Ss_clients_add_client.cancel_client_adding" title="pagemodel.ss_clients_add_client.Ss_clients_add_client.cancel_client_adding"><code class="xref py py-func docutils literal"><span class="pre">cancel_client_adding()</span></code></a></li>
 <li><strong>Step 2:</strong> <a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.log_out" title="common_lib.common_lib.Common_lib.log_out"><code class="xref py py-func docutils literal"><span class="pre">log_out()</span></code></a></li>
-<li><strong>Step 3:</strong> <a class="reference internal" href="../pagemodel/open_application.html#pagemodel.open_application.Open_application.open_application_url" title="pagemodel.open_application.Open_application.open_application_url"><code class="xref py py-func docutils literal"><span class="pre">open_application_url()</span></code></a>, <em>self.parameters[u’ss1_static_url’]</em></li>
-<li><strong>Step 4:</strong> <a class="reference internal" href="../pagemodel/ss_login.html#pagemodel.ss_login.Ss_login.login" title="pagemodel.ss_login.Ss_login.login"><code class="xref py py-func docutils literal"><span class="pre">login()</span></code></a>, <em>self.parameters[u’ss1_static_url’]</em></li>
+<li><strong>Step 3:</strong> <a class="reference internal" href="../pagemodel/open_application.html#pagemodel.open_application.Open_application.open_application_url" title="pagemodel.open_application.Open_application.open_application_url"><code class="xref py py-func docutils literal"><span class="pre">open_application_url()</span></code></a>, <em>TESTDATA[u’ss1_static_url’]</em></li>
+<li><strong>Step 4:</strong> <a class="reference internal" href="../pagemodel/ss_login.html#pagemodel.ss_login.Ss_login.login" title="pagemodel.ss_login.Ss_login.login"><code class="xref py py-func docutils literal"><span class="pre">login()</span></code></a>, <em>TESTDATA[u’ss1_static_url’]</em></li>
 <li><strong>Step 5:</strong> <a class="reference internal" href="../pagemodel/ss_sidebar.html#pagemodel.ss_sidebar.Ss_sidebar.verify_sidebar_title" title="pagemodel.ss_sidebar.Ss_sidebar.verify_sidebar_title"><code class="xref py py-func docutils literal"><span class="pre">verify_sidebar_title()</span></code></a></li>
-<li><strong>Step 6:</strong> <a class="reference internal" href="../pagemodel/ss_clients.html#pagemodel.ss_clients.Ss_clients.click_and_open_details_of_client_in_table" title="pagemodel.ss_clients.Ss_clients.click_and_open_details_of_client_in_table"><code class="xref py py-func docutils literal"><span class="pre">click_and_open_details_of_client_in_table()</span></code></a>, <em>self.parameters[u’member_static_configuration’]</em></li>
+<li><strong>Step 6:</strong> <a class="reference internal" href="../pagemodel/ss_clients.html#pagemodel.ss_clients.Ss_clients.click_and_open_details_of_client_in_table" title="pagemodel.ss_clients.Ss_clients.click_and_open_details_of_client_in_table"><code class="xref py py-func docutils literal"><span class="pre">click_and_open_details_of_client_in_table()</span></code></a>, <em>TESTDATA[u’member_static_configuration’]</em></li>
 <li><strong>Step 7:</strong> <a class="reference internal" href="../pagemodel/ss_client_dlg_details.html#pagemodel.ss_client_dlg_details.Ss_client_dlg_details.click_unregister_client" title="pagemodel.ss_client_dlg_details.Ss_client_dlg_details.click_unregister_client"><code class="xref py py-func docutils literal"><span class="pre">click_unregister_client()</span></code></a></li>
 <li><strong>Step 8:</strong> <a class="reference internal" href="../pagemodel/ss_client_dlg_unregister.html#pagemodel.ss_client_dlg_unregister.Ss_client_dlg_unregister.click_confirm_unregister" title="pagemodel.ss_client_dlg_unregister.Ss_client_dlg_unregister.click_confirm_unregister"><code class="xref py py-func docutils literal"><span class="pre">click_confirm_unregister()</span></code></a></li>
 <li><strong>Step 9:</strong> <a class="reference internal" href="../pagemodel/ss_client_dlg_delete_unregister.html#pagemodel.ss_client_dlg_delete_unregister.Ss_client_dlg_delete_unregister.click_client_delete" title="pagemodel.ss_client_dlg_delete_unregister.Ss_client_dlg_delete_unregister.click_client_delete"><code class="xref py py-func docutils literal"><span class="pre">click_client_delete()</span></code></a></li>
@@ -175,7 +178,7 @@
 <li><dl class="first docutils">
 <dt><strong>Step 5: login ss1 server</strong></dt>
 <dd><ul class="first last">
-<li><a class="reference internal" href="../pagemodel/open_application.html#pagemodel.open_application.Open_application.open_application_url" title="pagemodel.open_application.Open_application.open_application_url"><code class="xref py py-func docutils literal"><span class="pre">open_application_url()</span></code></a>, <em>self.parameters[u’ss1_static_url’]</em></li>
+<li><a class="reference internal" href="../pagemodel/open_application.html#pagemodel.open_application.Open_application.open_application_url" title="pagemodel.open_application.Open_application.open_application_url"><code class="xref py py-func docutils literal"><span class="pre">open_application_url()</span></code></a>, <em>TESTDATA[u’ss1_static_url’]</em></li>
 </ul>
 </dd>
 </dl>
@@ -191,7 +194,7 @@
 <li><dl class="first docutils">
 <dt><strong>Step 7: check service registration complete #webpage: ss_clients #parameters:</strong></dt>
 <dd><ul class="first last">
-<li><a class="reference internal" href="../pagemodel/ss_clients.html#pagemodel.ss_clients.Ss_clients.verify_service_registration_complete" title="pagemodel.ss_clients.Ss_clients.verify_service_registration_complete"><code class="xref py py-func docutils literal"><span class="pre">verify_service_registration_complete()</span></code></a>, <em>self.parameters[u’member_static_configuration’]</em></li>
+<li><a class="reference internal" href="../pagemodel/ss_clients.html#pagemodel.ss_clients.Ss_clients.verify_service_registration_complete" title="pagemodel.ss_clients.Ss_clients.verify_service_registration_complete"><code class="xref py py-func docutils literal"><span class="pre">verify_service_registration_complete()</span></code></a>, <em>TESTDATA[u’member_static_configuration’]</em></li>
 </ul>
 </dd>
 </dl>
@@ -199,7 +202,7 @@
 <li><dl class="first docutils">
 <dt><strong>Step 8: verify soap message</strong></dt>
 <dd><ul class="first last">
-<li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.send_soap_api_request_hello" title="common_lib.common_lib.Common_lib.send_soap_api_request_hello"><code class="xref py py-func docutils literal"><span class="pre">send_soap_api_request_hello()</span></code></a>, <em>self.parameters[‘soap’]</em></li>
+<li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.send_soap_api_request_hello" title="common_lib.common_lib.Common_lib.send_soap_api_request_hello"><code class="xref py py-func docutils literal"><span class="pre">send_soap_api_request_hello()</span></code></a>, <em>TESTDATA[‘soap’]</em></li>
 <li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.log_out" title="common_lib.common_lib.Common_lib.log_out"><code class="xref py py-func docutils literal"><span class="pre">log_out()</span></code></a></li>
 </ul>
 </dd>

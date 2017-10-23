@@ -7,6 +7,9 @@ from webframework.extension.parsers.parameter_parser import get_parameter
 from time import sleep
 
 class Cs_backup_restore_dlg_up_back_conf_exist(CommonUtils):
+    """
+
+    """
     # Pagemodel timestamp: 20171019021218
     # Pagemodel url: https://xroad-lxd-cs.lxd:4000/backup
     # Pagemodel area: (593, 355, 735, 146)
@@ -50,5 +53,10 @@ class Cs_backup_restore_dlg_up_back_conf_exist(CommonUtils):
     def click_button_confirm(self, parameters=None):
         """
         Click button confirm
+        
+        :param parameters:  Test data section dictionary
+        
+        **Test steps:**
+            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.UI_BUTTONSET_CONFIRM*
         """
         self.click_element(self.UI_BUTTONSET_CONFIRM)

@@ -25,9 +25,8 @@ class Lxd_help_scripts(SetupTest):
     Test set that contains useful test cases for lxd enviroment
 
     **Changelog:**
-
-    * 11.07.2017
-        | Documentation updated
+        * 11.07.2017
+            | Documentation updated
     """
     common_utils = CommonUtils()
     open_application = Open_application()
@@ -96,7 +95,7 @@ class Lxd_help_scripts(SetupTest):
                 * **Step 2:** :func:`~common_lib.component_ss.Component_ss.login`, *u'ss_mgm_url'*, *False*
                 * **Step 3:** :func:`~common_lib.component_ss.Component_ss.login`, *u'ss1_url'*, *False*
                 * **Step 4:** :func:`~common_lib.component_ss.Component_ss.login`, *u'ss2_url'*, *False*
-                * **Step 5:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *self.parameters[u'cs_url']['url']*
+                * **Step 5:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *TESTDATA[u'cs_url']['url']*
         """
         try:
             self.component_cs.login(u'cs_url', False)
@@ -127,19 +126,19 @@ class Lxd_help_scripts(SetupTest):
         *Updated: 11.07.2017*
 
         **Test steps:**
-                * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *self.parameters[u'cs_url']['url']*
+                * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *TESTDATA[u'cs_url']['url']*
                 * **Step 2:** :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_global_configuration_view`
                 * **Step 3:** :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.insert_pin_from_login_button`, *u'cs_url'*
-                * **Step 4:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *self.parameters[u'ss_mgm_url']['url']*
+                * **Step 4:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *TESTDATA[u'ss_mgm_url']['url']*
                 * **Step 5:** :func:`~common_lib.component_ss_sidebar.Component_ss_sidebar.open_keys_and_certs_view`
                 * **Step 6:** :func:`~common_lib.component_ss_keys_and_certs.Component_ss_keys_and_certs.active_token_and_insert_pin_code_if_needed`, *u'ss_mgm_url'*
-                * **Step 7:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *self.parameters[u'ss1_url']['url']*
+                * **Step 7:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *TESTDATA[u'ss1_url']['url']*
                 * **Step 8:** :func:`~common_lib.component_ss_sidebar.Component_ss_sidebar.open_keys_and_certs_view`
                 * **Step 9:** :func:`~common_lib.component_ss_keys_and_certs.Component_ss_keys_and_certs.active_token_and_insert_pin_code_if_needed`, *u'ss1_url'*
-                * **Step 10:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *self.parameters[u'ss2_url']['url']*
+                * **Step 10:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *TESTDATA[u'ss2_url']['url']*
                 * **Step 11:** :func:`~common_lib.component_ss_sidebar.Component_ss_sidebar.open_keys_and_certs_view`
                 * **Step 12:** :func:`~common_lib.component_ss_keys_and_certs.Component_ss_keys_and_certs.active_token_and_insert_pin_code_if_needed`, *u'ss2_url'*
-                * **Step 13:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *self.parameters[u'cs_url']['url']*
+                * **Step 13:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *TESTDATA[u'cs_url']['url']*
         """
         self.common_utils.open_url(TESTDATA[u'cs_url']['url'])
         self.component_cs_sidebar.open_global_configuration_view()
@@ -169,19 +168,19 @@ class Lxd_help_scripts(SetupTest):
         *Updated: 11.07.2017*
 
         **Test steps:**
-                * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *self.parameters[u'cs_url']['url']*
+                * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *TESTDATA[u'cs_url']['url']*
                 * **Step 2:** :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_backup_restore_view`
                 * **Step 3:** :func:`~common_lib.component_cs_backup.Component_cs_backup.generate_backup`
-                * **Step 4:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *self.parameters[u'ss_mgm_url']['url']*
+                * **Step 4:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *TESTDATA[u'ss_mgm_url']['url']*
                 * **Step 5:** :func:`~common_lib.component_ss_sidebar.Component_ss_sidebar.open_backup_restore_view`
                 * **Step 6:** :func:`~common_lib.component_ss_backup.Component_ss_backup.generate_backup`
-                * **Step 7:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *self.parameters[u'ss1_url']['url']*
+                * **Step 7:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *TESTDATA[u'ss1_url']['url']*
                 * **Step 8:** :func:`~common_lib.component_ss_sidebar.Component_ss_sidebar.open_backup_restore_view`
                 * **Step 9:** :func:`~common_lib.component_ss_backup.Component_ss_backup.generate_backup`
-                * **Step 10:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *self.parameters[u'ss2_url']['url']*
+                * **Step 10:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *TESTDATA[u'ss2_url']['url']*
                 * **Step 11:** :func:`~common_lib.component_ss_sidebar.Component_ss_sidebar.open_backup_restore_view`
                 * **Step 12:** :func:`~common_lib.component_ss_backup.Component_ss_backup.generate_backup`
-                * **Step 13:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *self.parameters[u'cs_url']['url']*
+                * **Step 13:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *TESTDATA[u'cs_url']['url']*
         """
         #self.test_login_all_servers()
 
@@ -210,19 +209,19 @@ class Lxd_help_scripts(SetupTest):
         *Updated: 11.07.2017*
 
         **Test steps:**
-                * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *self.parameters[u'cs_url']['url']*
+                * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *TESTDATA[u'cs_url']['url']*
                 * **Step 2:** :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_backup_restore_view`
                 * **Step 3:** :func:`~common_lib.component_cs_backup.Component_cs_backup.restore_backup`
-                * **Step 4:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *self.parameters[u'ss_mgm_url']['url']*
+                * **Step 4:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *TESTDATA[u'ss_mgm_url']['url']*
                 * **Step 5:** :func:`~common_lib.component_ss_sidebar.Component_ss_sidebar.open_backup_restore_view`
                 * **Step 6:** :func:`~common_lib.component_ss_backup.Component_ss_backup.restore_backup`
-                * **Step 7:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *self.parameters[u'ss1_url']['url']*
+                * **Step 7:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *TESTDATA[u'ss1_url']['url']*
                 * **Step 8:** :func:`~common_lib.component_ss_sidebar.Component_ss_sidebar.open_backup_restore_view`
                 * **Step 9:** :func:`~common_lib.component_ss_backup.Component_ss_backup.restore_backup`
-                * **Step 10:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *self.parameters[u'ss2_url']['url']*
+                * **Step 10:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *TESTDATA[u'ss2_url']['url']*
                 * **Step 11:** :func:`~common_lib.component_ss_sidebar.Component_ss_sidebar.open_backup_restore_view`
                 * **Step 12:** :func:`~common_lib.component_ss_backup.Component_ss_backup.restore_backup`
-                * **Step 13:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *self.parameters[u'cs_url']['url']*
+                * **Step 13:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *TESTDATA[u'cs_url']['url']*
         """
         #self.test_login_all_servers()
 
@@ -251,19 +250,19 @@ class Lxd_help_scripts(SetupTest):
         *Updated: 11.07.2017*
 
         **Test steps:**
-                * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *self.parameters[u'cs_url']['url']*
+                * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *TESTDATA[u'cs_url']['url']*
                 * **Step 2:** :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_backup_restore_view`
                 * **Step 3:** :func:`~pagemodel.cs_backup_restore.Cs_backup_restore.click_element_newest_delete`
                 * **Step 4:** :func:`~pagemodel.cs_backup_restore_dlg_delete_confirm.Cs_backup_restore_dlg_delete_confirm.click_button_ui_buttonset_confirm`
-                * **Step 5:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *self.parameters[u'ss_mgm_url']['url']*
+                * **Step 5:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *TESTDATA[u'ss_mgm_url']['url']*
                 * **Step 6:** :func:`~common_lib.component_ss_sidebar.Component_ss_sidebar.open_backup_restore_view`
                 * **Step 7:** :func:`~pagemodel.ss_backup_restore.Ss_backup_restore.click_element_first_row_delete`
                 * **Step 8:** :func:`~pagemodel.ss_backup_restore_confirm_delete.Ss_backup_restore_confirm_delete.click_button_confirm`
-                * **Step 9:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *self.parameters[u'ss1_url']['url']*
+                * **Step 9:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *TESTDATA[u'ss1_url']['url']*
                 * **Step 10:** :func:`~common_lib.component_ss_sidebar.Component_ss_sidebar.open_backup_restore_view`
                 * **Step 11:** :func:`~pagemodel.ss_backup_restore.Ss_backup_restore.click_element_first_row_delete`
                 * **Step 12:** :func:`~pagemodel.ss_backup_restore_confirm_delete.Ss_backup_restore_confirm_delete.click_button_confirm`
-                * **Step 13:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *self.parameters[u'ss2_url']['url']*
+                * **Step 13:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *TESTDATA[u'ss2_url']['url']*
                 * **Step 14:** :func:`~common_lib.component_ss_sidebar.Component_ss_sidebar.open_backup_restore_view`
                 * **Step 15:** :func:`~pagemodel.ss_backup_restore.Ss_backup_restore.click_element_first_row_delete`
                 * **Step 16:** :func:`~pagemodel.ss_backup_restore_confirm_delete.Ss_backup_restore_confirm_delete.click_button_confirm`
@@ -314,10 +313,10 @@ class Lxd_help_scripts(SetupTest):
         *Updated: 11.07.2017*
 
         **Test steps:**
-                * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *self.parameters[u'cs_url']['url']*
-                * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *self.parameters[u'ss_mgm_url']['url']*
-                * **Step 3:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *self.parameters[u'ss1_url']['url']*
-                * **Step 4:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *self.parameters[u'ss2_url']['url']*
+                * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *TESTDATA[u'cs_url']['url']*
+                * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *TESTDATA[u'ss_mgm_url']['url']*
+                * **Step 3:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *TESTDATA[u'ss1_url']['url']*
+                * **Step 4:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *TESTDATA[u'ss2_url']['url']*
         """
         driver = self.common_utils.driver_cache._get_current_driver()
         self.common_utils.open_url(TESTDATA[u'cs_url']['url'])

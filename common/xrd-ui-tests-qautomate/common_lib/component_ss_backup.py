@@ -22,16 +22,6 @@ class Component_ss_backup(CommonUtils):
     ss_backup_restore_confirm_delete = Ss_backup_restore_confirm_delete()
     ss_backup_restore_confirm_restore = Ss_backup_restore_confirm_restore()
 
-    def __init__(self):
-        """
-        Initilization method for moving test data to class
-
-        *Updated: 11.07.2017*
-
-        :param parameters:  Test data section dictionary
-        """
-        CommonUtils.__init__(self)
-
     def generate_backup(self):
         """
         Generate backup

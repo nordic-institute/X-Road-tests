@@ -24,16 +24,6 @@ class Component_ss(CommonUtils):
     ss_system_param_add_timestamp_dlg = Ss_system_param_add_timestamp_dlg()
     open_application = Open_application()
 
-    def __init__(self):
-        """
-        Initilization method for moving test data to class
-
-        *Updated: 11.07.2017*
-
-        :param parameters:  Test data section dictionary
-        """
-        CommonUtils.__init__(self)
-
     def login(self, section=u'security_server_url', initial_conf=False, wait_for_jquery=True):
         """
         Login to security server
@@ -45,8 +35,8 @@ class Component_ss(CommonUtils):
         :param wait_for_jquery:  If true method waits for jquery
         
         **Test steps:**
-                * **Step 1:** :func:`~pagemodel.open_application.Open_application.open_application_url`, *self.parameters[section]*
-                * **Step 2:** :func:`~pagemodel.ss_login.Ss_login.login`, *self.parameters[section]*, *wait_for_jquery*
+                * **Step 1:** :func:`~pagemodel.open_application.Open_application.open_application_url`, *TESTDATA[section]*
+                * **Step 2:** :func:`~pagemodel.ss_login.Ss_login.login`, *TESTDATA[section]*, *wait_for_jquery*
                 * **Step 3:** :func:`~pagemodel.ss_sidebar.Ss_sidebar.verify_sidebar_title`
         """
         ## Go to security server
@@ -67,7 +57,7 @@ class Component_ss(CommonUtils):
                 * **Step 1:** :func:`~pagemodel.ss_system_parameters.Ss_system_parameters.click_button_id_tsp_add`
                 * **Step 2:** :func:`~pagemodel.ss_system_param_add_timestamp_dlg.Ss_system_param_add_timestamp_dlg.click_trusted_tsp_first_row`
                 * **Step 3:** :func:`~pagemodel.ss_system_param_add_timestamp_dlg.Ss_system_param_add_timestamp_dlg.click_button_ok`
-                * **Step 4:** :func:`~pagemodel.ss_system_parameters.Ss_system_parameters.verify_time_stamping_url`, *self.parameters[section]*
+                * **Step 4:** :func:`~pagemodel.ss_system_parameters.Ss_system_parameters.verify_time_stamping_url`, *TESTDATA[section]*
         """
         self.ss_system_parameters.click_button_id_tsp_add()
         sleep(3)
@@ -98,8 +88,7 @@ class Component_ss(CommonUtils):
         :param section:  Test data section name
         
         **Test steps:**
-                * **Step 1:** :func:`~pagemodel.wait_until_page_contains(self.Wait_until_page_contains(self.parameters[section][u'tsp_url'])`, *self.parameters[section][u'tsp_url']*
-                * **Step 2:** :func:`~pagemodel.ss_system_parameters.Ss_system_parameters.click_element_from_table_tsps_1`, *self.parameters[section][u'tsp_url']*
+                * **Step 2:** :func:`~pagemodel.ss_system_parameters.Ss_system_parameters.click_element_from_table_tsps_1`, *TESTDATA[section][u'tsp_url']*
                 * **Step 3:** :func:`~pagemodel.ss_system_parameters.Ss_system_parameters.click_button_id_tsp_delete`
         """
         self.wait_until_page_contains(TESTDATA[section][u'tsp_url'])

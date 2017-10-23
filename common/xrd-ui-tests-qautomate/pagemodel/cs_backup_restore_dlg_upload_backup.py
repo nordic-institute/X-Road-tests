@@ -7,6 +7,9 @@ from webframework.extension.parsers.parameter_parser import get_parameter
 from time import sleep
 
 class Cs_backup_restore_dlg_upload_backup(CommonUtils):
+    """
+
+    """
     # Pagemodel timestamp: 20170929121256
     # Pagemodel url: https://xroad-lxd-cs.lxd:4000/backup
     # Pagemodel area: (608, 373, 704, 232)
@@ -50,10 +53,31 @@ class Cs_backup_restore_dlg_upload_backup(CommonUtils):
     CANCEL_0 = (By.XPATH, u'//div[4]/div[1]/button[2]') # x: 1176 y: 501 width: 75 height: 36, tag: button, type: button, name: cancel, form_id: , checkbox: , table_id: , href: 
 
     def click_element_upload_button(self, parameters=None):
+        """
+        
+        :param parameters:  Test data section dictionary
+        
+        **Test steps:**
+            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.FILE_UPLOAD_BUTTON*
+        """
         self.click_element(self.FILE_UPLOAD_BUTTON)
 
     def click_dialog_confirm(self, parameters=None):
+        """
+        
+        :param parameters:  Test data section dictionary
+        
+        **Test steps:**
+            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_FILE_UPLOAD_SUBMIT*
+        """
         self.click_element(self.ID_FILE_UPLOAD_SUBMIT)
 
     def click_button_cancel(self, parameters=None):
+        """
+        
+        :param parameters:  Test data section dictionary
+        
+        **Test steps:**
+            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.CANCEL_0*
+        """
         self.click_element(self.CANCEL_0)

@@ -56,9 +56,15 @@
 <span id="common-lib-ssh"></span><h1>Common lib ssh<a class="headerlink" href="#module-common_lib.common_lib_ssh" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="common_lib.common_lib_ssh.Common_lib_ssh">
-<em class="property">class </em><code class="descclassname">common_lib.common_lib_ssh.</code><code class="descname">Common_lib_ssh</code><span class="sig-paren">(</span><em>parameters=None</em><span class="sig-paren">)</span><a class="headerlink" href="#common_lib.common_lib_ssh.Common_lib_ssh" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">common_lib.common_lib_ssh.</code><code class="descname">Common_lib_ssh</code><a class="headerlink" href="#common_lib.common_lib_ssh.Common_lib_ssh" title="Permalink to this definition">¶</a></dt>
 <dd><p>Common library for ssh or lxd connection handeling</p>
-<p>Changelog:</p>
+<p>Changelog:
+* 19.10.2017</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">Ssh methods added for file manipulation</div>
+</div>
+</div></blockquote>
 <ul>
 <li><dl class="first docutils">
 <dt>11.07.2017</dt>
@@ -70,9 +76,35 @@
 </li>
 </ul>
 <dl class="method">
+<dt id="common_lib.common_lib_ssh.Common_lib_ssh.change_file_permission">
+<code class="descname">change_file_permission</code><span class="sig-paren">(</span><em>section</em>, <em>path</em>, <em>permission</em><span class="sig-paren">)</span><a class="headerlink" href="#common_lib.common_lib_ssh.Common_lib_ssh.change_file_permission" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>section</strong> – Test data section name</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="common_lib.common_lib_ssh.Common_lib_ssh.collect_server_log_files">
 <code class="descname">collect_server_log_files</code><span class="sig-paren">(</span><em>server='xroad-lxd-cs'</em><span class="sig-paren">)</span><a class="headerlink" href="#common_lib.common_lib_ssh.Common_lib_ssh.collect_server_log_files" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="common_lib.common_lib_ssh.Common_lib_ssh.delete_files_from_directory">
+<code class="descname">delete_files_from_directory</code><span class="sig-paren">(</span><em>section='cs_url'</em>, <em>path=u'/var/lib/xroad/backup'</em><span class="sig-paren">)</span><a class="headerlink" href="#common_lib.common_lib_ssh.Common_lib_ssh.delete_files_from_directory" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>section</strong> – Test data section name</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="common_lib.common_lib_ssh.Common_lib_ssh.empty_all_logs_from_server">
@@ -106,8 +138,34 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="common_lib.common_lib_ssh.Common_lib_ssh.generate_empty_file">
+<code class="descname">generate_empty_file</code><span class="sig-paren">(</span><em>section</em>, <em>path</em><span class="sig-paren">)</span><a class="headerlink" href="#common_lib.common_lib_ssh.Common_lib_ssh.generate_empty_file" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>section</strong> – Test data section name</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="common_lib.common_lib_ssh.Common_lib_ssh.get_all_logs_from_server">
 <code class="descname">get_all_logs_from_server</code><span class="sig-paren">(</span><em>section</em><span class="sig-paren">)</span><a class="headerlink" href="#common_lib.common_lib_ssh.Common_lib_ssh.get_all_logs_from_server" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>section</strong> – Test data section name</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="common_lib.common_lib_ssh.Common_lib_ssh.move_file">
+<code class="descname">move_file</code><span class="sig-paren">(</span><em>section</em>, <em>move_from</em>, <em>move_to</em><span class="sig-paren">)</span><a class="headerlink" href="#common_lib.common_lib_ssh.Common_lib_ssh.move_file" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -208,6 +266,7 @@
 <li class="toctree-l2"><a class="reference internal" href="component_cs_sidebar.html">Component cs sidebar</a></li>
 <li class="toctree-l2"><a class="reference internal" href="component_cs_system_settings.html">Component cs system settings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="component_cs_tsp_services.html">Component cs tsp services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="component_cs_version.html">Component cs version</a></li>
 <li class="toctree-l2"><a class="reference internal" href="component_ss.html">Component ss</a></li>
 <li class="toctree-l2"><a class="reference internal" href="component_ss_backup.html">Component ss backup</a></li>
 <li class="toctree-l2"><a class="reference internal" href="component_ss_clients.html">Component ss clients</a></li>

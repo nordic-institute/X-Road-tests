@@ -26,9 +26,8 @@ class Xroad_deletion_of_registered_object(BaseTest):
     Xroad cases for deleting registered objects
 
     **Changelog:**
-
-    * 11.07.2017
-        | Documentation updated
+        * 11.07.2017
+            | Documentation updated
     """
     common_utils = CommonUtils()
     component_cs_sidebar = Component_cs_sidebar()
@@ -90,7 +89,7 @@ class Xroad_deletion_of_registered_object(BaseTest):
 
         **Test steps:**
             * **Step 1: restore central server backup in central server**
-                * :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *self.parameters[u'cs_url']['url']*
+                * :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *TESTDATA[u'cs_url']['url']*
                 * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_backup_restore_view`
                 * :func:`~common_lib.component_cs_backup.Component_cs_backup.restore_backup`
                 * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_global_configuration_view`
@@ -102,10 +101,10 @@ class Xroad_deletion_of_registered_object(BaseTest):
                 * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_security_servers_view`
                 * :func:`~common_lib.component_cs_sec_servers.Component_cs_sec_servers.verify_servers_does_contain_server`, *u'member1_configuration'*, *u'member_name'*
             * **Step 4: log out from central server**
-                * :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *self.parameters[u'cs_url']['url']*
+                * :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *TESTDATA[u'cs_url']['url']*
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
             * **Step 5: restore security server in security server**
-                * :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *self.parameters[u'ss1_url']['url']*
+                * :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *TESTDATA[u'ss1_url']['url']*
                 * :func:`~common_lib.component_ss_sidebar.Component_ss_sidebar.open_backup_restore_view`
                 * :func:`~common_lib.component_ss_backup.Component_ss_backup.restore_backup`
                 * :func:`~common_lib.component_ss_sidebar.Component_ss_sidebar.open_keys_and_certs_view`
@@ -114,7 +113,7 @@ class Xroad_deletion_of_registered_object(BaseTest):
                 * :func:`~common_lib.component_ss_sidebar.Component_ss_sidebar.open_security_servers_client_view`
                 * :func:`~common_lib.component_cs_sec_servers.Component_cs_sec_servers.verify_table_contains_subsystem`, *u'member1_configuration'*
             * **Step 7: log out from security**
-                * :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *self.parameters[u'ss1_url']['url']*
+                * :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *TESTDATA[u'ss1_url']['url']*
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
         """
         print("tearDown")
@@ -439,7 +438,7 @@ class Xroad_deletion_of_registered_object(BaseTest):
                 * :func:`~common_lib.component_ss_backup.Component_ss_backup.generate_backup`
             * **Step 5: delete client of security server in security server**
                 * :func:`~common_lib.component_ss_sidebar.Component_ss_sidebar.open_security_servers_client_view`
-                * :func:`~pagemodel.ss_clients.Ss_clients.find_and_open_by_text_dlg_by_subsystem_code`, *self.parameters[u'member1_configuration']*
+                * :func:`~pagemodel.ss_clients.Ss_clients.find_and_open_by_text_dlg_by_subsystem_code`, *TESTDATA[u'member1_configuration']*
                 * :func:`~common_lib.component_ss_clients.Component_ss_clients.unregister_and_delete_subsystem_in_subsystem_details_dlg`
             * **Step 6: verify test service status in security server**
             * **Step 7: open central server url**

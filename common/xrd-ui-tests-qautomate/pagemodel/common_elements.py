@@ -54,7 +54,7 @@ Pagemodel
         Verify bottom message text
 
         :param message:  String value for message
-
+        
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.element_should_contain`, *self.MESSAGE*, *message*
         """
@@ -65,7 +65,7 @@ Pagemodel
         Click user info menu button
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.USER_INFO*
+            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.mouse_over`, *self.USER_INFO*
         """
         self.mouse_over(self.USER_INFO)
 

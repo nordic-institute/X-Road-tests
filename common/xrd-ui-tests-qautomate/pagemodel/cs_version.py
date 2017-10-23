@@ -7,6 +7,9 @@ from webframework.extension.parsers.parameter_parser import get_parameter
 from time import sleep
 
 class Cs_version(CommonUtils):
+    """
+
+    """
     # Pagemodel timestamp: 20170927121424
     # Pagemodel url: https://xroad-lxd-cs.lxd:4000/about
     # Pagemodel area: (271, 1, 1563, 812)
@@ -43,7 +46,7 @@ class Cs_version(CommonUtils):
         Verify version text with text
 
         :param text:  String value for text
-
+        
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.element_should_contain`, *self.VERSION_TEXT*, *text*
         """

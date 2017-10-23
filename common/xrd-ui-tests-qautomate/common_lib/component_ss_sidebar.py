@@ -18,16 +18,6 @@ class Component_ss_sidebar(CommonUtils):
     common_lib = Common_lib()
     ss_sidebar = Ss_sidebar()
 
-    def __init__(self):
-        """
-        Initilization method for moving test data to class
-
-        *Updated: 11.07.2017*
-
-        :param parameters:  Test data section dictionary
-        """
-        CommonUtils.__init__(self)
-
     def open_system_parameters_view(self):
         """
         Open security servers parameters view

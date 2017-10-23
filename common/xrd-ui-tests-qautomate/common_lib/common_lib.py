@@ -23,21 +23,11 @@ class Common_lib(CommonUtils):
     """
     common_elements = Common_elements()
 
-    def __init__(self):
-        """
-        Initilization method for moving test data to class
-
-        *Updated: 11.07.2017*
-
-        :param parameters:  Test data section dictionary
-        """
-        CommonUtils.__init__(self)
-
     def read_liityntapalvelin_konfiguraatio_parameters(self, parameters=None):
         """
 
         :param parameters:  Test data section dictionary
-
+        
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.add_dynamic_content_to_parameters(parameters, "data_folder", WORKSPACE + os.Add_dynamic_content_to_parameters(parameters, "data_folder", workspace + os.sep + GIT_WORKING_DIR + os`, *parameters*, *"data_folder"*, *WORKSPACE + os.sep + GIT_WORKING_DIR + os.sep + "data" + os.sep*, *u'paths'*
         """
@@ -140,7 +130,7 @@ class Common_lib(CommonUtils):
         """
 
         :param parameters:  Test data section dictionary
-
+        
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.add_dynamic_content_to_parameters(parameters, "data_folder", WORKSPACE + os.Add_dynamic_content_to_parameters(parameters, "data_folder", workspace + os.sep + GIT_WORKING_DIR + os`, *parameters*, *"data_folder"*, *WORKSPACE + os.sep + GIT_WORKING_DIR + os.sep + "data" + os.sep*, *u'paths'*
         """
@@ -310,7 +300,7 @@ class Common_lib(CommonUtils):
         """
 
         :param parameters:  Test data section dictionary
-
+        
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.delete_files_with_extension(parameters[u'downloads_folder'], ".Delete_files_with_extension(parameters[u'downloads_folder'], ".p10")`, *parameters[u'downloads_folder']*, *".p10"*
                 * **Step 2:** :func:`~pagemodel.delete_files_with_extension(parameters[u'downloads_folder'], ".Delete_files_with_extension(parameters[u'downloads_folder'], ".der")`, *parameters[u'downloads_folder']*, *".der"*
@@ -326,7 +316,7 @@ class Common_lib(CommonUtils):
         """
 
         :param parameters:  Test data section dictionary
-
+        
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.delete_files_with_extension(parameters[u'downloads_folder'], ".Delete_files_with_extension(parameters[u'downloads_folder'], ".der")`, *parameters[u'downloads_folder']*, *".der"*
         """

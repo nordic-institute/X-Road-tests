@@ -57,16 +57,6 @@ class Component_cs_members(CommonUtils):
     cs_members_details_dlg = Cs_members_details_dlg()
     cs_sec_servers_mgm_requests = Cs_sec_servers_mgm_requests()
 
-    def __init__(self):
-        """
-        Initilization method for moving test data to class
-
-        *Updated: 11.07.2017*
-
-        :param parameters:  Test data section dictionary
-        """
-        CommonUtils.__init__(self)
-
     def make_cert_file_upload(self, parameters="sign"):
         """
         Upload ceritificate file
@@ -96,7 +86,7 @@ class Component_cs_members(CommonUtils):
         :param parameter:  Test data parameter name
         
         **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_members.Cs_members.click_element_from_table_members`, *self.parameters[section][parameter]*
+                * **Step 1:** :func:`~pagemodel.cs_members.Cs_members.click_element_from_table_members`, *TESTDATA[section][parameter]*
                 * **Step 2:** :func:`~pagemodel.cs_members.Cs_members.click_button_member_action`
         """
         self.cs_members.click_element_from_table_members(TESTDATA[section][parameter])
@@ -124,7 +114,7 @@ class Component_cs_members(CommonUtils):
         **Test steps:**
                 * **Step 2:** :func:`~pagemodel.cs_members_details_dlg.Cs_members_details_dlg.click_subsystems_tab`
                 * **Step 3:** :func:`~pagemodel.cs_members_subsystems_dlg.Cs_members_subsystems_dlg.click_button_add`
-                * **Step 4:** :func:`~pagemodel.cs_members_add_subsystem_dlg.Cs_members_add_subsystem_dlg.input_text_to_id_subsystem_add_code`, *self.parameters[section]*
+                * **Step 4:** :func:`~pagemodel.cs_members_add_subsystem_dlg.Cs_members_add_subsystem_dlg.input_text_to_id_subsystem_add_code`, *TESTDATA[section]*
                 * **Step 5:** :func:`~pagemodel.cs_members_add_subsystem_dlg.Cs_members_add_subsystem_dlg.click_button_id_subsystem_add_submit`
                 * **Step 6:** :func:`~pagemodel.cs_members_subsystems_dlg.Cs_members_subsystems_dlg.click_button_submit`
         """
@@ -146,7 +136,7 @@ class Component_cs_members(CommonUtils):
         
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.cs_members.Cs_members.click_button_group_add_icon`
-                * **Step 2:** :func:`~pagemodel.cs_add_member_dlg.Cs_add_member_dlg.fill_input_add_member`, *self.parameters[section]*
+                * **Step 2:** :func:`~pagemodel.cs_add_member_dlg.Cs_add_member_dlg.fill_input_add_member`, *TESTDATA[section]*
                 * **Step 3:** :func:`~pagemodel.cs_add_member_dlg.Cs_add_member_dlg.click_button_ok_0`
         """
         self.cs_members.click_button_group_add_icon()
@@ -178,16 +168,16 @@ class Component_cs_members(CommonUtils):
         
         **Test steps:**
                 * **Step 2:** :func:`~pagemodel.cs_members.Cs_members.wait_until_element_is_visible_member_name`
-                * **Step 3:** :func:`~pagemodel.cs_members.Cs_members.search_text_from_table_members`, *self.parameters[section]*
+                * **Step 3:** :func:`~pagemodel.cs_members.Cs_members.search_text_from_table_members`, *TESTDATA[section]*
                 * **Step 4:** :func:`~pagemodel.cs_members.Cs_members.click_button_member_action`
                 * **Step 5:** :func:`~pagemodel.cs_members_details_dlg.Cs_members_details_dlg.click_element_owned_servers`
-                * **Step 6:** :func:`~pagemodel.cs_member_details_owned_servers.Cs_member_details_owned_servers.click_element_owned_server`, *self.parameters[section]*
+                * **Step 6:** :func:`~pagemodel.cs_member_details_owned_servers.Cs_member_details_owned_servers.click_element_owned_server`, *TESTDATA[section]*
                 * **Step 7:** :func:`~pagemodel.cs_sec_servers_details.Cs_sec_servers_details.click_clients_tab`
                 * **Step 8:** :func:`~pagemodel.cs_sec_servers_details_clients.Cs_sec_servers_details_clients.click_add_new_client_request`
                 * **Step 9:** :func:`~pagemodel.cs_sec_servers_new_client_req.Cs_sec_servers_new_client_req.click_new_client_search`
-                * **Step 10:** :func:`~pagemodel.cs_sec_servers_new_client_req_search.Cs_sec_servers_new_client_req_search.click_member_from_table`, *self.parameters[section]['member_name']*
+                * **Step 10:** :func:`~pagemodel.cs_sec_servers_new_client_req_search.Cs_sec_servers_new_client_req_search.click_member_from_table`, *TESTDATA[section]['member_name']*
                 * **Step 11:** :func:`~pagemodel.cs_sec_servers_new_client_req_search.Cs_sec_servers_new_client_req_search.click_ok_search`
-                * **Step 12:** :func:`~pagemodel.cs_sec_servers_new_client_req.Cs_sec_servers_new_client_req.insert_subsystem_code`, *self.parameters[section]*
+                * **Step 12:** :func:`~pagemodel.cs_sec_servers_new_client_req.Cs_sec_servers_new_client_req.insert_subsystem_code`, *TESTDATA[section]*
                 * **Step 13:** :func:`~pagemodel.cs_sec_servers_new_client_req.Cs_sec_servers_new_client_req.click_submit_new_client_request`
                 * **Step 14:** :func:`~pagemodel.cs_sec_servers_details.Cs_sec_servers_details.click_mgm_requests_tab`
         """
@@ -217,7 +207,7 @@ class Component_cs_members(CommonUtils):
         :param section:  Test data section name
         
         **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_members.Cs_members.search_text_from_table_members`, *self.parameters[section]*
+                * **Step 1:** :func:`~pagemodel.cs_members.Cs_members.search_text_from_table_members`, *TESTDATA[section]*
                 * **Step 2:** :func:`~pagemodel.cs_members.Cs_members.click_button_member_action`
                 * **Step 3:** :func:`~pagemodel.cs_members_details_dlg.Cs_members_details_dlg.click_element_management_requests_tab`
                 * **Step 4:** :func:`~pagemodel.cs_members_mgm_requests_dlg.Cs_members_mgm_requests_dlg.find_and_click_mgm_request`
@@ -264,12 +254,12 @@ class Component_cs_members(CommonUtils):
         
         **Test steps:**
                 * **Step 2:** :func:`~pagemodel.cs_members.Cs_members.wait_until_element_is_visible_member_name`
-                * **Step 3:** :func:`~pagemodel.cs_members.Cs_members.search_text_from_table_members`, *self.parameters[section]*
+                * **Step 3:** :func:`~pagemodel.cs_members.Cs_members.search_text_from_table_members`, *TESTDATA[section]*
                 * **Step 4:** :func:`~pagemodel.cs_members.Cs_members.click_button_member_action`
                 * **Step 5:** :func:`~pagemodel.cs_members_details_dlg.Cs_members_details_dlg.click_element_owned_servers`
                 * **Step 6:** :func:`~pagemodel.cs_member_details_owned_servers.Cs_member_details_owned_servers.click_button_ui_titlebar_widget_corner_all_helper_clearfix_draggable_handle_tabs`
                 * **Step 7:** :func:`~pagemodel.cs_members_owned_auth_cert_reg_dlg.Cs_members_owned_auth_cert_reg_dlg.click_element_id_owned_server_cert_upload_button`
-                * **Step 9:** :func:`~pagemodel.cs_members_owned_auth_cert_reg_dlg.Cs_members_owned_auth_cert_reg_dlg.input_text_to_id_owned_server_add_servercode`, *self.parameters[section]*
+                * **Step 9:** :func:`~pagemodel.cs_members_owned_auth_cert_reg_dlg.Cs_members_owned_auth_cert_reg_dlg.input_text_to_id_owned_server_add_servercode`, *TESTDATA[section]*
                 * **Step 10:** :func:`~pagemodel.cs_members_owned_auth_cert_reg_dlg.Cs_members_owned_auth_cert_reg_dlg.click_button_id_add_owned_server_submit`
                 * **Step 11:** :func:`~pagemodel.cs_members_details_dlg.Cs_members_details_dlg.wait_until_submitted_certificate`
                 * **Step 12:** :func:`~pagemodel.cs_members_details_dlg.Cs_members_details_dlg.click_element_management_requests_tab`
@@ -311,8 +301,8 @@ class Component_cs_members(CommonUtils):
         
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.cs_members_details_dlg.Cs_members_details_dlg.click_subsystems_tab`
-                * **Step 2:** :func:`~pagemodel.cs_members_subsystems_dlg.Cs_members_subsystems_dlg.check_subsystem_is_red`, *self.parameters[section][parameter]*
-                * **Step 3:** :func:`~pagemodel.cs_members_subsystems_dlg.Cs_members_subsystems_dlg.click_element_in_subsystems_table`, *self.parameters[section][parameter]*
+                * **Step 2:** :func:`~pagemodel.cs_members_subsystems_dlg.Cs_members_subsystems_dlg.check_subsystem_is_red`, *TESTDATA[section][parameter]*
+                * **Step 3:** :func:`~pagemodel.cs_members_subsystems_dlg.Cs_members_subsystems_dlg.click_element_in_subsystems_table`, *TESTDATA[section][parameter]*
                 * **Step 4:** :func:`~pagemodel.cs_members_subsystems_dlg.Cs_members_subsystems_dlg.sub_delete_is_enabled`
         """
         self.cs_members_details_dlg.click_subsystems_tab()
@@ -330,7 +320,7 @@ class Component_cs_members(CommonUtils):
         :param parameter:  Test data parameter name
         
         **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_members.Cs_members.table_does_not_contain_member`, *self.parameters[section][parameter]*
+                * **Step 1:** :func:`~pagemodel.cs_members.Cs_members.table_does_not_contain_member`, *TESTDATA[section][parameter]*
         """
         self.cs_members.table_does_not_contain_member(TESTDATA[section][parameter])
 
@@ -344,6 +334,6 @@ class Component_cs_members(CommonUtils):
         :param parameter:  Test data parameter name
         
         **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_members.Cs_members.table_contains_member`, *self.parameters[section][parameter]*
+                * **Step 1:** :func:`~pagemodel.cs_members.Cs_members.table_contains_member`, *TESTDATA[section][parameter]*
         """
         self.cs_members.table_contains_member(TESTDATA[section][parameter])

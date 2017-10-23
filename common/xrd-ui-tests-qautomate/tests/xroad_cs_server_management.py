@@ -53,10 +53,10 @@ class Xroad_cs_server_management(SetupTest):
             * 6a. A backup file with the same file name is saved in the system configuration.
 
     **Changelog:**
-    * 19.10.2017
-        | All cases done
-    * 15.09.2017
-        | Test set created and cases + documentation links added
+        * 19.10.2017
+            | All cases done
+        * 15.09.2017
+            | Test set created and cases + documentation links added
     """
     common_utils = CommonUtils()
     open_application = Open_application()
@@ -96,6 +96,9 @@ class Xroad_cs_server_management(SetupTest):
         """
         Method that runs before every test case
 
+        **Test steps:**
+                * **Step 1:** :func:`~pagemodel.start_log_time = self.Start_log_time = self.common_lib`
+                * **Step 2:** :func:`~common_lib.common_lib_ssh.Common_lib_ssh.empty_all_logs_from_server`, *"cs_url"*
         """
         self.start_log_time = self.common_lib.get_log_utc_time()
         self.common_lib_ssh.empty_all_logs_from_server("cs_url")
@@ -104,6 +107,15 @@ class Xroad_cs_server_management(SetupTest):
         """
         Method that runs after every test case
 
+        **Test steps:**
+            * **Step 1: find exceptions from log files**
+                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.get_all_logs_from_server`, *u'cs_url'*
+                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.find_exception_from_logs_and_save`
+            * **Step 2: log out if logged in**
+                * :func:`~common_lib.common_lib.Common_lib.log_out`
+            * **Step 3: return server to defaults**
+                * :func:`~common_lib.common_lib.Common_lib.delete_files_with_extension`, *TESTDATA.get_parameter(u'paths'*, *u'downloads_folder'*
+                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.delete_files_from_directory`, *u'cs_url'*, *strings.backup_directory*
         """
         # Step Find exceptions from log files
         stop_log_time = self.common_lib.get_log_utc_time()
@@ -127,6 +139,18 @@ class Xroad_cs_server_management(SetupTest):
 
         **Use cases:**
             * `2.5`_: Change the Graphical User Interface Language
+
+        **Test steps:**
+            * **Step 1: open central server**
+                * :func:`~common_lib.component_cs.Component_cs.login`, *u'cs_url'*, *False*
+            * **Step 2: change language**
+                * :func:`~common_lib.component_common.Component_common.open_select_language_dlg`
+                * :func:`~common_lib.component_common.Component_common.change_language_in_dlg`, *strings.lanquage_eng*
+                * :func:`~common_lib.component_common.Component_common.accept_select_language_dlg`
+            * **Step 3: verify audit log for language change**
+                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *u'cs_url'*, *strings.set_ui_language*
+            * **Step 4: log out of central server**
+                * :func:`~common_lib.common_lib.Common_lib.log_out`
         """
         # Step Open central server
         self.component_cs.login(u'cs_url', False)
@@ -148,6 +172,16 @@ class Xroad_cs_server_management(SetupTest):
 
         **Use cases:**
             * `2.6`_: View the Installed Software Version
+
+        **Test steps:**
+            * **Step 1: login to central server**
+                * :func:`~common_lib.component_cs.Component_cs.login`, *u'cs_url'*, *False*
+            * **Step 2: open version view**
+                * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_version_view`
+            * **Step 3: verify version**
+                * :func:`~common_lib.component_cs_version.Component_cs_version.verify_version`, *u'Central Server version 6'*
+            * **Step 4: log out of central server**
+                * :func:`~common_lib.common_lib.Common_lib.log_out`
         """
         # Step login to central server
         self.component_cs.login(u'cs_url', False)
@@ -167,6 +201,18 @@ class Xroad_cs_server_management(SetupTest):
 
         **Use cases:**
             * `2.7`_: View the List of Configuration Backup Files
+
+        **Test steps:**
+            * **Step 1: login to central server**
+                * :func:`~common_lib.component_cs.Component_cs.login`, *u'cs_url'*, *False*
+            * **Step 2: open backup view**
+                * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_backup_restore_view`
+            * **Step 3: generate backup**
+                * :func:`~common_lib.component_cs_backup.Component_cs_backup.generate_backup`
+            * **Step 4: verify backup view user actions**
+                * :func:`~pagemodel.cs_backup_restore.Cs_backup_restore.verify_contains_all_user_actions`
+            * **Step 5: log out of central server**
+                * :func:`~common_lib.common_lib.Common_lib.log_out`
         """
         # Step Login to central server
         self.component_cs.login(u'cs_url', False)
@@ -190,6 +236,18 @@ class Xroad_cs_server_management(SetupTest):
         **Use cases:**
             * `2.8`_: Back Up Configuration
                 * 3a. Backing up the central server configuration failed.
+
+        **Test steps:**
+            * **Step 1: login to central server**
+                * :func:`~common_lib.component_cs.Component_cs.login`, *u'cs_url'*, *False*
+            * **Step 2: open backup view**
+                * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_backup_restore_view`
+            * **Step 3: generate backup**
+                * :func:`~common_lib.component_cs_backup.Component_cs_backup.generate_invalid_backup`
+            * **Step 4: generate backup**
+                * :func:`~common_lib.component_cs_backup.Component_cs_backup.generate_backup`
+            * **Step 5: log out of central server**
+                * :func:`~common_lib.common_lib.Common_lib.log_out`
         """
         # Step Login to central server
         self.component_cs.login(u'cs_url', False)
@@ -214,6 +272,22 @@ class Xroad_cs_server_management(SetupTest):
             * `2.9`_: Restore Configuration from a Backup File
                 * 3a. CS administrator cancels the restoring of the configuration from the backup file.
                 * 4a. Restoring the central server configuration failed.
+
+        **Test steps:**
+            * **Step 1: login to central server**
+                * :func:`~common_lib.component_cs.Component_cs.login`, *u'cs_url'*, *False*
+            * **Step 2: open backup view**
+                * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_backup_restore_view`
+            * **Step 3: restore invalid backup**
+                * :func:`~common_lib.component_cs_backup.Component_cs_backup.restore_invalid_backup`
+            * **Step 4: generate backup**
+                * :func:`~common_lib.component_cs_backup.Component_cs_backup.generate_backup`
+            * **Step 5: cancel restore backup**
+                * :func:`~common_lib.component_cs_backup.Component_cs_backup.cancel_restore_backup`
+            * **Step 6: restore backup**
+                * :func:`~common_lib.component_cs_backup.Component_cs_backup.restore_backup`
+            * **Step 7: log out of central server**
+                * :func:`~common_lib.common_lib.Common_lib.log_out`
         """
         # Step Login to central server
         self.component_cs.login(u'cs_url', False)
@@ -242,6 +316,18 @@ class Xroad_cs_server_management(SetupTest):
 
         **Use cases:**
             * `2.10`_: Download a Backup File
+
+        **Test steps:**
+            * **Step 1: login to central server**
+                * :func:`~common_lib.component_cs.Component_cs.login`, *u'cs_url'*, *False*
+            * **Step 2: open backup view**
+                * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_backup_restore_view`
+            * **Step 3: generate backup**
+                * :func:`~common_lib.component_cs_backup.Component_cs_backup.generate_backup`
+            * **Step 4: download backup**
+                * :func:`~common_lib.component_cs_backup.Component_cs_backup.download_backup`
+            * **Step 5: log out of central server**
+                * :func:`~common_lib.common_lib.Common_lib.log_out`
         """
         # Step Login to central server
         self.component_cs.login(u'cs_url', False)
@@ -265,6 +351,20 @@ class Xroad_cs_server_management(SetupTest):
         **Use cases:**
             * `2.11`_: Delete a Backup File
                 * 3a. CS administrator cancels the deleting of the backup file.
+
+        **Test steps:**
+            * **Step 1: login to central server**
+                * :func:`~common_lib.component_cs.Component_cs.login`, *u'cs_url'*, *False*
+            * **Step 2: open backup view**
+                * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_backup_restore_view`
+            * **Step 3: generate backup**
+                * :func:`~common_lib.component_cs_backup.Component_cs_backup.generate_backup`
+            * **Step 4: cancel delete backup**
+                * :func:`~common_lib.component_cs_backup.Component_cs_backup.cancel_delete_backup`
+            * **Step 5: delete backup**
+                * :func:`~common_lib.component_cs_backup.Component_cs_backup.delete_backup`
+            * **Step 6: log out of central server**
+                * :func:`~common_lib.common_lib.Common_lib.log_out`
         """
         # Step Login to central server
         self.component_cs.login(u'cs_url', False)
@@ -294,6 +394,30 @@ class Xroad_cs_server_management(SetupTest):
                 * 4a. The file extension is not .tar.
                 * 5a. The content of the file is not in valid format.
                 * 6a. A backup file with the same file name is saved in the system configuration.
+
+        **Test steps:**
+            * **Step 1: login to central server**
+                * :func:`~common_lib.component_cs.Component_cs.login`, *u'cs_url'*, *False*
+            * **Step 2: open backup view**
+                * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_backup_restore_view`
+            * **Step 3: generate backup**
+                * :func:`~common_lib.component_cs_backup.Component_cs_backup.generate_backup`
+            * **Step 4: download backup**
+                * :func:`~common_lib.component_cs_backup.Component_cs_backup.download_backup`
+            * **Step 5: delete backup**
+                * :func:`~common_lib.component_cs_backup.Component_cs_backup.delete_backup`
+            * **Step 6: upload backup**
+                * :func:`~common_lib.component_cs_backup.Component_cs_backup.upload_backup`
+            * **Step 7: upload backup that already exists**
+                * :func:`~common_lib.component_cs_backup.Component_cs_backup.upload_backup_already_exists`
+            * **Step 8: upload backup with invalid characters in name**
+                * :func:`~common_lib.component_cs_backup.Component_cs_backup.upload_backup_invalid_char`
+            * **Step 9: upload backup with invalid extension**
+                * :func:`~common_lib.component_cs_backup.Component_cs_backup.upload_backup_invalid_extension`
+            * **Step 10: upload backup with invalid format**
+                * :func:`~common_lib.component_cs_backup.Component_cs_backup.upload_backup_invalid_format`
+            * **Step 11: log out of central server**
+                * :func:`~common_lib.common_lib.Common_lib.log_out`
         """
         # Step Login to central server
         self.component_cs.login(u'cs_url', False)

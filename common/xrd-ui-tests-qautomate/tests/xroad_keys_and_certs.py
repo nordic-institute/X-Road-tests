@@ -39,9 +39,8 @@ class Xroad_keys_and_certs(SetupTest):
     Xroad cases for testing key and certificate use cases
 
     **Changelog:**
-
-    * 11.07.2017
-        | Documentation updated
+        * 11.07.2017
+            | Documentation updated
     """
     common_utils = CommonUtils()
     common_lib = Common_lib()
@@ -104,7 +103,7 @@ class Xroad_keys_and_certs(SetupTest):
         *Updated: 11.07.2017*
 
         **Test steps:**
-                * **Step 1:** :func:`~common_lib.common_lib.Common_lib.remove_cert_from_downloads`, *self.parameters[u'paths']*
+                * **Step 1:** :func:`~common_lib.common_lib.Common_lib.remove_cert_from_downloads`, *TESTDATA[u'paths']*
                 * **Step 2:** :func:`~pagemodel.start_log_time = self.Start_log_time = self.common_lib`
                 * **Step 3:** :func:`~common_lib.common_lib_ssh.Common_lib_ssh.empty_all_logs_from_server`, *"ss1_url"*
                 * **Step 4:** :func:`~common_lib.common_lib_ssh.Common_lib_ssh.empty_all_logs_from_server`, *"cs_url"*
@@ -128,7 +127,7 @@ class Xroad_keys_and_certs(SetupTest):
                 * **Step 2:** :func:`~common_lib.common_lib_ssh.Common_lib_ssh.find_exception_from_logs_and_save`, *self.start_log_time*, *stop_log_time*, *u'ss1_url'*, *copy_log*
                 * **Step 3:** :func:`~common_lib.common_lib_ssh.Common_lib_ssh.get_all_logs_from_server`, *u'cs_url'*
                 * **Step 4:** :func:`~common_lib.common_lib_ssh.Common_lib_ssh.find_exception_from_logs_and_save`, *self.start_log_time*, *stop_log_time*, *u'cs_url'*, *copy_log*
-                * **Step 5:** :func:`~common_lib.common_lib.Common_lib.remove_cert_from_downloads`, *self.parameters[u'paths']*
+                * **Step 5:** :func:`~common_lib.common_lib.Common_lib.remove_cert_from_downloads`, *TESTDATA[u'paths']*
                 * **Step 6:** :func:`~common_lib.common_lib.Common_lib.get_ui_error_message`
                 * **Step 7:** :func:`~common_lib.common_lib.Common_lib.log_out`
         """
@@ -203,7 +202,7 @@ class Xroad_keys_and_certs(SetupTest):
                 * :func:`~pagemodel.ss_keys_and_cert.Ss_keys_and_cert.delete_imported_cert_key`, *cert_key*
             * **Step 2: click delete cert confirm key #webpage: ss_keys_and_cert_dlg_delete**
                 * :func:`~pagemodel.ss_keys_and_cert_dlg_delete.Ss_keys_and_cert_dlg_delete.click_delete_cert_confirm`, *strings.sign_key_label_2*
-                * :func:`~common_lib.common_lib.Common_lib.revoke_cert`, *self.parameters[u'paths']*
+                * :func:`~common_lib.common_lib.Common_lib.revoke_cert`, *TESTDATA[u'paths']*
             * **Step 3: log out from securityserver**
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
         """
@@ -235,7 +234,7 @@ class Xroad_keys_and_certs(SetupTest):
 
         **Test steps:**
             * **Step 1: find security server by member name #webpage: cs_sec_servers #parameters: certificate_auth**
-                * :func:`~pagemodel.cs_sec_servers.Cs_sec_servers.click_security_servers_row_with_text`, *self.parameters[u'member1_configuration'][u'member_name']*
+                * :func:`~pagemodel.cs_sec_servers.Cs_sec_servers.click_security_servers_row_with_text`, *TESTDATA[u'member1_configuration'][u'member_name']*
             * **Step 2: click ss details server #webpage: cs_sec_servers**
                 * :func:`~pagemodel.cs_sec_servers.Cs_sec_servers.click_ss_details`
                 * :func:`~pagemodel.cs_sec_servers_details.Cs_sec_servers_details.verify_ss_details_view`
@@ -274,7 +273,7 @@ class Xroad_keys_and_certs(SetupTest):
             * **Step 16: click unregister and delete cert confirm #webpage: ss_keys_and_cert_dlg_delete #parameters: certificate_auth**
                 * :func:`~pagemodel.ss_keys_and_cert_dlg_delete.Ss_keys_and_cert_dlg_delete.click_unregister_and_delete_cert_confirm`, *strings.auth_key_label_2*
             * **Step 17: revoke cert**
-                * :func:`~common_lib.common_lib.Common_lib.revoke_cert_auth`, *self.parameters[u'paths']*
+                * :func:`~common_lib.common_lib.Common_lib.revoke_cert_auth`, *TESTDATA[u'paths']*
             * **Step 18: log out security server**
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
         """

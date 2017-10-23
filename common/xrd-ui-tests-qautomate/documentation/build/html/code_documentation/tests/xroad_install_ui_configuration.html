@@ -58,8 +58,9 @@
 <dt id="tests.xroad_install_ui_configuration.Xroad_install_ui_configuration">
 <em class="property">class </em><code class="descclassname">tests.xroad_install_ui_configuration.</code><code class="descname">Xroad_install_ui_configuration</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#tests.xroad_install_ui_configuration.Xroad_install_ui_configuration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Xroad cases for installing ui configurations</p>
-<p><strong>Changelog:</strong></p>
-<ul>
+<dl class="docutils">
+<dt><strong>Changelog:</strong></dt>
+<dd><ul class="first last">
 <li><dl class="first docutils">
 <dt>11.07.2017</dt>
 <dd><div class="first last line-block">
@@ -69,6 +70,8 @@
 </dl>
 </li>
 </ul>
+</dd>
+</dl>
 </dd></dl>
 
 <div class="section" id="setup-and-teardown">
@@ -109,7 +112,7 @@
 <dl class="docutils">
 <dt><strong>Test steps:</strong></dt>
 <dd><ul class="first last simple">
-<li><strong>Step 1:</strong> <a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.remove_anchor_and_certs_from_downloads" title="common_lib.common_lib.Common_lib.remove_anchor_and_certs_from_downloads"><code class="xref py py-func docutils literal"><span class="pre">remove_anchor_and_certs_from_downloads()</span></code></a>, <em>self.parameters[u’paths’]</em></li>
+<li><strong>Step 1:</strong> <a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.remove_anchor_and_certs_from_downloads" title="common_lib.common_lib.Common_lib.remove_anchor_and_certs_from_downloads"><code class="xref py py-func docutils literal"><span class="pre">remove_anchor_and_certs_from_downloads()</span></code></a>, <em>TESTDATA[u’paths’]</em></li>
 <li><strong>Step 2:</strong> <code class="xref py py-func docutils literal"><span class="pre">common_lib()</span></code></li>
 <li><strong>Step 3:</strong> <a class="reference internal" href="../common_lib/common_lib_ssh.html#common_lib.common_lib_ssh.Common_lib_ssh.empty_all_logs_from_server" title="common_lib.common_lib_ssh.Common_lib_ssh.empty_all_logs_from_server"><code class="xref py py-func docutils literal"><span class="pre">empty_all_logs_from_server()</span></code></a>, <em>“ss1_url”</em></li>
 <li><strong>Step 4:</strong> <a class="reference internal" href="../common_lib/common_lib_ssh.html#common_lib.common_lib_ssh.Common_lib_ssh.empty_all_logs_from_server" title="common_lib.common_lib_ssh.Common_lib_ssh.empty_all_logs_from_server"><code class="xref py py-func docutils literal"><span class="pre">empty_all_logs_from_server()</span></code></a>, <em>“cs_url”</em></li>
@@ -134,7 +137,7 @@
 <li><strong>Step 5:</strong> <a class="reference internal" href="../common_lib/common_lib_ssh.html#common_lib.common_lib_ssh.Common_lib_ssh.get_all_logs_from_server" title="common_lib.common_lib_ssh.Common_lib_ssh.get_all_logs_from_server"><code class="xref py py-func docutils literal"><span class="pre">get_all_logs_from_server()</span></code></a>, <em>u’ss1_url’</em></li>
 <li><strong>Step 6:</strong> <a class="reference internal" href="../common_lib/common_lib_ssh.html#common_lib.common_lib_ssh.Common_lib_ssh.find_exception_from_logs_and_save" title="common_lib.common_lib_ssh.Common_lib_ssh.find_exception_from_logs_and_save"><code class="xref py py-func docutils literal"><span class="pre">find_exception_from_logs_and_save()</span></code></a>, <em>self.start_log_time</em>, <em>stop_log_time</em>, <em>u’ss1_url’</em>, <em>copy_log</em></li>
 <li><strong>Step 7:</strong> <a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.get_ui_error_message" title="common_lib.common_lib.Common_lib.get_ui_error_message"><code class="xref py py-func docutils literal"><span class="pre">get_ui_error_message()</span></code></a></li>
-<li><strong>Step 8:</strong> <a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.remove_anchor_and_certs_from_downloads" title="common_lib.common_lib.Common_lib.remove_anchor_and_certs_from_downloads"><code class="xref py py-func docutils literal"><span class="pre">remove_anchor_and_certs_from_downloads()</span></code></a>, <em>self.parameters[u’paths’]</em></li>
+<li><strong>Step 8:</strong> <a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.remove_anchor_and_certs_from_downloads" title="common_lib.common_lib.Common_lib.remove_anchor_and_certs_from_downloads"><code class="xref py py-func docutils literal"><span class="pre">remove_anchor_and_certs_from_downloads()</span></code></a>, <em>TESTDATA[u’paths’]</em></li>
 </ul>
 </dd>
 </dl>
@@ -154,7 +157,7 @@
 <li><dl class="first docutils">
 <dt><strong>Step 1: read liityntapalvelin konfiguraatio parameters</strong></dt>
 <dd><ul class="first last">
-<li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.read_liityntapalvelin_konfiguraatio_parameters" title="common_lib.common_lib.Common_lib.read_liityntapalvelin_konfiguraatio_parameters"><code class="xref py py-func docutils literal"><span class="pre">read_liityntapalvelin_konfiguraatio_parameters()</span></code></a>, <em>self.parameters</em></li>
+<li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.read_liityntapalvelin_konfiguraatio_parameters" title="common_lib.common_lib.Common_lib.read_liityntapalvelin_konfiguraatio_parameters"><code class="xref py py-func docutils literal"><span class="pre">read_liityntapalvelin_konfiguraatio_parameters()</span></code></a>, <em>TESTDATA</em></li>
 </ul>
 </dd>
 </dl>
@@ -268,7 +271,7 @@
 <dt><strong>Step 12: get wsdl address</strong></dt>
 <dd><ul class="first last">
 <li><a class="reference internal" href="../common_lib/component_cs_sidebar.html#common_lib.component_cs_sidebar.Component_cs_sidebar.open_system_settings_view" title="common_lib.component_cs_sidebar.Component_cs_sidebar.open_system_settings_view"><code class="xref py py-func docutils literal"><span class="pre">open_system_settings_view()</span></code></a></li>
-<li><a class="reference internal" href="../pagemodel/cs_system_settings.html#pagemodel.cs_system_settings.Cs_system_settings.get_wsdl_and_services_address" title="pagemodel.cs_system_settings.Cs_system_settings.get_wsdl_and_services_address"><code class="xref py py-func docutils literal"><span class="pre">get_wsdl_and_services_address()</span></code></a>, <em>self.parameters[u’cs_url’]</em></li>
+<li><a class="reference internal" href="../pagemodel/cs_system_settings.html#pagemodel.cs_system_settings.Cs_system_settings.get_wsdl_and_services_address" title="pagemodel.cs_system_settings.Cs_system_settings.get_wsdl_and_services_address"><code class="xref py py-func docutils literal"><span class="pre">get_wsdl_and_services_address()</span></code></a>, <em>TESTDATA[u’cs_url’]</em></li>
 <li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.log_out" title="common_lib.common_lib.Common_lib.log_out"><code class="xref py py-func docutils literal"><span class="pre">log_out()</span></code></a></li>
 </ul>
 </dd>
@@ -283,7 +286,7 @@
 <li><a class="reference internal" href="../pagemodel/cs_sec_servers_mgm_requests.html#pagemodel.cs_sec_servers_mgm_requests.Cs_sec_servers_mgm_requests.click_close_mgm_req_dlg" title="pagemodel.cs_sec_servers_mgm_requests.Cs_sec_servers_mgm_requests.click_close_mgm_req_dlg"><code class="xref py py-func docutils literal"><span class="pre">click_close_mgm_req_dlg()</span></code></a></li>
 <li><a class="reference internal" href="../common_lib/component_cs_members.html#common_lib.component_cs_members.Component_cs_members.close_member_details_dlg" title="common_lib.component_cs_members.Component_cs_members.close_member_details_dlg"><code class="xref py py-func docutils literal"><span class="pre">close_member_details_dlg()</span></code></a></li>
 <li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.log_out" title="common_lib.common_lib.Common_lib.log_out"><code class="xref py py-func docutils literal"><span class="pre">log_out()</span></code></a></li>
-<li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.sync_global_conf" title="common_lib.common_lib.Common_lib.sync_global_conf"><code class="xref py py-func docutils literal"><span class="pre">sync_global_conf()</span></code></a>, <em>self.parameters[u’ss1_url’][u’sync_timeout’]</em></li>
+<li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.sync_global_conf" title="common_lib.common_lib.Common_lib.sync_global_conf"><code class="xref py py-func docutils literal"><span class="pre">sync_global_conf()</span></code></a>, <em>TESTDATA[u’ss1_url’][u’sync_timeout’]</em></li>
 </ul>
 </dd>
 </dl>
@@ -292,10 +295,10 @@
 <dt><strong>Step 14: add subsystem to security server</strong></dt>
 <dd><ul class="first last">
 <li><a class="reference internal" href="../common_lib/component_ss.html#common_lib.component_ss.Component_ss.login" title="common_lib.component_ss.Component_ss.login"><code class="xref py py-func docutils literal"><span class="pre">login()</span></code></a>, <em>u’ss1_url’</em></li>
-<li><a class="reference internal" href="../pagemodel/ss_clients.html#pagemodel.ss_clients.Ss_clients.verify_service_registration_complete" title="pagemodel.ss_clients.Ss_clients.verify_service_registration_complete"><code class="xref py py-func docutils literal"><span class="pre">verify_service_registration_complete()</span></code></a>, <em>self.parameters[u’member1_configuration’]</em></li>
+<li><a class="reference internal" href="../pagemodel/ss_clients.html#pagemodel.ss_clients.Ss_clients.verify_service_registration_complete" title="pagemodel.ss_clients.Ss_clients.verify_service_registration_complete"><code class="xref py py-func docutils literal"><span class="pre">verify_service_registration_complete()</span></code></a>, <em>TESTDATA[u’member1_configuration’]</em></li>
 <li><a class="reference internal" href="../common_lib/component_ss_clients.html#common_lib.component_ss_clients.Component_ss_clients.add_new_subsystem_to_ss" title="common_lib.component_ss_clients.Component_ss_clients.add_new_subsystem_to_ss"><code class="xref py py-func docutils literal"><span class="pre">add_new_subsystem_to_ss()</span></code></a>, <em>u’member1_configuration’</em></li>
 <li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.log_out" title="common_lib.common_lib.Common_lib.log_out"><code class="xref py py-func docutils literal"><span class="pre">log_out()</span></code></a></li>
-<li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.sync_global_conf" title="common_lib.common_lib.Common_lib.sync_global_conf"><code class="xref py py-func docutils literal"><span class="pre">sync_global_conf()</span></code></a>, <em>self.parameters[u’ss1_url’][u’sync_timeout’]</em></li>
+<li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.sync_global_conf" title="common_lib.common_lib.Common_lib.sync_global_conf"><code class="xref py py-func docutils literal"><span class="pre">sync_global_conf()</span></code></a>, <em>TESTDATA[u’ss1_url’][u’sync_timeout’]</em></li>
 </ul>
 </dd>
 </dl>
@@ -315,7 +318,7 @@
 <dt><strong>Step 16: check registration complete</strong></dt>
 <dd><ul class="first last">
 <li><a class="reference internal" href="../common_lib/component_ss.html#common_lib.component_ss.Component_ss.login" title="common_lib.component_ss.Component_ss.login"><code class="xref py py-func docutils literal"><span class="pre">login()</span></code></a>, <em>u’ss1_url’</em></li>
-<li><a class="reference internal" href="../pagemodel/ss_clients.html#pagemodel.ss_clients.Ss_clients.verify_service_registration_complete" title="pagemodel.ss_clients.Ss_clients.verify_service_registration_complete"><code class="xref py py-func docutils literal"><span class="pre">verify_service_registration_complete()</span></code></a>, <em>self.parameters[u’member1_configuration’]</em></li>
+<li><a class="reference internal" href="../pagemodel/ss_clients.html#pagemodel.ss_clients.Ss_clients.verify_service_registration_complete" title="pagemodel.ss_clients.Ss_clients.verify_service_registration_complete"><code class="xref py py-func docutils literal"><span class="pre">verify_service_registration_complete()</span></code></a>, <em>TESTDATA[u’member1_configuration’]</em></li>
 <li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.log_out" title="common_lib.common_lib.Common_lib.log_out"><code class="xref py py-func docutils literal"><span class="pre">log_out()</span></code></a></li>
 </ul>
 </dd>
@@ -340,7 +343,7 @@
 <li><dl class="first docutils">
 <dt><strong>Step 1: read liityntapalvelin konfiguraatio parameters</strong></dt>
 <dd><ul class="first last">
-<li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.read_keskuspalvelin_konfiguraatio_parameters" title="common_lib.common_lib.Common_lib.read_keskuspalvelin_konfiguraatio_parameters"><code class="xref py py-func docutils literal"><span class="pre">read_keskuspalvelin_konfiguraatio_parameters()</span></code></a>, <em>self.parameters</em></li>
+<li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.read_keskuspalvelin_konfiguraatio_parameters" title="common_lib.common_lib.Common_lib.read_keskuspalvelin_konfiguraatio_parameters"><code class="xref py py-func docutils literal"><span class="pre">read_keskuspalvelin_konfiguraatio_parameters()</span></code></a>, <em>TESTDATA</em></li>
 </ul>
 </dd>
 </dl>
@@ -537,7 +540,7 @@
 <dd><ul class="first last">
 <li><a class="reference internal" href="../common_lib/component_cs_system_settings.html#common_lib.component_cs_system_settings.Component_cs_system_settings.register_subsystem_system_settings_in_cs" title="common_lib.component_cs_system_settings.Component_cs_system_settings.register_subsystem_system_settings_in_cs"><code class="xref py py-func docutils literal"><span class="pre">register_subsystem_system_settings_in_cs()</span></code></a>, <em>u’member_mgm_configuration’</em></li>
 <li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.log_out" title="common_lib.common_lib.Common_lib.log_out"><code class="xref py py-func docutils literal"><span class="pre">log_out()</span></code></a></li>
-<li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.sync_global_conf" title="common_lib.common_lib.Common_lib.sync_global_conf"><code class="xref py py-func docutils literal"><span class="pre">sync_global_conf()</span></code></a>, <em>self.parameters[u’cs_url’][u’sync_timeout’]</em></li>
+<li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.sync_global_conf" title="common_lib.common_lib.Common_lib.sync_global_conf"><code class="xref py py-func docutils literal"><span class="pre">sync_global_conf()</span></code></a>, <em>TESTDATA[u’cs_url’][u’sync_timeout’]</em></li>
 </ul>
 </dd>
 </dl>
@@ -613,7 +616,7 @@
 <li><dl class="first docutils">
 <dt><strong>Step 1: read liityntapalvelin konfiguraatio parameters</strong></dt>
 <dd><ul class="first last">
-<li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.read_liityntapalvelin_konfiguraatio_parameters" title="common_lib.common_lib.Common_lib.read_liityntapalvelin_konfiguraatio_parameters"><code class="xref py py-func docutils literal"><span class="pre">read_liityntapalvelin_konfiguraatio_parameters()</span></code></a>, <em>self.parameters</em></li>
+<li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.read_liityntapalvelin_konfiguraatio_parameters" title="common_lib.common_lib.Common_lib.read_liityntapalvelin_konfiguraatio_parameters"><code class="xref py py-func docutils literal"><span class="pre">read_liityntapalvelin_konfiguraatio_parameters()</span></code></a>, <em>TESTDATA</em></li>
 </ul>
 </dd>
 </dl>
@@ -732,7 +735,7 @@
 <li><dl class="first docutils">
 <dt><strong>Step 13: get wsdl and services address #webpage: cs_system_settings</strong></dt>
 <dd><ul class="first last">
-<li><a class="reference internal" href="../pagemodel/cs_system_settings.html#pagemodel.cs_system_settings.Cs_system_settings.get_wsdl_and_services_address" title="pagemodel.cs_system_settings.Cs_system_settings.get_wsdl_and_services_address"><code class="xref py py-func docutils literal"><span class="pre">get_wsdl_and_services_address()</span></code></a>, <em>self.parameters[u’cs_url’]</em></li>
+<li><a class="reference internal" href="../pagemodel/cs_system_settings.html#pagemodel.cs_system_settings.Cs_system_settings.get_wsdl_and_services_address" title="pagemodel.cs_system_settings.Cs_system_settings.get_wsdl_and_services_address"><code class="xref py py-func docutils literal"><span class="pre">get_wsdl_and_services_address()</span></code></a>, <em>TESTDATA[u’cs_url’]</em></li>
 <li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.log_out" title="common_lib.common_lib.Common_lib.log_out"><code class="xref py py-func docutils literal"><span class="pre">log_out()</span></code></a></li>
 </ul>
 </dd>
@@ -747,7 +750,7 @@
 <li><a class="reference internal" href="../pagemodel/cs_sec_servers_mgm_requests.html#pagemodel.cs_sec_servers_mgm_requests.Cs_sec_servers_mgm_requests.click_close_mgm_req_dlg" title="pagemodel.cs_sec_servers_mgm_requests.Cs_sec_servers_mgm_requests.click_close_mgm_req_dlg"><code class="xref py py-func docutils literal"><span class="pre">click_close_mgm_req_dlg()</span></code></a></li>
 <li><a class="reference internal" href="../common_lib/component_cs_members.html#common_lib.component_cs_members.Component_cs_members.close_member_details_dlg" title="common_lib.component_cs_members.Component_cs_members.close_member_details_dlg"><code class="xref py py-func docutils literal"><span class="pre">close_member_details_dlg()</span></code></a></li>
 <li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.log_out" title="common_lib.common_lib.Common_lib.log_out"><code class="xref py py-func docutils literal"><span class="pre">log_out()</span></code></a></li>
-<li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.sync_global_conf" title="common_lib.common_lib.Common_lib.sync_global_conf"><code class="xref py py-func docutils literal"><span class="pre">sync_global_conf()</span></code></a>, <em>self.parameters[u’ss1_url’][u’sync_timeout’]</em></li>
+<li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.sync_global_conf" title="common_lib.common_lib.Common_lib.sync_global_conf"><code class="xref py py-func docutils literal"><span class="pre">sync_global_conf()</span></code></a>, <em>TESTDATA[u’ss1_url’][u’sync_timeout’]</em></li>
 </ul>
 </dd>
 </dl>
@@ -758,7 +761,7 @@
 <li><a class="reference internal" href="../common_lib/component_ss.html#common_lib.component_ss.Component_ss.login" title="common_lib.component_ss.Component_ss.login"><code class="xref py py-func docutils literal"><span class="pre">login()</span></code></a>, <em>u’ss1_url’</em></li>
 <li><a class="reference internal" href="../common_lib/component_ss_clients.html#common_lib.component_ss_clients.Component_ss_clients.add_new_subsystem_to_ss" title="common_lib.component_ss_clients.Component_ss_clients.add_new_subsystem_to_ss"><code class="xref py py-func docutils literal"><span class="pre">add_new_subsystem_to_ss()</span></code></a>, <em>u’member1_configuration’</em></li>
 <li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.log_out" title="common_lib.common_lib.Common_lib.log_out"><code class="xref py py-func docutils literal"><span class="pre">log_out()</span></code></a></li>
-<li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.sync_global_conf" title="common_lib.common_lib.Common_lib.sync_global_conf"><code class="xref py py-func docutils literal"><span class="pre">sync_global_conf()</span></code></a>, <em>self.parameters[u’ss1_url’][u’sync_timeout’]</em></li>
+<li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.sync_global_conf" title="common_lib.common_lib.Common_lib.sync_global_conf"><code class="xref py py-func docutils literal"><span class="pre">sync_global_conf()</span></code></a>, <em>TESTDATA[u’ss1_url’][u’sync_timeout’]</em></li>
 </ul>
 </dd>
 </dl>
@@ -786,7 +789,7 @@
 <li><dl class="first docutils">
 <dt><strong>Step 18: check service registration complete #webpage: ss_clients #parameters: server_configuration</strong></dt>
 <dd><ul class="first last">
-<li><a class="reference internal" href="../pagemodel/ss_clients.html#pagemodel.ss_clients.Ss_clients.verify_service_registration_complete" title="pagemodel.ss_clients.Ss_clients.verify_service_registration_complete"><code class="xref py py-func docutils literal"><span class="pre">verify_service_registration_complete()</span></code></a>, <em>self.parameters[u’member1_configuration’]</em></li>
+<li><a class="reference internal" href="../pagemodel/ss_clients.html#pagemodel.ss_clients.Ss_clients.verify_service_registration_complete" title="pagemodel.ss_clients.Ss_clients.verify_service_registration_complete"><code class="xref py py-func docutils literal"><span class="pre">verify_service_registration_complete()</span></code></a>, <em>TESTDATA[u’member1_configuration’]</em></li>
 <li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.log_out" title="common_lib.common_lib.Common_lib.log_out"><code class="xref py py-func docutils literal"><span class="pre">log_out()</span></code></a></li>
 </ul>
 </dd>
@@ -811,7 +814,7 @@
 <li><dl class="first docutils">
 <dt><strong>Step 1: read liityntapalvelin konfiguraatio parameters</strong></dt>
 <dd><ul class="first last">
-<li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.read_liityntapalvelin_konfiguraatio_parameters" title="common_lib.common_lib.Common_lib.read_liityntapalvelin_konfiguraatio_parameters"><code class="xref py py-func docutils literal"><span class="pre">read_liityntapalvelin_konfiguraatio_parameters()</span></code></a>, <em>self.parameters</em></li>
+<li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.read_liityntapalvelin_konfiguraatio_parameters" title="common_lib.common_lib.Common_lib.read_liityntapalvelin_konfiguraatio_parameters"><code class="xref py py-func docutils literal"><span class="pre">read_liityntapalvelin_konfiguraatio_parameters()</span></code></a>, <em>TESTDATA</em></li>
 </ul>
 </dd>
 </dl>
@@ -930,7 +933,7 @@
 <li><dl class="first docutils">
 <dt><strong>Step 13: get wsdl and services address #webpage: cs_system_settings</strong></dt>
 <dd><ul class="first last">
-<li><a class="reference internal" href="../pagemodel/cs_system_settings.html#pagemodel.cs_system_settings.Cs_system_settings.get_wsdl_and_services_address" title="pagemodel.cs_system_settings.Cs_system_settings.get_wsdl_and_services_address"><code class="xref py py-func docutils literal"><span class="pre">get_wsdl_and_services_address()</span></code></a>, <em>self.parameters[u’cs_url’]</em></li>
+<li><a class="reference internal" href="../pagemodel/cs_system_settings.html#pagemodel.cs_system_settings.Cs_system_settings.get_wsdl_and_services_address" title="pagemodel.cs_system_settings.Cs_system_settings.get_wsdl_and_services_address"><code class="xref py py-func docutils literal"><span class="pre">get_wsdl_and_services_address()</span></code></a>, <em>TESTDATA[u’cs_url’]</em></li>
 <li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.log_out" title="common_lib.common_lib.Common_lib.log_out"><code class="xref py py-func docutils literal"><span class="pre">log_out()</span></code></a></li>
 </ul>
 </dd>
@@ -945,7 +948,7 @@
 <li><a class="reference internal" href="../pagemodel/cs_sec_servers_mgm_requests.html#pagemodel.cs_sec_servers_mgm_requests.Cs_sec_servers_mgm_requests.click_close_mgm_req_dlg" title="pagemodel.cs_sec_servers_mgm_requests.Cs_sec_servers_mgm_requests.click_close_mgm_req_dlg"><code class="xref py py-func docutils literal"><span class="pre">click_close_mgm_req_dlg()</span></code></a></li>
 <li><a class="reference internal" href="../common_lib/component_cs_members.html#common_lib.component_cs_members.Component_cs_members.close_member_details_dlg" title="common_lib.component_cs_members.Component_cs_members.close_member_details_dlg"><code class="xref py py-func docutils literal"><span class="pre">close_member_details_dlg()</span></code></a></li>
 <li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.log_out" title="common_lib.common_lib.Common_lib.log_out"><code class="xref py py-func docutils literal"><span class="pre">log_out()</span></code></a></li>
-<li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.sync_global_conf" title="common_lib.common_lib.Common_lib.sync_global_conf"><code class="xref py py-func docutils literal"><span class="pre">sync_global_conf()</span></code></a>, <em>self.parameters[u’ss2_url’][u’sync_timeout’]</em></li>
+<li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.sync_global_conf" title="common_lib.common_lib.Common_lib.sync_global_conf"><code class="xref py py-func docutils literal"><span class="pre">sync_global_conf()</span></code></a>, <em>TESTDATA[u’ss2_url’][u’sync_timeout’]</em></li>
 </ul>
 </dd>
 </dl>
@@ -956,7 +959,7 @@
 <li><a class="reference internal" href="../common_lib/component_ss.html#common_lib.component_ss.Component_ss.login" title="common_lib.component_ss.Component_ss.login"><code class="xref py py-func docutils literal"><span class="pre">login()</span></code></a>, <em>u’ss2_url’</em></li>
 <li><a class="reference internal" href="../common_lib/component_ss_clients.html#common_lib.component_ss_clients.Component_ss_clients.add_new_subsystem_to_ss" title="common_lib.component_ss_clients.Component_ss_clients.add_new_subsystem_to_ss"><code class="xref py py-func docutils literal"><span class="pre">add_new_subsystem_to_ss()</span></code></a>, <em>u’member2_configuration’</em></li>
 <li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.log_out" title="common_lib.common_lib.Common_lib.log_out"><code class="xref py py-func docutils literal"><span class="pre">log_out()</span></code></a></li>
-<li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.sync_global_conf" title="common_lib.common_lib.Common_lib.sync_global_conf"><code class="xref py py-func docutils literal"><span class="pre">sync_global_conf()</span></code></a>, <em>self.parameters[u’ss2_url’][u’sync_timeout’]</em></li>
+<li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.sync_global_conf" title="common_lib.common_lib.Common_lib.sync_global_conf"><code class="xref py py-func docutils literal"><span class="pre">sync_global_conf()</span></code></a>, <em>TESTDATA[u’ss2_url’][u’sync_timeout’]</em></li>
 </ul>
 </dd>
 </dl>
@@ -984,7 +987,7 @@
 <li><dl class="first docutils">
 <dt><strong>Step 18: check service registration complete #webpage: ss_clients #parameters: server_configuration</strong></dt>
 <dd><ul class="first last">
-<li><a class="reference internal" href="../pagemodel/ss_clients.html#pagemodel.ss_clients.Ss_clients.verify_service_registration_complete" title="pagemodel.ss_clients.Ss_clients.verify_service_registration_complete"><code class="xref py py-func docutils literal"><span class="pre">verify_service_registration_complete()</span></code></a>, <em>self.parameters[u’member2_configuration’]</em></li>
+<li><a class="reference internal" href="../pagemodel/ss_clients.html#pagemodel.ss_clients.Ss_clients.verify_service_registration_complete" title="pagemodel.ss_clients.Ss_clients.verify_service_registration_complete"><code class="xref py py-func docutils literal"><span class="pre">verify_service_registration_complete()</span></code></a>, <em>TESTDATA[u’member2_configuration’]</em></li>
 <li><a class="reference internal" href="../common_lib/common_lib.html#common_lib.common_lib.Common_lib.log_out" title="common_lib.common_lib.Common_lib.log_out"><code class="xref py py-func docutils literal"><span class="pre">log_out()</span></code></a></li>
 </ul>
 </dd>

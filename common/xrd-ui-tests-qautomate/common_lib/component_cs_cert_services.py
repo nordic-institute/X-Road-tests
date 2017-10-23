@@ -30,16 +30,6 @@ class Component_cs_cert_services(CommonUtils):
     cs_cert_services_ocsp_add_new_dlg = Cs_cert_services_ocsp_add_new_dlg()
     cs_cert_services_dlg_ca_settings = Cs_cert_services_dlg_ca_settings()
 
-    def __init__(self):
-        """
-        Initilization method for moving test data to class
-
-        *Updated: 11.07.2017*
-
-        :param parameters:  Test data section dictionary
-        """
-        CommonUtils.__init__(self)
-
     def upload_ca_certificate(self, section1=u'paths', section2=u'cs_url'):
         """
         Uploda ca certificate
@@ -50,7 +40,7 @@ class Component_cs_cert_services(CommonUtils):
         :param section2:  Test data section name
         
         **Test steps:**
-                * **Step 3:** :func:`~common_lib.common_lib.Common_lib.type_file_name_pyautogui`, *type_string*
+                * **Step 1:** :func:`~common_lib.common_lib.Common_lib.type_file_name_pyautogui`, *type_string*
         """
         sleep(2)
         type_string = os.path.join(os.getcwd(),
@@ -75,7 +65,7 @@ class Component_cs_cert_services(CommonUtils):
                 * **Step 1:** :func:`~pagemodel.cs_cert_services.Cs_cert_services.click_button_id_ca_add`
                 * **Step 2:** :func:`~pagemodel.cs_cert_services_insert_service_ca_cert.Cs_cert_services_insert_service_ca_cert.click_button_browse`
                 * **Step 4:** :func:`~pagemodel.cs_cert_services_insert_service_ca_cert.Cs_cert_services_insert_service_ca_cert.click_button_next`
-                * **Step 5:** :func:`~pagemodel.cs_cert_services_dlg_ca_settings.Cs_cert_services_dlg_ca_settings.input_text_to_cert_profile_info_text`, *self.parameters[section3]*
+                * **Step 5:** :func:`~pagemodel.cs_cert_services_dlg_ca_settings.Cs_cert_services_dlg_ca_settings.input_text_to_cert_profile_info_text`, *TESTDATA[section3]*
                 * **Step 6:** :func:`~pagemodel.cs_cert_services_dlg_ca_settings.Cs_cert_services_dlg_ca_settings.click_button_id_ca_settings_submit`
                 * **Step 7:** :func:`~pagemodel.ca_cert_services_ca_details.Ca_cert_services_ca_details.click_button_close`
         """
@@ -100,7 +90,7 @@ class Component_cs_cert_services(CommonUtils):
                 * **Step 2:** :func:`~pagemodel.cs_cert_services.Cs_cert_services.click_button_id_ca_details`
                 * **Step 3:** :func:`~pagemodel.ca_cert_services_ca_details.Ca_cert_services_ca_details.click_oscp_responders`
                 * **Step 4:** :func:`~pagemodel.cs_cert_services_ocsp_responder_dlg.Cs_cert_services_ocsp_responder_dlg.click_button_id_ocsp_responder_add`
-                * **Step 5:** :func:`~pagemodel.cs_cert_services_ocsp_add_new_dlg.Cs_cert_services_ocsp_add_new_dlg.input_text_to_id_ocsp_responder_url`, *self.parameters[section]*
+                * **Step 5:** :func:`~pagemodel.cs_cert_services_ocsp_add_new_dlg.Cs_cert_services_ocsp_add_new_dlg.input_text_to_id_ocsp_responder_url`, *TESTDATA[section]*
                 * **Step 6:** :func:`~pagemodel.cs_cert_services_ocsp_add_new_dlg.Cs_cert_services_ocsp_add_new_dlg.click_button_ok`
                 * **Step 7:** :func:`~pagemodel.cs_cert_services_ocsp_responder_dlg.Cs_cert_services_ocsp_responder_dlg.click_button_close`
         """

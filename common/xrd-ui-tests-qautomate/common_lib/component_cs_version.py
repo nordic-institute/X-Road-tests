@@ -8,9 +8,6 @@ from pagemodel.ss_version import Ss_version
 class Component_component_cs_version(CommonUtils):
     ss_version = Ss_version()
 
-    def __init__(self):
-        CommonUtils.__init__(self)
-
     def verify_version(self, text=u'Central Server version 6'):
         """
         Verify version view contains right version

@@ -41,9 +41,8 @@ class Xroad_test_service(BaseTest):
     Xroad cases for testing enabling wsdl services and sending messages
 
     **Changelog:**
-
-    * 11.07.2017
-        | Documentation updated
+        * 11.07.2017
+            | Documentation updated
     """
     common_utils = CommonUtils()
     common_lib = Common_lib()
@@ -101,10 +100,10 @@ class Xroad_test_service(BaseTest):
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.ss_clients_add_client.Ss_clients_add_client.cancel_client_adding`
                 * **Step 2:** :func:`~common_lib.common_lib.Common_lib.log_out`
-                * **Step 3:** :func:`~pagemodel.open_application.Open_application.open_application_url`, *self.parameters[u'ss1_static_url']*
-                * **Step 4:** :func:`~pagemodel.ss_login.Ss_login.login`, *self.parameters[u'ss1_static_url']*
+                * **Step 3:** :func:`~pagemodel.open_application.Open_application.open_application_url`, *TESTDATA[u'ss1_static_url']*
+                * **Step 4:** :func:`~pagemodel.ss_login.Ss_login.login`, *TESTDATA[u'ss1_static_url']*
                 * **Step 5:** :func:`~pagemodel.ss_sidebar.Ss_sidebar.verify_sidebar_title`
-                * **Step 6:** :func:`~pagemodel.ss_clients.Ss_clients.click_and_open_details_of_client_in_table`, *self.parameters[u'member_static_configuration']*
+                * **Step 6:** :func:`~pagemodel.ss_clients.Ss_clients.click_and_open_details_of_client_in_table`, *TESTDATA[u'member_static_configuration']*
                 * **Step 7:** :func:`~pagemodel.ss_client_dlg_details.Ss_client_dlg_details.click_unregister_client`
                 * **Step 8:** :func:`~pagemodel.ss_client_dlg_unregister.Ss_client_dlg_unregister.click_confirm_unregister`
                 * **Step 9:** :func:`~pagemodel.ss_client_dlg_delete_unregister.Ss_client_dlg_delete_unregister.click_client_delete`
@@ -162,13 +161,13 @@ class Xroad_test_service(BaseTest):
                 * :func:`~pagemodel.cs_members_details_dlg.Cs_members_details_dlg.click_button_close`
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
             * **Step 5: login ss1 server**
-                * :func:`~pagemodel.open_application.Open_application.open_application_url`, *self.parameters[u'ss1_static_url']*
+                * :func:`~pagemodel.open_application.Open_application.open_application_url`, *TESTDATA[u'ss1_static_url']*
             * **Step 6: login #webpage: ss_login**
                 * :func:`~common_lib.component_ss.Component_ss.login`, *u'ss1_static_url'*
             * **Step 7: check service registration complete #webpage: ss_clients #parameters:**
-                * :func:`~pagemodel.ss_clients.Ss_clients.verify_service_registration_complete`, *self.parameters[u'member_static_configuration']*
+                * :func:`~pagemodel.ss_clients.Ss_clients.verify_service_registration_complete`, *TESTDATA[u'member_static_configuration']*
             * **Step 8: verify soap message**
-                * :func:`~common_lib.common_lib.Common_lib.send_soap_api_request_hello`, *self.parameters['soap']*
+                * :func:`~common_lib.common_lib.Common_lib.send_soap_api_request_hello`, *TESTDATA['soap']*
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
         """
         self.component_ss.login(u'ss1_static_url')

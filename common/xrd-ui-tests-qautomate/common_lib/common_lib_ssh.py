@@ -26,7 +26,6 @@ class Common_lib_ssh(CommonUtils):
 
         *Updated: 11.07.2017*
 
-        :param parameters:  Test data section dictionary
         """
         CommonUtils.__init__(self)
         self.log_file_output = ""
@@ -116,6 +115,9 @@ class Common_lib_ssh(CommonUtils):
             self.run_bash_command(command, True)
 
     def delete_files_from_directory(self, section="cs_url", path=u'/var/lib/xroad/backup'):
+        """
+        :param section:  Test data section name
+        """
         server = TESTDATA[section][u'server_address']
         if strings.server_environment_type() == strings.lxd_type_environment:
             server = server.split(".lxd")[0]
@@ -128,6 +130,9 @@ class Common_lib_ssh(CommonUtils):
         self.run_bash_command(command, True)
 
     def generate_empty_file(self, section, path):
+        """
+        :param section:  Test data section name
+        """
         server = TESTDATA[section][u'server_address']
         if strings.server_environment_type() == strings.lxd_type_environment:
             server = server.split(".lxd")[0]
@@ -140,6 +145,9 @@ class Common_lib_ssh(CommonUtils):
         self.run_bash_command(command, True)
 
     def change_file_permission(self, section, path, permission):
+        """
+        :param section:  Test data section name
+        """
         server = TESTDATA[section][u'server_address']
         if strings.server_environment_type() == strings.lxd_type_environment:
             server = server.split(".lxd")[0]
@@ -152,6 +160,9 @@ class Common_lib_ssh(CommonUtils):
         self.run_bash_command(command, True)
 
     def move_file(self, section, move_from, move_to):
+        """
+        :param section:  Test data section name
+        """
         server = TESTDATA[section][u'server_address']
         if strings.server_environment_type() == strings.lxd_type_environment:
             server = server.split(".lxd")[0]

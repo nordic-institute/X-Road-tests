@@ -34,16 +34,6 @@ class Component_cs_system_settings(CommonUtils):
     cs_initial_conf_initilialized_dlg = Cs_initial_conf_initilialized_dlg()
     cs_system_settings_change_cs_address_dlg = Cs_system_settings_change_cs_address_dlg()
 
-    def __init__(self):
-        """
-        Initilization method for moving test data to class
-
-        *Updated: 11.07.2017*
-
-        :param parameters:  Test data section dictionary
-        """
-        CommonUtils.__init__(self)
-
     def register_subsystem_system_settings_in_cs(self, section=u'member_mgm_configuration'):
         """
         Register subsystem settings in central server
@@ -55,7 +45,7 @@ class Component_cs_system_settings(CommonUtils):
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.cs_system_settings.Cs_system_settings.click_element_id_service_provider_security_server_register`
                 * **Step 2:** :func:`~pagemodel.cs_system_settings_mgm_sp_reg_req_dlg.Cs_system_settings_mgm_sp_reg_req_dlg.click_button_id_used_server_server_search`
-                * **Step 3:** :func:`~pagemodel.cs_system_settings_mgm_req_servers_dlg.Cs_system_settings_mgm_req_servers_dlg.click_server_from_table_usedserversearchall`, *self.parameters[section]*
+                * **Step 3:** :func:`~pagemodel.cs_system_settings_mgm_req_servers_dlg.Cs_system_settings_mgm_req_servers_dlg.click_server_from_table_usedserversearchall`, *TESTDATA[section]*
                 * **Step 4:** :func:`~pagemodel.cs_system_settings_mgm_req_servers_dlg.Cs_system_settings_mgm_req_servers_dlg.click_button_select`
                 * **Step 5:** :func:`~pagemodel.cs_system_settings_mgm_sp_reg_req_dlg.Cs_system_settings_mgm_sp_reg_req_dlg.click_button_submit`
         """
@@ -74,7 +64,7 @@ class Component_cs_system_settings(CommonUtils):
         :param section:  Test data section name
         
         **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_system_settings.Cs_system_settings.get_wsdl_and_services_address`, *self.parameters[section]*
+                * **Step 1:** :func:`~pagemodel.cs_system_settings.Cs_system_settings.get_wsdl_and_services_address`, *TESTDATA[section]*
         """
         self.cs_system_settings.get_wsdl_and_services_address(TESTDATA[section])
 
@@ -89,7 +79,7 @@ class Component_cs_system_settings(CommonUtils):
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.cs_system_settings.Cs_system_settings.click_button_id_service_provider_edit`
                 * **Step 2:** :func:`~pagemodel.cs_system_settings_search_member.Cs_system_settings_search_member.wait_until_element_is_visible_type`
-                * **Step 3:** :func:`~pagemodel.cs_system_settings_search_member.Cs_system_settings_search_member.click_member_from_table_membersearch`, *self.parameters[section]*
+                * **Step 3:** :func:`~pagemodel.cs_system_settings_search_member.Cs_system_settings_search_member.click_member_from_table_membersearch`, *TESTDATA[section]*
                 * **Step 4:** :func:`~pagemodel.cs_system_settings_search_member.Cs_system_settings_search_member.click_element_dlg_select`
         """
         self.cs_system_settings.click_button_id_service_provider_edit()
@@ -108,7 +98,7 @@ class Component_cs_system_settings(CommonUtils):
         :param section:  Test data section name
         
         **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_initial_configuration.Cs_initial_configuration.fill_input_values_init`, *self.parameters[section]*
+                * **Step 1:** :func:`~pagemodel.cs_initial_configuration.Cs_initial_configuration.fill_input_values_init`, *TESTDATA[section]*
                 * **Step 2:** :func:`~pagemodel.cs_initial_configuration.Cs_initial_configuration.submit_init_noname1`
                 * **Step 3:** :func:`~pagemodel.cs_initial_conf_initilialized_dlg.Cs_initial_conf_initilialized_dlg.click_button_ok`
                 * **Step 4:** :func:`~pagemodel.cs_sidebar.Cs_sidebar.verify_central_server_title`
@@ -129,8 +119,8 @@ class Component_cs_system_settings(CommonUtils):
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.cs_sidebar.Cs_sidebar.click_link_data_name_system_settings`
                 * **Step 2:** :func:`~pagemodel.cs_system_settings.Cs_system_settings.click_button_add_icon`
-                * **Step 3:** :func:`~pagemodel.cs_system_settings_add_member_class.Cs_system_settings_add_member_class.input_text_to_name_member_class_fill_text`, *self.parameters[section]*
-                * **Step 4:** :func:`~pagemodel.cs_system_settings_add_member_class.Cs_system_settings_add_member_class.input_text_name_member_class_description`, *self.parameters[section]*
+                * **Step 3:** :func:`~pagemodel.cs_system_settings_add_member_class.Cs_system_settings_add_member_class.input_text_to_name_member_class_fill_text`, *TESTDATA[section]*
+                * **Step 4:** :func:`~pagemodel.cs_system_settings_add_member_class.Cs_system_settings_add_member_class.input_text_name_member_class_description`, *TESTDATA[section]*
                 * **Step 5:** :func:`~pagemodel.cs_system_settings_add_member_class.Cs_system_settings_add_member_class.click_button_ok`
         """
         self.cs_sidebar.click_link_data_name_system_settings()
@@ -185,6 +175,6 @@ class Component_cs_system_settings(CommonUtils):
         :param section:  Test data section name
         
         **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_system_settings_change_cs_address_dlg.Cs_system_settings_change_cs_address_dlg.input_server_address`, *self.parameters[section]*
+                * **Step 1:** :func:`~pagemodel.cs_system_settings_change_cs_address_dlg.Cs_system_settings_change_cs_address_dlg.input_server_address`, *TESTDATA[section]*
         """
         self.cs_system_settings_change_cs_address_dlg.input_server_address(TESTDATA[section])

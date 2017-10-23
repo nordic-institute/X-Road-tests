@@ -18,16 +18,6 @@ class Component_cs_mgm_requests(CommonUtils):
     cs_mgm_requests_dlg_reg_details = Cs_mgm_requests_dlg_reg_details()
     cs_mgm_requests = Cs_mgm_requests()
 
-    def __init__(self):
-        """
-        Initilization method for moving test data to class
-
-        *Updated: 11.07.2017*
-
-        :param parameters:  Test data section dictionary
-        """
-        CommonUtils.__init__(self)
-
     def verify_comment_in_request_details_dlg(self, text=None):
         """
         Verify comment in request details dialog

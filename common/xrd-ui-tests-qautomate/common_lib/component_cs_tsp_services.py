@@ -22,16 +22,6 @@ class Component_cs_tsp_services(CommonUtils):
     cs_time_stamping_services_add_dlg = Cs_time_stamping_services_add_dlg()
     cs_time_stamping_services = Cs_time_stamping_services()
 
-    def __init__(self):
-        """
-        Initilization method for moving test data to class
-
-        *Updated: 11.07.2017*
-
-        :param parameters:  Test data section dictionary
-        """
-        CommonUtils.__init__(self)
-
     def upload_tsa_certificate(self, section1=u'paths', section2=u'cs_url'):
         """
         Upload tsa certificate
@@ -42,7 +32,7 @@ class Component_cs_tsp_services(CommonUtils):
         :param section2:  Test data section name
         
         **Test steps:**
-                * **Step 3:** :func:`~common_lib.common_lib.Common_lib.type_file_name_pyautogui`, *type_string*
+                * **Step 1:** :func:`~common_lib.common_lib.Common_lib.type_file_name_pyautogui`, *type_string*
         """
         sleep(2)
         type_string = os.path.join(os.getcwd(),
@@ -64,7 +54,7 @@ class Component_cs_tsp_services(CommonUtils):
         
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.cs_time_stamping_services.Cs_time_stamping_services.click_button_id_tsp_add`
-                * **Step 2:** :func:`~pagemodel.cs_time_stamping_services_add_dlg.Cs_time_stamping_services_add_dlg.input_text_to_id_tsp_url`, *self.parameters[section2]*
+                * **Step 2:** :func:`~pagemodel.cs_time_stamping_services_add_dlg.Cs_time_stamping_services_add_dlg.input_text_to_id_tsp_url`, *TESTDATA[section2]*
                 * **Step 3:** :func:`~pagemodel.cs_time_stamping_services_add_dlg.Cs_time_stamping_services_add_dlg.click_button_upload`
                 * **Step 5:** :func:`~pagemodel.cs_time_stamping_services_add_dlg.Cs_time_stamping_services_add_dlg.click_button_ok`
         """

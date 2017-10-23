@@ -50,11 +50,10 @@ class Xroad_global_configuration(SetupTest):
             * 4a: The inserted address is not valid
 
     **Changelog:**
-
-    * 20.09.2017
-        | Links added to md use case documentation
-    * 11.07.2017
-        | Documentation updated
+        * 20.09.2017
+            | Links added to md use case documentation
+        * 11.07.2017
+            | Documentation updated
     """
     common_utils = CommonUtils()
     open_application = Open_application()
@@ -110,7 +109,7 @@ class Xroad_global_configuration(SetupTest):
 
         **Test steps:**
             * **Step 1: log out if logged in**
-                * :func:`~pagemodel.open_application.Open_application.open_application_url`, *self.parameters[u'cs_url']*
+                * :func:`~pagemodel.open_application.Open_application.open_application_url`, *TESTDATA[u'cs_url']*
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
         """
         stop_log_time = self.common_lib.get_log_utc_time()

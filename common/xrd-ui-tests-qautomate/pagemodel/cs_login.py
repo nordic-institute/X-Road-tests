@@ -52,7 +52,7 @@ class Cs_login(CommonUtils):
         Login to central server
 
         :param parameters:  Test data section dictionary
-
+        
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.input_text`, *self.ID_J_USERNAME*, *parameters[u'j_username']*
             * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.input_text`, *self.ID_J_PASSWORD*, *parameters[u'j_password']*
@@ -68,5 +68,6 @@ class Cs_login(CommonUtils):
     def verify_is_login_page(self, parameters=None):
         """
         Verify page is login page
+        :param parameters:  Test data section dictionary
         """
         return self.is_visible(self.ID_J_USERNAME)

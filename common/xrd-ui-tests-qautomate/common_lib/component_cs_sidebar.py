@@ -18,16 +18,6 @@ class Component_cs_sidebar(CommonUtils):
     common_lib = Common_lib()
     cs_sidebar = Cs_sidebar()
 
-    def __init__(self):
-        """
-        Initilization method for moving test data to class
-
-        *Updated: 11.07.2017*
-
-        :param parameters:  Test data section dictionary
-        """
-        CommonUtils.__init__(self)
-
     def open_members_view(self):
         """
         Open members view in central server

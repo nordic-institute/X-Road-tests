@@ -48,9 +48,8 @@ class Xroad_install_ui_configuration(SetupTest):
     Xroad cases for installing ui configurations
 
     **Changelog:**
-
-    * 11.07.2017
-        | Documentation updated
+        * 11.07.2017
+            | Documentation updated
     """
     start_log_time = ""
     common_utils = CommonUtils()
@@ -123,7 +122,7 @@ class Xroad_install_ui_configuration(SetupTest):
         *Updated: 11.07.2017*
 
         **Test steps:**
-                * **Step 1:** :func:`~common_lib.common_lib.Common_lib.remove_anchor_and_certs_from_downloads`, *self.parameters[u'paths']*
+                * **Step 1:** :func:`~common_lib.common_lib.Common_lib.remove_anchor_and_certs_from_downloads`, *TESTDATA[u'paths']*
                 * **Step 2:** :func:`~pagemodel.start_log_time = self.Start_log_time = self.common_lib`
                 * **Step 3:** :func:`~common_lib.common_lib_ssh.Common_lib_ssh.empty_all_logs_from_server`, *"ss1_url"*
                 * **Step 4:** :func:`~common_lib.common_lib_ssh.Common_lib_ssh.empty_all_logs_from_server`, *"cs_url"*
@@ -149,7 +148,7 @@ class Xroad_install_ui_configuration(SetupTest):
                 * **Step 5:** :func:`~common_lib.common_lib_ssh.Common_lib_ssh.get_all_logs_from_server`, *u'ss1_url'*
                 * **Step 6:** :func:`~common_lib.common_lib_ssh.Common_lib_ssh.find_exception_from_logs_and_save`, *self.start_log_time*, *stop_log_time*, *u'ss1_url'*, *copy_log*
                 * **Step 7:** :func:`~common_lib.common_lib.Common_lib.get_ui_error_message`
-                * **Step 8:** :func:`~common_lib.common_lib.Common_lib.remove_anchor_and_certs_from_downloads`, *self.parameters[u'paths']*
+                * **Step 8:** :func:`~common_lib.common_lib.Common_lib.remove_anchor_and_certs_from_downloads`, *TESTDATA[u'paths']*
         """
         stop_log_time = self.common_lib.get_log_utc_time()
         if not self.is_last_test_passed():
@@ -172,7 +171,7 @@ class Xroad_install_ui_configuration(SetupTest):
 
         **Test steps:**
             * **Step 1: read liityntapalvelin konfiguraatio parameters**
-                * :func:`~common_lib.common_lib.Common_lib.read_liityntapalvelin_konfiguraatio_parameters`, *self.parameters*
+                * :func:`~common_lib.common_lib.Common_lib.read_liityntapalvelin_konfiguraatio_parameters`, *TESTDATA*
             * **Step 2: find existing member in central server**
                 * :func:`~common_lib.component_cs.Component_cs.login`, *u'cs_url'*
                 * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_members_view`
@@ -220,7 +219,7 @@ class Xroad_install_ui_configuration(SetupTest):
                 * :func:`~common_lib.component_cs_members.Component_cs_members.accept_auth_certificate_request_in_cs`, *u'member1_configuration'*
             * **Step 12: get wsdl address**
                 * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_system_settings_view`
-                * :func:`~pagemodel.cs_system_settings.Cs_system_settings.get_wsdl_and_services_address`, *self.parameters[u'cs_url']*
+                * :func:`~pagemodel.cs_system_settings.Cs_system_settings.get_wsdl_and_services_address`, *TESTDATA[u'cs_url']*
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
             * **Step 13: add subsystem to central server**
                 * :func:`~common_lib.component_cs.Component_cs.login`, *u'cs_url'*
@@ -229,13 +228,13 @@ class Xroad_install_ui_configuration(SetupTest):
                 * :func:`~pagemodel.cs_sec_servers_mgm_requests.Cs_sec_servers_mgm_requests.click_close_mgm_req_dlg`
                 * :func:`~common_lib.component_cs_members.Component_cs_members.close_member_details_dlg`
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
-                * :func:`~common_lib.common_lib.Common_lib.sync_global_conf`, *self.parameters[u'ss1_url'][u'sync_timeout']*
+                * :func:`~common_lib.common_lib.Common_lib.sync_global_conf`, *TESTDATA[u'ss1_url'][u'sync_timeout']*
             * **Step 14: add subsystem to security server**
                 * :func:`~common_lib.component_ss.Component_ss.login`, *u'ss1_url'*
-                * :func:`~pagemodel.ss_clients.Ss_clients.verify_service_registration_complete`, *self.parameters[u'member1_configuration']*
+                * :func:`~pagemodel.ss_clients.Ss_clients.verify_service_registration_complete`, *TESTDATA[u'member1_configuration']*
                 * :func:`~common_lib.component_ss_clients.Component_ss_clients.add_new_subsystem_to_ss`, *u'member1_configuration'*
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
-                * :func:`~common_lib.common_lib.Common_lib.sync_global_conf`, *self.parameters[u'ss1_url'][u'sync_timeout']*
+                * :func:`~common_lib.common_lib.Common_lib.sync_global_conf`, *TESTDATA[u'ss1_url'][u'sync_timeout']*
             * **Step 15: accept subsystem in in central server**
                 * :func:`~common_lib.component_cs.Component_cs.login`, *u'cs_url'*
                 * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_members_view`
@@ -243,7 +242,7 @@ class Xroad_install_ui_configuration(SetupTest):
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
             * **Step 16: check registration complete**
                 * :func:`~common_lib.component_ss.Component_ss.login`, *u'ss1_url'*
-                * :func:`~pagemodel.ss_clients.Ss_clients.verify_service_registration_complete`, *self.parameters[u'member1_configuration']*
+                * :func:`~pagemodel.ss_clients.Ss_clients.verify_service_registration_complete`, *TESTDATA[u'member1_configuration']*
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
         """
         # Step Read liityntapalvelin konfiguraatio parameters
@@ -350,7 +349,7 @@ class Xroad_install_ui_configuration(SetupTest):
 
         **Test steps:**
             * **Step 1: read liityntapalvelin konfiguraatio parameters**
-                * :func:`~common_lib.common_lib.Common_lib.read_keskuspalvelin_konfiguraatio_parameters`, *self.parameters*
+                * :func:`~common_lib.common_lib.Common_lib.read_keskuspalvelin_konfiguraatio_parameters`, *TESTDATA*
             * **Step 2: initialize server and add new member in central server**
                 * :func:`~common_lib.component_cs.Component_cs.login`, *u'cs_url'*, *initial_conf=True*
                 * :func:`~common_lib.component_cs_system_settings.Component_cs_system_settings.initialize_cs_server_config`, *u'cs_url'*
@@ -427,7 +426,7 @@ class Xroad_install_ui_configuration(SetupTest):
             * **Step 21: register subsystem in central server**
                 * :func:`~common_lib.component_cs_system_settings.Component_cs_system_settings.register_subsystem_system_settings_in_cs`, *u'member_mgm_configuration'*
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
-                * :func:`~common_lib.common_lib.Common_lib.sync_global_conf`, *self.parameters[u'cs_url'][u'sync_timeout']*
+                * :func:`~common_lib.common_lib.Common_lib.sync_global_conf`, *TESTDATA[u'cs_url'][u'sync_timeout']*
             * **Step 22: add subsystem to security server**
                 * :func:`~common_lib.component_ss.Component_ss.login`, *u'ss_mgm_url'*
                 * :func:`~pagemodel.ss_sidebar.Ss_sidebar.verify_sidebar_title`
@@ -596,7 +595,7 @@ class Xroad_install_ui_configuration(SetupTest):
 
         **Test steps:**
             * **Step 1: read liityntapalvelin konfiguraatio parameters**
-                * :func:`~common_lib.common_lib.Common_lib.read_liityntapalvelin_konfiguraatio_parameters`, *self.parameters*
+                * :func:`~common_lib.common_lib.Common_lib.read_liityntapalvelin_konfiguraatio_parameters`, *TESTDATA*
             * **Step 2: add new member to central server**
                 * :func:`~common_lib.component_cs.Component_cs.login`, *u'cs_url'*
                 * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_members_view`
@@ -643,7 +642,7 @@ class Xroad_install_ui_configuration(SetupTest):
             * **Step 12: get wsdl address**
                 * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_system_settings_view`
             * **Step 13: get wsdl and services address #webpage: cs_system_settings**
-                * :func:`~pagemodel.cs_system_settings.Cs_system_settings.get_wsdl_and_services_address`, *self.parameters[u'cs_url']*
+                * :func:`~pagemodel.cs_system_settings.Cs_system_settings.get_wsdl_and_services_address`, *TESTDATA[u'cs_url']*
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
             * **Step 14: add subsystem to central server**
                 * :func:`~common_lib.component_cs.Component_cs.login`, *u'cs_url'*
@@ -652,12 +651,12 @@ class Xroad_install_ui_configuration(SetupTest):
                 * :func:`~pagemodel.cs_sec_servers_mgm_requests.Cs_sec_servers_mgm_requests.click_close_mgm_req_dlg`
                 * :func:`~common_lib.component_cs_members.Component_cs_members.close_member_details_dlg`
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
-                * :func:`~common_lib.common_lib.Common_lib.sync_global_conf`, *self.parameters[u'ss1_url'][u'sync_timeout']*
+                * :func:`~common_lib.common_lib.Common_lib.sync_global_conf`, *TESTDATA[u'ss1_url'][u'sync_timeout']*
             * **Step 15: add subsystem to security server**
                 * :func:`~common_lib.component_ss.Component_ss.login`, *u'ss1_url'*
                 * :func:`~common_lib.component_ss_clients.Component_ss_clients.add_new_subsystem_to_ss`, *u'member1_configuration'*
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
-                * :func:`~common_lib.common_lib.Common_lib.sync_global_conf`, *self.parameters[u'ss1_url'][u'sync_timeout']*
+                * :func:`~common_lib.common_lib.Common_lib.sync_global_conf`, *TESTDATA[u'ss1_url'][u'sync_timeout']*
             * **Step 16: accept subsystem in in central server**
                 * :func:`~common_lib.component_cs.Component_cs.login`, *u'cs_url'*
                 * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_members_view`
@@ -667,7 +666,7 @@ class Xroad_install_ui_configuration(SetupTest):
                 * :func:`~common_lib.component_ss.Component_ss.login`, *u'ss1_url'*
                 * :func:`~pagemodel.ss_sidebar.Ss_sidebar.verify_sidebar_title`
             * **Step 18: check service registration complete #webpage: ss_clients #parameters: server_configuration**
-                * :func:`~pagemodel.ss_clients.Ss_clients.verify_service_registration_complete`, *self.parameters[u'member1_configuration']*
+                * :func:`~pagemodel.ss_clients.Ss_clients.verify_service_registration_complete`, *TESTDATA[u'member1_configuration']*
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
         """
         # Step Read liityntapalvelin konfiguraatio parameters
@@ -776,7 +775,7 @@ class Xroad_install_ui_configuration(SetupTest):
 
         **Test steps:**
             * **Step 1: read liityntapalvelin konfiguraatio parameters**
-                * :func:`~common_lib.common_lib.Common_lib.read_liityntapalvelin_konfiguraatio_parameters`, *self.parameters*
+                * :func:`~common_lib.common_lib.Common_lib.read_liityntapalvelin_konfiguraatio_parameters`, *TESTDATA*
             * **Step 2: add new member to central server**
                 * :func:`~common_lib.component_cs.Component_cs.login`, *u'cs_url'*
                 * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_members_view`
@@ -823,7 +822,7 @@ class Xroad_install_ui_configuration(SetupTest):
             * **Step 12: get wsdl address**
                 * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_system_settings_view`
             * **Step 13: get wsdl and services address #webpage: cs_system_settings**
-                * :func:`~pagemodel.cs_system_settings.Cs_system_settings.get_wsdl_and_services_address`, *self.parameters[u'cs_url']*
+                * :func:`~pagemodel.cs_system_settings.Cs_system_settings.get_wsdl_and_services_address`, *TESTDATA[u'cs_url']*
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
             * **Step 14: add subsystem to central server**
                 * :func:`~common_lib.component_cs.Component_cs.login`, *u'cs_url'*
@@ -832,12 +831,12 @@ class Xroad_install_ui_configuration(SetupTest):
                 * :func:`~pagemodel.cs_sec_servers_mgm_requests.Cs_sec_servers_mgm_requests.click_close_mgm_req_dlg`
                 * :func:`~common_lib.component_cs_members.Component_cs_members.close_member_details_dlg`
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
-                * :func:`~common_lib.common_lib.Common_lib.sync_global_conf`, *self.parameters[u'ss2_url'][u'sync_timeout']*
+                * :func:`~common_lib.common_lib.Common_lib.sync_global_conf`, *TESTDATA[u'ss2_url'][u'sync_timeout']*
             * **Step 15: add subsystem to security server**
                 * :func:`~common_lib.component_ss.Component_ss.login`, *u'ss2_url'*
                 * :func:`~common_lib.component_ss_clients.Component_ss_clients.add_new_subsystem_to_ss`, *u'member2_configuration'*
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
-                * :func:`~common_lib.common_lib.Common_lib.sync_global_conf`, *self.parameters[u'ss2_url'][u'sync_timeout']*
+                * :func:`~common_lib.common_lib.Common_lib.sync_global_conf`, *TESTDATA[u'ss2_url'][u'sync_timeout']*
             * **Step 16: accept subsystem in in central server**
                 * :func:`~common_lib.component_cs.Component_cs.login`, *u'cs_url'*
                 * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_members_view`
@@ -847,7 +846,7 @@ class Xroad_install_ui_configuration(SetupTest):
                 * :func:`~common_lib.component_ss.Component_ss.login`, *u'ss2_url'*
                 * :func:`~pagemodel.ss_sidebar.Ss_sidebar.verify_sidebar_title`
             * **Step 18: check service registration complete #webpage: ss_clients #parameters: server_configuration**
-                * :func:`~pagemodel.ss_clients.Ss_clients.verify_service_registration_complete`, *self.parameters[u'member2_configuration']*
+                * :func:`~pagemodel.ss_clients.Ss_clients.verify_service_registration_complete`, *TESTDATA[u'member2_configuration']*
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
         """
         # Step Read liityntapalvelin konfiguraatio parameters

@@ -20,14 +20,6 @@ class Component_common(CommonUtils):
     dlg_change_language = Dlg_change_language()
     common_elements = Common_elements()
 
-    def __init__(self):
-        """
-        Initilization method for moving test data to class
-
-        :param parameters:  Test data section dictionary
-        """
-        CommonUtils.__init__(self)
-
     def open_select_language_dlg(self):
         """
         Open select language dialog

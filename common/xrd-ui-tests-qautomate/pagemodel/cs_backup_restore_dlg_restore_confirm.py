@@ -63,5 +63,7 @@ class Cs_backup_restore_dlg_restore_confirm(CommonUtils):
         """
         Click confirm cancel
 
+        **Test steps:**
+            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_CANCEL*
         """
         self.click_element(self.BUTTON_CANCEL)

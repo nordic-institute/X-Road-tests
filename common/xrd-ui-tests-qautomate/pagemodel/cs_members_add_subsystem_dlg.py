@@ -68,6 +68,7 @@ class Cs_members_add_subsystem_dlg(CommonUtils):
 
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
+            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         # AutoGen method
         self.click_element(self.BUTTON_OK)

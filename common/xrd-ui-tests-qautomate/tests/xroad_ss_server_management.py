@@ -53,11 +53,10 @@ class Xroad_ss_server_management(SetupTest):
         * `3.10`_: View Certificate Details
 
     **Changelog:**
-
-    * 20.09.2017
-        | Links added to md use case documentation
-    * 11.07.2017
-        | Documentation updated
+        * 20.09.2017
+            | Links added to md use case documentation
+        * 11.07.2017
+            | Documentation updated
     """
     common_utils = CommonUtils()
     open_application = Open_application()
@@ -231,7 +230,7 @@ class Xroad_ss_server_management(SetupTest):
                 * :func:`~common_lib.component_ss.Component_ss.login`, *u'ss1_url'*
             * **Step 2: change language**
                 * :func:`~common_lib.component_common.Component_common.open_select_language_dlg`
-                * :func:`~common_lib.component_common.Component_common.change_language_in_dlg`, *u'ENGLISH (EN*
+                * :func:`~common_lib.component_common.Component_common.change_language_in_dlg`, *strings.lanquage_eng*
                 * :func:`~common_lib.component_common.Component_common.accept_select_language_dlg`
             * **Step 3: verify audit log for language change**
                 * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *u'ss1_url'*, *strings.set_ui_language*

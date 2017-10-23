@@ -28,16 +28,6 @@ class Component_cs_conf_mgm(CommonUtils):
     cs_conf_mgm_delete_confirm_dlg = Cs_conf_mgm_delete_confirm_dlg()
     cs_conf_mgm_activate_confirm_dlg = Cs_conf_mgm_activate_confirm_dlg()
 
-    def __init__(self):
-        """
-        Initilization method for moving test data to class
-
-        *Updated: 11.07.2017*
-
-        :param parameters:  Test data section dictionary
-        """
-        CommonUtils.__init__(self)
-
     def download_source_anchor_from_cs(self):
         """
         Donwload source anchor from central server
@@ -86,7 +76,7 @@ class Component_cs_conf_mgm(CommonUtils):
         :param section:  Test data section name
         
         **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_conf_mgm_enter_pin.Cs_conf_mgm_enter_pin.input_text_to_id_activate_token_pin`, *self.parameters[section]*
+                * **Step 1:** :func:`~pagemodel.cs_conf_mgm_enter_pin.Cs_conf_mgm_enter_pin.input_text_to_id_activate_token_pin`, *TESTDATA[section]*
                 * **Step 2:** :func:`~pagemodel.cs_conf_mgm_enter_pin.Cs_conf_mgm_enter_pin.click_button_ok`
         """
         # Sometimes it will not ask pin code, recovery added

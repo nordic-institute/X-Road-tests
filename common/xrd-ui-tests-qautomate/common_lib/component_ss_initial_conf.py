@@ -25,16 +25,6 @@ class Component_ss_initial_conf(CommonUtils):
     ss_initial_conf_server_init_dlg = Ss_initial_conf_server_init_dlg()
     ss_initial_conf_server_details = Ss_initial_conf_server_details()
 
-    def __init__(self):
-        """
-        Initilization method for moving test data to class
-
-        *Updated: 11.07.2017*
-
-        :param parameters:  Test data section dictionary
-        """
-        CommonUtils.__init__(self)
-
     def import_configuration_anchor(self, section=u'paths'):
         """
         Import configuration anchor
@@ -45,7 +35,7 @@ class Component_ss_initial_conf(CommonUtils):
         
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.ss_initial_conf_import_anchor.Ss_initial_conf_import_anchor.wait_until_element_is_visible_initial_conf`
-                * **Step 2:** :func:`~pagemodel.ss_initial_conf_import_anchor.Ss_initial_conf_import_anchor.upload_anchor`, *self.parameters[section]*
+                * **Step 2:** :func:`~pagemodel.ss_initial_conf_import_anchor.Ss_initial_conf_import_anchor.upload_anchor`, *TESTDATA[section]*
                 * **Step 3:** :func:`~pagemodel.ss_initial_conf_import_conf_dlg.Ss_initial_conf_import_conf_dlg.wait_until_element_is_visible_conf_required`
                 * **Step 4:** :func:`~pagemodel.ss_initial_conf_import_conf_dlg.Ss_initial_conf_import_conf_dlg.click_button_ui_buttonset_confirm`
                 * **Step 5:** :func:`~pagemodel.ss_initial_conf_server_details.Ss_initial_conf_server_details.wait_until_element_is_visible_security_server_owner`
@@ -67,8 +57,8 @@ class Component_ss_initial_conf(CommonUtils):
         :param section2:  Test data section name
         
         **Test steps:**
-                * **Step 1:** :func:`~pagemodel.ss_initial_conf_server_details.Ss_initial_conf_server_details.fill_input_values_serverconfform`, *self.parameters[section1]*
-                * **Step 2:** :func:`~pagemodel.ss_initial_conf_server_details.Ss_initial_conf_server_details.fill_input_values_pincode`, *self.parameters[section2]*
+                * **Step 1:** :func:`~pagemodel.ss_initial_conf_server_details.Ss_initial_conf_server_details.fill_input_values_serverconfform`, *TESTDATA[section1]*
+                * **Step 2:** :func:`~pagemodel.ss_initial_conf_server_details.Ss_initial_conf_server_details.fill_input_values_pincode`, *TESTDATA[section2]*
                 * **Step 3:** :func:`~pagemodel.ss_initial_conf_server_details.Ss_initial_conf_server_details.submit_serverconfform_noname1`
                 * **Step 4:** :func:`~pagemodel.ss_initial_conf_server_init_dlg.Ss_initial_conf_server_init_dlg.wait_until_element_is_visible_id_alert`
                 * **Step 5:** :func:`~pagemodel.ss_initial_conf_server_init_dlg.Ss_initial_conf_server_init_dlg.submit_serverconfform_noname3`

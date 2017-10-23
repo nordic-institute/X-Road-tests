@@ -24,7 +24,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Component ss backup" href="component_ss_backup.html" />
-    <link rel="prev" title="Component cs tsp services" href="component_cs_tsp_services.html" /> 
+    <link rel="prev" title="Component cs version" href="component_cs_version.html" /> 
   </head>
   <body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -40,7 +40,7 @@
           <a href="component_ss_backup.html" title="Component ss backup"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="component_cs_tsp_services.html" title="Component cs tsp services"
+          <a href="component_cs_version.html" title="Component cs version"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">qautomate  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../common_lib.html" accesskey="U">common_lib</a> &#187;</li> 
@@ -56,7 +56,7 @@
 <span id="component-ss"></span><h1>Component ss<a class="headerlink" href="#module-common_lib.component_ss" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="common_lib.component_ss.Component_ss">
-<em class="property">class </em><code class="descclassname">common_lib.component_ss.</code><code class="descname">Component_ss</code><span class="sig-paren">(</span><em>parameters=None</em><span class="sig-paren">)</span><a class="headerlink" href="#common_lib.component_ss.Component_ss" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">common_lib.component_ss.</code><code class="descname">Component_ss</code><a class="headerlink" href="#common_lib.component_ss.Component_ss" title="Permalink to this definition">¶</a></dt>
 <dd><p>Components common to security servers</p>
 <p>Changelog:</p>
 <ul>
@@ -88,7 +88,7 @@
 <li><strong>Step 1:</strong> <a class="reference internal" href="../pagemodel/ss_system_parameters.html#pagemodel.ss_system_parameters.Ss_system_parameters.click_button_id_tsp_add" title="pagemodel.ss_system_parameters.Ss_system_parameters.click_button_id_tsp_add"><code class="xref py py-func docutils literal"><span class="pre">click_button_id_tsp_add()</span></code></a></li>
 <li><strong>Step 2:</strong> <a class="reference internal" href="../pagemodel/ss_system_param_add_timestamp_dlg.html#pagemodel.ss_system_param_add_timestamp_dlg.Ss_system_param_add_timestamp_dlg.click_trusted_tsp_first_row" title="pagemodel.ss_system_param_add_timestamp_dlg.Ss_system_param_add_timestamp_dlg.click_trusted_tsp_first_row"><code class="xref py py-func docutils literal"><span class="pre">click_trusted_tsp_first_row()</span></code></a></li>
 <li><strong>Step 3:</strong> <a class="reference internal" href="../pagemodel/ss_system_param_add_timestamp_dlg.html#pagemodel.ss_system_param_add_timestamp_dlg.Ss_system_param_add_timestamp_dlg.click_button_ok" title="pagemodel.ss_system_param_add_timestamp_dlg.Ss_system_param_add_timestamp_dlg.click_button_ok"><code class="xref py py-func docutils literal"><span class="pre">click_button_ok()</span></code></a></li>
-<li><strong>Step 4:</strong> <a class="reference internal" href="../pagemodel/ss_system_parameters.html#pagemodel.ss_system_parameters.Ss_system_parameters.verify_time_stamping_url" title="pagemodel.ss_system_parameters.Ss_system_parameters.verify_time_stamping_url"><code class="xref py py-func docutils literal"><span class="pre">verify_time_stamping_url()</span></code></a>, <em>self.parameters[section]</em></li>
+<li><strong>Step 4:</strong> <a class="reference internal" href="../pagemodel/ss_system_parameters.html#pagemodel.ss_system_parameters.Ss_system_parameters.verify_time_stamping_url" title="pagemodel.ss_system_parameters.Ss_system_parameters.verify_time_stamping_url"><code class="xref py py-func docutils literal"><span class="pre">verify_time_stamping_url()</span></code></a>, <em>TESTDATA[section]</em></li>
 </ul>
 </dd>
 </dl>
@@ -110,8 +110,7 @@
 <dl class="docutils">
 <dt><strong>Test steps:</strong></dt>
 <dd><ul class="first last simple">
-<li><strong>Step 1:</strong> <code class="xref py py-func docutils literal"><span class="pre">parameters[section][u'tsp_url'])()</span></code>, <em>self.parameters[section][u’tsp_url’]</em></li>
-<li><strong>Step 2:</strong> <a class="reference internal" href="../pagemodel/ss_system_parameters.html#pagemodel.ss_system_parameters.Ss_system_parameters.click_element_from_table_tsps_1" title="pagemodel.ss_system_parameters.Ss_system_parameters.click_element_from_table_tsps_1"><code class="xref py py-func docutils literal"><span class="pre">click_element_from_table_tsps_1()</span></code></a>, <em>self.parameters[section][u’tsp_url’]</em></li>
+<li><strong>Step 2:</strong> <a class="reference internal" href="../pagemodel/ss_system_parameters.html#pagemodel.ss_system_parameters.Ss_system_parameters.click_element_from_table_tsps_1" title="pagemodel.ss_system_parameters.Ss_system_parameters.click_element_from_table_tsps_1"><code class="xref py py-func docutils literal"><span class="pre">click_element_from_table_tsps_1()</span></code></a>, <em>TESTDATA[section][u’tsp_url’]</em></li>
 <li><strong>Step 3:</strong> <a class="reference internal" href="../pagemodel/ss_system_parameters.html#pagemodel.ss_system_parameters.Ss_system_parameters.click_button_id_tsp_delete" title="pagemodel.ss_system_parameters.Ss_system_parameters.click_button_id_tsp_delete"><code class="xref py py-func docutils literal"><span class="pre">click_button_id_tsp_delete()</span></code></a></li>
 </ul>
 </dd>
@@ -139,8 +138,8 @@
 <dl class="docutils">
 <dt><strong>Test steps:</strong></dt>
 <dd><ul class="first last simple">
-<li><strong>Step 1:</strong> <a class="reference internal" href="../pagemodel/open_application.html#pagemodel.open_application.Open_application.open_application_url" title="pagemodel.open_application.Open_application.open_application_url"><code class="xref py py-func docutils literal"><span class="pre">open_application_url()</span></code></a>, <em>self.parameters[section]</em></li>
-<li><strong>Step 2:</strong> <a class="reference internal" href="../pagemodel/ss_login.html#pagemodel.ss_login.Ss_login.login" title="pagemodel.ss_login.Ss_login.login"><code class="xref py py-func docutils literal"><span class="pre">login()</span></code></a>, <em>self.parameters[section]</em>, <em>wait_for_jquery</em></li>
+<li><strong>Step 1:</strong> <a class="reference internal" href="../pagemodel/open_application.html#pagemodel.open_application.Open_application.open_application_url" title="pagemodel.open_application.Open_application.open_application_url"><code class="xref py py-func docutils literal"><span class="pre">open_application_url()</span></code></a>, <em>TESTDATA[section]</em></li>
+<li><strong>Step 2:</strong> <a class="reference internal" href="../pagemodel/ss_login.html#pagemodel.ss_login.Ss_login.login" title="pagemodel.ss_login.Ss_login.login"><code class="xref py py-func docutils literal"><span class="pre">login()</span></code></a>, <em>TESTDATA[section]</em>, <em>wait_for_jquery</em></li>
 <li><strong>Step 3:</strong> <a class="reference internal" href="../pagemodel/ss_sidebar.html#pagemodel.ss_sidebar.Ss_sidebar.verify_sidebar_title" title="pagemodel.ss_sidebar.Ss_sidebar.verify_sidebar_title"><code class="xref py py-func docutils literal"><span class="pre">verify_sidebar_title()</span></code></a></li>
 </ul>
 </dd>
@@ -202,6 +201,7 @@
 <li class="toctree-l2"><a class="reference internal" href="component_cs_sidebar.html">Component cs sidebar</a></li>
 <li class="toctree-l2"><a class="reference internal" href="component_cs_system_settings.html">Component cs system settings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="component_cs_tsp_services.html">Component cs tsp services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="component_cs_version.html">Component cs version</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Component ss</a></li>
 <li class="toctree-l2"><a class="reference internal" href="component_ss_backup.html">Component ss backup</a></li>
 <li class="toctree-l2"><a class="reference internal" href="component_ss_clients.html">Component ss clients</a></li>
@@ -247,7 +247,7 @@
           <a href="component_ss_backup.html" title="Component ss backup"
              >next</a> |</li>
         <li class="right" >
-          <a href="component_cs_tsp_services.html" title="Component cs tsp services"
+          <a href="component_cs_version.html" title="Component cs version"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../../index.html">qautomate  documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../common_lib.html" >common_lib</a> &#187;</li> 

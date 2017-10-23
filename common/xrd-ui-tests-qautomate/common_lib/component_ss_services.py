@@ -30,16 +30,6 @@ class Component_ss_services(CommonUtils):
     ss_clients_services_dlg_add_subjects = Ss_clients_services_dlg_add_subjects()
     ss_clients_services_dlg_acl_confirm = Ss_clients_services_dlg_acl_confirm()
 
-    def __init__(self):
-        """
-        Initilization method for moving test data to class
-
-        *Updated: 11.07.2017*
-
-        :param parameters:  Test data section dictionary
-        """
-        CommonUtils.__init__(self)
-
     def add_new_wsdl(self, section=u'add_wsdl'):
         """
         Add new wsdl
@@ -51,7 +41,7 @@ class Component_ss_services(CommonUtils):
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.ss_clients_dlg_services.Ss_clients_dlg_services.click_wsdl_add`
                 * **Step 2:** :func:`~pagemodel.ss_clients_dlg_services_add_wsdl.Ss_clients_dlg_services_add_wsdl.verify_add_wsdl_dlg_open`
-                * **Step 3:** :func:`~pagemodel.ss_clients_dlg_services_add_wsdl.Ss_clients_dlg_services_add_wsdl.add_wsdl`, *self.parameters[section]*
+                * **Step 3:** :func:`~pagemodel.ss_clients_dlg_services_add_wsdl.Ss_clients_dlg_services_add_wsdl.add_wsdl`, *TESTDATA[section]*
         """
         self.ss_clients_dlg_services.click_wsdl_add()
         self.ss_clients_dlg_services_add_wsdl.verify_add_wsdl_dlg_open()
@@ -69,11 +59,10 @@ class Component_ss_services(CommonUtils):
         :param parameter:  Test data parameter name
         
         **Test steps:**
-                * **Step 1:** :func:`~pagemodel.ss_clients_dlg_services.Ss_clients_dlg_services.click_and_open_wsdl_service`, *self.parameters[section1]*
+                * **Step 1:** :func:`~pagemodel.ss_clients_dlg_services.Ss_clients_dlg_services.click_and_open_wsdl_service`, *TESTDATA[section1]*
                 * **Step 2:** :func:`~pagemodel.ss_clients_dlg_services.Ss_clients_dlg_services.click_edit_service_params`
                 * **Step 3:** :func:`~pagemodel.ss_clients_dlg_services_edit_wsdl.Ss_clients_dlg_services_edit_wsdl.verify_edit_serv_param_dlg_open`
-                * **Step 4:** :func:`~pagemodel.add_dynamic_content_to_parameters(self.Add_dynamic_content_to_parameters(self.parameters, u'params_url', new_wsdl_value, section2)`, *self.parameters*, *u'params_url'*, *new_wsdl_value*, *section2*
-                * **Step 5:** :func:`~pagemodel.ss_clients_dlg_services_edit_wsdl.Ss_clients_dlg_services_edit_wsdl.fill_service_parameters`, *self.parameters[section2]*
+                * **Step 5:** :func:`~pagemodel.ss_clients_dlg_services_edit_wsdl.Ss_clients_dlg_services_edit_wsdl.fill_service_parameters`, *TESTDATA[section2]*
                 * **Step 6:** :func:`~pagemodel.ss_clients_dlg_services_edit_wsdl.Ss_clients_dlg_services_edit_wsdl.click_ok_service_parameters`
         """
         sleep(2)
@@ -95,10 +84,10 @@ class Component_ss_services(CommonUtils):
         :param section2:  Test data section name
         
         **Test steps:**
-                * **Step 1:** :func:`~pagemodel.ss_clients_dlg_services.Ss_clients_dlg_services.click_and_open_wsdl_service`, *self.parameters[section1]*
+                * **Step 1:** :func:`~pagemodel.ss_clients_dlg_services.Ss_clients_dlg_services.click_and_open_wsdl_service`, *TESTDATA[section1]*
                 * **Step 2:** :func:`~pagemodel.ss_clients_dlg_services.Ss_clients_dlg_services.click_edit_service_params`
                 * **Step 3:** :func:`~pagemodel.ss_clients_dlg_services_edit_wsdl.Ss_clients_dlg_services_edit_wsdl.verify_edit_serv_param_dlg_open`
-                * **Step 4:** :func:`~pagemodel.ss_clients_dlg_services_edit_wsdl.Ss_clients_dlg_services_edit_wsdl.fill_service_parameters`, *self.parameters[section2]*
+                * **Step 4:** :func:`~pagemodel.ss_clients_dlg_services_edit_wsdl.Ss_clients_dlg_services_edit_wsdl.fill_service_parameters`, *TESTDATA[section2]*
                 * **Step 5:** :func:`~pagemodel.ss_clients_dlg_services_edit_wsdl.Ss_clients_dlg_services_edit_wsdl.click_ok_service_parameters`
         """
         sleep(2)

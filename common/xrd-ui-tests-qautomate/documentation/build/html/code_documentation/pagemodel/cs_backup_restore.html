@@ -97,6 +97,26 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="pagemodel.cs_backup_restore.Cs_backup_restore.click_element_newest_download">
+<code class="descname">click_element_newest_download</code><span class="sig-paren">(</span><em>parameters=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pagemodel.cs_backup_restore.Cs_backup_restore.click_element_newest_download" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>parameters</strong> – Test data section dictionary</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt><strong>Test steps:</strong></dt>
+<dd><ul class="first last simple">
+<li><strong>Step 1:</strong> <a class="reference internal" href="../common_utils.html#webframework.extension.util.common_utils.CommonUtils.click_element" title="webframework.extension.util.common_utils.CommonUtils.click_element"><code class="xref py py-func docutils literal"><span class="pre">click_element()</span></code></a>, <em>self.NEWEST_DOWNLOAD</em></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="pagemodel.cs_backup_restore.Cs_backup_restore.click_element_newest_restore">
 <code class="descname">click_element_newest_restore</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pagemodel.cs_backup_restore.Cs_backup_restore.click_element_newest_restore" title="Permalink to this definition">¶</a></dt>
 <dd><p>Click restore button on backups tables first row</p>
@@ -104,6 +124,51 @@
 <dt><strong>Test steps:</strong></dt>
 <dd><ul class="first last simple">
 <li><strong>Step 1:</strong> <a class="reference internal" href="../common_utils.html#webframework.extension.util.common_utils.CommonUtils.click_element" title="webframework.extension.util.common_utils.CommonUtils.click_element"><code class="xref py py-func docutils literal"><span class="pre">click_element()</span></code></a>, <em>self.NEWEST_RESTORE</em></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pagemodel.cs_backup_restore.Cs_backup_restore.click_element_upload_backup_file">
+<code class="descname">click_element_upload_backup_file</code><span class="sig-paren">(</span><em>parameters=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pagemodel.cs_backup_restore.Cs_backup_restore.click_element_upload_backup_file" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>parameters</strong> – Test data section dictionary</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt><strong>Test steps:</strong></dt>
+<dd><ul class="first last simple">
+<li><strong>Step 1:</strong> <a class="reference internal" href="../common_utils.html#webframework.extension.util.common_utils.CommonUtils.click_element" title="webframework.extension.util.common_utils.CommonUtils.click_element"><code class="xref py py-func docutils literal"><span class="pre">click_element()</span></code></a>, <em>self.ID_BACKUP_UPLOAD</em></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pagemodel.cs_backup_restore.Cs_backup_restore.verify_contains_all_user_actions">
+<code class="descname">verify_contains_all_user_actions</code><span class="sig-paren">(</span><em>parameters=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pagemodel.cs_backup_restore.Cs_backup_restore.verify_contains_all_user_actions" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>parameters</strong> – Test data section dictionary</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt><strong>Test steps:</strong></dt>
+<dd><ul class="first last simple">
+<li><strong>Step 1:</strong> <a class="reference internal" href="../common_utils.html#webframework.extension.util.common_utils.CommonUtils.element_should_be_present" title="webframework.extension.util.common_utils.CommonUtils.element_should_be_present"><code class="xref py py-func docutils literal"><span class="pre">element_should_be_present()</span></code></a>, <em>self.ID_BACKUP</em></li>
+<li><strong>Step 2:</strong> <a class="reference internal" href="../common_utils.html#webframework.extension.util.common_utils.CommonUtils.element_should_be_present" title="webframework.extension.util.common_utils.CommonUtils.element_should_be_present"><code class="xref py py-func docutils literal"><span class="pre">element_should_be_present()</span></code></a>, <em>self.ID_BACKUP_UPLOAD</em></li>
+<li><strong>Step 3:</strong> <a class="reference internal" href="../common_utils.html#webframework.extension.util.common_utils.CommonUtils.fail" title="webframework.extension.util.common_utils.CommonUtils.fail"><code class="xref py py-func docutils literal"><span class="pre">fail()</span></code></a>, <em>errors.backup_name_is_empty</em></li>
+<li><strong>Step 4:</strong> <a class="reference internal" href="../common_utils.html#webframework.extension.util.common_utils.CommonUtils.element_should_be_present" title="webframework.extension.util.common_utils.CommonUtils.element_should_be_present"><code class="xref py py-func docutils literal"><span class="pre">element_should_be_present()</span></code></a>, <em>self.NEWEST_RESTORE</em></li>
+<li><strong>Step 5:</strong> <a class="reference internal" href="../common_utils.html#webframework.extension.util.common_utils.CommonUtils.element_should_be_present" title="webframework.extension.util.common_utils.CommonUtils.element_should_be_present"><code class="xref py py-func docutils literal"><span class="pre">element_should_be_present()</span></code></a>, <em>self.NEWEST_DELETE</em></li>
+<li><strong>Step 6:</strong> <a class="reference internal" href="../common_utils.html#webframework.extension.util.common_utils.CommonUtils.element_should_be_present" title="webframework.extension.util.common_utils.CommonUtils.element_should_be_present"><code class="xref py py-func docutils literal"><span class="pre">element_should_be_present()</span></code></a>, <em>self.NEWEST_DOWNLOAD</em></li>
 </ul>
 </dd>
 </dl>
@@ -139,6 +204,8 @@
 <li class="toctree-l2"><a class="reference internal" href="cs_backup_restore_dlg_back_up_config.html">Cs backup restore dlg back up config</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cs_backup_restore_dlg_delete_confirm.html">Cs backup restore dlg delete confirm</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cs_backup_restore_dlg_restore_confirm.html">Cs backup restore dlg restore confirm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cs_backup_restore_dlg_up_back_conf_exist.html">Cs backup restore dlg up back conf exist</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cs_backup_restore_dlg_upload_backup.html">Cs backup restore dlg upload backup</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cs_cert_services.html">Cs cert services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cs_cert_services_dlg_ca_settings.html">Cs cert services dlg ca settings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cs_cert_services_insert_service_ca_cert.html">Cs cert services insert service ca cert</a></li>
@@ -184,6 +251,7 @@
 <li class="toctree-l2"><a class="reference internal" href="cs_system_settings_search_member.html">Cs system settings search member</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cs_time_stamping_services.html">Cs time stamping services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cs_time_stamping_services_add_dlg.html">Cs time stamping services add dlg</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cs_version.html">Cs version</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dlg_change_language.html">Dlg change language</a></li>
 <li class="toctree-l2"><a class="reference internal" href="open_application.html">Open application</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ss_backup_restore.html">Ss backup restore</a></li>

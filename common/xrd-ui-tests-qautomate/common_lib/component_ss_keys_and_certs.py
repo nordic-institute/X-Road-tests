@@ -37,16 +37,6 @@ class Component_ss_keys_and_certs(CommonUtils):
     ss_softoken_enter_pin = Ss_softoken_enter_pin()
     ss_keys_and_cert_details = Ss_keys_and_cert_details()
 
-    def __init__(self):
-        """
-        Initilization method for moving test data to class
-
-        *Updated: 11.07.2017*
-
-        :param parameters:  Test data section dictionary
-        """
-        CommonUtils.__init__(self)
-
     def generate_and_select_certificate_key_in_ss(self, text=u'ta_generated_key_sign'):
         """
         Generate and select certificate key in security server
@@ -81,9 +71,9 @@ class Component_ss_keys_and_certs(CommonUtils):
         
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.ss_keys_and_cert.Ss_keys_and_cert.click_generate_certificate_request`
-                * **Step 2:** :func:`~pagemodel.ss_keys_and_cert_generate_csr.Ss_keys_and_cert_generate_csr.fill_input_values_keys_csr_sign`, *self.parameters[section]*
+                * **Step 2:** :func:`~pagemodel.ss_keys_and_cert_generate_csr.Ss_keys_and_cert_generate_csr.fill_input_values_keys_csr_sign`, *TESTDATA[section]*
                 * **Step 3:** :func:`~pagemodel.ss_keys_and_cert_generate_csr.Ss_keys_and_cert_generate_csr.click_button_id_generate_csr_submit`
-                * **Step 4:** :func:`~pagemodel.ss_keys_and_cert_dlg_subject_dname.Ss_keys_and_cert_dlg_subject_dname.fill_input_values_keys_dname_sign`, *self.parameters[section]*
+                * **Step 4:** :func:`~pagemodel.ss_keys_and_cert_dlg_subject_dname.Ss_keys_and_cert_dlg_subject_dname.fill_input_values_keys_dname_sign`, *TESTDATA[section]*
                 * **Step 5:** :func:`~pagemodel.ss_keys_and_cert_dlg_subject_dname.Ss_keys_and_cert_dlg_subject_dname.submit_keys_dname`
         """
         self.ss_keys_and_cert.click_generate_certificate_request()
@@ -104,7 +94,7 @@ class Component_ss_keys_and_certs(CommonUtils):
                 * **Step 1:** :func:`~pagemodel.ss_keys_and_cert.Ss_keys_and_cert.click_generate_certificate_request`
                 * **Step 2:** :func:`~pagemodel.ss_keys_and_cert_generate_csr.Ss_keys_and_cert_generate_csr.fill_input_values_keys_csr_auth`
                 * **Step 3:** :func:`~pagemodel.ss_keys_and_cert_generate_csr.Ss_keys_and_cert_generate_csr.click_button_id_generate_csr_submit`
-                * **Step 4:** :func:`~pagemodel.ss_keys_and_cert_dlg_subject_dname.Ss_keys_and_cert_dlg_subject_dname.fill_input_values_keys_dname_auth`, *self.parameters[section]*
+                * **Step 4:** :func:`~pagemodel.ss_keys_and_cert_dlg_subject_dname.Ss_keys_and_cert_dlg_subject_dname.fill_input_values_keys_dname_auth`, *TESTDATA[section]*
                 * **Step 5:** :func:`~pagemodel.ss_keys_and_cert_dlg_subject_dname.Ss_keys_and_cert_dlg_subject_dname.submit_keys_dname`
         """
         self.ss_keys_and_cert.click_generate_certificate_request()
@@ -147,7 +137,7 @@ class Component_ss_keys_and_certs(CommonUtils):
         
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.ss_keys_and_cert.Ss_keys_and_cert.register_auth_cert`, *value_string*
-                * **Step 2:** :func:`~pagemodel.ss_keys_and_cert_dlg_registration_req.Ss_keys_and_cert_dlg_registration_req.input_text_to_server_address`, *self.parameters[section]*
+                * **Step 2:** :func:`~pagemodel.ss_keys_and_cert_dlg_registration_req.Ss_keys_and_cert_dlg_registration_req.input_text_to_server_address`, *TESTDATA[section]*
                 * **Step 3:** :func:`~pagemodel.ss_keys_and_cert_dlg_registration_req.Ss_keys_and_cert_dlg_registration_req.submit_register_request`
         """
         # step Send register request #Webpage: ss_keys_and_cert
@@ -165,7 +155,7 @@ class Component_ss_keys_and_certs(CommonUtils):
         
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.ss_softoken_enter_pin.Ss_softoken_enter_pin.click_button_activate_token_enter_pin`
-                * **Step 2:** :func:`~pagemodel.ss_enter_pin_dlg.Ss_enter_pin_dlg.input_text_to_id_activate_token_pin`, *self.parameters[section]*
+                * **Step 2:** :func:`~pagemodel.ss_enter_pin_dlg.Ss_enter_pin_dlg.input_text_to_id_activate_token_pin`, *TESTDATA[section]*
                 * **Step 3:** :func:`~pagemodel.ss_enter_pin_dlg.Ss_enter_pin_dlg.click_button_ok`
                 * **Step 4:** :func:`~pagemodel.ss_softoken_enter_pin.Ss_softoken_enter_pin.wait_until_softoken_pin_query_is_not_visible`
         """
@@ -206,7 +196,7 @@ class Component_ss_keys_and_certs(CommonUtils):
         :param section:  Test data section name
         
         **Test steps:**
-                * **Step 1:** :func:`~common_lib.common_lib.Common_lib.copy_and_sign_cert_request`, *self.parameters[section]*
+                * **Step 1:** :func:`~common_lib.common_lib.Common_lib.copy_and_sign_cert_request`, *TESTDATA[section]*
                 * **Step 2:** :func:`~pagemodel.fail(errors.Fail(errors.could_not_verify_certificate)`, *errors.could_not_verify_certificate*
         """
         if self.common_lib.verify_cert_request(TESTDATA[section]):
@@ -224,7 +214,7 @@ class Component_ss_keys_and_certs(CommonUtils):
         :param section:  Test data section name
         
         **Test steps:**
-                * **Step 1:** :func:`~common_lib.common_lib.Common_lib.copy_and_auth_cert_request`, *self.parameters[section]*
+                * **Step 1:** :func:`~common_lib.common_lib.Common_lib.copy_and_auth_cert_request`, *TESTDATA[section]*
                 * **Step 2:** :func:`~pagemodel.fail(errors.Fail(errors.could_not_verify_certificate)`, *errors.could_not_verify_certificate*
         """
         if self.common_lib.verify_cert_request(TESTDATA[section]):

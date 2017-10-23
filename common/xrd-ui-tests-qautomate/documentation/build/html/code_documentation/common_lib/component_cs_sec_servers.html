@@ -56,7 +56,7 @@
 <span id="component-cs-sec-servers"></span><h1>Component cs sec servers<a class="headerlink" href="#module-common_lib.component_cs_sec_servers" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="common_lib.component_cs_sec_servers.Component_cs_sec_servers">
-<em class="property">class </em><code class="descclassname">common_lib.component_cs_sec_servers.</code><code class="descname">Component_cs_sec_servers</code><span class="sig-paren">(</span><em>parameters=None</em><span class="sig-paren">)</span><a class="headerlink" href="#common_lib.component_cs_sec_servers.Component_cs_sec_servers" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">common_lib.component_cs_sec_servers.</code><code class="descname">Component_cs_sec_servers</code><a class="headerlink" href="#common_lib.component_cs_sec_servers.Component_cs_sec_servers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Components common to central server security servers view</p>
 <p>Changelog:</p>
 <ul>
@@ -117,7 +117,7 @@
 <dt><strong>Test steps:</strong></dt>
 <dd><ul class="first last simple">
 <li><strong>Step 1:</strong> <a class="reference internal" href="../pagemodel/cs_sec_servers_details.html#pagemodel.cs_sec_servers_details.Cs_sec_servers_details.click_clients_tab" title="pagemodel.cs_sec_servers_details.Cs_sec_servers_details.click_clients_tab"><code class="xref py py-func docutils literal"><span class="pre">click_clients_tab()</span></code></a></li>
-<li><strong>Step 2:</strong> <a class="reference internal" href="../pagemodel/cs_sec_servers_details_clients.html#pagemodel.cs_sec_servers_details_clients.Cs_sec_servers_details_clients.search_text_from_table_securityserver_clients_1" title="pagemodel.cs_sec_servers_details_clients.Cs_sec_servers_details_clients.search_text_from_table_securityserver_clients_1"><code class="xref py py-func docutils literal"><span class="pre">search_text_from_table_securityserver_clients_1()</span></code></a>, <em>self.parameters[section]</em></li>
+<li><strong>Step 2:</strong> <a class="reference internal" href="../pagemodel/cs_sec_servers_details_clients.html#pagemodel.cs_sec_servers_details_clients.Cs_sec_servers_details_clients.search_text_from_table_securityserver_clients_1" title="pagemodel.cs_sec_servers_details_clients.Cs_sec_servers_details_clients.search_text_from_table_securityserver_clients_1"><code class="xref py py-func docutils literal"><span class="pre">search_text_from_table_securityserver_clients_1()</span></code></a>, <em>TESTDATA[section]</em></li>
 <li><strong>Step 3:</strong> <a class="reference internal" href="../pagemodel/cs_sec_servers_details_clients.html#pagemodel.cs_sec_servers_details_clients.Cs_sec_servers_details_clients.click_element_id_securityserver_client_delete" title="pagemodel.cs_sec_servers_details_clients.Cs_sec_servers_details_clients.click_element_id_securityserver_client_delete"><code class="xref py py-func docutils literal"><span class="pre">click_element_id_securityserver_client_delete()</span></code></a></li>
 <li><strong>Step 4:</strong> <a class="reference internal" href="../pagemodel/cs_sec_servers_delete_clients.html#pagemodel.cs_sec_servers_delete_clients.Cs_sec_servers_delete_clients.click_element_submit" title="pagemodel.cs_sec_servers_delete_clients.Cs_sec_servers_delete_clients.click_element_submit"><code class="xref py py-func docutils literal"><span class="pre">click_element_submit()</span></code></a></li>
 </ul>
@@ -161,7 +161,7 @@
 <dl class="docutils">
 <dt><strong>Test steps:</strong></dt>
 <dd><ul class="first last simple">
-<li><strong>Step 1:</strong> <a class="reference internal" href="../pagemodel/cs_sec_servers.html#pagemodel.cs_sec_servers.Cs_sec_servers.click_security_servers_row_with_text" title="pagemodel.cs_sec_servers.Cs_sec_servers.click_security_servers_row_with_text"><code class="xref py py-func docutils literal"><span class="pre">click_security_servers_row_with_text()</span></code></a>, <em>self.parameters[section][parameter]</em></li>
+<li><strong>Step 1:</strong> <a class="reference internal" href="../pagemodel/cs_sec_servers.html#pagemodel.cs_sec_servers.Cs_sec_servers.click_security_servers_row_with_text" title="pagemodel.cs_sec_servers.Cs_sec_servers.click_security_servers_row_with_text"><code class="xref py py-func docutils literal"><span class="pre">click_security_servers_row_with_text()</span></code></a>, <em>TESTDATA[section][parameter]</em></li>
 <li><strong>Step 2:</strong> <a class="reference internal" href="../pagemodel/cs_sec_servers.html#pagemodel.cs_sec_servers.Cs_sec_servers.click_ss_details" title="pagemodel.cs_sec_servers.Cs_sec_servers.click_ss_details"><code class="xref py py-func docutils literal"><span class="pre">click_ss_details()</span></code></a></li>
 </ul>
 </dd>
@@ -188,7 +188,7 @@
 <dl class="docutils">
 <dt><strong>Test steps:</strong></dt>
 <dd><ul class="first last simple">
-<li><strong>Step 1:</strong> <a class="reference internal" href="../pagemodel/cs_sec_servers.html#pagemodel.cs_sec_servers.Cs_sec_servers.table_contains_server" title="pagemodel.cs_sec_servers.Cs_sec_servers.table_contains_server"><code class="xref py py-func docutils literal"><span class="pre">table_contains_server()</span></code></a>, <em>self.parameters[section][parameter]</em></li>
+<li><strong>Step 1:</strong> <a class="reference internal" href="../pagemodel/cs_sec_servers.html#pagemodel.cs_sec_servers.Cs_sec_servers.table_contains_server" title="pagemodel.cs_sec_servers.Cs_sec_servers.table_contains_server"><code class="xref py py-func docutils literal"><span class="pre">table_contains_server()</span></code></a>, <em>TESTDATA[section][parameter]</em></li>
 </ul>
 </dd>
 </dl>
@@ -214,7 +214,7 @@
 <dl class="docutils">
 <dt><strong>Test steps:</strong></dt>
 <dd><ul class="first last simple">
-<li><strong>Step 1:</strong> <a class="reference internal" href="../pagemodel/cs_sec_servers.html#pagemodel.cs_sec_servers.Cs_sec_servers.table_does_not_contain_server" title="pagemodel.cs_sec_servers.Cs_sec_servers.table_does_not_contain_server"><code class="xref py py-func docutils literal"><span class="pre">table_does_not_contain_server()</span></code></a>, <em>self.parameters[section][parameter]</em></li>
+<li><strong>Step 1:</strong> <a class="reference internal" href="../pagemodel/cs_sec_servers.html#pagemodel.cs_sec_servers.Cs_sec_servers.table_does_not_contain_server" title="pagemodel.cs_sec_servers.Cs_sec_servers.table_does_not_contain_server"><code class="xref py py-func docutils literal"><span class="pre">table_does_not_contain_server()</span></code></a>, <em>TESTDATA[section][parameter]</em></li>
 </ul>
 </dd>
 </dl>
@@ -236,7 +236,7 @@
 <dl class="docutils">
 <dt><strong>Test steps:</strong></dt>
 <dd><ul class="first last simple">
-<li><strong>Step 1:</strong> <a class="reference internal" href="../pagemodel/ss_clients.html#pagemodel.ss_clients.Ss_clients.verify_table_contains_subsystem" title="pagemodel.ss_clients.Ss_clients.verify_table_contains_subsystem"><code class="xref py py-func docutils literal"><span class="pre">verify_table_contains_subsystem()</span></code></a>, <em>self.parameters[section]</em></li>
+<li><strong>Step 1:</strong> <a class="reference internal" href="../pagemodel/ss_clients.html#pagemodel.ss_clients.Ss_clients.verify_table_contains_subsystem" title="pagemodel.ss_clients.Ss_clients.verify_table_contains_subsystem"><code class="xref py py-func docutils literal"><span class="pre">verify_table_contains_subsystem()</span></code></a>, <em>TESTDATA[section]</em></li>
 </ul>
 </dd>
 </dl>
@@ -275,6 +275,7 @@
 <li class="toctree-l2"><a class="reference internal" href="component_cs_sidebar.html">Component cs sidebar</a></li>
 <li class="toctree-l2"><a class="reference internal" href="component_cs_system_settings.html">Component cs system settings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="component_cs_tsp_services.html">Component cs tsp services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="component_cs_version.html">Component cs version</a></li>
 <li class="toctree-l2"><a class="reference internal" href="component_ss.html">Component ss</a></li>
 <li class="toctree-l2"><a class="reference internal" href="component_ss_backup.html">Component ss backup</a></li>
 <li class="toctree-l2"><a class="reference internal" href="component_ss_clients.html">Component ss clients</a></li>

@@ -31,16 +31,6 @@ class Component_cs_sec_servers(CommonUtils):
     cs_sec_servers_auth_dlg = Cs_sec_servers_auth_dlg()
     ss_clients = Ss_clients()
 
-    def __init__(self):
-        """
-        Initilization method for moving test data to class
-
-        *Updated: 11.07.2017*
-
-        :param parameters:  Test data section dictionary
-        """
-        CommonUtils.__init__(self)
-
     def open_server_details_dlg(self, section=u'member_mgm_configuration', parameter=u'member_name'):
         """
         Open server details dialog
@@ -51,7 +41,7 @@ class Component_cs_sec_servers(CommonUtils):
         :param parameter:  Test data parameter name
         
         **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_sec_servers.Cs_sec_servers.click_security_servers_row_with_text`, *self.parameters[section][parameter]*
+                * **Step 1:** :func:`~pagemodel.cs_sec_servers.Cs_sec_servers.click_security_servers_row_with_text`, *TESTDATA[section][parameter]*
                 * **Step 2:** :func:`~pagemodel.cs_sec_servers.Cs_sec_servers.click_ss_details`
         """
         self.cs_sec_servers.click_security_servers_row_with_text(TESTDATA[section][parameter])
@@ -82,7 +72,7 @@ class Component_cs_sec_servers(CommonUtils):
         
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.cs_sec_servers_details.Cs_sec_servers_details.click_clients_tab`
-                * **Step 2:** :func:`~pagemodel.cs_sec_servers_details_clients.Cs_sec_servers_details_clients.search_text_from_table_securityserver_clients_1`, *self.parameters[section]*
+                * **Step 2:** :func:`~pagemodel.cs_sec_servers_details_clients.Cs_sec_servers_details_clients.search_text_from_table_securityserver_clients_1`, *TESTDATA[section]*
                 * **Step 3:** :func:`~pagemodel.cs_sec_servers_details_clients.Cs_sec_servers_details_clients.click_element_id_securityserver_client_delete`
                 * **Step 4:** :func:`~pagemodel.cs_sec_servers_delete_clients.Cs_sec_servers_delete_clients.click_element_submit`
         """
@@ -130,7 +120,7 @@ class Component_cs_sec_servers(CommonUtils):
         :param parameter:  Test data parameter name
         
         **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_sec_servers.Cs_sec_servers.table_does_not_contain_server`, *self.parameters[section][parameter]*
+                * **Step 1:** :func:`~pagemodel.cs_sec_servers.Cs_sec_servers.table_does_not_contain_server`, *TESTDATA[section][parameter]*
         """
         self.cs_sec_servers.table_does_not_contain_server(TESTDATA[section][parameter])
 
@@ -144,7 +134,7 @@ class Component_cs_sec_servers(CommonUtils):
         :param parameter:  Test data parameter name
         
         **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_sec_servers.Cs_sec_servers.table_contains_server`, *self.parameters[section][parameter]*
+                * **Step 1:** :func:`~pagemodel.cs_sec_servers.Cs_sec_servers.table_contains_server`, *TESTDATA[section][parameter]*
         """
         self.cs_sec_servers.table_contains_server(TESTDATA[section][parameter])
 
@@ -157,6 +147,6 @@ class Component_cs_sec_servers(CommonUtils):
         :param section:  Test data section name
         
         **Test steps:**
-                * **Step 1:** :func:`~pagemodel.ss_clients.Ss_clients.verify_table_contains_subsystem`, *self.parameters[section]*
+                * **Step 1:** :func:`~pagemodel.ss_clients.Ss_clients.verify_table_contains_subsystem`, *TESTDATA[section]*
         """
         self.ss_clients.verify_table_contains_subsystem(TESTDATA[section])

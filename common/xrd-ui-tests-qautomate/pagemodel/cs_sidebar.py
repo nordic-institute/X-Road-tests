@@ -74,7 +74,9 @@ class Cs_sidebar(CommonUtils):
         Click sidebar link to open security server view
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_SECURITYSERVERS_SECURITY_SERVERS*
+            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_element_is_enabled`, *self.DATA_NAME_SECURITYSERVERS_SECURITY_SERVERS*
+            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_SECURITYSERVERS_SECURITY_SERVERS*
+            * **Step 3:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         # AutoGen method click_link: https://test-cs.i.palveluvayla.com:4000/securityservers
         self.wait_until_element_is_enabled(self.DATA_NAME_SECURITYSERVERS_SECURITY_SERVERS)
@@ -86,7 +88,9 @@ class Cs_sidebar(CommonUtils):
         Click sidebar link to open
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_GROUPS*
+            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_element_is_enabled`, *self.DATA_NAME_GROUPS*
+            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_GROUPS*
+            * **Step 3:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         # AutoGen method click_link: https://test-cs.i.palveluvayla.com:4000/groups
         self.wait_until_element_is_enabled(self.DATA_NAME_GROUPS)
@@ -98,7 +102,9 @@ class Cs_sidebar(CommonUtils):
         Click sidebar link to open central services view
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_CENTRAL_SERVICES*
+            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_element_is_enabled`, *self.DATA_NAME_CENTRAL_SERVICES*
+            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_CENTRAL_SERVICES*
+            * **Step 3:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         # AutoGen method click_link: https://test-cs.i.palveluvayla.com:4000/central_services
         self.wait_until_element_is_enabled(self.DATA_NAME_CENTRAL_SERVICES)
@@ -110,7 +116,9 @@ class Cs_sidebar(CommonUtils):
         Click sidebar link to open certificate services view
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_APPROVED_CAS_CERTIFICATION_SERVICES*
+            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_element_is_enabled`, *self.DATA_NAME_APPROVED_CAS_CERTIFICATION_SERVICES*
+            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_APPROVED_CAS_CERTIFICATION_SERVICES*
+            * **Step 3:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         # AutoGen method click_link: https://test-cs.i.palveluvayla.com:4000/approved_cas
         self.wait_until_element_is_enabled(self.DATA_NAME_APPROVED_CAS_CERTIFICATION_SERVICES)
@@ -122,8 +130,9 @@ class Cs_sidebar(CommonUtils):
         Click sidebar link to open requests management view
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_REQUESTS_MANAGEMENT*
-            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_element_is_enabled`, *self.DATA_NAME_REQUESTS_MANAGEMENT*
+            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_REQUESTS_MANAGEMENT*
+            * **Step 3:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         # AutoGen method click_link: https://test-cs.i.palveluvayla.com:4000/requests
         self.wait_until_element_is_enabled(self.DATA_NAME_REQUESTS_MANAGEMENT)
@@ -135,7 +144,9 @@ class Cs_sidebar(CommonUtils):
         Click sidebar link to open configuration management view
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_CONFIGURATION_MANAGEMENT_GLOBAL*
+            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_element_is_enabled`, *self.DATA_NAME_CONFIGURATION_MANAGEMENT_GLOBAL*
+            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_CONFIGURATION_MANAGEMENT_GLOBAL*
+            * **Step 3:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         # AutoGen method click_link: https://test-cs.i.palveluvayla.com:4000/configuration_management
         self.wait_until_element_is_enabled(self.DATA_NAME_CONFIGURATION_MANAGEMENT_GLOBAL)
@@ -147,7 +158,9 @@ class Cs_sidebar(CommonUtils):
         Click sidebar link to open system settings view
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_SYSTEM_SETTINGS*
+            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_element_is_enabled`, *self.DATA_NAME_SYSTEM_SETTINGS*
+            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_SYSTEM_SETTINGS*
+            * **Step 3:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         # AutoGen method click_link: https://test-cs.i.palveluvayla.com:4000/system_settings
         self.wait_until_element_is_enabled(self.DATA_NAME_SYSTEM_SETTINGS)
@@ -159,8 +172,9 @@ class Cs_sidebar(CommonUtils):
         Click sidebar link to open backups view
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_BACKUP_BACK_UP_AND_RESTORE*
-            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_element_is_enabled`, *self.DATA_NAME_BACKUP_BACK_UP_AND_RESTORE*
+            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_BACKUP_BACK_UP_AND_RESTORE*
+            * **Step 3:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         # AutoGen method click_link: https://test-cs.i.palveluvayla.com:4000/backup
         self.wait_until_element_is_enabled(self.DATA_NAME_BACKUP_BACK_UP_AND_RESTORE)
@@ -173,6 +187,7 @@ class Cs_sidebar(CommonUtils):
         
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_ABOUT_VERSION*
+            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         # AutoGen method click_link: https://test-cs.i.palveluvayla.com:4000/about
         self.click_element(self.DATA_NAME_ABOUT_VERSION)
@@ -183,8 +198,9 @@ class Cs_sidebar(CommonUtils):
         Click sidebar link to open members view
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.MEMBERS*
-            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_element_is_enabled`, *self.MEMBERS*
+            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.MEMBERS*
+            * **Step 3:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         self.wait_until_element_is_enabled(self.MEMBERS)
         self.click_element(self.MEMBERS)
@@ -195,7 +211,9 @@ class Cs_sidebar(CommonUtils):
         Click sidebar link to open timestamping services view
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_TSPS_TIMESTAMPING_SERVICES*
+            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_element_is_enabled`, *self.DATA_NAME_TSPS_TIMESTAMPING_SERVICES*
+            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_TSPS_TIMESTAMPING_SERVICES*
+            * **Step 3:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         self.wait_until_element_is_enabled(self.DATA_NAME_TSPS_TIMESTAMPING_SERVICES)
         self.click_element(self.DATA_NAME_TSPS_TIMESTAMPING_SERVICES)

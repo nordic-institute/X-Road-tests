@@ -174,7 +174,7 @@ class Xroad_deletion_of_registered_object(BaseTest):
         self.common_lib_ssh.delete_files_from_directory(u'cs_url', strings.backup_directory)
 
         if error:
-            self.common_utils.fail(error)
+            print(error)
 
     def test_deletion_of_the_owner_of_ss_from_cs(self):
         """

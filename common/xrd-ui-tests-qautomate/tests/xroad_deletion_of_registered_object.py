@@ -20,6 +20,8 @@ from common_lib.component_ss_keys_and_certs import Component_ss_keys_and_certs
 from common_lib.component_cs_conf_mgm import Component_cs_conf_mgm
 from common_lib.component_ss_clients import Component_ss_clients
 from pagemodel.ss_clients import Ss_clients
+from pagemodel.ss_login import Ss_login
+from pagemodel.cs_login import Cs_login
 
 class Xroad_deletion_of_registered_object(BaseTest):
     """
@@ -45,6 +47,7 @@ class Xroad_deletion_of_registered_object(BaseTest):
     component_cs_conf_mgm = Component_cs_conf_mgm()
     component_ss_clients = Component_ss_clients()
     ss_clients = Ss_clients()
+    cs_login = Cs_login()
 
     @classmethod
     def setUpTestSet(self):

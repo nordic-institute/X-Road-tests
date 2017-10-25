@@ -144,7 +144,7 @@ class Xroad_deletion_of_registered_object(BaseTest):
                 self.component_cs_sec_servers.verify_servers_does_contain_server(u'member1_configuration', u'member_name')
             except Exception as e:
                 error = "\n" + str(e)
-                print(error)
+                print("tearDown_restore_cs" + "\n" + error)
 
             # Step Log out from central server
             self.common_utils.open_url(TESTDATA[u'cs_url']['url'])
@@ -163,7 +163,7 @@ class Xroad_deletion_of_registered_object(BaseTest):
                 self.component_cs_sec_servers.verify_table_contains_subsystem(u'member1_configuration')
             except Exception as e:
                 error = "\n" + str(e)
-                print(error)
+                print("tearDown_restore_ss" + "\n" + error)
 
             # Step Log out from security
             self.common_utils.open_url(TESTDATA[u'ss1_url']['url'])

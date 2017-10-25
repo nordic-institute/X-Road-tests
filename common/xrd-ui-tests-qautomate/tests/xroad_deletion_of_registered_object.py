@@ -48,6 +48,7 @@ class Xroad_deletion_of_registered_object(BaseTest):
     component_ss_clients = Component_ss_clients()
     ss_clients = Ss_clients()
     cs_login = Cs_login()
+    ss_login = Ss_login()
 
     @classmethod
     def setUpTestSet(self):

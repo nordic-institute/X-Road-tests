@@ -134,12 +134,6 @@ class Xroad_deletion_of_registered_object(BaseTest):
                 self.common_utils.open_url(TESTDATA[u'cs_url']['url'])
                 self.component_cs_sidebar.open_backup_restore_view()
                 self.component_cs_backup.restore_backup()
-                self.component_cs_sidebar.open_global_configuration_view()
-
-                try:
-                    self.component_cs_conf_mgm.insert_pin_from_login_button(u'cs_url')
-                except:
-                    print("Pin not needed?")
 
                 # Step Verify member found in members table in central server
                 self.component_cs_sidebar.open_members_view()
@@ -163,11 +157,6 @@ class Xroad_deletion_of_registered_object(BaseTest):
                 self.common_utils.open_url(TESTDATA[u'ss1_url']['url'])
                 self.component_ss_sidebar.open_backup_restore_view()
                 self.component_ss_backup.restore_backup()
-                # For some reason jquery takes too long
-                sleep(35)
-
-                self.component_ss_sidebar.open_keys_and_certs_view()
-                self.component_ss_keys_and_certs.active_token_and_insert_pin_code_if_needed(u'ss1_url')
 
                 # Step Verify security serve subsystem in security server
                 self.component_ss_sidebar.open_security_servers_client_view()
@@ -181,11 +170,11 @@ class Xroad_deletion_of_registered_object(BaseTest):
             self.common_lib.log_out()
         print("END")
 
-        if error:
-            print(error)
-
         # Step Return server to defaults
         self.common_lib_ssh.delete_files_from_directory(u'cs_url', strings.backup_directory)
+
+        if error:
+            self.common_utils.fail(error)
 
     def test_deletion_of_the_owner_of_ss_from_cs(self):
         """

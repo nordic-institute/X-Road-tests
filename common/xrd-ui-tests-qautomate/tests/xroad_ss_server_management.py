@@ -2,9 +2,7 @@
 from variables import strings
 from webframework import TESTDATA
 from webframework.extension.base.setupTest import SetupTest
-from webframework.extension.parsers.parameter_parser import get_all_parameters
 from webframework.extension.util.common_utils import *
-from time import sleep
 from pagemodel.open_application import Open_application
 from common_lib.component_ss import Component_ss
 from common_lib.common_lib import Common_lib
@@ -12,16 +10,11 @@ from common_lib.common_lib_ssh import Common_lib_ssh
 from common_lib.component_ss_backup import Component_ss_backup
 from common_lib.component_ss_sidebar import Component_ss_sidebar
 from common_lib.component_ss_version import Component_ss_version
-from pagemodel.ss_system_parameters import Ss_system_parameters
 from pagemodel.ss_login import Ss_login
 from pagemodel.ss_backup_restore import Ss_backup_restore
 from pagemodel.ss_backup_restore_confirm_restore import Ss_backup_restore_confirm_restore
-from pagemodel.ss_backup_restore_confirm_delete import Ss_backup_restore_confirm_delete
-from pagemodel.ss_backup_restore_back_up_config import Ss_backup_restore_back_up_config
 from common_lib.component_ss_keys_and_certs import Component_ss_keys_and_certs
-from pagemodel.ss_sidebar import Ss_sidebar
 from common_lib.component_common import Component_common
-from common_lib.component_ss_services import Component_ss_services
 
 class Xroad_ss_server_management(SetupTest):
     """
@@ -66,16 +59,11 @@ class Xroad_ss_server_management(SetupTest):
     component_ss_backup = Component_ss_backup()
     component_ss_sidebar = Component_ss_sidebar()
     component_ss_version = Component_ss_version()
-    ss_system_parameters = Ss_system_parameters()
     ss_login = Ss_login()
     ss_backup_restore = Ss_backup_restore()
     ss_backup_restore_confirm_restore = Ss_backup_restore_confirm_restore()
-    ss_backup_restore_confirm_delete = Ss_backup_restore_confirm_delete()
-    ss_backup_restore_back_up_config = Ss_backup_restore_back_up_config()
     component_ss_keys_and_certs = Component_ss_keys_and_certs()
-    ss_sidebar = Ss_sidebar()
     component_common = Component_common()
-    component_ss_services = Component_ss_services()
 
     @classmethod
     def setUpTestSet(self):

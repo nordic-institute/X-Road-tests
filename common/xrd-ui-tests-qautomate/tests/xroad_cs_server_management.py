@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
-import os
 from variables import strings
 from webframework import TESTDATA
 from webframework.extension.base.setupTest import SetupTest
 from webframework.extension.util.common_utils import *
-from time import sleep
 from pagemodel.open_application import Open_application
 from common_lib.component_cs import Component_cs
 from common_lib.common_lib import Common_lib
@@ -14,9 +12,7 @@ from common_lib.component_cs_sidebar import Component_cs_sidebar
 from common_lib.component_cs_version import Component_component_cs_version
 from pagemodel.cs_backup_restore import Cs_backup_restore
 from common_lib.component_cs_backup import Component_cs_backup
-from pagemodel.ss_login import Ss_login
 from pagemodel.cs_login import Cs_login
-from pagemodel.cs_backup_restore_dlg_back_up_config import Cs_backup_restore_dlg_back_up_config
 
 class Xroad_cs_server_management(SetupTest):
     """
@@ -68,9 +64,7 @@ class Xroad_cs_server_management(SetupTest):
     component_cs_version = Component_component_cs_version()
     cs_backup_restore = Cs_backup_restore()
     component_cs_backup = Component_cs_backup()
-    ss_login = Ss_login()
     cs_login = Cs_login()
-    cs_backup_restore_dlg_back_up_config = Cs_backup_restore_dlg_back_up_config()
 
     @classmethod
     def setUpTestSet(self):

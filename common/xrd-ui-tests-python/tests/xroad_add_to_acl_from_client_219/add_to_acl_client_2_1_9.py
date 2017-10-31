@@ -1,13 +1,13 @@
 import traceback
 
-import sys
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.by import By
 
 from helpers import auditchecker
-from view_models import popups as popups, clients_table_vm as clients_table_vm, log_constants
-from selenium.webdriver.common.by import By
 from tests.xroad_add_to_acl_218.add_to_acl_2_1_8 import select_subjects_to_acl
+from view_models import popups as popups, clients_table_vm as clients_table_vm, log_constants
 from view_models.clients_table_vm import select_subjects_from_table
+from view_models.log_constants import ADD_ACCESS_RIGHTS_TO_SUBJECT, REMOVE_ACCESS_RIGHTS_FROM_SUBJECT
 
 test_name = 'ADD_TO_ACL_CLIENT'
 
@@ -83,12 +83,10 @@ def test_empty_client(ss_ssh_host=None, ss_ssh_user=None, ss_ssh_pass=None, rows
 
             self.wait_jquery()
             if ss_ssh_host is not None:
-                logs_found = log_checker.check_log(log_constants.ADD_ACCESS_RIGHTS_TO_SUBJECT,
-                                                   from_line=current_log_lines + 1)
-                self.is_true(logs_found,
-                             msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
-                                 log_constants.ADD_ACCESS_RIGHTS_TO_SUBJECT,
-                                 log_checker.found_lines))
+                expected_log_msg = ADD_ACCESS_RIGHTS_TO_SUBJECT
+                self.log('SERVICE_03 4. System logs the event "{0}"'.format(expected_log_msg))
+                logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
+                self.is_true(logs_found)
 
             # TEST PLAN 2.1.9.1-4 check if correct rows are displayed
             self.log('Getting opened services for client')
@@ -242,7 +240,7 @@ def test_existing_client(ss_ssh_host=None, ss_ssh_user=None, ss_ssh_pass=None, r
 def remove_added_data(self, log_checker=None, client_name=None, selected_id=None):
     """
     SERVICE_05(1-4) removes added data specific to these tests
-    :param log_checker|None: Auditchecker instance for log checking
+    :param log_checker: Auditchecker instance for log checking
     :param self: MainController class object
     """
     self.log('2.1.9-del Removing data')
@@ -273,11 +271,10 @@ def remove_added_data(self, log_checker=None, client_name=None, selected_id=None
     self.wait_jquery()
 
     if log_checker is not None:
-        logs_found = log_checker.check_log(log_constants.REMOVE_ACCESS_RIGHTS_FROM_SUBJECT,
+        expected_log_msg = REMOVE_ACCESS_RIGHTS_FROM_SUBJECT
+        self.log('SERVICE_05 4. System logs the event "{0}"'.format(expected_log_msg))
+        logs_found = log_checker.check_log(expected_log_msg,
                                            from_line=current_log_lines + 1)
-        self.is_true(logs_found,
-                     msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
-                         log_constants.REMOVE_ACCESS_RIGHTS_FROM_SUBJECT,
-                         log_checker.found_lines))
+        self.is_true(logs_found)
 
     self.driver.get(self.url + 'login/logout')

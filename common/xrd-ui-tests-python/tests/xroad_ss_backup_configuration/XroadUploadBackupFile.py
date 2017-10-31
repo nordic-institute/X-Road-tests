@@ -1,17 +1,23 @@
+# coding=utf-8
 import unittest
 from main.maincontroller import MainController
 import ss_management
 
-class XroadVerifyTS(unittest.TestCase):
+class XroadUploadBackupFile(unittest.TestCase):
     '''
-    UC  SS 18  Upload a Backup File
+    UC SS_18: Upload a Backup File
+    RIA URL: https://jira.ria.ee/browse/XTKB-105
+    Depends on finishing other test(s):
+    Requires helper scenarios:
+    X-Road version: 6.16
     '''
 
     def test_xroad_verify_ts(self):
         main = MainController(self)
 
-        # Set test name and number
-        main.test_number = 'UC SS 18'
+        '''Set test name and number'''
+        main.test_number = 'UC SS_18'
+        main.log('TEST: UC  SS_18: Upload a Backup File')
         main.test_name = self.__class__.__name__
 
         ssh_host = main.config.get('ss2.ssh_host')
@@ -33,7 +39,7 @@ class XroadVerifyTS(unittest.TestCase):
             '''Run the test'''
             test_ss_backup_upload()
         except:
-            main.log('XroadBackupDownload: Failed to download backup file')
+            main.log('XroadUploadBackupFile: Failed to upload backup file')
             main.save_exception_data()
             assert False
         finally:

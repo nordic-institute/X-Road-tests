@@ -8,7 +8,7 @@ from main.maincontroller import MainController
 from tests.xroad_client_registration_in_ss_221.client_registration_in_ss_2_2_1 import approve_requests
 from tests.xroad_delete_csr_and_cert.XroadCertAndCSRDeletion import test_delete_csr_key_has_more_items, \
     test_delete_cert_key_has_more_items, test_delete_only_cert_from_only_key, test_delete_only_csr_from_only_key
-from tests.xroad_parse_users_input_SS_41.parse_user_input_SS_41 import add_key_label
+from tests.xroad_parse_users_inputs.xroad_parse_user_inputs import add_key_label
 from tests.xroad_ss_client_certification_213.client_certification_2_1_3 import register_cert, activate_cert, \
     test_add_cert_to_ss, \
     test_generate_csr_and_import_cert
@@ -17,15 +17,16 @@ from view_models.keys_and_certificates_table import SIGNING_KEY_LABEL, AUTH_KEY_
 
 
 class cert_and_csr_deletion_tests(unittest.TestCase):
+    """
+    SS_39 1-5, 3a, 4a, 4b Delete Certificate or a Certificate Signing Request Notice from System Configuration
+    RIA URL: https://jira.ria.ee/browse/XTKB-100
+    RIA URL: https://jira.ria.ee/browse/XTKB-126
+    Depends on finishing other test(s):
+    Requires helper scenarios:
+    X-Road version: 6.16
+    """
+
     def test_cert_and_csr_deletion(self):
-        """
-        SS_39 4, 4b Deleting cert and CSR tests
-        RIA URL: https://jira.ria.ee/browse/XTKB-126
-        Depends on finishing other test(s):
-        Requires helper scenarios: client_certification
-        X-Road version: 6.9.4
-        :return:
-        """
         main = MainController(self)
         ca_ssh_host = main.config.get('ca.ssh_host')
         ca_ssh_user = main.config.get('ca.ssh_user')

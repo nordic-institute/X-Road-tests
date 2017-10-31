@@ -162,7 +162,7 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
         refresh_wsdl_failed_message = log_constants.REFRESH_WSDL_FAILED
         current_log_lines = log_checker.get_line_count()
 
-        '''SERVICE_14 3b The process of validating the WSDL file was terminated with an error message'''
+        '''SERVICE_14 3b. The process of validating the WSDL file was terminated with an error message'''
         self.log('Replacing testwsdl with a one, which gives error')
         webserver_set_wsdl(self, wsdl_source_filename=wsdl_local_path.format(wsdl_error),
                            wsdl_target_filename=wsdl_local_path.format(wsdl_filename))
@@ -175,16 +175,15 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
                       .format(wsdl_url, error))
         self.is_none(warning, msg='Refresh invalid WSDL: got warning for WSDL {0} : {1}'
                      .format(wsdl_url, warning))
+        self.log('SERVICE_14 3b.1 System displays WSDL validator output describing the reason of the failure,'
+                 'and the error message from the validation process')
         self.is_not_none(console, msg='Refresh invalid WSDL: no console output for WSDL {0}'
                          .format(wsdl_url))
         self.log('Error message: {0}'.format(warning))
 
-        self.log('Check if log contains expected message')
+        self.log('SERVICE_14 3b.2 System logs the event "{0}"'.format(refresh_wsdl_failed_message))
         logs_found = log_checker.check_log(refresh_wsdl_failed_message, from_line=current_log_lines + 1)
-        self.is_true(logs_found,
-                     msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
-                         refresh_wsdl_failed_message,
-                         log_checker.found_lines))
+        self.is_true(logs_found)
 
         # TEST PLAN 2.2.5.2 - replace WSDL with a file that gives a validation warning
         self.log('2.2.5.2 - replace WSDL with a file that gives a validation warning: {0}'.format(wsdl_warning))
@@ -244,14 +243,10 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
         # Wait until the settings are saved.
         self.wait_jquery()
 
-        self.log('SERVICE_14 7. Refresh WSDL is logged in audit log')
-        refresh_wsdl_message = log_constants.REFRESH_WSDL
-        self.log('Check if log contains expected message')
-        logs_found = log_checker.check_log(refresh_wsdl_message, from_line=current_log_lines + 1)
-        self.is_true(logs_found,
-                     msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
-                         refresh_wsdl_message,
-                         log_checker.found_lines))
+        expected_log_msg = log_constants.REFRESH_WSDL
+        self.log('SERVICE_14 7. System logs the event "{0}"'.format(expected_log_msg))
+        logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
+        self.is_true(logs_found)
 
         # TEST PLAN 2.2.5-3 test query from TS1 client CLIENT1:sub to service bodyMassIndex. Query should fail.
         self.log('2.2.5-3 test query {0} to service bodyMassIndex. Query should fail.'.format(query_filename))
@@ -304,7 +299,6 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
 
         new_service_parameters = clients_table_vm.get_service_parameters(self, service_row)
         new_service_parameters_2 = clients_table_vm.get_service_parameters(self, service_row_2)
-
 
         self.is_equal(service_parameters_2['url'], new_service_parameters_2['url'],
                       msg='Service URLs are not equal, old={0}, new={1}'.format(
@@ -376,52 +370,41 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
         self.log('2.2.5-6 test query 2 {0} to service xroadGetRandom. Query should succeed.'.format(query_2_filename))
         case.is_true(testclient_http_2.check_success(), msg='2.2.5-6 test query 2 failed')
 
-        # UC SERVICE 14 4a. Service read from WSDL file already exists in another WSDL
-        # Open client services tab
+        '''UC SERVICE 14 4a. Service read from WSDL file already exists in another WSDL'''
+        self.log('Open client details')
         clients_table_vm.open_client_popup_services(self, client_name=client_name, client_id=client_id)
 
-        # Find the table that lists all WSDL files and services
+        self.log('Open services tab')
         services_table = self.by_id(popups.CLIENT_DETAILS_POPUP_SERVICES_TABLE_ID)
-        # Wait until that table is visible (opened in a popup)
         self.wait_until_visible(services_table)
 
-        # Replace new WSDL file to be without services WSDL
+        self.log('Copy empty wsdl to new wsdl file')
         webserver_set_wsdl(self, wsdl_source_filename=wsdl_local_path.format(wsdl_warning),
                            wsdl_target_filename=wsdl_local_path.format(new_wsdl))
-        # Get new WSDL service url
         new_wsdl_url = wsdl_path.format(new_wsdl)
-        # Add new WSDL
+        self.log('Add new wsdl')
         console, warning, error = configure_service_2_2_2.add_wsdl(self, new_wsdl_url)
         self.is_none(error)
-
-        # Confirm WSDL adding
         self.wait_until_visible(type=By.XPATH, element=popups.WARNING_POPUP_CONTINUE_XPATH).click()
         self.wait_jquery()
 
-        # Replace new WSDL with WSDL, which contains only xroadgetrandom
+        self.log('Replace new wsdl file with the one, which contains service that is already present in another wsdl')
         webserver_set_wsdl(self, wsdl_source_filename=wsdl_local_path.format(wsdl_correct),
                            wsdl_target_filename=wsdl_local_path.format(new_wsdl))
-
-        # Connect to ss and get current log line count
         current_log_lines = log_checker.get_line_count()
-        # Refresh new WSDL services
+
+        self.log('SERVICE_14 4a. A service with the same service code and version values as a '
+                 'service read from the WSDL file is described in another WSDL of the service client')
         clients_table_vm.client_services_popup_select_wsdl(self, wsdl_url=new_wsdl_url)
         refresh_wsdl(self)
-        # Error message should show up, which says that xroadgetrandom service exists in another WSDL
-        error = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
-
-        # Adding existing WSDL service error
         correct_error = messages.WSDL_REFRESH_ERROR_SERVICE_EXISTS.format(service_name_2, new_wsdl_url, wsdl_url)
-        # Check if error message is correct
-        self.is_equal(con1=error, con2=correct_error,
-                      msg='Error message {0} is not correct, should be: {1}'.format(error, correct_error))
+        self.log('SERVICE_14 4a.1 System displays the error message "{0}"'.format(correct_error))
+        error = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
+        self.is_equal(correct_error, error)
 
-        # Check if log contains expected message
+        self.log('SERVICE_14 4a.2 System logs the event "{0}"'.format(refresh_wsdl_failed_message))
         logs_found = log_checker.check_log(refresh_wsdl_failed_message, from_line=current_log_lines + 1)
-        self.is_true(logs_found,
-                     msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
-                         refresh_wsdl_failed_message,
-                         log_checker.found_lines))
+        self.is_true(logs_found)
 
     return refresh_existing_wsdl
 

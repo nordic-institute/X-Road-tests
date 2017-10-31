@@ -1,10 +1,13 @@
-from helpers import xroad, soaptestclient
-from view_models import clients_table_vm, popups, log_constants
-from selenium.webdriver.common.by import By
 import re
 import time
 
+from selenium.webdriver.common.by import By
+
+from helpers import xroad, soaptestclient
+from view_models import clients_table_vm, popups
 # These faults are checked when we need the result to be unsuccessful. Otherwise the checking function returns True.
+from view_models.log_constants import DISABLE_WSDL
+
 faults_unsuccessful = ['Server.ServerProxy.ServiceDisabled']
 # These faults are checked when we need the result to be successful. Otherwise the checking function returns False.
 faults_successful = ['Server.ServerProxy.AccessDenied', 'Server.ServerProxy.UnknownService',
@@ -109,13 +112,8 @@ def test_disable_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
         # Wait until the "Disable WSDL" dialog opens.
         self.wait_until_visible(popups.DISABLE_WSDL_POPUP_XPATH, type=By.XPATH)
 
-        '''SERVICE_13 3a disabling confirmation dialog is cancelled'''
-        self.log('SERVICE_13 3a disabling confirmation dialog is cancelled')
-        # Get the Cancel button
-        disable_dialog_cancel_button = self.by_xpath(popups.DISABLE_WSDL_POPUP_CANCEL_BTN_XPATH)
-
-        # Cancel disabling
-        disable_dialog_cancel_button.click()
+        self.log('SERVICE_13 3a. Disabling WSDL confirmation dialog is cancelled')
+        self.by_xpath(popups.DISABLE_WSDL_POPUP_CANCEL_BTN_XPATH).click()
         self.wait_jquery()
 
         # Find and click the "Disable" button to enable the WSDL.
@@ -137,14 +135,11 @@ def test_disable_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
         self.wait_jquery()
 
         if log_checker is not None:
-            expected_log_msg = log_constants.DISABLE_WSDL
-            '''Log message expected to be present in audit.log after deletion'''
+            expected_log_msg = DISABLE_WSDL
+            self.log('SERVICE_13 6. System logs the event "{0}"'.format(expected_log_msg))
             logs_found = log_checker.check_log(expected_log_msg,
                                                from_line=current_log_lines + 1)
-            self.is_true(logs_found,
-                         msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
-                             expected_log_msg,
-                             log_checker.found_lines))
+            self.is_true(logs_found)
 
         # TEST PLAN 2.2.6-2 sub: check that the WSDL is written in red text (class "disabled") and starts with
         # "WSDL DISABLED"

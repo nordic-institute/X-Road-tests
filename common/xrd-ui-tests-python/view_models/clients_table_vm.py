@@ -476,29 +476,26 @@ def client_services_popup_get_wsdl(self, wsdl_index):
 
 
 def client_servers_popup_set_connection(self, type):
-    # Find the connection type select list
+    self.log('MEMBER_49 2. Selecting internal server connection type "{0}"'.format(type))
     connection_type_select = Select(self.by_id(popups.CLIENT_DETAILS_POPUP_INTERNAL_SERVERS_CONNECTION_TYPE_ID))
-    # Set connection type
     connection_type_select.select_by_value(type)
 
-    # Save connection type
+    self.log('MEMBER_49 3. Save button is pressed, system saves the connection type')
     connection_type_save_button = self.by_id(popups.CLIENT_DETAILS_POPUP_INTERNAL_SERVERS_CONNECTION_TYPE_SAVE_BTN_ID)
     connection_type_save_button.click()
 
-    # Wait until saved.
+    self.log('Check if success message is shown')
     self.wait_jquery()
-
-    # Check if we got a success message (notice)
     notice = messages.get_notice_message(self)
     return (notice is not None)
 
 
 def client_servers_popup_delete_tls_certs(self, cancel_deletion=False):
-    '''
+    """
     :param self:
-    :param cancel_deletion: bool|False - True if canceling confirmation before confirming wanted
+    :param cancel_deletion: bool|False - if canceling before confirming
     :return:
-    '''
+    """
     delete_button = self.by_id(popups.CLIENT_DETAILS_POPUP_INTERNAL_SERVERS_DELETE_CERTIFICATE_BTN_ID)
     deleted_certs = 0
     while True:
@@ -510,18 +507,20 @@ def client_servers_popup_delete_tls_certs(self, cancel_deletion=False):
         if 'dataTables_empty' in self.get_classes(certificate):
             break
 
-        # Click on the certificate to select it
+        self.log('MEMBER_51 1. TLS certificate is selected')
         certificate.click()
+        self.log('MEMBER_51 1. Delete button is pressed')
         delete_button.click()
 
+        self.log('MEMBER_51 2. System prompts for confirmation')
         if cancel_deletion:
+            self.log('MEMBER_51 3.a Deletion confirmation is canceled')
             self.wait_until_visible(type=By.XPATH, element=popups.CONFIRM_POPUP_CANCEL_BTN_XPATH).click()
+            self.log('Click delete button again')
             delete_button.click()
 
-        # Confirm deletion
+        self.log('MEMBER_51 3. Deletion is confirmed')
         popups.confirm_dialog_click(self)
-
-        # Wait until saved.
         self.wait_jquery()
 
         deleted_certs += 1

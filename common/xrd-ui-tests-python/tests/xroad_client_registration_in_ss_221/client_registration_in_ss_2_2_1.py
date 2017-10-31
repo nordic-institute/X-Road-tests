@@ -10,7 +10,7 @@ from view_models import members_table, clients_table_vm, sidebar, popups, \
     keys_and_certificates_table as keyscertificates_constants, cs_security_servers, log_constants, messages, \
     groups_table
 from view_models.keys_and_certificates_table import APPROVED
-from view_models.log_constants import DELETE_SUBSYSTEM
+from view_models.log_constants import DELETE_SUBSYSTEM, REVOKE_AUTH_REGISTRATION_REQUEST, DELETE_CLIENT
 from view_models.members_table import MANAGEMENT_REQUEST_TABLE_ID
 
 SYSTEM_TYPE = 'SUBSYSTEM'
@@ -243,18 +243,17 @@ def test_test(case, cs_host, cs_username, cs_password,
             approve_requests(self, '2.2.1-5 ', cancel_confirmation=True)
             self.reload_webdriver(url=cs_host, username=cs_username, password=cs_password)
 
-            '''MEMBER_39 waiting registration request is revoked'''
-            self.log('MEMBER_39 waiting registration request is revoked')
+            self.log('MEMBER_39 Revoke a Registration Request')
             '''Make copy of ss1client to make another client, which gets revoked'''
             revoke_client = ss_1_client.copy()
             '''Replace subsystem information'''
             revoke_client['subsystem'] = 'revoke'
             revoke_client['subsystem_code'] = 'revoke'
-            '''Add new client to member'''
+            self.log('Add new client to member, which will be revoked')
             add_sub_as_client_to_member(self, self.config.get('ss1.server_name'), revoke_client, wait_input=wait_input,
                                         check_request=False)
-            '''Revoke clients request'''
-            revoke_requests(self, try_cancel=True)
+            revoke_requests(self, try_cancel=True,
+                            log_checker=auditchecker.AuditChecker(cs_ssh_host, cs_ssh_user, cs_ssh_pass))
             popups.close_all_open_dialogs(self)
             '''Remove added client'''
             remove_client_subsystem(self, revoke_client)
@@ -513,8 +512,7 @@ def add_client_to_ss(self, client, retry_interval=0, retry_timeout=0, wait_input
     warning = self.wait_until_visible(type=By.ID, element=popups.CONFIRM_POPUP_TEXT_AREA_ID).text
     self.wait_jquery()
 
-    '''MEMBER_48 2a. When adding client with not existing subsystem, a warning is shown'''
-    self.log('MEMBER_48 2a. When adding client with not existing subsystem, a warning is shown')
+    self.log('MEMBER_48 2a.1 When adding client with not existing subsystem, a warning is shown')
     self.is_true(warning in get_expected_warning_messages(client), test_name,
                  step + 'WARNING NOT CORRECT: {0}'.format(
                      warning),
@@ -522,8 +520,7 @@ def add_client_to_ss(self, client, retry_interval=0, retry_timeout=0, wait_input
                      get_expected_warning_messages(client),
                      warning))
 
-    # Confirm the correct warning
-    self.log(step + 'Confirm message')
+    self.log('MEMBER_48 2a.2 Warning popup is confirmed')
     popups.confirm_dialog_click(self)
 
     # Check status
@@ -642,6 +639,7 @@ def add_client_to_ss_by_hand(self, client, check_send_errors=False, ss_host=None
     if log_checker is not None:
         '''MEMBER_48 7. System logs the event "Register client" to the audit log'''
         self.log('MEMBER_48 7. System logs the event "Register client" to the audit log')
+        time.sleep(1.5)
         logs_found = log_checker.check_log(log_constants.REGISTER_CLIENT,
                                            from_line=current_log_lines + 1)
         self.is_true(logs_found, msg='"Register client" event not found in log"')
@@ -830,7 +828,6 @@ def approve_requests(self, use_case='', step='', cancel_confirmation=False):
             self.wait_until_visible(type=By.ID, element=members_table.MANAGEMENT_REQUEST_DETAILS_BTN_ID).click()
             self.wait_jquery()
 
-            '''MEMBER_37 request approval confirmation is cancelled'''
             self.log(use_case + '1. Approve request button is pressed')
             self.wait_until_visible(type=By.XPATH, element=members_table.APPROVE_REQUEST_BTN_XPATH).click()
             self.wait_jquery()
@@ -1200,12 +1197,11 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
     current_log_lines = log_checker_ss1.get_line_count()
     self.reload_webdriver(sec_1_host, sec_1_password, sec_1_password)
     safe(self, remove_client_with_cert_and_cancelling, ss_1_client,
-         '2.2.1-del Removing client from security server 1 failed')
-    logs_found = log_checker_ss1.check_log(log_constants.DELETE_CLIENT, from_line=current_log_lines + 1, strict=False)
-    self.is_true(logs_found,
-                 msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
-                     log_constants.DELETE_CLIENT,
-                     log_checker_ss1.found_lines))
+         'Client removal with cert and deletion cancelling failed')
+    expected_log_msg = DELETE_CLIENT
+    self.log('MEMBER_53 8. System logs the event "{0}"'.format(expected_log_msg))
+    logs_found = log_checker_ss1.check_log(expected_log_msg, from_line=current_log_lines + 1, strict=False)
+    self.is_true(logs_found)
 
     '''Delete subsystem with global group from member'''
     self.reload_webdriver(cs_host, cs_username, cs_password)
@@ -1221,7 +1217,7 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
     expected_log_msg = DELETE_SUBSYSTEM
     self.reload_webdriver(cs_host, cs_username, cs_password)
     safe(self, remove_client_subsystem_with_canceling, ss_1_client,
-         '2.2.1-del Removing security server 1 client subsystem failed')
+         'Removing client {0} with subsystem'.format(ss_1_client))
     self.log('MEMBER_14 6. System logs the event {0}'.format(expected_log_msg))
     logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
     self.is_true(logs_found)
@@ -1233,10 +1229,9 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
                                                            group)).find_elements_by_tag_name('td')[2].text
     self.is_true(group_member_count > group_member_count_after)
 
-    '''Removing members from central server'''
-    self.log('2.2.1-del removing member from central server')
-    safe(self, remove_member, cs_member, '2.2.1-del Removing member failed')
-    safe(self, remove_member, ss_1_client_2, 'Removing member failed')
+    self.log('Removing members from central server')
+    safe(self, remove_member, cs_member, 'Removing member {0} failed'.format(cs_member))
+    safe(self, remove_member, ss_1_client_2, 'Removing member {0} failed'.format(ss_1_client_2))
 
     '''Reload the CS homepage'''
     self.reset_webdriver(cs_host, cs_username, cs_password)
@@ -1313,10 +1308,12 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
 
     self.driver.get(self.url)
     '''Try to remove client from security server 2'''
-    safe(self, remove_client, ss_2_client, '2.2.1-del Removing client from security server 2 failed')
+    safe(self, remove_client, ss_2_client, 'Removing client {0} failed'.format(ss_2_client))
     '''Check if log contains Delete client event'''
     log_errors = []
-    logs_found = log_checker.check_log(log_constants.DELETE_CLIENT, from_line=current_log_lines + 1)
+    expected_log_msg = DELETE_CLIENT
+    self.log('MEMBER_53 8. System logs the event {0}'.format(expected_log_msg))
+    logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
     if not logs_found:
         log_error = 'SS2 client 1 delete: some log entries were missing. Expected: "{0}", found: "{1}"'.format(
             log_constants.DELETE_CLIENT,
@@ -1327,9 +1324,10 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
 
     self.driver.get(self.url)
     '''Try to remove second client from security server 2'''
-    safe(self, remove_client, ss_2_client_2, '2.2.1-del Removing client 2 from security server 2 failed')
-    '''Check if log contains delete client event'''
-    logs_found = log_checker.check_log(log_constants.DELETE_CLIENT, from_line=current_log_lines + 1)
+    safe(self, remove_client, ss_2_client_2, 'Removing client {0} failed'.format(ss_2_client_2))
+    expected_log_msg = DELETE_CLIENT
+    self.log('MEMBER_53 8. System logs the event {0}'.format(expected_log_msg))
+    logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
     if not logs_found:
         log_error = 'SS2 client 2 delete: some log entries were missing. Expected: "{0}", found: "{1}"'.format(
             log_constants.DELETE_CLIENT,
@@ -1431,21 +1429,23 @@ def remove_client(self, client, delete_cert=False, cancel_deletion=False, deny_c
         '''Confirm unregistering'''
         popups.confirm_dialog_click(self)
         try:
+            self.log('MEMBER_53 1. Client deletion process is started')
             self.wait_jquery()
-            '''Cancel client deletion'''
+            self.log('MEMBER_53 2. System prompts for confirmation')
             if cancel_deletion:
+                self.log('MEMBER_53 3.a Client deletion is canceled')
                 self.by_xpath(popups.CONFIRM_POPUP_CANCEL_BTN_XPATH).click()
-                '''Click delete again'''
                 self.by_id(popups.CLIENT_DETAILS_POPUP_DELETE_BUTTON_ID).click()
                 self.wait_jquery()
-            '''Confirm client deletion'''
+            self.log('MEMBER_53 3. Client deletion is confirmed')
             popups.confirm_dialog_click(self)
             self.wait_jquery()
             '''Certificate deletion'''
             if delete_cert:
-                '''Wait certificate deletion confirmation popup'''
+                self.log('MEMBER_53 4. System verifies that the signature certificates associated with the client '
+                         'have no other users and asks for confirmation to delete the client\'s signature certificates')
                 self.wait_until_visible(type=By.XPATH, element=popups.YESNO_POPUP_XPATH)
-                '''Confirm certificate deletion'''
+                self.log('MEMBER_53 5. Certificate deletion is confirmed')
                 self.by_xpath(popups.YESNO_POPUP_YES_BTN_XPATH).click()
                 self.log('Open "Keys and Certificates tab"')
                 self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.KEYSANDCERTIFICATES_BTN_CSS).click()
@@ -1458,7 +1458,6 @@ def remove_client(self, client, delete_cert=False, cancel_deletion=False, deny_c
                 which means that the key has no cert and deletion was successful'''
                 self.is_true('cert-active' not in expected_next_tr.get_attribute('class').split(' '))
             elif deny_cert_deletion:
-                '''MEMBER_53 5a. Deny certificate deletion'''
                 self.log('MEMBER_53 5a. Deny certificate deletion')
                 self.wait_until_visible(type=By.XPATH, element=popups.YESNO_POPUP_XPATH)
                 self.by_xpath(popups.YESNO_POPUP_NO_BTN_XPATH).click()
@@ -1527,13 +1526,10 @@ def remove_client_subsystem(self, client, try_cancel=False):
     self.wait_until_visible(type=By.XPATH, element=members_table.SUBSYSTEM_TAB).click()
     self.wait_jquery()
 
-    table = self.wait_until_visible(type=By.XPATH, element=members_table.SUBSYSTEM_TABLE_XPATH)
     self.wait_jquery()
 
     subsys_row = self.wait_until_visible(type=By.XPATH, element=members_table.SUBSYSTEM_TR_BY_CODE_XPATH.format(
         client['subsystem_code']))
-    # Try to find leftover subsystem (without server ID) in the table.
-    # subsys_row = members_table.get_row_by_columns(table, client['subsystem_code'])
     subsys_row.click()
 
     # Click "Delete"
@@ -1668,13 +1664,18 @@ def remove_key_and_revoke_certificates(self, client, ssh_client=None):
         client_certification_2_1_3.revoke_certs(ssh_client, certs_to_revoke)
 
 
-def revoke_requests(self, try_cancel=False, auth=False):
+def revoke_requests(self, try_cancel=False, auth=False, log_checker=None):
     '''
     Revoke management requests that are in waiting state.
     :param try_cancel:  bool|False - cancels revoke before confirming
+    :param auth: bool|False - request type auth
+    :param log_checker: obj|None - auditchecker instance
     :param self: MainController object
     :return: None
     '''
+    current_log_lines = None
+    if log_checker is not None:
+        current_log_lines = log_checker.get_line_count()
     '''Client/cert successful revoke message'''
     success_message = messages.AUTH_REQUEST_REVOKE_SUCCESSFUL_NOTICE if auth \
         else messages.REQUEST_REVOKE_SUCCESSFUL_NOTICE
@@ -1690,10 +1691,12 @@ def revoke_requests(self, try_cancel=False, auth=False):
     '''Client/cert registration request selector'''
     reg_request_selector = cs_security_servers.REVOKE_CERT_MANAGEMENT_REQUEST_BTN_XPATH if auth \
         else cs_security_servers.REVOKE_CLIENT_MANAGEMENT_REQUEST_BTN_XPATH
-    self.log('REVOKING REQUESTS')
+    self.log('MEMBER_39 Revoke a Registration Request')
+    self.log('Open management requests tab')
     self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.MANAGEMENT_REQUESTS_CSS).click()
     self.wait_jquery()
 
+    self.log('Find request with waiting status')
     td = self.wait_until_visible(type=By.XPATH, element=members_table.get_requests_row_by_td_text(
         keyscertificates_constants.WAITING_STATE))
     '''Waiting request id'''
@@ -1704,12 +1707,12 @@ def revoke_requests(self, try_cancel=False, auth=False):
     self.wait_until_visible(type=By.ID, element=members_table.MANAGEMENT_REQUEST_DETAILS_BTN_ID).click()
     self.wait_jquery()
 
-    self.log('Click on revoke button')
+    self.log('MEMBER_39 1. Click on revoke button')
     self.wait_until_visible(type=By.XPATH,
                             element=reg_request_selector).click()
     self.wait_jquery()
 
-    '''MEMBER_39 3a request revoking is canceled'''
+    self.log('MEMBER_39 2. System prompts for confirmation')
     if try_cancel:
         self.log('MEMBER_39 3a request revoking is canceled')
         self.wait_until_visible(type=By.XPATH, element=popups.CONFIRM_POPUP_CANCEL_BTN_XPATH).click()
@@ -1719,32 +1722,30 @@ def revoke_requests(self, try_cancel=False, auth=False):
                                 element=reg_request_selector).click()
         self.wait_jquery()
 
-    self.log('Confirm request revokation')
+    self.log('MEMBER_39 3. Confirm request revocation')
     popups.confirm_dialog_click(self)
     self.wait_jquery()
-    self.log('Check revocation notice message')
+    expected_success_msg = success_message.format(request_id)
+    self.log('MEMBER_39 6. System displays the message "{0}"'.format(expected_success_msg))
     notice_msg = messages.get_notice_message(self)
-    self.is_equal(success_message.format(request_id), notice_msg)
-    '''MEMBER_39 5. System sets the state of registration request to revoked'''
-    self.log('Find first revoked request id in table')
+    self.is_equal(expected_success_msg, notice_msg)
+    self.log('MEMBER_39 5. System sets the state of registration request to revoked')
     first_revoked_request_id = self.by_xpath(members_table.get_requests_row_by_td_text(
         keyscertificates_constants.REVOKED_STATE)).find_element_by_tag_name('td').text
-    self.log('Check if request id is same as the one revoked')
     self.is_equal(request_id, first_revoked_request_id)
-    '''MEMBER_39 5. System creates a deletion request with revoked request info'''
-    self.log('Find first deletion request in table')
+    self.log('MEMBER_39 5. System creates a deletion request with revoked request id')
     self.by_xpath(deletion_request_selector).click()
-    self.log('Open deletion request details')
     self.wait_until_visible(type=By.ID, element=members_table.MANAGEMENT_REQUEST_DETAILS_BTN_ID).click()
-
     '''Request details dialog element'''
     client_deletion_details_dialog = self.wait_until_visible(type=By.ID, element=details_dialog_selector)
-
     '''Request details comment field text'''
     comment = client_deletion_details_dialog.find_element_by_class_name(
         cs_security_servers.CLIENT_DELETION_REQUEST_DETAILS_DIALOG_COMMENTS_INPUT_CLASS).text
-    self.log('Check if request deletion comment contains information about request revocation')
-    self.is_equal(comment, delete_request_comment.format(request_id), msg='Deletion comment not correct')
+    self.is_equal(comment, delete_request_comment.format(request_id))
+    if current_log_lines is not None:
+        expected_log_msg = REVOKE_AUTH_REGISTRATION_REQUEST
+        logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
+        self.is_true(logs_found)
 
 
 def safe(self, func, member, message):

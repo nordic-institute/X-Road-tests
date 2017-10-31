@@ -10,10 +10,6 @@ def test_view_list_of_tokens_keys_certs(host_cert_name):
      UC SS_19: View the List of Tokens, Keys and Certificates
     """
     def test_case(self):
-        """
-        :param self: MainController object
-        :return: None
-        """
         def verify_cert_data_display(cert_data, key_type=None):
             if key_type == '(auth)':
                 cert_name = host_cert_name
@@ -126,7 +122,7 @@ def test_view_list_of_tokens_keys_certs(host_cert_name):
 
             elif splited_row[0] == 'Token:':
                 '''Verify that friendly name is displayed for token'''
-                self.log('''Verify that friendly name is displayed for token. SS_19/2''')
+                self.log('''Verify that friendly name is displayed for token.''')
                 displayed_token_name = splited_row[1]
                 token_name_displayed = False
                 if len(displayed_token_name) > 0:
@@ -136,7 +132,7 @@ def test_view_list_of_tokens_keys_certs(host_cert_name):
 
             elif splited_row[0] == 'Key:':
                 '''Verify that friendly name and type of the key are displayed for key'''
-                self.log('''Verify that friendly name and type of the key are displayed for  key. SS_19/2''')
+                self.log('''Verify that friendly name and type of the key are displayed for  key.''')
 
                 key_data = splited_row
                 key_name_displayed = False
@@ -157,26 +153,26 @@ def test_view_list_of_tokens_keys_certs(host_cert_name):
                 auth_request = False
                 if certificate_key_type == key_type_auth and len(cert_data) == 1:
                     '''Verify that only - Request - is displayed for certificate, if key type for requested certificate 
-                    is (auth). SS_19/2'''
+                    is (auth).'''
                     self.log('Verify that only - Request - is displayed for certificate, if key type for requested '
-                             'certificate is (auth). SS_19/2')
+                             'certificate is (auth).')
                     auth_request = True
                     self.log('''Certificate name - {0} - is displayed.'''.format(cert_data[0]))
                     assert auth_request is True
 
                 elif certificate_key_type == key_type_auth and len(cert_data) > 1:
                     '''Verify that  - Certificate, OCSP response, Expires, Status - are displayed for certificate, if 
-                    key type for certificate is (auth). SS_19/2'''
+                    key type for certificate is (auth).'''
                     self.log('Verify that  - Certificate, OCSP response, Expires, Status - are displayed '
-                             'for certificate, if key type for certificate is (auth). SS_19/2')
+                             'for certificate, if key type for certificate is (auth).')
 
                     verify_cert_data_display(cert_data, key_type=key_type_auth)
 
                 elif certificate_key_type == key_type_sign and len(cert_data) == 4:
                     '''Verify that  - Request, Member - is displayed for certificate, if key type for requested 
-                    certificate is (sign). SS_19/2'''
+                    certificate is (sign).'''
                     self.log('Verify that  - Request, Member - is displayed for certificate, if key type for requested '
-                             'certificate is (sign). SS_19/2')
+                             'certificate is (sign).')
                     displayed_cert_name = cert_data[0]
                     displayed_member_class = cert_data[1]
                     displayed_colon = cert_data[2]
@@ -200,9 +196,9 @@ def test_view_list_of_tokens_keys_certs(host_cert_name):
 
                 elif certificate_key_type == key_type_sign and len(cert_data) > 4:
                     '''Verify that  - Certificate, Member, OCSP response, Expires, Status - are displayed for 
-                    certificate, if key type for certificate is (sign). SS_19/2'''
+                    certificate, if key type for certificate is (sign).'''
                     self.log('Verify that  - Certificate, Member, OCSP response, Expires, Status - are displayed for '
-                             'certificate, if key type for certificate is (sign). SS_19/2')
+                             'certificate, if key type for certificate is (sign).')
                     verify_cert_data_display(cert_data, key_type_sign)
 
     return test_case
@@ -213,10 +209,6 @@ def test_view_token_details():
     UC SS_20: View the Details of a Token
     """
     def test_case(self):
-        """
-        :param self: MainController object
-        :return: None
-        """
         '''SS administrator selects to view the list of tokens'''
         self.log('SS administrator selects to view the list of tokens, keys and certificates, '
                  'by clicking on "Keys and certificates" tab')
@@ -225,7 +217,6 @@ def test_view_token_details():
 
         '''System displays the tokens'''
         self.log('''System displays the tokens''')
-
         tokens = self.wait_until_visible(type=By.CLASS_NAME, element=keyscertificates_constants.TOKEN_NAMES_CLASS,
                                          multiple=True)
 
@@ -274,10 +265,6 @@ def test_view_key_details():
     UC SS_21: View the Details of a Key
     """
     def test_case(self):
-        """
-        :param self: MainController object
-        :return: None
-        """
         '''SS administrator selects to view the list of keys'''
         self.log('SS administrator selects to view the list of keys, '
                  'by clicking on "Keys and certificates" tab')
@@ -288,6 +275,7 @@ def test_view_key_details():
         self.log('''System displays the keys''')
 
         keys = self.wait_until_visible(type=By.CLASS_NAME, element='key-usage', multiple=True)
+
         for key in keys:
             '''SS_21 step 1. SS administrator selects to view the details of a key.'''
             self.log('''SS_21 step 1. SS administrator selects to view the details of a key.''')
@@ -349,12 +337,10 @@ def test_change_key_name(ssh_host, ssh_user, ssh_pass):
     :return: None
     """
     def test_case(self):
-        """
-        :param self: MainController object
-        :return: None
-        """
         key_name = "test_certificate_keys"
 
+        '''Key names and results = [entered string, are there errors(True/False), expected error message, 
+        parameter for error message, are there whitespaces]'''
         key_name_and_results = [[256 * 'S', True, "Parameter '{0}' input exceeds 255 characters", 'friendly_name',
                                  False],
                                 ['   ' + key_name + '   ', False, None, None, True],
@@ -380,6 +366,8 @@ def test_change_key_name(ssh_host, ssh_user, ssh_pass):
 
         '''SS_23 2a.3. SS administrator selects to reinsert the friendly name. Use case continues form step 2.'''
         self.log('SS_23 2a.3. SS administrator selects to reinsert the friendly name. Use case continues form step 2.')
+
+
         for key_name in key_name_and_results:
 
             input_text = key_name[0]
@@ -441,6 +429,7 @@ def test_change_key_name(ssh_host, ssh_user, ssh_pass):
                     find_text_with_whitespaces(self, input_text, key_label_name)
                 else:
                     assert input_text in key_label_name
+            self.wait_jquery()
 
         '''Delete the added key label'''
         self.log('''Delete the added key label''')

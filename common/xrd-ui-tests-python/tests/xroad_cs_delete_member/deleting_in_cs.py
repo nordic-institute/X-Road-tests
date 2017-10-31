@@ -14,12 +14,13 @@ from tests.xroad_ss_client_certification_213 import client_certification_2_1_3
 from view_models import popups, sidebar, groups_table, cs_security_servers, members_table, keys_and_certificates_table, \
     messages, log_constants
 from view_models.cs_security_servers import SECURITY_SERVER_TABLE_CSS
-from view_models.log_constants import APPROVE_CLIENT_REGISTRATION_REQUST
+from view_models.log_constants import APPROVE_CLIENT_REGISTRATION_REQUST, ADD_SECURITY_SERVER
+from view_models.messages import CERTIFICATE_IMPORT_SUCCESSFUL, CERTIFICATE_ADDING_NEW_SERVER_REQUEST_ADDED_NOTICE
 
 
 def test_deleting_member_with_global_group(cs_ssh_host, cs_ssh_username, cs_ssh_password, client, user, test_group):
     """
-    Deletes member in central server, which has global group
+    Delete member in central server, which has global group test
     :param cs_ssh_host: string - central server ssh host
     :param cs_ssh_username: string - central server ssh username
     :param cs_ssh_password:  string - central server ssh password
@@ -30,7 +31,6 @@ def test_deleting_member_with_global_group(cs_ssh_host, cs_ssh_username, cs_ssh_
     """
 
     def deleting_member_with_global_group(self):
-        '''Central server ssh client'''
         ssh_client = ssh_server_actions.get_client(cs_ssh_host, cs_ssh_username, cs_ssh_password)
         self.log('Adding new member to central server')
         add_member_to_cs(self, ssh_client, user, member=client)
@@ -39,18 +39,16 @@ def test_deleting_member_with_global_group(cs_ssh_host, cs_ssh_username, cs_ssh_
         add_group(self, ssh_client, user, group=test_group)
         self.log('Adding added member to added group')
         add_client_to_group(self, ssh_client, user, member=client, group=test_group)
-        self.log('Delete added member from central server')
+        self.log('MEMBER_36 6.a Delete member in global group from central server')
         delete_client(self, ssh_client, user, member=client)
         self.wait_jquery()
-        self.log('Check if previously added group is empty after deleting its only member')
+        self.log('MEMBER_36 6.a1 System removes the member from global groups')
         self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.GLOBAL_GROUPS_CSS).click()
         self.wait_jquery()
-        '''Added group member count after deletion'''
         member_count_after_deletion = self.wait_until_visible(type=By.XPATH,
                                                               element=groups_table.get_global_group_member_count_by_code(
                                                                   test_group)).text
         self.is_equal(member_count_after_deletion, '0', msg='Global group member count not 0 after deleting member')
-        self.log('Remove group from central server')
 
     return deleting_member_with_global_group
 
@@ -59,7 +57,7 @@ def test_deleting_member_with_subsystem_registered_as_client_to_ss(case, cs_memb
                                                                    ss1_client, cs_ssh_host,
                                                                    cs_ssh_username, cs_ssh_password, user):
     """
-    Deletes member in central server with subsystem registered as security server client
+    Delete member in central server with subsystem registered as security server client test
     :param case:
     :param cs_member_name: str - new member name
     :param cs_new_member: dict - member to add
@@ -75,7 +73,7 @@ def test_deleting_member_with_subsystem_registered_as_client_to_ss(case, cs_memb
     ss1_instance = ss1_client['instance']
 
     def deleting_member_with_subsystem_registered_as_client_to_ss():
-        '''Central server ssh client instance'''
+        self.log('MEMBER_26 5a The member\'s subsystems are clients of security servers')
         ssh_client = ssh_server_actions.get_client(cs_ssh_host, cs_ssh_username, cs_ssh_password)
         self.log('Deleting member from central server')
         delete_client(self, ssh_client, user, member=cs_member)
@@ -94,9 +92,13 @@ def test_deleting_member_with_subsystem_registered_as_client_to_ss(case, cs_memb
         comment = client_deletion_details_dialog.find_element_by_class_name(
             cs_security_servers.CLIENT_DELETION_REQUEST_DETAILS_DIALOG_COMMENTS_INPUT_CLASS).text
         self.log('Check if request details is about subsystem deletion')
+        expected_deletion_comment = messages.SUBSYSTEM_DELETION_COMMENT.format(ss1_instance, ss1_client['class'],
+                                                                               ss1_client['code'],
+                                                                               ss1_client['subsystem'])
+        self.log('MEMBER_26 5a.1 System creates and saves a security server '
+                 'client deletion request with the comment \n"{0}"'.format(expected_deletion_comment))
         self.is_equal(comment,
-                      messages.SUBSYSTEM_DELETION_COMMENT.format(ss1_instance, ss1_client['class'], ss1_client['code'],
-                                                                 ss1_client['subsystem']),
+                      expected_deletion_comment,
                       msg='Subsystem deletion comment not correct')
 
     return deleting_member_with_subsystem_registered_as_client_to_ss
@@ -128,10 +130,10 @@ def remove_client_and_key_from_ss(case, ss1_host, ss1_username, ss1_password, ss
     return remove_client_and_key
 
 
-def test_deleting_member_with_security_server(case, cs_ssh_host, cs_ssh_user, cs_ssh_pass,
+def test_deleting_member_with_security_server(self, cs_ssh_host, cs_ssh_user, cs_ssh_pass,
                                               client, user):
     """
-    Deletes member with security server
+    Delete member with security server test
     :param case:
     :param cs_ssh_host: str - central server ssh host
     :param cs_ssh_user: str - central server ssh username
@@ -140,14 +142,12 @@ def test_deleting_member_with_security_server(case, cs_ssh_host, cs_ssh_user, cs
     :param user: dict - username, under which the changes are made
     :return:
     """
-    self = case
 
     def delete_member_with_security_server():
-        '''Central server ssh client instance'''
+        self.log('MEMBER_26 4a. Delete member from central server, which has owned security server')
         ssh_client = ssh_server_actions.get_client(cs_ssh_host, cs_ssh_user, cs_ssh_pass)
-        self.log('Delete member from central server')
         delete_client(self, ssh_client, user, member=client)
-        self.log('Check if security server owned by deleted member is not visible')
+        self.log('MEMBER_26 4a.1 System deletes the security server')
         self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.SECURITY_SERVERS_CSS).click()
         try:
             self.wait_until_visible(type=By.ID, element=cs_security_servers.SECURITY_SERVER_TABLE_ID)
@@ -163,7 +163,7 @@ def test_add_security_server_to_member(case, cs_host, cs_username, cs_password, 
                                        client, cert_path, check_inputs=False, verify_cert=False,
                                        cert_used_already=False, check_server=False):
     """
-    MEMBER_12 ALL steps , except 7
+    MEMBER_12 ALL steps
     Adds security server to member in central server
     :param case:
     :param cs_host: str - central server host
@@ -184,9 +184,7 @@ def test_add_security_server_to_member(case, cs_host, cs_username, cs_password, 
     file_abs_path = os.path.abspath(local_cert_path)
 
     def add_security_server_to_member():
-        '''Log checker instance for central server'''
         log_checker = auditchecker.AuditChecker(host=cs_ssh_host, username=cs_ssh_user, password=cs_ssh_pass)
-        '''Current line count in log'''
         current_log_lines = log_checker.get_line_count()
         self.log('Open central server homepage')
         self.reload_webdriver(url=cs_host, username=cs_username, password=cs_password)
@@ -195,9 +193,9 @@ def test_add_security_server_to_member(case, cs_host, cs_username, cs_password, 
         self.wait_jquery()
         self.log('Open owned servers tab')
         self.by_xpath(cs_security_servers.SERVER_MANAGEMENT_OWNED_SERVERS_TAB).click()
-        self.log('Click on add owned servers button')
+        self.log('MEMBER_12 1. Click on add owned servers button')
         self.wait_until_visible(type=By.CSS_SELECTOR, element=cs_security_servers.ADD_OWNED_SERVER_BTN_CSS).click()
-        self.log('Check if fields are prefilled')
+        self.log('MEMBER_12 2. Check if fields are prefilled')
         self.is_equal(client['name'], self.wait_until_visible(type=By.ID,
                                                               element=cs_security_servers.OWNED_SERVERS_UPLOAD_OWNER_NAME_ID).text)
         self.is_equal(client['class'], self.wait_until_visible(type=By.ID,
@@ -215,7 +213,7 @@ def test_add_security_server_to_member(case, cs_host, cs_username, cs_password, 
         if verify_cert:
             wrong_local_cert_path = self.get_download_path('test')
             wrong_file_abs_path = os.path.abspath(wrong_local_cert_path)
-
+            self.log('MEMBER_12 6a The uploaded file is not in PEM or DER format')
             xroad.fill_upload_input(self, file_upload, wrong_file_abs_path)
             expected_error_msg = messages.AUTH_CERT_IMPORT_FILE_FORMAT_ERROR
             self.log('MEMBER_12 6a.1 System displays the "{0}" error message'.format(expected_error_msg))
@@ -224,7 +222,7 @@ def test_add_security_server_to_member(case, cs_host, cs_username, cs_password, 
 
             error_local_cert_path = self.get_download_path(os.getcwd() + '/error.pem')
             error_file_abs_path = os.path.abspath(error_local_cert_path)
-
+            self.log('MEMBER_12 6b. The uploaded certificate is not an authentication certificate.')
             xroad.fill_upload_input(self, file_upload, error_file_abs_path)
             expected_error_msg = messages.AUTH_CERT_IMPORT_FILE_CANNOT_BE_USED
             self.log('MEMBER_12 6b.1 System displays the "{0}" error message'.format(expected_error_msg))
@@ -235,17 +233,20 @@ def test_add_security_server_to_member(case, cs_host, cs_username, cs_password, 
             return
 
         xroad.fill_upload_input(self, file_upload, file_abs_path)
+        self.log('MEMBER_12 4. Uploading the authentication certificate from the local file system')
         self.wait_jquery()
+        expected_notice_msg = CERTIFICATE_IMPORT_SUCCESSFUL
+        self.log('MEMBER_12 6. System verifies the uploaded certificate and displays the message "{0}"'.format(
+            expected_notice_msg))
         notice_msg = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.NOTICE_MESSAGE_CSS).text
-        self.is_equal(messages.CERTIFICATE_IMPORT_SUCCESSFUL, notice_msg)
-        '''MEMBER_12 7, 7.a. System parses the user input '''
+        self.is_equal(expected_notice_msg, notice_msg)
         if check_inputs:
             self.log('MEMBER_12 7, 7.a. System parses the user input ')
             self.log('Submit button disabled when one field is empty')
             self.is_false(self.by_id(cs_security_servers.ADD_OWNED_SERVER_SUBMIT_BUTTON_ID).is_enabled())
             self.log('MEMBER_12 7.a. Error is shown when input is 256 char long')
             self.input(element=server_code_input, text='A' * 256)
-            '''Submit server registration form'''
+            self.log('Submit server registration form')
             self.wait_until_visible(type=By.ID, element=cs_security_servers.ADD_OWNED_SERVER_SUBMIT_BUTTON_ID).click()
             '''Expected error message'''
             expected_error_msg = messages.INPUT_EXCEEDS_255_CHARS.format('serverCode')
@@ -261,17 +262,17 @@ def test_add_security_server_to_member(case, cs_host, cs_username, cs_password, 
                      'This time 255 chars, starting and ending with whitespace')
             name_255 = ' {0} '.format('A' * 255)
             self.input(element=server_code_input, text=name_255)
-            '''Submit server registration form'''
+            self.log('Submit server registration form')
             self.wait_until_visible(type=By.ID, element=cs_security_servers.ADD_OWNED_SERVER_SUBMIT_BUTTON_ID).click()
-            '''Visible notice message text'''
+            expected_notice_msg = CERTIFICATE_ADDING_NEW_SERVER_REQUEST_ADDED_NOTICE.format(
+                '{0}/{1}/{2}/{3}'.format(client['instance'], client['class'], client['code'], name_255.strip()))
+            self.log('MEMBER_12 11. System displays the message "{0}"'.format(expected_notice_msg))
             notice_msg = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.NOTICE_MESSAGE_CSS).text
-            self.is_equal(messages.CERTIFICATE_ADDING_NEW_SERVER_REQUEST_ADDED_NOTICE.format(
-                '{0}/{1}/{2}/{3}'.format(client['instance'], client['class'], client['code'], name_255.strip())),
-                notice_msg)
-            '''Revoke added security server request'''
+            self.is_equal(expected_notice_msg, notice_msg)
+            self.log('Revoke added security server request')
             self.reload_webdriver(cs_host, cs_username, cs_password)
             client_registration_in_ss_2_2_1.revoke_requests(self, auth=True)
-            '''Add server to member without input parsing check'''
+            self.log('Add server to member without input parsing check')
             test_add_security_server_to_member(self, cs_host, cs_username, cs_password, cs_ssh_host, cs_ssh_user,
                                                cs_ssh_pass, client, cert_path)()
             return
@@ -284,12 +285,14 @@ def test_add_security_server_to_member(case, cs_host, cs_username, cs_password, 
             self.wait_jquery()
             'Get error message'
             error_msg = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
-            expected_error_msg = messages.AUTH_CERT_ALREADY_REGISTRED.format(self.number)
-            self.is_equal(expected_error_msg, error_msg)
+            expected_error_msg = messages.AUTH_CERT_ALREADY_REGISTRED
+            self.is_true(error_msg.startswith(expected_error_msg))
 
             '''Expected log message'''
             expected_log_msg = log_constants.ADD_SECURITY_SERVER_FAILED
-            self.log('MEMBER_12 8a.2. System logs the event {0}'.format(expected_log_msg))
+            self.log('MEMBER_12 8a.1. System logs the event {0}'.format(expected_log_msg))
+            self.log('MEMBER_12 8a.2. System logs the event “Add security server failed” to the audit log')
+
             logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines)
             self.is_true(logs_found)
 
@@ -312,25 +315,29 @@ def test_add_security_server_to_member(case, cs_host, cs_username, cs_password, 
 
             '''Expected log message'''
             expected_log_msg = log_constants.ADD_SECURITY_SERVER_FAILED
-            self.log('MEMBER_12 9a.2. System logs the event {0}'.format(expected_log_msg))
+            self.log('MEMBER_12 9a.1. System logs the event {0}'.format(expected_log_msg))
+            self.log('MEMBER_12 9a.2. System logs the event “Add security server failed” to the audit log')
+
             logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines)
             self.is_true(logs_found)
 
             return
 
-        self.log('Insert server code to server code field')
+        self.log('MEMBER_12 3. Insert server code to server code field')
         self.input(element=server_code_input, text=client['name'])
-        self.log('Click ok')
+        self.log('MEMBER_12 5. Registration request is submitted')
         self.wait_until_visible(type=By.ID, element=cs_security_servers.ADD_OWNED_SERVER_SUBMIT_BUTTON_ID).click()
         self.wait_jquery()
         self.log('Check if certificate adding request is present')
-        self.is_equal(messages.CERTIFICATE_ADDING_NEW_SERVER_REQUEST_ADDED_NOTICE.format(
-            '{0}/{1}/{2}/{3}'.format(client['instance'], client['class'], client['code'], client['name'])),
-            messages.get_notice_message(self))
-        self.log('Check if log contains "Add security server" event"')
-        logs_found = log_checker.check_log(log_constants.ADD_SECURITY_SERVER, from_line=current_log_lines + 1)
+        expected_notice_msg = CERTIFICATE_ADDING_NEW_SERVER_REQUEST_ADDED_NOTICE.format(
+            '{0}/{1}/{2}/{3}'.format(client['instance'], client['class'], client['code'], client['name']))
+        self.log('MEMBER_12 11. System displays the message \n"{0}"'.format(expected_notice_msg))
+        self.is_equal(expected_notice_msg, messages.get_notice_message(self))
+        expected_log_msg = ADD_SECURITY_SERVER
+        self.log('MEMBER_12 12. Check if log contains "{0}" event'.format(expected_log_msg))
+        logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
         self.is_true(logs_found, msg="Add security server log message not found")
-        '''Log line count after adding'''
+
         current_log_lines = log_checker.get_line_count()
         approve_requests(self, use_case='MEMBER_36 ', cancel_confirmation=True)
         expected_log_msg = APPROVE_CLIENT_REGISTRATION_REQUST
@@ -349,11 +356,10 @@ def test_add_security_server_to_member(case, cs_host, cs_username, cs_password, 
     return add_security_server_to_member
 
 
-def restore_security_server_after_member_deletion(case, cs_ssh_host, cs_ssh_user, cs_ssh_pass,
-                                                  client, ss2_host,
-                                                  ss2_username, ss2_password, user):
+def add_central_server_member_delete_global_error_cert(case, cs_ssh_host, cs_ssh_user, cs_ssh_pass,
+                                                       client, ss2_host,
+                                                       ss2_username, ss2_password, user):
     """
-    MEMBER_01 steps 3(only auth cert part) - 7
     Restores security server after member being deleted in central server
     :param case:
     :param cs_ssh_host: str - central server ssh host
@@ -374,7 +380,7 @@ def restore_security_server_after_member_deletion(case, cs_ssh_host, cs_ssh_user
     self = case
     sync_timeout = 120
 
-    def restore_security_server():
+    def add_cs_member_delete_global_error_cert():
         ssh_client = ssh_server_actions.get_client(cs_ssh_host, cs_ssh_user, cs_ssh_pass)
         self.log('Open members page')
         self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.MEMBERS_CSS).click()
@@ -394,7 +400,7 @@ def restore_security_server_after_member_deletion(case, cs_ssh_host, cs_ssh_user
         popups.confirm_dialog_click(self)
         self.wait_jquery()
 
-    return restore_security_server
+    return add_cs_member_delete_global_error_cert
 
 
 def setup_member_with_subsystem_as_ss_client(case, cs_host, cs_username, cs_password, cs_member_name, cs_new_member,
@@ -436,7 +442,7 @@ def setup_member_with_subsystem_as_ss_client(case, cs_host, cs_username, cs_pass
         login(self, host=ss1_host, username=ss1_username, password=ss1_password)
         self.log('Wait until data is synced between servers')
         time.sleep(sync_timeout)
-        self.log('Add previously added member as client to security server')
+        self.log('Add member as client to security server')
         add_client_to_ss(self, ss_1_client, retry_interval=sync_retry, retry_timeout=sync_timeout,
                          wait_input=wait_input)
         self.log('Navigate to security server homepage')

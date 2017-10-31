@@ -1,3 +1,4 @@
+# coding=utf-8
 from selenium.webdriver.common.by import By
 from helpers import auditchecker
 from view_models import sidebar, keys_and_certificates_table, popups, messages, log_constants
@@ -33,7 +34,7 @@ def test_edit_conf(case, ssh_host=None, ssh_username=None, ssh_password=None):
         if ssh_host is not None:
             # Check logs for entries
             self.log(
-                'System checks audit log')
+                'UC SS_22 4.System logs the event “Set friendly name to token” to the audit log.')
             logs_found = log_checker.check_log(self.logdata, from_line=current_log_lines + 1)
             self.is_true(logs_found,
                          msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(self.logdata,
@@ -68,7 +69,6 @@ def successful_edit(self):
 
     '''Inserting name "softToken-0"'''
     self.input(key_label_input, keys_and_certificates_table.SOFTTOKEN_FRIENDLY_NAME)
-
     '''Click "OK" button'''
     self.wait_until_visible(type=By.XPATH, element=popups.TOKEN_DETAILS_POPUP_OK_BTN_XPATH).click()
 
@@ -97,6 +97,8 @@ def find_errors(self):
 
         '''Input area'''
         key_label_input = self.wait_until_visible(type=By.NAME, element=popups.TOKEN_DETAILS_POPUP_KEY_LABEL_AREA_ID)
+
+        self.log('UC SS_22 2.System parses the user input')
 
         '''Inserting names from KEY_LABEL_TEXT_AND_RESULTS'''
         self.input(key_label_input, input_text)
@@ -134,6 +136,7 @@ def find_errors(self):
 def whitespace_friendly_name(self):
     '''Set "Set friendly name to token" to logdata'''
     self.logdata.append(log_constants.KEYS_AND_SERTIFICATES_SET_TOKEN)
+    self.log('UC SS_22 1.SS administrator selects to change the friendly name of a security token and changes the name.')
 
     clicking_buttons(self)
 
@@ -153,6 +156,7 @@ def whitespace_friendly_name(self):
 
     '''Remove whitespaces from test string'''
     without_whitespaces_cntrl = text_with_whitespaces.strip()
+    self.log('UC SS_22 3.System saves the changes to the system configuration.')
 
     '''Verify whitespaces removing'''
     self.is_true(without_whitespaces == without_whitespaces_cntrl,

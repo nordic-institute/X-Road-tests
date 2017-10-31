@@ -25,6 +25,8 @@ def test_edit_conf(case, ssh_host=None, ssh_username=None, ssh_password=None):
         self.wait_jquery()
 
         '''Click "LOGIN"'''
+        self.log('SS_24 1.SS administrator selects to log in to a software token.')
+
         self.driver.find_element_by_xpath(keys_and_certificates_table.SOFTTOKEN_LOGIN).click()
         self.wait_jquery()
 
@@ -37,6 +39,8 @@ def test_edit_conf(case, ssh_host=None, ssh_username=None, ssh_password=None):
         if ssh_host is not None:
             # Check logs for entries
             self.log('Check the audit log')
+            self.log('SS_24 5.System logs the event “Log in to token” to the audit log.')
+
             logs_found = log_checker.check_log(self.logdata, from_line=current_log_lines + 1)
             self.is_true(logs_found,
                          msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(self.logdata,
@@ -58,6 +62,7 @@ def successful_login(self):
 
     '''Input area'''
     key_label_input = self.wait_until_visible(type=By.NAME, element=popups.TOKEN_PIN_LABEL_AREA)
+    self.log('SS_24 2.SS administrator enters the PIN code of the token.')
 
     '''Insert correct PIN'''
     self.input(key_label_input, keys_and_certificates_table.SOFTTOKEN_PIN)
@@ -66,9 +71,11 @@ def successful_login(self):
     '''Click "OK" button'''
     self.wait_until_visible(type=By.XPATH, element=popups.TOKEN_LOGIN_OK_BTN_XPATH).click()
     self.wait_jquery
+    self.log('SS_24 4.System verifies that the PIN code is correct and logs in to the token.')
 
     '''Set "Log in to token" to logdata'''
     self.logdata.append(log_constants.SOFTTOKEN_LOG_OUT)
+
     self.logdata.append(log_constants.SOFTTOKEN_LOGIN_SUCCESS)
     time.sleep(1)
     return self.logdata
@@ -101,13 +108,14 @@ def find_errors_login(self):
         '''Click "OK" button'''
         self.wait_until_visible(type=By.XPATH, element=popups.TOKEN_LOGIN_OK_BTN_XPATH).click()
         self.wait_jquery
-        time.sleep(1)
+        time.sleep(2)
         '''Set "Log in to token failed" to logdata'''
         self.logdata.append(log_constants.SOFTTOKEN_LOGIN_FAILED)
 
+
         ui_error = messages.get_error_message(self)
 
-        self.log('Checking error message: "{0}"'.format(ui_error))
+        self.log('SS_24 3a., 4a. The process of parsing the user input terminated with an error message. Checking error message: "{0}"'.format(ui_error))
         '''Expecting error'''
         if error:
             if ui_error is not None:

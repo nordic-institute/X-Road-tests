@@ -11,6 +11,7 @@ from tests.xroad_ss_client_certification_213 import client_certification_2_1_3
 from view_models import popups as popups, members_table, clients_table_vm as clients_table, sidebar, \
     keys_and_certificates_table, messages, groups_table
 from view_models.log_constants import *
+from view_models.messages import MISSING_PARAMETER, INPUT_EXCEEDS_255_CHARS
 
 USERNAME = 'username'
 PASSWORD = 'password'
@@ -67,8 +68,7 @@ def test_test(ssh_host, ssh_username, ssh_password,
                              sec_password=user[PASSWORD], ssh_host=ssh_host, ssh_username=ssh_username,
                              ssh_password=ssh_password, client=client)
 
-            # TEST PLAN 2.11.2-5 add new local group to the client
-            self.log('2.11.2-5 add new local group to the client')
+            self.log('SERVICE_25 Add a Local Group for a Security Server Client')
             add_group_to_client(self=self, sec_host=sec_host, sec_username=user[USERNAME], sec_password=user[PASSWORD],
                                 ssh_host=ssh_host, ssh_username=ssh_username, ssh_password=ssh_password, client=client)
 
@@ -214,6 +214,7 @@ def add_client_to_ss(self, sec_host, sec_username, sec_password,
     self.wait_until_visible(type=By.XPATH, element=popups.ADD_CLIENT_POPUP_OK_BTN_XPATH).click()
     self.wait_jquery()
 
+    time.sleep(3)
     # TEST PLAN 2.11.2-4/2.11.2-14 check logs for adding client
     bool_value, log_data, date_time = check_logs_for(self, ssh_host, ssh_username, ssh_password, ADD_CLIENT,
                                                      sec_username)
@@ -240,10 +241,8 @@ def add_group_to_client(self, sec_host, sec_username, sec_password, ssh_host, ss
     :return: None
     '''
 
-    '''SERVICE_25 user input parsing terminates with error message'''
-    '''Get auditchecker instance on given ssh server'''
+    self.log('SERVICE_25 3a user input parsing terminates with error message(empty code error)')
     log_checker = auditchecker.AuditChecker(host=ssh_host, username=ssh_username, password=ssh_password)
-    '''Get current log lines count'''
     current_log_lines = log_checker.get_line_count()
     self.logout(sec_host)
     self.login(sec_username, sec_password)
@@ -252,43 +251,102 @@ def add_group_to_client(self, sec_host, sec_username, sec_password, ssh_host, ss
     self.driver.refresh()
     self.wait_jquery()
     time.sleep(5)
-    '''Open client local groups tab'''
+    self.log('Open client local groups tab')
     added_client_row(self, client).find_element_by_css_selector(clients_table.LOCAL_GROUPS_TAB_CSS).click()
-    '''Check if local groups table is empty and contains expected message'''
+    self.log('Check if local groups table is empty and contains expected message')
     self.is_not_none(self.by_xpath(groups_table.LOCAL_GROUP_ROW_BY_TD_TEXT_XPATH.format('No (matching) records')))
-    '''Click on group add button'''
+    self.log('SERVICE_25 1. Click on group add button')
     self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_GROUP_ADD_BTN_ID).click()
-    '''Confirm group adding popup'''
+    self.log('Confirm group adding popup')
     self.wait_until_visible(type=By.XPATH, element=popups.GROUP_ADD_POPUP_OK_BTN_XPATH).click()
     self.wait_jquery()
+    expected_error_msg = MISSING_PARAMETER.format('add_group_code')
+    self.log('SERVICE_25 3a.1 System displays the error message "{0}"'.format(expected_error_msg))
+    error_message = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
+    self.is_equal(expected_error_msg, error_message)
     time.sleep(5)
-    '''TEST PLAN 2.11.2-5/2.11.2-14 log check for adding group to client '''
-    logs_found = log_checker.check_log(ADD_GROUP_FAILED, from_line=current_log_lines + 1)
-    self.is_true(logs_found,
-                 msg='2.11.2-5/2.11.2-14 log check for adding group to client - check failed')
+    expected_log_msg = ADD_GROUP_FAILED
+    self.log('SERVICE_25 3a.2 System logs the event "{0}"'.format(expected_log_msg))
+    logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
+    self.is_true(logs_found)
 
-    '''SERVICE_25 successful local group adding'''
-    '''Get curent log lines count'''
-    current_log_lines = log_checker.get_line_count()
-    '''Name of the addable test group'''
-    group_name = 'testgroup'
+    self.log('SERVICE_25 3a user input parsing terminates with error message(empty description)')
+    messages.close_error_messages(self)
     group_add_code_input = self.by_id(popups.GROUP_ADD_POPUP_CODE_AREA_ID)
-    self.log('Filling group adding popup')
-    self.input(element=group_add_code_input, text=group_name)
+    code_256_len = 'A' * 256
+    self.log('SERVICE_25 2. Filling group adding popup with "{0}"'.format(code_256_len))
+    self.input(element=group_add_code_input, text=code_256_len)
+    self.log('Confirm group adding popup')
+    self.wait_until_visible(type=By.XPATH, element=popups.GROUP_ADD_POPUP_OK_BTN_XPATH).click()
+    self.wait_jquery()
+    expected_error_msg = MISSING_PARAMETER.format('add_group_description')
+    self.log('SERVICE_25 3a.1 System displays the error message "{0}"'.format(expected_error_msg))
+    error_message = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
+    self.is_equal(expected_error_msg, error_message)
+    time.sleep(5)
+    expected_log_msg = ADD_GROUP_FAILED
+    self.log('SERVICE_25 3a.2 System logs the event "{0}"'.format(expected_log_msg))
+    logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
+    self.is_true(logs_found)
+
+    self.log('SERVICE_25 3a user input parsing terminates with error message(code 256 chars)')
+    messages.close_error_messages(self)
     group_add_description_input = self.by_id(popups.GROUP_ADD_POPUP_CODE_DESCRIPTION_ID)
+    self.input(element=group_add_description_input, text='asd')
+    self.log('Confirm group adding popup')
+    self.wait_until_visible(type=By.XPATH, element=popups.GROUP_ADD_POPUP_OK_BTN_XPATH).click()
+    self.wait_jquery()
+    expected_error_msg = INPUT_EXCEEDS_255_CHARS.format('add_group_code')
+    self.log('SERVICE_25 3a.1 System displays the error message "{0}"'.format(expected_error_msg))
+    error_message = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
+    self.is_equal(expected_error_msg, error_message)
+    time.sleep(5)
+    expected_log_msg = ADD_GROUP_FAILED
+    self.log('SERVICE_25 3a.2 System logs the event "{0}"'.format(expected_log_msg))
+    logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
+    self.is_true(logs_found)
+
+    self.log('SERVICE_25 3a user input parsing terminates with error message(description 256 chars)')
+    messages.close_error_messages(self)
+    self.input(element=group_add_code_input, text='asd')
+    self.input(element=group_add_description_input, text=code_256_len)
+    self.log('Confirm group adding popup')
+    self.wait_until_visible(type=By.XPATH, element=popups.GROUP_ADD_POPUP_OK_BTN_XPATH).click()
+    self.wait_jquery()
+    expected_error_msg = INPUT_EXCEEDS_255_CHARS.format('add_group_description')
+    self.log('SERVICE_25 3a.1 System displays the error message "{0}"'.format(expected_error_msg))
+    error_message = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
+    self.is_equal(expected_error_msg, error_message)
+    time.sleep(5)
+    expected_log_msg = ADD_GROUP_FAILED
+    self.log('SERVICE_25 3a.2 System logs the event "{0}"'.format(expected_log_msg))
+    logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
+    self.is_true(logs_found)
+
+    self.log('SERVICE_25 Add a local group for a security server client'
+             '(255 chars code and description, ending and starting with whitespaces)')
+    current_log_lines = log_checker.get_line_count()
+    code_255_len = ' {0} '.format('A' * 255)
+    group_name = code_255_len
+    self.log('SERVICE_25 2. Filling group adding popup with "{0}"'.format(group_name))
+    self.input(element=group_add_code_input, text=group_name)
     self.input(element=group_add_description_input, text=group_name)
     self.log('Confirm group adding popup')
     self.wait_until_visible(type=By.XPATH, element=popups.GROUP_ADD_POPUP_OK_BTN_XPATH).click()
     self.wait_jquery()
-    '''Check if groups table contains added group'''
-    self.is_not_none(self.by_xpath(groups_table.LOCAL_GROUP_ROW_BY_TD_TEXT_XPATH.format(group_name)))
-    '''Check if log contains add group event'''
-    logs_found = log_checker.check_log(ADD_GROUP, from_line=current_log_lines + 1)
-    self.is_true(logs_found,
-                 msg='Add group not found in log')
+    self.log('SERVICE_25 5. System saves the information about the local group to the system configuration')
+    try:
+        self.by_xpath(groups_table.LOCAL_GROUP_ROW_BY_TD_TEXT_XPATH.format(group_name))
+    except:
+        pass
+    self.is_not_none(self.by_xpath(groups_table.LOCAL_GROUP_ROW_BY_TD_TEXT_XPATH.format(group_name.strip())))
+    group_name = group_name.strip()
+    expected_log_msg = ADD_GROUP
+    self.log('SERVICE_25 6. System logs the event "{0}"'.format(expected_log_msg))
+    logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
+    self.is_true(logs_found)
 
-    '''SERVICE_25 inserting group with same code produces error message'''
-    '''Get current lines count'''
+    self.log('SERVICE_25 4a. Adding group with already existing group info')
     current_log_lines = log_checker.get_line_count()
     self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_GROUP_ADD_BTN_ID).click()
     self.log('Filling group adding popup with already existing group info')
@@ -299,36 +357,34 @@ def add_group_to_client(self, sec_host, sec_username, sec_password, ssh_host, ss
     self.log('Confirm popup')
     self.wait_until_visible(type=By.XPATH, element=popups.GROUP_ADD_POPUP_OK_BTN_XPATH).click()
     self.wait_jquery()
-    '''Get error message'''
+    expected_error_msg = messages.GROUP_ALREADY_EXISTS_ERROR.format(group_name)
     error_message = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
-    '''Check if correct error message is displayed for already existing group'''
-    self.is_equal(error_message, messages.GROUP_ALREADY_EXISTS_ERROR.format(group_name),
-                  msg='Group already exists error different from expected')
-    '''Check if log contains expected message'''
-    logs_found = log_checker.check_log(ADD_GROUP_FAILED, from_line=current_log_lines + 1)
-    self.is_true(logs_found, msg='\'Add group failed\' not found in log')
+    self.log('SERVICE_25 4a.1 System displays the error message "{0}"'.format(expected_error_msg))
+    self.is_equal(expected_error_msg, error_message)
+    expected_log_msg = ADD_GROUP_FAILED
+    self.log('SERVICE_25 4a.2 System logs the event "{0}"'.format(expected_log_msg))
+    logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
+    self.is_true(logs_found)
 
-    '''SERVICE_25 inserting group after failure'''
-    '''Get current lines count'''
+    self.log('SERVICE_25 4a.3 Group code is reinserted')
     current_log_lines = log_checker.get_line_count()
-    '''Name of the new addable group'''
     group_name = 'testgroup1'
-    '''Fill group adding popup'''
+    self.log('Trying to add group with code "{0}"'.format(group_name))
     self.input(element=group_add_code_input, text=group_name)
     group_add_description_input = self.by_id(popups.GROUP_ADD_POPUP_CODE_DESCRIPTION_ID)
     self.input(element=group_add_description_input, text=group_name)
     self.log('Confirm popup')
     self.wait_until_visible(type=By.XPATH, element=popups.GROUP_ADD_POPUP_OK_BTN_XPATH).click()
     self.wait_jquery()
-    '''Check if local groups table contains new added group'''
+    self.log('Check if local groups table contains new added group')
     self.is_not_none(self.by_xpath(groups_table.LOCAL_GROUP_ROW_BY_TD_TEXT_XPATH.format(group_name)))
-    '''Check if number of groups is equal to 2(2 successful addings)'''
+    self.log('Check if number of groups is equal to 2(2 successful addings)')
     self.is_equal(2, len(
         self.by_css(element=groups_table.LOCAL_GROUP_ROW_CSS, multiple=True)))
-    '''Check if log contains expected message'''
-    logs_found = log_checker.check_log(ADD_GROUP, from_line=current_log_lines + 1)
-    self.is_true(logs_found,
-                 msg='Add group not found in log')
+    expected_log_msg = ADD_GROUP
+    self.log('SERVICE_25 6. System logs the event "{0}"'.format(expected_log_msg))
+    logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
+    self.is_true(logs_found)
 
 
 def certify_client_in_ss(self, sec_host, sec_username, sec_password,
@@ -356,7 +412,8 @@ def certify_client_in_ss(self, sec_host, sec_username, sec_password,
     self.driver.get(sec_host)
     self.login(username=sec_username, password=sec_password)
     if ssh_host is not None:
-        bool_value, log_data, date_time = check_logs_for(self, ssh_host, ssh_username, ssh_password, LOGIN, sec_username)
+        bool_value, log_data, date_time = check_logs_for(self, ssh_host, ssh_username, ssh_password, LOGIN,
+                                                         sec_username)
         self.is_true(bool_value, test_name, '2.11.2-6/2.11.2-14 log check for login - check failed',
                      '2.11.2-6/2.11.2-14 log check for login')
 
@@ -365,7 +422,8 @@ def certify_client_in_ss(self, sec_host, sec_username, sec_password,
     self.driver.get(sec_host)
     self.wait_jquery()
     self.url = sec_host
-    client_certification_2_1_3.test_generate_csr_and_import_cert(client_code=client['code'], client_class=client['class'])(self)
+    client_certification_2_1_3.test_generate_csr_and_import_cert(client_code=client['code'],
+                                                                 client_class=client['class'])(self)
 
 
 def get_current_time(ssh_host, ssh_password, ssh_username):
@@ -475,15 +533,14 @@ def add_services_to_client(self, ssh_host, ssh_username, ssh_password, sec_host,
     self.wait_until_visible(type=By.XPATH, element=popups.EDIT_SERVICE_POPUP_OK_BTN_XPATH).click()
     self.wait_jquery()
 
-    '''SERVICE_20 System logs "Edit service parameters" when TLS option changed'''
-    self.log('SERVICE_20 System logs "Edit service parameters" when TLS option changed')
     self.log('Open edit wsdl service popup')
     self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_EDIT_WSDL_BTN_ID).click()
     self.log('Editing service parameters')
     self.wait_until_visible(type=By.ID, element=popups.EDIT_SERVICE_POPUP_TLS_ID).click()
     self.wait_until_visible(type=By.XPATH, element=popups.EDIT_SERVICE_POPUP_OK_BTN_XPATH).click()
-    '''Log check for editing service parameters'''
-    bool_value, log_data, date_time = check_logs_for(self, ssh_host, ssh_username, ssh_password, EDIT_SERVICE_PARAMS,
+    expected_log_msg = EDIT_SERVICE_PARAMS
+    self.log('SERVICE_20 3. System logs "{0}" when TLS option changed'.format(expected_log_msg))
+    bool_value, log_data, date_time = check_logs_for(self, ssh_host, ssh_username, ssh_password, expected_log_msg,
                                                      sec_username)
     self.is_true(bool_value)
 

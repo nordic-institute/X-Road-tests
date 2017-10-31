@@ -117,7 +117,7 @@ MANAGEMENT_SERVICE_ADDED_COMMENT = 'Management service provider registration'
 DECLINED_REQUEST_NOTICE = 'Successfully declined request with id \'{0}\''
 
 SECURITY_SERVER_CODE_ALREADY_REGISTRED = 'Failed to add new owned server request: Server with owner class \'{0}\', owner code \'{1}\' and server code \'{2}\' already exists.'
-AUTH_CERT_ALREADY_REGISTRED = "Failed to add new owned server request: Certificate is already registered, request id \'{}"
+AUTH_CERT_ALREADY_REGISTRED = "Failed to add new owned server request: Certificate is already registered, request id \'"
 
 def get_error_message(self):
     '''

@@ -45,6 +45,8 @@ ADD_MEMBER_TO_GROUP = 'Add member to global group'
 
 ADD_CA = 'Add certification service'
 ADD_TS = 'Add timestamping service'
+EDIT_TS = 'Edit timestamping service'
+
 ADD_CA_FAILED = 'Add certification service failed'
 EDIT_CA = 'Edit certification service settings'
 EDIT_CA_FAILED = 'Edit certification service settings failed'
@@ -62,7 +64,9 @@ ADD_TS_EXISTING_URL = 'An approved timestamping service with the inserted URL an
 REGISTER_MEMBER_AS_SEC_SERVER_CLIENT = 'Register member as security server client'
 REGISTER_MEMBER_AS_SEC_SERVER_CLIENT_FAILED = 'Register member as security server client failed'
 REVOKE_CLIENT_REGISTRATION_REQUEST = 'Revoke client registration request'
+REVOKE_AUTH_REGISTRATION_REQUEST = 'Revoke authentication certificate request'
 APPROVE_CLIENT_REGISTRATION_REQUST = 'Approve registration request'
+ADD_MEMBERS_TO_GLOBAL_GROUP = 'Add members to global group'
 
 ADD_INTERNAL_TLS_CERT = 'Add internal TLS certificate'
 ADD_INTERNAL_TLS_CERT_FAILED = 'Add internal TLS certificate failed'

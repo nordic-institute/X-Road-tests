@@ -118,6 +118,7 @@
 |   | save\_screenshots | x |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 |   | load\_custom\_config | x |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 |   | harmonized\_environment |  | x |   |   |   |   |   |   |   |   |   |   |   |   |   |
+|   | marionette |  | x |   |   |   |   |   |   |   |   |   |   |   |   |   |
 |   | debug | x |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 
 ![Logo](https://raw.githubusercontent.com/ria-ee/X-Road/develop/doc/Manuals/img/eu_regional_development_fund_horizontal_div_15.png "EU logo")

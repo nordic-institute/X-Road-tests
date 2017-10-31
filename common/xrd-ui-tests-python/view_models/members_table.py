@@ -6,7 +6,8 @@ ADD_MEMBER_TEXTS_AND_RESULTS = [['', '', '', True, 'Missing parameter: {0}', 'me
                                 ['MEMBER_TEST', 'GOV', 256 * 'T', True, "Parameter '{0}' input exceeds 255 characters", 'memberCode', False],
                                 ['MEMBER_TEST', 'GOV', 'TEST_MEMBER', False, None, None, False],
                                 [255 * 'A', 'GOV', 255 * 'T', False, None, None, False],
-                                ['   MEMBER_TEST   ', 'GOV', '   TEST_MEMBER   ', False, None, None, True]
+                                ['   MEMBER_TEST   ', 'GOV', '   TEST_MEMBER   ', False, None, None, True],
+                                ['MEMBER_TEST', 'GOV', 'TEST_MEMBER', True, "Failed to add member: Member with class 'GOV' and code 'TEST_MEMBER' already exists", None, False]
                                 ]
 CS_MEMBER_NAME_CLASS_CODE = ['MEMBER_TEST', 'GOV', 'TEST_MEMBER']
 
@@ -56,9 +57,11 @@ SELECT_SECURITY_SERVER_BTN_ID = 'member_securityserver_search_select'
 '''
 MEMBER POPUP
 '''
+OWNED_SERVERS_TAB = '//li[@aria-controls="member_owned_servers_tab"]'
 SUBSYSTEM_TAB = '//li[@aria-controls="member_subsystems_tab"]'
 USED_SERVERS_TAB = '//li[@aria-controls="member_used_servers_tab"]'
 GLOBAL_GROUP_TAB = '//li[@aria-controls="member_group_membership_tab"]'
+MANAGEMENT_REQUESTS_TAB = '//li[@aria-controls="member_management_requests_tab"]'
 
 ADD_SUBSYSTEM_BTN_ID = '//div[not(contains(@style,"display:none")) and contains(@class, "ui-dialog")]//button[@id="add_subsystem"]'
 DELETE_SUBSYSTEM_BTN_ID = '//div[not(contains(@style,"display:none")) and contains(@class, "ui-dialog")]//button[@id="delete_subsystem"]'
@@ -88,6 +91,13 @@ ADD_AUTH_CERT_UPLOAD_BTN_ID = 'securityserver_auth_cert_upload_button'
 ADD_AUTH_CERT_SUBMIT_BTN_ID = 'auth_cert_add_submit'
 ADD_AUTH_CERT_CANCEL_BTN_XPATH = '//div[@aria-describedby="auth_cert_add_dialog"]//span[contains(text(), "Cancel")]'
 SUBSYSTEM_TR_BY_CODE_XPATH = '//tr[contains(., "{0}")]'
+
+USED_SERVERS_TABLE_XPATH = '//table[contains(@class, "member_used_servers")]//tbody'
+MEMBER_MANAGEMENT_TABLE_XPATH = '//table[contains(@class, "member_management_requests")]//tbody'
+DELETE_REGISTER_SECURITYSERVER_CLIENT_BTN_ID = '//div[not(contains(@style,"display:none")) and contains(@class, "ui-dialog")]//button[@id="remove_securityserver_client"]'
+
+
+
 
 def get_requests_row_by_td_text(text):
     return '//table[@id = "management_requests_all"]//tbody//tr//td[contains(text(), "' + text + '")]/parent:: *'

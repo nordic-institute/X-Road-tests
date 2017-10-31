@@ -1,18 +1,24 @@
+# coding=utf-8
 import unittest
 from main.maincontroller import MainController
 import ts_management
 
 
 class XroadEditTS(unittest.TestCase):
-    '''
+    """
     UC TRUST_17: Edit the URL of a Timestamping Server
-    '''
-
+    RIA URL: https://jira.ria.ee/browse/XTKB-79
+    Depends on finishing other test(s):
+    Requires helper scenarios:
+    X-Road version: 6.16
+    """
     def test_xroad_edit_ts(self):
         main = MainController(self)
 
-        # Set test name and number
-        main.test_number = 'UC TRUST_17: Edit the URL of a Timestamping Server'
+        '''Set test name and number'''
+        main.test_number = 'UC TRUST_17'
+        main.log('TEST: UC TRUST_17: Edit the URL of a Timestamping Server')
+
         main.test_name = self.__class__.__name__
 
         cs_host = main.config.get('cs.host')

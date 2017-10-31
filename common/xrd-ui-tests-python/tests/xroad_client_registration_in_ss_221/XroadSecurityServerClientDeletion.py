@@ -8,6 +8,17 @@ from tests.xroad_client_registration_in_ss_221 import client_registration_in_ss_
 
 
 class XroadSecurityServerClientDeletion(unittest.TestCase):
+    """
+    MEMBER_14 Delete an X-Road Member's Subsystem
+    MEMBER_53 Delete a Security Server Client
+    RIA URL: https://jira.ria.ee/browse/XTKB-34
+    RIA URL: https://jira.ria.ee/browse/XTKB-124
+    RIA URL: https://jira.ria.ee/browse/XTKB-131
+    Depends on finishing other test(s): client registration, global group
+    Requires helper scenarios:
+    X-Road version: 6.16
+    """
+
     def test_client_deletion(self):
         main = MainController(self)
 

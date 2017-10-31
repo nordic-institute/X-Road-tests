@@ -1,19 +1,27 @@
+# coding=utf-8
 import unittest
 from main.maincontroller import MainController
 import ss_management
 
 
 
-class XroadVerifyTS(unittest.TestCase):
-    '''
-    UC  SS 16 Download a Backup File
-    '''
+class XroadDownloadBackupFile(unittest.TestCase):
 
-    def test_xroad_verify_ts(self):
+    """
+    UC SS_16: Download a Backup File
+    RIA URL: https://jira.ria.ee/browse/XTKB-103
+    Depends on finishing other test(s):
+    Requires helper scenarios:
+    X-Road version: 6.16
+    """
+
+    def test_download_backupfile(self):
         main = MainController(self)
 
-        # Set test name and number
-        main.test_number = 'UC SS 16'
+        '''Set test name and number'''
+        main.test_number = 'UC SS_16'
+        main.log('TEST: UC SS_16: Download a Backup File')
+
         main.test_name = self.__class__.__name__
 
         main.url = main.config.get('ss2.host')

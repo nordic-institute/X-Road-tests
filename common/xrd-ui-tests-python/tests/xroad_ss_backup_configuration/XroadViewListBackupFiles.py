@@ -3,9 +3,13 @@ from main.maincontroller import MainController
 import ss_management
 
 
-class ViewListBackupFiles(unittest.TestCase):
+class XroadViewListBackupFiles(unittest.TestCase):
     """
     UC  SS 13  View the List of Configuration Backup Files
+    RIA URL: https://jira.ria.ee/browse/XT-326, https://jira.ria.ee/browse/XTKB-123
+    Depends on finishing other test(s): None
+    Requires helper scenarios: None
+    X-Road version: 6.9.4
     """
 
     def test_view_list_backup_files(self):
@@ -15,6 +19,7 @@ class ViewListBackupFiles(unittest.TestCase):
         main.test_number = 'UC SS 13'
         main.test_name = self.__class__.__name__
 
+        main.log('TEST: UC  SS 13  View the List of Configuration Backup Files')
         main.url = main.config.get('ss2.host')
         main.username = main.config.get('ss2.user')
         main.password = main.config.get('ss2.pass')

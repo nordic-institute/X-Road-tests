@@ -3,8 +3,12 @@ from selenium.webdriver.support.ui import Select
 
 from helpers import soaptestclient, auditchecker
 from view_models import popups, sidebar, messages, central_services, log_constants
-
 # These faults are checked when we need the result to be unsuccessful. Otherwise the checking function returns True.
+from view_models.log_constants import ADD_CENTRAL_SERVICE_FAILED, ADD_CENTRAL_SERVICE, EDIT_CENTRAL_SERVICE, \
+    DELETE_CENTRAL_SERVICE
+from view_models.messages import ADD_CENTRAL_SERVICE_EXISTS_ERROR, ADD_CENTRAL_SERVICE_PROVIDER_NOT_FOUND_ERROR
+from view_models.popups import CENTRAL_SERVICE_POPUP_OK_BUTTON_ID
+
 faults_unsuccessful = ['Server.ServerProxy.ServiceDisabled', 'Client.InternalError']
 # These faults are checked when we need the result to be successful. Otherwise the checking function returns False.
 faults_successful = ['Server.ServerProxy.AccessDenied', 'Server.ServerProxy.UnknownService',
@@ -156,13 +160,11 @@ def test_add_central_service(case, provider=None, central_service_name=None,
         # Wait until the service is added.
         self.wait_jquery()
 
-        '''Checking log for "Add central service" event'''
-        logs_found = log_checker.check_log(log_constants.ADD_CENTRAL_SERVICE,
+        expected_log_msg = ADD_CENTRAL_SERVICE
+        self.log('SERVICE_41 7. System logs the event {0}'.format(expected_log_msg))
+        logs_found = log_checker.check_log(expected_log_msg,
                                            from_line=current_log_lines + 1)
-        self.is_true(logs_found,
-                     msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
-                         log_constants.ADD_CENTRAL_SERVICE,
-                         log_checker.found_lines))
+        self.is_true(logs_found)
 
         # Test that we didn't get an error. If we did, no need to continue.
         error_message = messages.get_error_message(self)  # Error message (anywhere)
@@ -198,57 +200,52 @@ def test_add_central_service(case, provider=None, central_service_name=None,
             add_service_ok_button = self.by_id(popups.CENTRAL_SERVICE_POPUP_OK_BUTTON_ID)
             add_service_ok_button.click()
             self.wait_jquery()
+            expected_error_msg = ADD_CENTRAL_SERVICE_EXISTS_ERROR.format(central_service_name)
+            self.log('SERVICE_41 4a.1 System displays the error message "{0}"'.format(expected_error_msg))
             error_message = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
-            self.is_equal(messages.ADD_CENTRAL_SERVICE_EXISTS_ERROR.format(central_service_name),
-                          error_message)
-            logs_found = log_checker.check_log(log_constants.ADD_CENTRAL_SERVICE_FAILED,
-                                               from_line=current_log_lines + 1)
-            self.is_true(logs_found,
-                         msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
-                             log_constants.ADD_CENTRAL_SERVICE_FAILED,
-                             log_checker.found_lines))
+            self.is_equal(expected_error_msg, error_message)
+            expected_log_msg = ADD_CENTRAL_SERVICE_FAILED
+            self.log('SERVICE_41 4a.2 System logs the event "{0}"'.format(expected_log_msg))
+            logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
+            self.is_true(logs_found)
             popups.close_all_open_dialogs(self)
-        '''SERVICE_41 5a Adding central service with not existing member'''
         if try_not_existing_member:
             current_log_lines = log_checker.get_line_count()
             self.log('SERVICE_41 5a Adding central service with not existing member')
             self.log('Click on adding button')
-            add_button = self.by_id(central_services.SERVICE_ADD_BUTTON_ID)
-            add_button.click()
-
-            '''Wait until popup opens'''
+            self.by_id(central_services.SERVICE_ADD_BUTTON_ID).click()
+            self.log('Wait until popup opens')
             self.wait_until_visible(element=popups.CENTRAL_SERVICE_POPUP, type=By.XPATH)
-
-            '''Find "service code" input field, clear it and enter the service name there'''
+            self.log('Find "service code" input field, clear it and enter the service name there')
             central_service_code_input = self.by_id(popups.CENTRAL_SERVICE_POPUP_CENTRAL_SERVICE_CODE_ID)
-            central_service_code_input.clear()
             self.input(central_service_code_input, central_service_name)
             not_existing_provider = 'notexisting'
             provider['code'] = not_existing_provider
+            self.log('Fill provider fields')
             set_central_service_provider_fields(self, provider=provider)
-
-            add_service_ok_button = self.by_id(popups.CENTRAL_SERVICE_POPUP_OK_BUTTON_ID)
-            add_service_ok_button.click()
+            self.log('Click OK')
+            self.by_id(CENTRAL_SERVICE_POPUP_OK_BUTTON_ID).click()
             self.wait_jquery()
+            expected_error_msg = ADD_CENTRAL_SERVICE_PROVIDER_NOT_FOUND_ERROR.format(provider['instance'],
+                                                                                     provider['class'],
+                                                                                     not_existing_provider,
+                                                                                     provider['subsystem'])
+            self.log('SERVICE_41 5a.1 System displays the error message "{0}"'.format(expected_error_msg))
             error_message = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
-            self.is_equal(
-                messages.ADD_CENTRAL_SERVICE_PROVIDER_NOT_FOUND_ERROR.format(provider['instance'], provider['class'],
-                                                                             not_existing_provider,
-                                                                             provider['subsystem']),
-                error_message)
-            logs_found = log_checker.check_log(log_constants.ADD_CENTRAL_SERVICE_FAILED,
+            self.is_equal(expected_error_msg, error_message)
+            expected_log_msg = ADD_CENTRAL_SERVICE_FAILED
+            self.log('SERVICE_41 5a.2 System logs the event "{0}"'.format(expected_log_msg))
+            logs_found = log_checker.check_log(expected_log_msg,
                                                from_line=current_log_lines + 1)
-            self.is_true(logs_found,
-                         msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
-                             log_constants.ADD_CENTRAL_SERVICE_FAILED,
-                             log_checker.found_lines))
+            self.is_true(logs_found)
             popups.close_all_open_dialogs(self)
 
     return add_central_service
 
 
 def test_edit_central_service(case, provider, requester, central_service_name, sync_max_seconds=0,
-                              wait_sync_retry_delay=0, try_not_existing_provider=False, cs_ssh_host=None, cs_ssh_user=None,
+                              wait_sync_retry_delay=0, try_not_existing_provider=False, cs_ssh_host=None,
+                              cs_ssh_user=None,
                               cs_ssh_pass=None):
     self = case
 
@@ -326,13 +323,10 @@ def test_edit_central_service(case, provider, requester, central_service_name, s
         # Wait until the service is added.
         self.wait_jquery()
 
-        '''Checking log for "Edit central service" event'''
-        logs_found = log_checker.check_log(log_constants.EDIT_CENTRAL_SERVICE,
-                                           from_line=current_log_lines + 1)
-        self.is_true(logs_found,
-                     msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
-                         log_constants.EDIT_CENTRAL_SERVICE,
-                         log_checker.found_lines))
+        expected_log_msg = EDIT_CENTRAL_SERVICE
+        self.log('SERVICE_42 6. System logs the event {0}'.format(expected_log_msg))
+        logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
+        self.is_true(logs_found)
 
         # Test that we didn't get an error. If we did, no need to continue.
         error_message = messages.get_error_message(self)  # Error message (anywhere)
@@ -375,8 +369,8 @@ def test_edit_central_service(case, provider, requester, central_service_name, s
             error_message = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
             self.is_equal(
                 messages.EDIT_CENTRAL_SERVICE_PROVIDER_NOT_FOUND_ERROR.format(provider['instance'], provider['class'],
-                                                                             not_existing_provider,
-                                                                             provider['subsystem']),
+                                                                              not_existing_provider,
+                                                                              provider['subsystem']),
                 error_message)
             logs_found = log_checker.check_log(log_constants.EDIT_CENTRAL_SERVICE_FAILED,
                                                from_line=current_log_lines + 1)
@@ -389,7 +383,8 @@ def test_edit_central_service(case, provider, requester, central_service_name, s
     return edit_central_service
 
 
-def test_delete_central_service(case, cs_ssh_host, cs_ssh_user, cs_ssh_pass, central_service_name, provider, requester, sync_max_seconds=0,
+def test_delete_central_service(case, cs_ssh_host, cs_ssh_user, cs_ssh_pass, central_service_name, provider, requester,
+                                sync_max_seconds=0,
                                 wait_sync_retry_delay=0, cancel_deletion=False):
     self = case
 
@@ -467,13 +462,10 @@ def test_delete_central_service(case, cs_ssh_host, cs_ssh_user, cs_ssh_pass, cen
         # Wait until ajax query finishes.
         self.wait_jquery()
 
-        '''Checking log for "Delete service" event'''
-        logs_found = log_checker.check_log(log_constants.DELETE_CENTRAL_SERVICE,
-                                           from_line=current_log_lines + 1)
-        self.is_true(logs_found,
-                     msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(
-                         log_constants.DELETE_CENTRAL_SERVICE,
-                         log_checker.found_lines))
+        expected_log_msg = DELETE_CENTRAL_SERVICE
+        self.log('SERVICE_43 5. System logs the event {0}'.format(expected_log_msg))
+        logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
+        self.is_true(logs_found)
         # Test if the service was deleted.
         service_row = get_central_service_row(self, central_service_name)
         self.is_none(service_row, msg='2.2.8-del Central service not deleted: {0}'.format(central_service_name))

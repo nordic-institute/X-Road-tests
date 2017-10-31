@@ -14,13 +14,13 @@ def select_ts(self, ts_name):
     '''
 
     # Click on Timestamping Services
-    self.log('UC TRUST_15_1     CS administrator selects to view approved timestamping services.: {0}'.format(ts_name))
+    self.log('UC TRUST_15 1.CS administrator selects to view approved timestamping services.: {0}'.format(ts_name))
     self.wait_until_visible(self.by_css(sidebar.TIMESTAMPING_SERVICES_CSS)).click()
     self.wait_jquery()
 
     # Activate timestamp services - make one click on it.
     self.log(
-        'UC TRUST_15_2    The value of the subject common name (CN) element from the TSA certificate is displayed as the name of the timestamping service')
+        'UC TRUST_15 2.The value of the subject common name (CN) element from the TSA certificate is displayed as the name of the timestamping service')
     self.wait_until_visible(element=certification_services.ts_get_ca_by_td_text(ts_name), type=By.XPATH).click()
     self.wait_jquery()
 
@@ -33,7 +33,7 @@ def verify_ts(self, ts_name):
     '''
     cert_name = self.by_xpath(timestamp_services.SERTIFICATE_NAME).text
 
-    self.log('UC TRUST_15_2    "Valid sertificate name {0}'.format(cert_name))
+    self.log('UC TRUST_15 2."Valid sertificate name {0}'.format(cert_name))
 
     self.is_true(cert_name == ts_name,
                  msg='Sertificate has wrong name')
@@ -48,31 +48,31 @@ def verify_ts(self, ts_name):
     from_date_match = re.match(timestamp_services.DATE_REGEX, from_date)
     to_date_match = re.match(timestamp_services.DATE_REGEX, to_date)
 
-    self.log('UC TRUST_15_2    "Valid From" verification {0}'.format(from_date))
+    self.log('UC TRUST_15 2."Valid From" verification {0}'.format(from_date))
 
     self.is_true(from_date_match,
                  msg='From date in wrong format')
 
-    self.log('UC TRUST_15_2    "Valid To" verification {0}'.format(from_date))
+    self.log('UC TRUST_15 2."Valid To" verification {0}'.format(from_date))
 
     self.is_true(to_date_match,
                  msg='To date in wrong format')
 
     # Locate visible "Add" button
-    self.log('UC TRUST_15_2    "Add button verification"')
+    self.log('UC TRUST_15 2."Add button verification"')
 
     ts_add_btn = self.wait_until_visible(self.by_id(certification_services.TSADD_BTN_ID)).is_enabled()
     self.is_true(ts_add_btn,
                  msg='Add button not enabled')
 
-    self.log('UC TRUST_15_2    "Delete button verification"')
+    self.log('UC TRUST_15 2."Delete button verification"')
 
     # Locate visible "Delete" button
     ts_delete_btn = self.wait_until_visible(self.by_id(certification_services.TSDELETE_BTN_ID)).is_enabled()
     self.is_true(ts_delete_btn,
                  msg='Delete button not enabled')
 
-    self.log('UC TRUST_15_2    "Edit button verification"')
+    self.log('UC TRUST_15 2."Edit button verification"')
     # Locate visible "Edit" button
     ts_edit_btn = self.wait_until_visible(self.by_id(certification_services.TSEDIT_BTN_ID)).is_enabled()
     self.is_true(ts_edit_btn,
@@ -91,7 +91,7 @@ def click_ts(self):
 
     view_certificate_btn = self.wait_until_visible(self.by_id(certification_services.VIEW_CERTIFICATE)).is_enabled()
 
-    self.log('UC TRUST_15_2    "View sertificate" button verification"')
+    self.log('UC TRUST_15 2."View sertificate" button verification"')
     self.is_true(view_certificate_btn,
                  msg='View certificate button not found')
 
@@ -106,7 +106,7 @@ def test_view_approved_ts(case, ts_name):
 
     def view_ts():
         # UC TRUST_15: View Approved Timestamping Services
-        self.log('UC TRUST_15 -  View Approved Timestamping Services: {0}'.format(ts_name))
+        self.log('UC TRUST_15 View Approved Timestamping Services: {0}'.format(ts_name))
 
         # Open "Timestamping services"
         select_ts(self, ts_name)
@@ -152,14 +152,18 @@ def test_add_ts(case, ts_url, ts_certificate, invalid_ts_certificate=None, certi
         self.wait_until_visible(self.by_css(sidebar.TIMESTAMPING_SERVICES_CSS)).click()
         self.wait_jquery()
 
+        self.log('UC TRUST_16: 1. CS administrator selects to add an approved timestamping service.')
+
         # Click "Add"
         self.by_id(certification_services.TSADD_BTN_ID).click()
         self.wait_jquery()
 
+        self.log('UC TRUST_16: 2. CS administrator selects to add an approved timestamping service.')
         # Add Url
         self.by_id(certification_services.TIMESTAMP_SERVICES_URL_ID).send_keys(ts_url)
         self.wait_jquery()
 
+        self.log('UC TRUST_16: 3. CS administrator selects and uploads the TSA certificate file from the local file system.')
         # Add valid sertificate
         add_first_certifcate(self, ts_certificate)
         # Click "Add" for trying to add invalid sertificates
@@ -203,17 +207,21 @@ def test_edit_ts(case, cs_ssh_host=None, cs_ssh_user=None, cs_ssh_pass=None,
     self = case
 
     def edit_ca():
+        self.logdata = []
 
+        if cs_ssh_host is not None:
+            log_checker = auditchecker.AuditChecker(host=cs_ssh_host, username=cs_ssh_user, password=cs_ssh_pass)
+            current_log_lines = log_checker.get_line_count()
         self.log(
         'UC TRUST_17 Open Timestaming services')
 
         # Open "Timestamping services"
         select_ts(self, ts_name)
 
+        self.log('UC TRUST_17 1.CS administrator selects to edit the URL of a timestamping server.')
         # Clicks on TS row
         click_ts(self)
         self.wait_jquery()
-
 
 
         self.log(
@@ -274,12 +282,22 @@ def test_edit_ts(case, cs_ssh_host=None, cs_ssh_user=None, cs_ssh_pass=None,
         # Save URL text
         cert_name = self.wait_until_visible(type=By.ID, element='tsp_url').get_attribute('value')
 
+        self.logdata.append(log_constants.EDIT_TS)
 
         self.log(
         'UC TRUST_17 Compares and verifies new correct URL')
         # Compare URL
         self.is_true(cert_name == (ts_url),
                      msg='Sertificate has wrong name')
+
+        if cs_ssh_host is not None:
+            # Check logs for entries
+            self.log('System logs the event “Edit timestamping service” to the audit log.')
+            logs_found = log_checker.check_log(self.logdata, from_line=current_log_lines + 1)
+            self.is_true(logs_found,
+                         msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(self.logdata,
+                                                                                                   log_checker.found_lines))
+
 
     return edit_ca
 
@@ -333,7 +351,6 @@ def set_ts_certificate(self, ts_certificate, close_errors=False):
     xroad.fill_upload_input(self, import_cert_btn, ts_certificate)
     # Give some time for JS to react to file input being changed.
     time.sleep(0.5)
-
     # If an ajax query is initiated, wait for it to finish.
     self.wait_jquery()
 
@@ -367,7 +384,6 @@ def configure_ts_certificate(self, certificate_filename=None, invalid_certificat
     # UC TRUST_16 3 - setting valid TS certificate
     self.log('TRUST_16 3 - setting valid TS certificate')
     set_ts_certificate(self, certificate_filename)
-
     # If invalid_certificate_filename is set, try to upload and check for errors.
     if invalid_certificate_filename is not None:
         time.sleep(4)
@@ -406,6 +422,8 @@ def configure_ts(self, certificate_classpath=None, check_errors=False, log_succe
         # Parse user input UC TRUST_19,  UC_TRUST_16 (4a, 5a, 6a, 7a), UC_TRUST_17 (3a, 4a)
         self.log(
             'Parse user input UC TRUST_19,  UC_TRUST_16 (4a, 5a, 6a, 7a), UC_TRUST_17 (3a, 4a)')
+        self.log('UC_TRUST_17 3a. The parsing of the user input terminated with an error message.')
+        self.log('UC_TRUST_17 4a .The URL is malformed.')
 
         # Using UC_TRUST 19 and URL inputs. Check input parsing
         successes, errors, final_url = check_inputs(self,
@@ -543,13 +561,20 @@ def test_delete_ts(case, ts_name, cs_ssh_host=None, cs_ssh_user=None, cs_ssh_pas
         '''Select TS sertificate'''
         select_ts(self, ts_name)
 
+        self.log('UC_TRUST_18 1. CS administrator selects to delete an approved timestamping service.')
+
         '''Click on delete button'''
         self.by_id(certification_services.TSDELETE_BTN_ID).click()
         self.wait_jquery()
 
+        self.log('UC_TRUST_18 2. System prompts for confirmation.')
+        self.log('UC_TRUST_18 3. CS administrator confirms.')
+
         '''Click ok button on popup'''
         self.by_xpath(popups.CONFIRM_POPUP_OK_BTN_XPATH).click()
         self.wait_jquery()
+
+        self.log('UC_TRUST_18 4. System deletes the approved timestamping service information from the system configuration.')
 
         '''Get text "No (matching) records"'''
         no_records = self.by_xpath(timestamp_services.SERTIFICATE_EMPTY).text
@@ -560,7 +585,7 @@ def test_delete_ts(case, ts_name, cs_ssh_host=None, cs_ssh_user=None, cs_ssh_pas
 
         if cs_ssh_host is not None:
             '''Check logs for entries'''
-        self.log('TRUST_18 5 - checking logs for: {0}'.format(self.logdata))
+        self.log('TRUST_18 5.System logs the event “Delete timestamping service” to the audit log.')
         logs_found = log_checker.check_log(self.logdata, from_line=current_log_lines + 1)
         self.is_true(logs_found,
                      msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(self.logdata,

@@ -3,7 +3,7 @@ from datetime import datetime
 
 from selenium.webdriver.common.by import By
 
-import tests.xroad_parse_users_input_SS_41.parse_user_input_SS_41 as user_input_check
+import tests.xroad_parse_users_inputs.xroad_parse_user_inputs as user_input_check
 from helpers import auditchecker
 from helpers import ssh_server_actions, xroad
 from tests.xroad_add_to_acl_218 import add_to_acl_2_1_8
@@ -14,7 +14,7 @@ from view_models.log_constants import *
 
 
 def add_member_to_group(self, client, group, ss2_host, ss2_user, ss2_pass,
-                        wsdl_url, service_name, identifier, testclient=None):
+                        wsdl_url, service_name, identifier, testclient=None, log_checker=None):
     """
     SERVICE_33 Add Members to a Global Group
     :param wsdl_url: str - wsdl url
@@ -31,6 +31,9 @@ def add_member_to_group(self, client, group, ss2_host, ss2_user, ss2_pass,
     :param group: str - group name
     :return:
     """
+    current_log_lines = None
+    if log_checker is not None:
+        current_log_lines = log_checker.get_line_count()
     subject_list = ['GLOBALGROUP : {0} : {1}'.format(identifier, group)]
     client_name = client['name']
     client_subsystem = client['subsystem']
@@ -54,6 +57,11 @@ def add_member_to_group(self, client, group, ss2_host, ss2_user, ss2_pass,
                                                                                    client_subsystem)).click()
     self.log('SERVICE_33 2. Add button is clicked')
     self.wait_until_visible(type=By.ID, element=groups_table.GROUP_MEMBERS_ADD_BUTTON_ID).click()
+    if current_log_lines is not None:
+        expected_log_msg = ADD_MEMBERS_TO_GLOBAL_GROUP
+        self.log('SERVICE_33 4. System logs the event "{0}"'.format(expected_log_msg))
+        logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
+        self.is_true(logs_found)
     if testclient is not None:
         test_configure_service_acl = add_to_acl_2_1_8.test_add_subjects(case=self, client=client,
                                                                         client_name=client_name,
@@ -69,14 +77,16 @@ def add_member_to_group(self, client, group, ss2_host, ss2_user, ss2_pass,
         self.reload_webdriver(ss2_host, ss2_user, ss2_pass)
         current_subjects = test_configure_service_acl()
 
-        self.log('Check if test query as global group member succeeds')
+        self.log('SERVICE_33 3. System adds group members to the global group. '
+                 'Added group members will inherit all access rights granted for the group')
+        self.log('Testing by querying service, in which ACL only global group exists')
         self.is_true(testclient.check_success(), msg='Query as global group member failed')
 
+        self.log('Restore service ACL')
         clients_table_vm.open_client_popup_services(self, client_name=client_name,
                                                     client_id=xroad.get_xroad_id(client))
 
         services_table = self.by_id(popups.CLIENT_DETAILS_POPUP_SERVICES_TABLE_ID)
-        '''Wait until that table is visible (opened in a popup)'''
         self.wait_until_visible(services_table)
 
         '''Find the WSDL, expand it and select service'''
@@ -154,7 +164,7 @@ def add_group(self, group, check_global_groups_inputs=False, cs_ssh_host=None, c
                                cs_ssh_pass=cs_ssh_pass)
 
             # Verify group code and description
-            user_input_check.parse_user_input(self, error, error_message, error_message_label)
+            user_input_check.error_messages(self, error, error_message, error_message_label)
 
             if error:
                 # Close a pop-up window , if there is a error message
@@ -221,7 +231,7 @@ def add_group(self, group, check_global_groups_inputs=False, cs_ssh_host=None, c
         self.wait_jquery()
 
         '''Check error message'''
-        user_input_check.parse_user_input(self, True, messages.GLOBAL_GROUP_ALREADY_TAKEN, group)
+        user_input_check.error_messages(self, True, messages.GLOBAL_GROUP_ALREADY_TAKEN, group)
         self.log('Click on "CANCEL" to terminate the use case')
         self.wait_until_visible(type=By.XPATH, element=groups_table.NEW_GROUP_POPUP_CANCEL_BTN_XPATH).click()
         self.wait_jquery()

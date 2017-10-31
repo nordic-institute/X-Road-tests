@@ -25,7 +25,7 @@ def test_edit_conf(case, ssh_host=None, ssh_username=None, ssh_password=None):
 
         if ssh_host is not None:
             # Check logs for entries
-            self.log('Check the audit log')
+            self.log('UC SS_26: 3.System logs the event “Log out from token” to the audit log.')
             logs_found = log_checker.check_log(self.logdata, from_line=current_log_lines + 1)
             self.is_true(logs_found,
                          msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(self.logdata,
@@ -38,10 +38,11 @@ def test_edit_conf(case, ssh_host=None, ssh_username=None, ssh_password=None):
 
 
 def software_token_logout(self):
-    self.log('Log out')
+    self.log('UC SS_26: 1.SS administrator selects to log out of a software token.')
     '''Click "LOGOUT"'''
     self.driver.find_element_by_xpath(keys_and_certificates_table.SOFTTOKEN_LOGOUT).click()
     self.wait_jquery()
+    self.log('UC SS_26: 2.System logs out of the token.')
 
     '''Set "Log out from token" to logdata'''
     self.logdata.append(log_constants.SOFTTOKEN_LOG_OUT)

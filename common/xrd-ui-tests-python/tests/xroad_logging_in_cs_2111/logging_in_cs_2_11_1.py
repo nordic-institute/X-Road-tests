@@ -8,6 +8,7 @@ from selenium.webdriver.support.select import Select
 from helpers import ssh_server_actions, ssh_user_actions, xroad
 from view_models import members_table, sidebar, groups_table, cs_security_servers, popups, messages
 from view_models.log_constants import *
+from view_models.messages import MEMBER_ALREADY_EXISTS_ERROR
 
 USERNAME = 'username'
 PASSWORD = 'password'
@@ -66,8 +67,7 @@ def test_test(ssh_host, ssh_username, ssh_password, users, client_id, client_nam
             self.log('2.11.1-1 logging in to central server as user1')
             check_login(self, ssh_client, None, users['user1'])
 
-            # TEST PLAN 2.11.1-2 adding new member to central server
-            self.log('2.11.1-2 adding new member to central server')
+            self.log('MEMBER_10 Add an X-Road Member')
             add_member_to_cs(self, ssh_client, user, member=client, existing_client=existing_client,
                              with_extensions=True)
 
@@ -75,8 +75,7 @@ def test_test(ssh_host, ssh_username, ssh_password, users, client_id, client_nam
             self.log('2.11.1-3 adding new subsystem to the member')
             add_subsystem_to_member(self, ssh_client=ssh_client, user=user, member=client)
 
-            # TEST PLAN 2.11.1-4, 2.11.1-5 change member name (empty and non-empty)
-            self.log('2.11.1-4, 2.11.1-5 change member name (empty and non-empty)')
+            self.log('MEMBER_11 change member name')
             change_member_name(self, ssh_client, user, member=client)
 
             # TEST PLAN 2.11.1-6 log out and then log in to central server UI as user2
@@ -198,32 +197,18 @@ def add_member_to_cs(self, ssh_client, user, member, existing_client=None, with_
     '''
 
     '''Open add dialog'''
-    self.log('Wait for the "ADD" button and click')
+    self.log('MEMBER_10 1. Add member button is pressed')
     self.wait_until_visible(type=By.ID, element=members_table.ADD_MEMBER_BTN_ID).click()
     self.log('Wait for the popup to be visible')
     self.wait_jquery()
-
     if with_extensions:
-        '''MEMBER_10 3a parsing user input terminates with error'''
-        '''Click OK with empty fields'''
-        self.wait_until_visible(type=By.XPATH, element=members_table.ADD_MEMBER_POPUP_OK_BTN_XPATH).click()
-        self.wait_jquery()
-        '''Get error message'''
-        error_msg = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
-        '''Check if error message is same as expected'''
-        self.is_equal(error_msg, messages.MISSING_PARAMETER.format('memberClass'),
-                      msg='Missing parameter error different from expected')
-        bool_value, data, date_time = check_logs_for(ssh_client, ADD_MEMBER_FAILED, user[USERNAME])
-        self.is_true(bool_value, test_name=test_name,
-                     msg='2.11.1-2/2.11.1-14 checking logs for added member - check failed',
-                     log_message='2.11.1-2/2.11.1-14 checking logs for added member')
-        '''MEMBER_10 4a member with the inserted class and code already exists'''
-        '''Try to add already existing member'''
+        self.log('MEMBER_10 4.a member with the inserted class and code already exists')
         self.wait_until_visible(type=By.XPATH, element=members_table.ADD_MEMBER_POPUP_XPATH)
         '''Existing member parameters'''
         existing_member_name = existing_client['name']
         existing_member_class = existing_client['class']
         existing_member_code = existing_client['code']
+        self.log('MEMBER_10 2. Member adding popup is filled')
         self.log('Enter {0} to "member name" area'.format(existing_member_name))
         input_name = self.wait_until_visible(type=By.ID, element=members_table.ADD_MEMBER_POPUP_MEMBER_NAME_AREA_ID)
         self.input(input_name, existing_member_name)
@@ -235,21 +220,22 @@ def add_member_to_cs(self, ssh_client, user, member, existing_client=None, with_
         input_code = self.wait_until_visible(type=By.ID, element=members_table.ADD_MEMBER_POPUP_MEMBER_CODE_AREA_ID)
         self.input(input_code, existing_member_code)
 
-        '''Click OK'''
+        self.log('Click OK')
         self.wait_until_visible(type=By.XPATH, element=members_table.ADD_MEMBER_POPUP_OK_BTN_XPATH).click()
         self.wait_jquery()
 
-        '''Check if error message is as expected'''
+        expected_error_msg = MEMBER_ALREADY_EXISTS_ERROR.format(existing_member_class, existing_member_code)
+        self.log('MEMBER_10 4a.1 System displays the error message "{0}"'.format(expected_error_msg))
         error_msg = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
-        self.is_equal(error_msg,
-                      messages.MEMBER_ALREADY_EXISTS_ERROR.format(existing_member_class, existing_member_code),
-                      msg='Member already exists error different from expected')
-        bool_value, data, date_time = check_logs_for(ssh_client, ADD_MEMBER_FAILED, user[USERNAME])
-        self.is_true(bool_value, test_name=test_name,
-                     msg='2.11.1-2/2.11.1-14 checking logs for added member - check failed',
-                     log_message='2.11.1-2/2.11.1-14 checking logs for added member')
+        self.is_equal(expected_error_msg, error_msg)
 
-    '''Enter data'''
+        expected_log_msg = ADD_MEMBER_FAILED
+        bool_value, data, date_time = check_logs_for(ssh_client, expected_log_msg, user[USERNAME])
+        self.is_true(bool_value, test_name=test_name,
+                     msg='{0} not found in audit log'.format(expected_log_msg),
+                     log_message='MEMBER_10 4a.3 CS System logs the event "{0}"'.format(expected_log_msg))
+
+    self.log('MEMBER_10 2. Filling member adding popup')
     self.wait_until_visible(type=By.XPATH, element=members_table.ADD_MEMBER_POPUP_XPATH)
     self.log('Enter {0} to "member name" area'.format(member['name']))
     input_name = self.wait_until_visible(type=By.ID, element=members_table.ADD_MEMBER_POPUP_MEMBER_NAME_AREA_ID)
@@ -262,16 +248,15 @@ def add_member_to_cs(self, ssh_client, user, member, existing_client=None, with_
     input_code = self.wait_until_visible(type=By.ID, element=members_table.ADD_MEMBER_POPUP_MEMBER_CODE_AREA_ID)
     self.input(input_code, member['code'])
 
-    '''Save data'''
     self.log('Click "OK" to add member')
     self.wait_until_visible(type=By.XPATH, element=members_table.ADD_MEMBER_POPUP_OK_BTN_XPATH).click()
     self.wait_jquery()
 
-    '''TEST PLAN 2.11.1-14 check logs for added member'''
-    bool_value, data, date_time = check_logs_for(ssh_client, ADD_MEMBER, user[USERNAME])
+    expected_log_msg = ADD_MEMBER
+    bool_value, data, date_time = check_logs_for(ssh_client, expected_log_msg, user[USERNAME])
     self.is_true((bool_value & (str(data['data']['memberCode']) == member['code'])), test_name,
-                 '2.11.1-2/2.11.1-14 checking logs for added member - check failed',
-                 '2.11.1-2/2.11.1-14 checking logs for added member')
+                 msg='{0} not found in audit log'.format(expected_log_msg),
+                 log_message='MEMBER_10 7. System logs the event "{0}"'.format(expected_log_msg))
 
 
 def add_subsystem_to_member(self, member, user=None, ssh_client=None):
@@ -316,59 +301,35 @@ def add_subsystem_to_member(self, member, user=None, ssh_client=None):
 
 
 def change_member_name(self, ssh_client, user, member):
-    '''
-    Change existing member name. First try to set an empty name, then try with the correct one.
+    """
+    Change existing member name.
     Checks if the action was logged.
     :param self: MainController object
     :param ssh_client: SSHClient object
     :param user: dict - user data
     :param member: dict - member data
     :return: None
-    '''
+    """
     self.driver.get(self.url)
-    # TEST PLAN 2.11.1-4 change member name and set an empty name
-    self.log('2.11.1-4 change member name, set empty name')
-
-    # Open member details and edit member
     open_member_details(self, member=member)
+    self.log('MEMBER_11 1. Clicking edit member name button')
     self.wait_until_visible(type=By.XPATH, element=members_table.MEMBER_NAME_EDIT_BTN_XPATH).click()
     self.wait_jquery()
 
-    # Set empty name
     edit_member_area = self.wait_until_visible(type=By.XPATH,
                                                element=members_table.MEMBER_EDIT_NAME_POPUP_EDIT_NAME_AREA_XPATH)
-    edit_member_area.clear()
-
-    # Try to save
-    self.wait_until_visible(type=By.XPATH, element=members_table.MEMBER_EDIT_NAME_POPUP_OK_BTN_XPATH).click()
-    self.wait_jquery()
-    time.sleep(5)
-
-    # Get error message
-    error = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
-
-    # TEST PLAN 2.11.1-4 check if correct error message is shown
-    self.is_equal(error, 'Missing parameter: memberName', test_name,
-                  '2.11.1-4 error message is not shown, message: {0}'.format(error),
-                  '2.11.1-4 check if error message is shown, expected: {0}'.format('Missing parameter: memberName'))
-
-    # TEST PLAN 2.11.1-14 check logs for editing member name failure
-    bool_value, data, date_time = check_logs_for(ssh_client, EDIT_MEMBER_NAME_FAILED, user[USERNAME])
-    self.is_true(bool_value, test_name,
-                 '2.11.1-4/2.11.1-14 log check for member name change failure - check failed',
-                 '2.11.1-4/2.11.1-14 log check for member name change failure')
-
-    # TEST PLAN 2.11.1-5 change member name and set a correct new name
-    self.log('2.11.1-5 change member name, set new name')
+    self.log('MEMBER_11 2. New member name is inserted')
     member['name'] = member['name2']
     self.input(edit_member_area, member['name'])
+    self.log('Clicking OK')
     self.wait_until_visible(type=By.XPATH, element=members_table.MEMBER_EDIT_NAME_POPUP_OK_BTN_XPATH).click()
     self.wait_jquery()
-    # TEST PLAN 2.11.1-14 check logs for successful member name change
-    bool_value, data, date_time = check_logs_for(ssh_client, EDIT_MEMBER_NAME, user[USERNAME])
+
+    expected_log_msg = EDIT_MEMBER_NAME
+    bool_value, data, date_time = check_logs_for(ssh_client, expected_log_msg, user[USERNAME])
     self.is_true(bool_value, test_name,
-                 '2.11.1-5/2.11.1-14 log check for member name change - check failed',
-                 '2.11.1-5/2.11.1-14 log check for member name change')
+                 log_message='MEMBER_11 5. System logs the event "{0}"'.format(expected_log_msg),
+                 msg='{0} not found in audit log'.format(expected_log_msg))
 
 
 def add_group(self, ssh_client, user, group, try_empty=False):
@@ -556,7 +517,8 @@ def remove_subsystem_registration_request(self, ssh_client, user, server_id):
     self.log('2.11.1-12: Revoke request by clicking "REVOKE" button')
     self.wait_jquery()
     time.sleep(10)
-    self.wait_until_visible(type=By.XPATH, element=cs_security_servers.REVOKE_CLIENT_MANAGEMENT_REQUEST_BTN_XPATH).click()
+    self.wait_until_visible(type=By.XPATH,
+                            element=cs_security_servers.REVOKE_CLIENT_MANAGEMENT_REQUEST_BTN_XPATH).click()
 
     # Confirm
     self.log('2.11.1-12: Confirm revoking request')

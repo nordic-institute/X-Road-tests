@@ -7,9 +7,13 @@ from view_models import popups
 
 
 class XroadAddCa(unittest.TestCase):
-    '''
-    UC TRUST_08 Add an Approved Certification Service
-    '''
+    """
+    TRUST_08 5(a) Add an Approved Certification Service for only authentication or also signing
+    RIA URL: https://jira.ria.ee/browse/XTKB-33
+    Depends on finishing other test(s):
+    Requires helper scenarios:
+    X-Road version: 6.16
+    """
 
     def test_xroad_add_ca(self):
         main = MainController(self)

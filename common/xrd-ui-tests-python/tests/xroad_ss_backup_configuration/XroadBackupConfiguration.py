@@ -1,18 +1,27 @@
+# coding=utf-8
 import unittest
 from main.maincontroller import MainController
 import ss_management
 
 
-class XroadVerifyTS(unittest.TestCase):
-    '''
-    UC  SS 14 Back Up Configuration
-    '''
+class XroadBackupConfiguration(unittest.TestCase):
+    """
+      UC SS_14: Back Up Configuration
+      RIA URL: https://jira.ria.ee/browse/XTKB-97
+      Depends on finishing other test(s):
+      Requires helper scenarios:
+      X-Road version: 6.16
+    """
 
-    def test_xroad_verify_ts(self):
+
+
+    def test_backup_configuration(self):
         main = MainController(self)
 
-        # Set test name and number
-        main.test_number = 'UC SS 14'
+        '''Set test name and number'''
+        main.test_number = 'UC SS_14'
+        main.log('TEST: UC SS_14: Back Up Configuration')
+
         main.test_name = self.__class__.__name__
 
         ssh_host = main.config.get('ss2.ssh_host')
@@ -33,7 +42,7 @@ class XroadVerifyTS(unittest.TestCase):
             '''Run the test'''
             test_ss_backup_conf()
         except:
-            main.log('XroadBackupConfiguration: Failed to run ss backup configuration')
+            main.log('XroadBackupConfiguration: Failed to run SS backup configuration')
             main.save_exception_data()
             assert False
         finally:

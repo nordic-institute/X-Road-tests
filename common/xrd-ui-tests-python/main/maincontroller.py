@@ -34,7 +34,8 @@ class MainController(AssertHelper):
     password = None  # Default password
     url = ''  # Default url
     debug = True  # Show debug messages
-    logdata = [] # Reserved for temporary storage of log entries to be checked later
+    logdata = []  # Reserved for temporary storage of log entries to be checked later
+    number = None  # Management request revoked ID
 
     # MainController path (../ relative from maincontroller.py location)
     main_path = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
@@ -374,7 +375,8 @@ class MainController(AssertHelper):
         if init_new_webdriver or self.driver is None:
             try:
                 self.driver = webdriver_init.get_webdriver(self.driver_type, download_dir=self.get_download_path(),
-                                                           log_dir=self.get_temp_path(self.browser_log))
+                                                           log_dir=self.get_temp_path(self.browser_log),
+                                                           marionette=self.config.get('config.marionette', False))
             except:
                 # If WebDriver fails to start, the test has failed.
                 assert False, 'MainController: failed to start WebDriver'

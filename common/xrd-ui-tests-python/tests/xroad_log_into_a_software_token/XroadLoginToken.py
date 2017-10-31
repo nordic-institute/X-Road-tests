@@ -1,10 +1,17 @@
+# coding=utf-8
+
 import unittest
 from main.maincontroller import MainController
 import st_management
 
-'''
-UC SS 24: Log In to a Software Token
-'''
+
+"""
+ UC SS_24: Log In to a Software Token
+ RIA URL: https://jira.ria.ee/browse/XTKB-117
+ Depends on finishing other test(s):
+ Requires helper scenarios:
+ X-Road version: 6.16
+ """
 
 
 class XroadLoginToken(unittest.TestCase):
@@ -12,7 +19,9 @@ class XroadLoginToken(unittest.TestCase):
         main = MainController(self)
 
         # Set test name and number
-        main.test_number = 'UC SS 24'
+        main.test_number = 'UC SS_24'
+        main.log('TEST: UC SS_24: Log In to a Software Token')
+
         main.test_name = self.__class__.__name__
 
         ssh_host = main.config.get('ss2.ssh_host')

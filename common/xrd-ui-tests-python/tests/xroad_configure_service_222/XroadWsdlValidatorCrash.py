@@ -4,10 +4,19 @@ import unittest
 from helpers import xroad
 from main.maincontroller import MainController
 from tests.xroad_configure_service_222 import wsdl_validator_errors
+from tests.xroad_configure_service_222.wsdl_validator_errors import restore_wsdl_validator_wrapper
 from view_models import ss_system_parameters
 
 
 class XroadWsdlValidatorCrash(unittest.TestCase):
+    """
+    SERVICE_44 1c WSDL validation program crashes while validating the WSDL file
+    RIA URL: https://jira.ria.ee/browse/XTKB-30
+    Depends on finishing other test(s): client_registration
+    Requires helper scenarios:
+    X-Road version: 6.16
+    """
+
     def test_xroad_wsdl_validator_crash(self):
         main = MainController(self)
 
@@ -39,15 +48,11 @@ class XroadWsdlValidatorCrash(unittest.TestCase):
                                                                                     wsdl_validator_wrapper_path=wsdl_validator_wrapper_path)
 
         try:
-            '''SERVICE_44 step 1c Testing wsdl validation, when wsdl validator is executed with wrong argument'''
-            main.log('SERVICE_44 step 1c Testing wsdl validation, when wsdl validator is executed with wrong argument')
+            main.log('SERVICE_44 1.c The validation program crashed while validating the WSDL file')
             test_wsdl_validator_crash()
-        except:
-            main.log('Test failed')
-            assert False
         finally:
             main.log('Restoring wsdl wrapper')
-            wsdl_validator_errors.restore_wsdl_validator_wrapper(case=main, ssh_host=ssh_host, ssh_username=ssh_user,
-                                                                 ssh_password=ssh_pass,
-                                                                 wsdl_validator_wrapper_path=wsdl_validator_wrapper_path)
+            restore_wsdl_validator_wrapper(case=main, ssh_host=ssh_host, ssh_username=ssh_user,
+                                           ssh_password=ssh_pass,
+                                           wsdl_validator_wrapper_path=wsdl_validator_wrapper_path)
             main.tearDown()

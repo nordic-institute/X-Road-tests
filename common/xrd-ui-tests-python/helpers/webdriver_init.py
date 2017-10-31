@@ -2,16 +2,17 @@ from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 
-def get_webdriver(type=webdriver.Firefox, download_dir='', log_dir=''):
+def get_webdriver(type=webdriver.Firefox, download_dir='', log_dir='', marionette=False):
     '''
     Gets the webdriver object depending on the type set.
     :param type: RemoteWebDriver - type of the WebDriver, allowed: Firefox, Chrome, Ie
     :param download_dir: str - path of the download directory
     :param log_dir: str - path of the logfile
+    :param marionette: bool - used only for Firefox; True for Selenium 3; False for Selenium 2
     :return: WebDriver object
     '''
     if type == webdriver.Firefox:
-        return get_firefox(download_dir=download_dir, log_dir=log_dir)
+        return get_firefox(download_dir=download_dir, log_dir=log_dir, marionette=marionette)
     elif type == webdriver.Chrome:
         return get_chrome(download_dir=download_dir, log_dir=log_dir)
     elif type == webdriver.Ie:
@@ -39,12 +40,13 @@ def get_chrome(download_dir='', log_dir=''):
     return webdriver.Chrome()
 
 
-def get_firefox(download_dir='', log_dir=''):
+def get_firefox(download_dir='', log_dir='', marionette=False):
     '''
     Returns a Firefox WebDriver that accepts untrusted certificates, will no ask to resume from crashes,
     does not use cache, uses specified download directory and logfile, downloads files automatically.
     :param download_dir: str - path of the download directory
     :param log_dir: str - path of the logfile
+    :param marionette: bool - False to use Selenium 2, True for Selenium 3
     :return: WebDriver object
     '''
     # New firefox profile
@@ -77,7 +79,7 @@ def get_firefox(download_dir='', log_dir=''):
     capabilities['acceptSslCerts'] = True
     capabilities['acceptInsecureCerts'] = True
     capabilities['handleAlerts'] = True
-    capabilities['marionette'] = False  # Uncomment this line to use Selenium 3 with Firefox <=47
+    capabilities['marionette'] = marionette  # Uncomment this line to use Selenium 3 with Firefox <=47
 
     # Start Firefox with our profile and capabilities and return the WebDriver
     return webdriver.Firefox(firefox_profile=profile, capabilities=capabilities)

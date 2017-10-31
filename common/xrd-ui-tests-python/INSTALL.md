@@ -44,17 +44,14 @@ find and install ShiningPanda Plugin in jenkins
 
 
 
-## install firefox
-wget 
-https://sourceforge.net/projects/ubuntuzilla/files/mozilla/apt/pool/main/f/firefox-mozilla-build/firefox-mozilla-build_48.0.2-0ubuntu1_amd64.deb/download?use_mirror=netix&r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fubuntuzilla%2Ffiles%2Fmozilla%2Fapt%2Fpool%2Fmain%2Ff%2Ffirefox-mozilla-build%2F&use_mirror=netix
-
--O firefox-mozilla-build_47.0.2-0ubuntu1_amd64.deb
+## install Firefox and xvfb
+Get Firefox 47.0.2 deb package and save it as firefox-mozilla-build_47.0.2-0ubuntu1_amd64.deb
 
 * install firefox
 
-sudo dpkg -i firefox-mozilla-build_47.0.1-0ubuntu1_amd64.deb\?r\=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fubuntuzilla%2Ffiles%2Fmozilla%2Fapt%2Fpool%2Fmain%2Ff%2Ffirefox-mozilla-build%2F
+sudo dpkg -i firefox-mozilla-build_47.0.1-0ubuntu1_amd64.deb
 
-* install xvfb for firefox
+* install xvfb for running Firefox headless
 
 sudo apt-get install firefox xvfb
 
@@ -177,7 +174,7 @@ where you extracted SoapUI.
 
 project_location=$(pwd)
 
-repo_root_dir=/var/lib/jenkins/workspace/repository/common/xrd-automated-tests
+repo_root_dir=/var/lib/jenkins/workspace/repository/common/xrd-ui-tests-python
 
 test_dir=xroad_everything
 

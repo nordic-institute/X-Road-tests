@@ -7,6 +7,14 @@ from main.maincontroller import MainController
 
 
 class XroadDeleteLocalTls(unittest.TestCase):
+    """
+    MEMBER_51 5, 3a Delete a Security Server Client's Internal TLS certificate
+    RIA URL: https://jira.ria.ee/browse/XTKB-42
+    Depends on finishing other test(s): client_registration, configure_service, XroadAddLocalTls
+    Requires helper scenarios:
+    X-Road version: 6.16
+    """
+
     def test_tls_227(self):
         main = MainController(self)
 

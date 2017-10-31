@@ -1,10 +1,13 @@
 # coding=utf-8
 
-from view_models import messages, log_constants, clients_table_vm, popups, sidebar
-from selenium.webdriver.common.by import By
-from helpers import xroad, auditchecker
-from tests.xroad_parse_users_input_SS_41 import parse_user_input_SS_41 as parse_input
 import re
+
+from selenium.webdriver.common.by import By
+
+from helpers import xroad, auditchecker
+from tests.xroad_parse_users_inputs import xroad_parse_user_inputs as parse_input
+from view_models import messages, log_constants, clients_table_vm, popups, sidebar
+from view_models.log_constants import REGISTER_CLIENT
 
 
 def add_ss_client(self, member_code, member_class, subsystem_code):
@@ -325,29 +328,24 @@ def test_register_client(case, client=None, client_id=None, system_exists=True, 
         self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_REGISTER_BUTTON_ID).click()
         self.wait_jquery()
 
-        # UC MEMBER_48 2 - system verifies that the selected subsystem exists in the global configuration
         self.log('MEMBER_48 2 - system verifies that the selected subsystem exists in the global configuration')
-
         # If the subsystem does not exist in the global configuration, we need to confirm submitting it.
         if not system_exists:
-            # UC MEMBER_48 2a - system prompts for confirmation
-            self.log('MEMBER_48 2a - system prompts for confirmation')
-
+            self.log('MEMBER_48 2a. The subsystem does not exist in the global configuration'
+                     'MEMBER_48 2a.1 System prompts for registration confirmation')
             if test_cancel:
-                # UC MEMBER_48 2a.2a - user cancels the deletion, nothing should be deleted
-                self.log('MEMBER_48 2a.2a - not confirming')
+                self.log('MEMBER_48 2a.2a Canceling registration confirmation popup')
                 popups.close_all_open_dialogs(self)
                 self.wait_jquery()
 
-                # Start editing the client again; if the client was erroneously deleted, we will get an exception here
+                self.log('Opening client edit popup')
                 client_row = clients_table_vm.get_client_row_element(self, client=client_data)
                 edit_client(self, client_row)
 
-                # Click the "register" button
+                self.log('Click on register button')
                 self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_REGISTER_BUTTON_ID).click()
                 self.wait_jquery()
 
-            # UC MEMBER_48 2a - confirm registration
             self.log('MEMBER_48 2a - confirm submitting a new subsystem')
             popups.confirm_dialog_click(self)
 
@@ -366,8 +364,9 @@ def test_register_client(case, client=None, client_id=None, system_exists=True, 
                           msg='MEMBER_48 6 - Expected client status "{0}", found "{1}"'.format(
                               clients_table_vm.CLIENT_STATUS_REGISTRATION, status_title))
 
-            # Remember that we need to look for a success message.
-            self.logdata.append(log_constants.REGISTER_CLIENT)
+            expected_log_msg = REGISTER_CLIENT
+            self.log('MEMBER_48 7. System logs the event "{0}"'.format(expected_log_msg))
+            self.logdata.append(expected_log_msg)
         else:
             # UC MEMBER_48 3-5a creating or sending the request failed, or the response was an error message
             self.log('MEMBER_48 3-5a creating or sending the request failed, or the response was an error message')

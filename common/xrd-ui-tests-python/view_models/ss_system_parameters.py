@@ -15,9 +15,11 @@ BACKUP_DUMP_DIR2 = '/etc/nginx/sites-enabled/'
 BACKUP_DUMP_VER = 'security_XROAD_6.8_KS1/GOV/TS2OWNER/TS2'
 BACKUP_CORRUPTION_FILE = '/etc/xroad/conf.d/deletethisfile.ini'
 BACKUP_CORRUPTION_FILE2 = '/var/lib/xroad/backup/deletethisfile.tar'
+BACKUP_CREATED = '/var/lib/xroad/backup//conf_backup_'
 DELETE = "//button[contains(.,'Delete')]"
 RESTORE = "//button[contains(.,'Restore')]"
 DOWNLOAD = "//button[contains(.,'Download')]"
+SHA1_REGEX = '(^[0-9A-F]{2}(:[0-9A-F]{2}){19}$)'
 
 RESTORE_DUMP_CLEARING_SHARED_MEMORY = 'CLEARING SHARED MEMORY'
 RESTORE_DUMP_STOPPING_SERVICES = 'STOPPING ALL SERVICES EXCEPT JETTY'

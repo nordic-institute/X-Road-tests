@@ -1,9 +1,11 @@
 # coding=utf-8
 
-from view_models import popups, messages, sidebar, certification_services, log_constants
-from selenium.webdriver.common.by import By
 import time
+
+from selenium.webdriver.common.by import By
+
 from helpers import xroad, auditchecker
+from view_models import popups, messages, sidebar, certification_services, log_constants
 
 
 def select_ca(self, ca_name):
@@ -234,7 +236,7 @@ def configure_ca(self, certificate_classpath=None,
         self.by_id(certification_services.SUBMIT_CA_SETTINGS_BTN_ID).click()
 
         # Save expected success log message for checking the logs later
-        self.logdata.append(log_success)
+        self.logdata.append('Add timestamping service')
 
 
 def test_add_ca(case, ca_certificate, invalid_ca_certificate=None, certificate_classpath=None, cs_ssh_host=None,
@@ -298,9 +300,8 @@ def test_add_ca(case, ca_certificate, invalid_ca_certificate=None, certificate_c
             self.is_true(logs_found,
                          msg='Some log entries were missing. Expected: "{0}", found: "{1}"'.format(self.logdata,
                                                                                                    log_checker.found_lines))
-        '''TRUST_08 5(a) certification service is marked for only authenticatication service'''
         if auth_only_certs:
-            self.log('TRUST_08 5(a) certification service is marked for only authenticatication service')
+            self.log('TRUST_08 5(a) certification service is marked for only authentication service')
             self.wait_until_visible(type=By.XPATH, element=certification_services.CA_SETTINGS_TAB_XPATH).click()
             auth_checkbox = self.wait_until_visible(certification_services.EDIT_CA_AUTH_ONLY_CHECKBOX_XPATH, By.XPATH)
             checked = auth_checkbox.get_attribute('checked')

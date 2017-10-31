@@ -1,18 +1,28 @@
+# coding=utf-8
 import unittest
 from main.maincontroller import MainController
 import kc_management
 
 
 class XroadEditFriendlyName(unittest.TestCase):
-    '''
-    UC SS 22: Edit the Friendly Name of a Token.
-    '''
+
+    """
+    UC SS_22: Edit the Friendly Name of a Token
+    RIA URL: https://jira.ria.ee/browse/XTKB-74
+    Depends on finishing other test(s):
+    Requires helper scenarios:
+    X-Road version: 6.16
+    """
+
+
+
 
     def test_xroad_edit_friendly_name(self):
         main = MainController(self)
 
-        # Set test name and number
-        main.test_number = 'UC SS 22'
+        '''Set test name and number'''
+        main.test_number = 'UC SS_22'
+        main.test_number = 'UC SS_22: Edit the Friendly Name of a Token'
         main.test_name = self.__class__.__name__
 
         ssh_host = main.config.get('ss2.ssh_host')

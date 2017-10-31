@@ -1,11 +1,16 @@
+# coding=utf-8
 import unittest
 from main.maincontroller import MainController
 import st_management
 
-'''
-UC SS 26: Log Out of a Software Token
-'''
 
+"""
+ UC SS_26: Log Out of a Software Token
+ RIA URL: https://jira.ria.ee/browse/XTKB-120
+ Depends on finishing other test(s):
+ Requires helper scenarios:
+ X-Road version: 6.16
+ """
 
 class XroadLogoutToken(unittest.TestCase):
     def test_xroad_logout_token(self):
@@ -13,6 +18,8 @@ class XroadLogoutToken(unittest.TestCase):
 
         # Set test name and number
         main.test_number = 'UC SS 26'
+        main.log('TEST:  UC SS_26: Log Out of a Software Token')
+
         main.test_name = self.__class__.__name__
 
         ssh_host = main.config.get('ss2.ssh_host')

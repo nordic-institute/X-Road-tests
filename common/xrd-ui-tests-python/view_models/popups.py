@@ -148,6 +148,14 @@ WARNING_POPUP = '//div[@aria-describedby="warning"]'
 WARNING_POPUP_CONTINUE_XPATH = WARNING_POPUP + '//div[@class="ui-dialog-buttonset"]//button[span="Continue"]'
 WARNING_POPUP_CANCEL_XPATH = WARNING_POPUP + '//div[@class="ui-dialog-buttonset"]//button[span="Cancel"]'
 
+
+
+SECURITY_SERVER_EDIT_POPUP = '//div[@aria-describedby="securityserver_edit_dialog"]'
+SECURITY_SERVER_EDIT_POPUP_CANCEL_XPATH = SECURITY_SERVER_EDIT_POPUP + '//div[@class="ui-dialog-buttonset"]//button[span="Close"]'
+
+
+
+
 XROAD_ID_BY_INDEX_XPATH = '(.//span[@class="xroad-id"])[{0}]'  # Needs to be used with .format(index_string)
 XROAD_ID_BY_NAME_XPATH = u'.//span[@class="xroad-id"][text()="{0}"]'  # Needs to be used with .format(xroad_id)
 XROAD_ID_SELECTABLE_ROW_CSS = 'tr.selectable span.xroad-id'
@@ -172,6 +180,13 @@ TOKEN_LOGIN_OK_BTN_XPATH = TOKEN_LOGIN_POPUP + '//div[@class="ui-dialog-buttonse
 TOKEN_LOGIN_CANCEL_BTN_XPATH = TOKEN_LOGIN_POPUP + '//div[@class="ui-dialog-buttonset"]//button[span="Cancel"]'
 
 TOKEN_PIN_LABEL_AREA = 'activate_token_pin'
+
+MEMBER_DETAILS_MANAGEMENT_REGQUEST_ID_REGEX = '[0-9]'
+MEMBER_DETAILS_MANAGEMENT_REGQUEST_CREATED_REGEX = '(\d{4}[-]?\d{1,2}[-]?\d{1,2} \d{1,2}:\d{1,2}:\d{1,2})'
+MEMBER_DETAILS_MANAGEMENT_REQUEST_TYPE = '(\D)'
+MEMBER_DETAILS_MANAGEMENT_REQUEST_STATUS = '(\D+)'
+
+
 
 def confirm_dialog_visible(self):
     # Check if anything with a "Confirm" button is visible

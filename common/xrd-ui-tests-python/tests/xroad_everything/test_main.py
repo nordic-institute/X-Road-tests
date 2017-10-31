@@ -10,7 +10,7 @@ class TestAll(unittest.TestCase):
 
     # Add clients to central server (2.2.1), undo later
     def test_01_xroad_security_server_client_registration(self):
-        from tests.xroad_client_registration_in_ss_221.test_main import XroadSecurityServerClientRegistration
+        from tests.xroad_client_registration_in_ss_221.XroadSecurityServerClientRegistration import XroadSecurityServerClientRegistration
         print('\n test_01_xroad_security_server_client_registration STARTED \n')
         suite = unittest.TestLoader().loadTestsFromTestCase(XroadSecurityServerClientRegistration)
         ret = unittest.TextTestRunner().run(suite)
@@ -24,7 +24,7 @@ class TestAll(unittest.TestCase):
 
     # Configure test service (2.2.2), undo later
     def test_02_xroad_configure_service(self):
-        from tests.xroad_configure_service_222.test_main import XroadConfigureService
+        from tests.xroad_configure_service_222.XroadConfigureService import XroadConfigureService
         print('\n test_02_xroad_configure_service STARTED\n')
         suite = unittest.TestLoader().loadTestsFromTestCase(XroadConfigureService)
         ret = unittest.TextTestRunner().run(suite)
@@ -38,7 +38,7 @@ class TestAll(unittest.TestCase):
 
     # Refresh WSDL (2.2.5), no undo necessary (according to specification, end state is the same as start state)
     def test_03_xroad_refresh_wsdl(self):
-        from tests.xroad_refresh_wsdl_225.test_main import XroadRefreshWsdl
+        from tests.xroad_refresh_wsdl_225.XroadRefreshWsdl import XroadRefreshWsdl
         print('\n test_03_xroad_refresh_wsdl STARTED\n')
         suite = unittest.TestLoader().loadTestsFromTestCase(XroadRefreshWsdl)
         ret = unittest.TextTestRunner().run(suite)
@@ -53,7 +53,7 @@ class TestAll(unittest.TestCase):
 
     # Deactivate and reactivate WSDL (2.2.6), no undo necessary (specification: end state is the same as start state)
     def test_04_xroad_deactivate_wsdl(self):
-        from tests.xroad_deactivate_wsdl_226.test_main import XroadDeactivateWsdl
+        from tests.xroad_deactivate_wsdl_226.XroadDeactivateWsdl import XroadDeactivateWsdl
         print('\n test_04_xroad_deactivate_wsdl STARTED\n')
         suite = unittest.TestLoader().loadTestsFromTestCase(XroadDeactivateWsdl)
         ret = unittest.TextTestRunner().run(suite)
@@ -67,7 +67,7 @@ class TestAll(unittest.TestCase):
 
     # Using TLS locally (2.2.7), undo right away
     def test_05_xroad_Local_tls(self):
-        from tests.xroad_tls_227.test_main import XroadLocalTls
+        from tests.xroad_tls_227.XroadLocalTls import XroadLocalTls
         print('\n test_05_xroad_Local_tls STARTED\n')
         suite = unittest.TestLoader().loadTestsFromTestCase(XroadLocalTls)
         ret = unittest.TextTestRunner().run(suite)
@@ -94,7 +94,7 @@ class TestAll(unittest.TestCase):
 
     # Add central service (2.2.8), undo later
     def test_07_xroad_add_central_service(self):
-        from tests.xroad_add_central_service_228.test_main import XroadAddCentralService
+        from tests.xroad_add_central_service_228.XroadAddCentralService import XroadAddCentralService
         print('\n test_07_xroad_add_central_service STARTED\n')
         suite = unittest.TestLoader().loadTestsFromTestCase(XroadAddCentralService)
         ret = unittest.TextTestRunner().run(suite)
@@ -108,7 +108,7 @@ class TestAll(unittest.TestCase):
 
     # Test adding access to XRoad member (2.2.9), no undo necessary (specification: end state is the same as start state)
     def test_08_xroad_member_access(self):
-        from tests.xroad_member_access_229.test_main import XroadMemberAccess
+        from tests.xroad_member_access_229.XroadMemberAccess import XroadMemberAccess
         print('\n test_08_xroad_member_access STARTED\n')
         suite = unittest.TestLoader().loadTestsFromTestCase(XroadMemberAccess)
         ret = unittest.TextTestRunner().run(suite)
@@ -197,7 +197,7 @@ class TestAll(unittest.TestCase):
 
     # Test 2.11.1 Testing logging in central server
     def test_14_xroad_logging_in_central_server(self):
-        from tests.xroad_logging_in_cs_2111.test_main import XroadLoggingInCentralServer
+        from tests.xroad_logging_in_cs_2111.XroadCsLogging import XroadLoggingInCentralServer
         print('\n test_14_xroad_logging_in_central_server STARTED\n')
         suite = unittest.TestLoader().loadTestsFromTestCase(XroadLoggingInCentralServer)
         ret = unittest.TextTestRunner().run(suite)
@@ -212,7 +212,7 @@ class TestAll(unittest.TestCase):
 
     # Test 2.11.2
     def test_15_XroadLoggingInSecurityServer(self):
-        from tests.xroad_logging_service_ss_2112.test_main import XroadLoggingInSecurityServer
+        from tests.xroad_logging_service_ss_2112.XroadSsLogging import XroadLoggingInSecurityServer
         print('\n test_15_XroadLoggingInSecurityServer STARTED\n')
         suite = unittest.TestLoader().loadTestsFromTestCase(XroadLoggingInSecurityServer)
         ret = unittest.TextTestRunner().run(suite)
@@ -225,14 +225,14 @@ class TestAll(unittest.TestCase):
 
     # Test 2.1.3 Failures
     def test_16_security_server_client_registration_failures(self):
-        from tests.xroad_ss_client_certification_213.SecurityServerClientRegistrationFailures import \
-            SecurityServerClientRegistrationFailures
+        from tests.xroad_ss_client_certification_213.XroadSecurityServerClientRegistrationFailures import \
+            XroadSecurityServerClientRegistrationFailures
         print('\n test_16_security_server_client_registration_failures STARTED\n')
-        suite = unittest.TestLoader().loadTestsFromTestCase(SecurityServerClientRegistrationFailures)
+        suite = unittest.TestLoader().loadTestsFromTestCase(XroadSecurityServerClientRegistrationFailures)
         ret = unittest.TextTestRunner().run(suite)
         if len(ret.failures) > 0:
             assert False
         elif len(ret.errors) > 0:
             assert False
-        del SecurityServerClientRegistrationFailures
+        del XroadSecurityServerClientRegistrationFailures
         print('\n test_16_security_server_client_registration_failures FINISHED')

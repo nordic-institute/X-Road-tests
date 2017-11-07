@@ -203,9 +203,6 @@ class Xroad_deletion_of_registered_object(BaseTest):
         # Step Verify request comment in central server
         request_comment = strings.server_request_comment(u'member1_configuration')
         self.component_cs_sidebar.open_management_request_view()
-        #self.component_cs_mgm_requests.open_request_details_dlg(strings.request_client_deletion)
-        #self.component_cs_mgm_requests.verify_comment_in_request_details_dlg(request_comment)
-        #self.component_cs_mgm_requests.close_request_details_dlg()
         self.component_cs_mgm_requests.open_request_details_dlg(strings.request_cert_deletion)
         self.component_cs_mgm_requests.verify_comment_in_request_details_dlg(request_comment)
         self.component_cs_mgm_requests.close_request_details_dlg()
@@ -289,9 +286,6 @@ class Xroad_deletion_of_registered_object(BaseTest):
         # Step Verify request comment in central server
         self.component_cs_sidebar.open_management_request_view()
         request_comment = strings.server_request_comment(u'member1_configuration')
-        #self.component_cs_mgm_requests.open_request_details_dlg(strings.request_client_deletion)
-        #self.component_cs_mgm_requests.verify_comment_in_request_details_dlg(request_comment)
-        #self.component_cs_mgm_requests.close_request_details_dlg()
         self.component_cs_mgm_requests.open_request_details_dlg(strings.request_cert_deletion)
         self.component_cs_mgm_requests.verify_comment_in_request_details_dlg(request_comment)
         self.component_cs_mgm_requests.close_request_details_dlg()
@@ -344,9 +338,6 @@ class Xroad_deletion_of_registered_object(BaseTest):
         # Step Verify reguest comment in central server
         request_comment = strings.server_request_comment(u'member1_configuration')
         self.component_cs_sidebar.open_management_request_view()
-        #self.component_cs_mgm_requests.open_request_details_dlg(strings.request_client_deletion)
-        #self.component_cs_mgm_requests.verify_comment_in_request_details_dlg(request_comment)
-        #self.component_cs_mgm_requests.close_request_details_dlg()
 
     def test_deletion_of_authentication_certificate_from_cs(self):
         """
@@ -452,11 +443,6 @@ class Xroad_deletion_of_registered_object(BaseTest):
 
         # Step Verify management request of client deletion in central server
         self.component_cs_sidebar.open_management_request_view()
-        #self.component_cs_mgm_requests.open_request_details_dlg(strings.request_client_deletion)
-        #self.component_cs_mgm_requests.close_request_details_dlg()
-
-        # Step Verify client table does not contain client in central server
-        #self.component_cs_sidebar.open_security_servers_view()
 
         # Step Verify subsystem state in central server
         self.component_cs_sidebar.open_members_view()

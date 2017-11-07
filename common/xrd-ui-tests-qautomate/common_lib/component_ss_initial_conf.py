@@ -44,6 +44,7 @@ class Component_ss_initial_conf(CommonUtils):
         self.ss_initial_conf_import_anchor.upload_anchor(TESTDATA[section])
         self.ss_initial_conf_import_conf_dlg.wait_until_element_is_visible_conf_required()
         self.ss_initial_conf_import_conf_dlg.click_button_ui_buttonset_confirm()
+        self.wait_until_jquery_ajax_loaded()
         self.ss_initial_conf_server_details.wait_until_element_is_visible_security_server_owner()
         sleep(6)
 

@@ -15,6 +15,9 @@ This folder contains X-Road ui test made with qautomate framework.
 * tests > test cases
 * variabels > files containing python variables for tests
 
+## Sphinx documentation
+
+Generated sphinx documentation: [Documentation](https://s3-eu-west-1.amazonaws.com/xroad-tests-qautomate/index.html)
 
 ## Qautomate installation
 

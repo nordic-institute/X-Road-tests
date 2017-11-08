@@ -128,6 +128,7 @@ class Component_cs_system_settings(CommonUtils):
         self.cs_system_settings_add_member_class.input_text_to_name_member_class_fill_text(TESTDATA[section])
         self.cs_system_settings_add_member_class.input_text_name_member_class_description(TESTDATA[section])
         self.cs_system_settings_add_member_class.click_button_ok()
+        self.wait_until_jquery_ajax_loaded()
 
     def change_server_address(self, section=u'cs_url'):
         """

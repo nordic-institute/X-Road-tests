@@ -60,4 +60,5 @@ class Component_common(CommonUtils):
         **Test steps:**
                 * **Step 1:** :func:`~common_lib.common_elements.Common_elements.verify_message_contains`, *message*
         """
+        self.wait_until_jquery_ajax_loaded()
         self.common_elements.verify_message_contains(message)

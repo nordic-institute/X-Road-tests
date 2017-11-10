@@ -73,7 +73,7 @@ class Common_lib_ssh(CommonUtils):
                     os.makedirs(copy_location)
                 command = "sudo cp " + self.run_folder + os.sep + log_file_name + " " + copy_location + name_prefix + "_" + log_file_name
 
-                self.run_bash_command(command, True)
+                self.run_bash_command(command, False)
             except AssertionError:
                 self.warning("Could not copy file " + log_file_name)
 
@@ -112,7 +112,7 @@ class Common_lib_ssh(CommonUtils):
             raise Exception(errors.enviroment_type_not_valid)
         for log_file in strings.ss_all_logs:
             command = formated_command.format(server, log_file, log_file.split("/")[-1])
-            self.run_bash_command(command, True)
+            self.run_bash_command(command, False)
 
     def delete_files_from_directory(self, section="cs_url", path=u'/var/lib/xroad/backup'):
         """

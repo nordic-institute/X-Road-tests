@@ -6,8 +6,11 @@ from selenium.webdriver.common.by import By
 from helpers import auditchecker
 from tests.xroad_add_to_acl_218.add_to_acl_2_1_8 import select_subjects_to_acl
 from view_models import popups as popups, clients_table_vm as clients_table_vm, log_constants
-from view_models.clients_table_vm import select_subjects_from_table
+from view_models.clients_table_vm import select_subjects_from_table, SERVICE_CLIENT_NAME_XPATH, \
+    SERVICE_CLIENT_IDENTIFIER_XPATH
 from view_models.log_constants import ADD_ACCESS_RIGHTS_TO_SUBJECT, REMOVE_ACCESS_RIGHTS_FROM_SUBJECT
+from view_models.popups import CLIENT_DETAILS_POPUP_ACL_SUBJECTS_OPEN_CLIENTS_SERVICES_ID, \
+    CLIENT_DETAILS_POPUP_ACL_SUBJECTS_ADD_BTN_ID
 
 test_name = 'ADD_TO_ACL_CLIENT'
 
@@ -52,7 +55,7 @@ def rows_are_unselectable(table, rows):
 
 
 def test_empty_client(ss_ssh_host=None, ss_ssh_user=None, ss_ssh_pass=None, rows_to_select=None, remove_data=True,
-                      client_name=None):
+                      client_name=None, view_service_clients=False):
     def test_case(self):
         # TEST PLAN 2.1.9.1 add access to new client
         self.log('*** 2.1.9 / XT-463')
@@ -97,6 +100,20 @@ def test_empty_client(ss_ssh_host=None, ss_ssh_user=None, ss_ssh_pass=None, rows
         except Exception:
             self.log('2.1.9.1 ERROR: {0}'.format(traceback.format_exc()))
 
+        if view_service_clients:
+            self.log('Close access rights popup')
+            popups.close_all_open_dialogs(self, limit=1)
+            self.wait_jquery()
+            self.log('SERVICE_01 1. Viewing service clients of a security server client')
+            self.log('SERVICE_01 2. System displays the name of the X-Road member')
+            self.is_equal(client_name, self.wait_until_visible(type=By.XPATH, element=SERVICE_CLIENT_NAME_XPATH).text)
+            self.log('SERVICE_01 2. System displays the X-Road identifier')
+            self.is_equal(selected_id[0],
+                          self.wait_until_visible(type=By.XPATH, element=SERVICE_CLIENT_IDENTIFIER_XPATH).text)
+            self.log('SERVICE_01 2. "Add a client" button is visible')
+            self.is_not_none(self.by_id(CLIENT_DETAILS_POPUP_ACL_SUBJECTS_ADD_BTN_ID))
+            self.log('SERVICE_01 2. "Access rights" button is visible')
+            self.is_not_none(self.by_id(CLIENT_DETAILS_POPUP_ACL_SUBJECTS_OPEN_CLIENTS_SERVICES_ID))
         if remove_data:
             if ss_ssh_host is not None:
                 remove_added_data(self, log_checker, client_name, selected_id=selected_id)

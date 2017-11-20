@@ -12,7 +12,8 @@ from view_models.popups import CENTRAL_SERVICE_POPUP_OK_BUTTON_ID
 faults_unsuccessful = ['Server.ServerProxy.ServiceDisabled', 'Client.InternalError']
 # These faults are checked when we need the result to be successful. Otherwise the checking function returns False.
 faults_successful = ['Server.ServerProxy.AccessDenied', 'Server.ServerProxy.UnknownService',
-                     'Server.ServerProxy.ServiceDisabled', 'Server.ClientProxy.*', 'Client.*']
+                     'Server.ServerProxy.ServiceDisabled', 'Server.ClientProxy.*', 'Client.*',
+                     'Server.ServerProxy.ServiceFailed.InvalidContentType']
 
 
 def set_central_service_provider_fields(self, provider):

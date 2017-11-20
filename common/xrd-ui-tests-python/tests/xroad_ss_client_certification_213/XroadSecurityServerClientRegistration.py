@@ -16,7 +16,7 @@ class XroadSecurityServerClientRegistration(unittest.TestCase):
     RIA URL: https://jira.ria.ee/browse/XTKB-86
     Depends on finishing other test(s):
     Requires helper scenarios:
-    X-Road version: 6.16
+    X-Road version: 6.16.0
     """
 
     def test_security_server_client_registration_2_1_3(self):

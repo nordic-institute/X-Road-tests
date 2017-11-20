@@ -291,7 +291,7 @@ def test_add_security_server_to_member(case, cs_host, cs_username, cs_password, 
             '''Expected log message'''
             expected_log_msg = log_constants.ADD_SECURITY_SERVER_FAILED
             self.log('MEMBER_12 8a.1. System logs the event {0}'.format(expected_log_msg))
-            self.log('MEMBER_12 8a.2. System logs the event “Add security server failed” to the audit log')
+            self.log('MEMBER_12 8a.2. System logs the event "Add security server failed" to the audit log')
 
             logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines)
             self.is_true(logs_found)
@@ -316,7 +316,7 @@ def test_add_security_server_to_member(case, cs_host, cs_username, cs_password, 
             '''Expected log message'''
             expected_log_msg = log_constants.ADD_SECURITY_SERVER_FAILED
             self.log('MEMBER_12 9a.1. System logs the event {0}'.format(expected_log_msg))
-            self.log('MEMBER_12 9a.2. System logs the event “Add security server failed” to the audit log')
+            self.log('MEMBER_12 9a.2. System logs the event "Add security server failed" to the audit log')
 
             logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines)
             self.is_true(logs_found)

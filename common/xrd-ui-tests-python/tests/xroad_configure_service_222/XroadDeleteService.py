@@ -6,6 +6,14 @@ from main.maincontroller import MainController
 from tests.xroad_configure_service_222 import configure_service_2_2_2
 
 class XroadDeleteService(unittest.TestCase):
+    """
+    DESCRIPTION: ???
+    RIA URL: ???
+    Depends on finishing other test(s): XroadConfigureService
+    Requires helper scenarios:
+    X-Road version: 6.16.0
+    """
+
     def test_xroad_configure_service(self):
         main = MainController(self)
 

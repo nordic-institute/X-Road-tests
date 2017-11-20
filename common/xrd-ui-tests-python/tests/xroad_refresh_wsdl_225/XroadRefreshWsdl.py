@@ -9,18 +9,20 @@ from tests.xroad_configure_service_222 import configure_service_2_2_2
 
 class XroadRefreshWsdl(unittest.TestCase):
     """
-    SERVICE_14 7, 3b2, 4a2 Refresh a WSDL
-    RIA URL: https://jira.ria.ee/browse/XTKB-95
-    Depends on finishing other test(s): client registration, configure service
-    Requires helper scenarios:
-    X-Road version: 6.16
+    UC SERVICE_14: Refresh Security Server Client's WSDL (covers all steps except extensions 3a, 3d, 3e which
+    are covered by XroadWsdlValidatorErrors)
+    RIA URL: https://jira.ria.ee/browse/XT-271, https://jira.ria.ee/browse/XTKB-25
+    RIA URL: https://jira.ria.ee/browse/XTKB-26, https://jira.ria.ee/browse/XTKB-95
+    Depends on finishing other test(s): XroadSecurityServerClientRegistration, XroadConfigureService
+    Requires helper scenarios: xroad_add_to_acl_218
+    X-Road version: 6.16.0
     """
 
     def test_refresh_wsdl(self):
         main = MainController(self)
 
         # Set test name and number
-        main.test_number = '2.2.5'
+        main.test_number = 'UC SERVICE_14'
         main.test_name = self.__class__.__name__
 
         ss_host = main.config.get('ss2.host')

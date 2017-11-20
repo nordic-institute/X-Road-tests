@@ -12,7 +12,7 @@ UC SS_42: Unregister an Authentication Certificate on Key Deletion
 RIA URL: https://jira.ria.ee/browse/XTKB-122
 Depends on finishing other test(s):
 Requires helper scenarios:
-X-Road version: 6.16
+X-Road version: 6.16.0
 """
 
 

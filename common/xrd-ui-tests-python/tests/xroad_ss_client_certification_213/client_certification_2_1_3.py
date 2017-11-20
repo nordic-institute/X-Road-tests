@@ -75,7 +75,7 @@ def test_generate_csr_and_import_cert(client_code, client_class, usage_auth=Fals
         if delete_csr_before_import:
             self.log('SS_30 15a. No CSR notice corresponding to imported cert exist in system configuration')
             sshclient = ssh_client.SSHClient(ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass)
-            delete_csr(self, client_code, client_class, log_checker, sshclient)
+            delete_csr(self, sshclient, log_checker, client_code, client_class)
 
         # Get the certificate request path
         file_path = \
@@ -1312,7 +1312,13 @@ def get_ca_certificate(client, cert, target_path):
     sftp.close()
 
 
-def get_cert(client, service, file_path, local_path, remote_cert_path, remote_csr_path):
+def put_file_in_ss(client, local_path, remote_path):
+    sftp = client.get_client().open_sftp()
+    sftp.put(local_path, remote_path)
+    sftp.close()
+
+
+def get_cert(client, service, file_path, local_path, remote_cert_path, remote_csr_path, convert_der=False, close_client=True):
     '''
     Gets the certificate (sign or auth) from the CA.
 
@@ -1336,12 +1342,18 @@ def get_cert(client, service, file_path, local_path, remote_cert_path, remote_cs
     client.exec_command('cat ' + remote_csr_path + ' | ' + service + ' > ' + remote_cert_path)
     time.sleep(3)
 
+    if convert_der:
+        new_cert_path = remote_cert_path.replace('.pem', '.der')
+        client.exec_command('openssl x509 -outform der -in {0} -out {1}'.format(remote_cert_path, new_cert_path))
+        remote_cert_path = new_cert_path
+
     # Download certificate
     sftp.get(remote_cert_path, local_path)
 
     # Close the connection
     sftp.close()
-    client.close()
+    if close_client:
+        client.close()
 
 
 def revoke_certs(client, certs, ca_path='/home/ca/CA', revoke_script='./revoke.sh'):
@@ -1821,26 +1833,22 @@ def test_import_cert_global_conf_expired(self, ss_host, ss_username, ss_pass, ss
     return ss_global_conf_expired
 
 
-def expire_global_conf(self, ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass):
+def expire_global_conf(self, sshclient):
     def expire_conf():
-        client = ssh_client.SSHClient(ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass)
         self.log('Stop configuration client service')
-        client.exec_command('service xroad-confclient stop', sudo=True)
-        self.log('Close ssh connection')
-        client.close()
+        sshclient.exec_command('service xroad-confclient stop', sudo=True)
         self.log('Wait 11 minutes, so the global configuration has expired for sure')
         time.sleep(ss_system_parameters.GLOBAL_CONF_EXPIRATION_TIME_IN_SECONDS)
 
     return expire_conf
 
 
-def start_xroad_conf_client(self, ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass):
+def start_xroad_conf_client(self, sshclient):
     def start_conf_client():
-        client = ssh_client.SSHClient(ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass)
         self.log('Start xroad-confclient service')
-        client.exec_command('service xroad-confclient start', sudo=True)
+        sshclient.exec_command('service xroad-confclient start', sudo=True)
         self.log('Close ssh connection')
-        client.close()
+        sshclient.close()
 
     return start_conf_client
 

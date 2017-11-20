@@ -117,8 +117,8 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
         :return: None
         ''"""
 
-        # TEST PLAN 2.2.5 - refresh service WSDL
-        self.log('*** 2.2.5 / XT-469')
+        # UC SERVICE_14: Refresh Security Server Client's WSDL
+        self.log('*** UC SERVICE_14: Refresh Security Server Client''s WSDL')
 
         '''Get log checker for security server'''
         log_checker = auditchecker.AuditChecker(host=ss_ssh_host, username=ss_ssh_user, password=ss_ssh_pass)
@@ -126,16 +126,16 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
         # Open an SSH connection to the webserver
         webserver_connect(self, ssh_host, ssh_username, ssh_password)
 
-        self.log('2.2.5 initialize with the correct WSDL file: {0}'.format(wsdl_correct))
+        self.log('SERVICE_14 initialize with the correct WSDL file: {0}'.format(wsdl_correct))
         webserver_set_wsdl(self, wsdl_source_filename=wsdl_local_path.format(wsdl_correct),
                            wsdl_target_filename=wsdl_local_path.format(wsdl_filename))
 
-        # TEST PLAN 2.2.5-1 test query from TS1 client CLIENT1:sub to service bodyMassIndex. Query should succeed.
-        self.log('2.2.5-1 test query {0} to bodyMassIndex. Query should succeed.'.format(query_filename))
-        case.is_true(testclient_http.check_success(), msg='2.2.5-1 test query failed')
+        # UC SERVICE_14 test query 1 from SS1 client 1 subsystem to service bodyMassIndex. Query should succeed.
+        self.log('SERVICE_14 test query (1) {0} to bodyMassIndex. Query should succeed.'.format(query_filename))
+        case.is_true(testclient_http.check_success(), msg='SERVICE_14 test query 1 failed')
 
-        # TEST PLAN 2.2.5-2 delete service bodyMassIndex and refresh WSDL
-        self.log('2.2.5-2 delete service bodyMassIndex and refresh WSDL')
+        # UC SERVICE_14 5a - delete service bodyMassIndex and refresh WSDL (services defined in WSDL differ from current)
+        self.log('SERVICE_14 5a - delete service bodyMassIndex and refresh WSDL (services defined in WSDL differ from current)')
 
         # Open client popup using shortcut button to open it directly at Services tab.
         clients_table_vm.open_client_popup_services(self, client_name=client_name, client_id=client_id)
@@ -185,8 +185,8 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
         logs_found = log_checker.check_log(refresh_wsdl_failed_message, from_line=current_log_lines + 1)
         self.is_true(logs_found)
 
-        # TEST PLAN 2.2.5.2 - replace WSDL with a file that gives a validation warning
-        self.log('2.2.5.2 - replace WSDL with a file that gives a validation warning: {0}'.format(wsdl_warning))
+        # UC SERVICE_14 3c - replace WSDL with a file that gives a validation warning
+        self.log('SERVICE_14 3c - replace WSDL with a file that gives a validation warning: {0}'.format(wsdl_warning))
         webserver_set_wsdl(self, wsdl_source_filename=wsdl_local_path.format(wsdl_warning),
                            wsdl_target_filename=wsdl_local_path.format(wsdl_filename))
         warning, error, console = refresh_wsdl(self)
@@ -202,15 +202,9 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
         self.wait_until_visible(type=By.XPATH, element=popups.WARNING_POPUP_CANCEL_XPATH).click()
         self.wait_jquery()
 
-        # TEST PLAN 2.2.5-2 - replace WSDL with a correct file that doesn't include bodyMassIndex service.
-        # In the test plan, there are two variants of how to delete the service (v1 and v2). One of them is commenting
-        # out bodyMassIndex service and the second is to replace the WSDL with one that only contains service
-        # xroadGetRandom. As the outcome is the same and only relies on parsing the XML (parser just ignores commented-out
-        # blocks), we're just using variant 2 (v2 - replacing the WSDL with one that only contains xroadGetRandom).
-        # If it is necessary to test both, the full 2.2.5-2 block may be duplicated and wsdl_missing_service variable
-        # should be replaced or updated with one that specifies a file with commented-out bodyMassIndex.
+        # UC SERVICE_14 5a - replace WSDL with a correct file that doesn't include bodyMassIndex service.
         self.log(
-            '2.2.5-2 - replace WSDL with a file that only contains xroadGetRandom: {0}'.format(wsdl_missing_service))
+            'SERVICE_14 5a - replace WSDL with a file that only contains xroadGetRandom: {0}'.format(wsdl_missing_service))
         '''Get current line count'''
         current_log_lines = log_checker.get_line_count()
         webserver_set_wsdl(self, wsdl_source_filename=wsdl_local_path.format(wsdl_missing_service),
@@ -248,15 +242,15 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
         logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
         self.is_true(logs_found)
 
-        # TEST PLAN 2.2.5-3 test query from TS1 client CLIENT1:sub to service bodyMassIndex. Query should fail.
-        self.log('2.2.5-3 test query {0} to service bodyMassIndex. Query should fail.'.format(query_filename))
+        # UC SERVICE_14 test query 2 from SS1 client 1 subsystem to service bodyMassIndex. Query should fail.
+        self.log('SERVICE_14 test query (2) {0} to service bodyMassIndex. Query should fail.'.format(query_filename))
 
-        case.is_true(testclient_http.check_fail(faults=True), msg='2.2.5-3 test query succeeded')
+        case.is_true(testclient_http.check_fail(faults=True), msg='SERVICE_14 test query (2) succeeded')
 
-        # TEST PLAN 2.2.5-4 add service bodyMassIndex to service WSDL and refresh the service. UI should notify about
+        # UC SERVICE_14 5a - add service bodyMassIndex to service WSDL and refresh the service. UI should notify about
         # an added service. NB! Service settings must not change.
 
-        self.log('2.2.5-4 add service bodyMassIndex to service WSDL and refresh the service: {0}'.format(wsdl_correct))
+        self.log('SERVICE_14 5a - add service bodyMassIndex to service WSDL and refresh the service: {0}'.format(wsdl_correct))
 
         webserver_set_wsdl(self, wsdl_source_filename=wsdl_local_path.format(wsdl_correct),
                            wsdl_target_filename=wsdl_local_path.format(wsdl_filename))
@@ -320,9 +314,9 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
         # Set WSDL without any services
         webserver_set_wsdl(self, wsdl_source_filename=wsdl_local_path.format(wsdl_warning),
                            wsdl_target_filename=wsdl_local_path.format(wsdl_filename))
-        # UC SERVICE 14 3c2. Refreshing process continues with WSDL, which gives warnings
+        # UC SERVICE_14 3c2. Refreshing process continues with WSDL, which gives warnings
         # Refresh WSDL again with WSDL, which gives warnings(WSDL contains no services)
-        self.log('UC SERVICE 14 3c2. Refreshing process continues with WSDL, which gives warnings')
+        self.log('SERVICE_14 3c2. Refreshing process continues with WSDL that gives warnings')
         refresh_wsdl(self)
         self.wait_jquery()
 
@@ -347,8 +341,8 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
 
         popups.close_all_open_dialogs(self)
 
-        # TEST PLAN 2.2.5-5 set bodyMassIndex address and ACL (give access to CLIENT1:sub)
-        self.log('2.2.5-5 set bodyMassIndex address and ACL (give access to client)')
+        # Set bodyMassIndex address and ACL (give access to CLIENT1:sub) using XroadAddToAcl (SERVICE_17)
+        self.log('Set service address and ACL (give access to client) using XroadAddToAcl (SERVICE_17)')
 
         add_acl = add_to_acl_2_1_8.test_add_subjects(self, client=client, client_id=client_id, wsdl_url=wsdl_url,
                                                      service_name=service_name, service_subjects=[requester_id],
@@ -362,13 +356,13 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
         add_acl()
         add_acl1()
 
-        # TEST PLAN 2.2.5-6 test queries from TS1 client CLIENT1:sub to services bodyMassIndex and xroadGetRandom.
+        # UC SERVICE_14/SERVICE_17 test queries from TS1 client CLIENT1:sub to services bodyMassIndex and xroadGetRandom.
         # Both queries should succeed.
-        self.log('2.2.5-6 test query {0} to service bodyMassIndex. Query should succeed.'.format(query_filename))
-        case.is_true(testclient_http.check_success(), msg='2.2.5-6 test query failed')
+        self.log('SERVICE_14/SERVICE_17 test query (3) {0} to service bodyMassIndex. Query should succeed.'.format(query_filename))
+        case.is_true(testclient_http.check_success(), msg='SERVICE_14/SERVICE_17 test query (3) failed')
 
-        self.log('2.2.5-6 test query 2 {0} to service xroadGetRandom. Query should succeed.'.format(query_2_filename))
-        case.is_true(testclient_http_2.check_success(), msg='2.2.5-6 test query 2 failed')
+        self.log('SERVICE_14/SERVICE_17 test query (4) {0} to service xroadGetRandom. Query should succeed.'.format(query_2_filename))
+        case.is_true(testclient_http_2.check_success(), msg='SERVICE_14/SERVICE_17 test query (4) failed')
 
         '''UC SERVICE 14 4a. Service read from WSDL file already exists in another WSDL'''
         self.log('Open client details')
@@ -378,17 +372,17 @@ def test_refresh_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
         services_table = self.by_id(popups.CLIENT_DETAILS_POPUP_SERVICES_TABLE_ID)
         self.wait_until_visible(services_table)
 
-        self.log('Copy empty wsdl to new wsdl file')
+        self.log('Copy empty WSDL to new WSDL file')
         webserver_set_wsdl(self, wsdl_source_filename=wsdl_local_path.format(wsdl_warning),
                            wsdl_target_filename=wsdl_local_path.format(new_wsdl))
         new_wsdl_url = wsdl_path.format(new_wsdl)
-        self.log('Add new wsdl')
+        self.log('Add new WSDL')
         console, warning, error = configure_service_2_2_2.add_wsdl(self, new_wsdl_url)
         self.is_none(error)
         self.wait_until_visible(type=By.XPATH, element=popups.WARNING_POPUP_CONTINUE_XPATH).click()
         self.wait_jquery()
 
-        self.log('Replace new wsdl file with the one, which contains service that is already present in another wsdl')
+        self.log('Replace new WSDL file with one that contains service that is already present in another WSDL')
         webserver_set_wsdl(self, wsdl_source_filename=wsdl_local_path.format(wsdl_correct),
                            wsdl_target_filename=wsdl_local_path.format(new_wsdl))
         current_log_lines = log_checker.get_line_count()
@@ -427,14 +421,14 @@ def test_reset_wsdl(case, wsdl_local_path=None, wsdl_filename=None, wsdl_correct
         :return: None
         ''"""
 
-        self.log('2.2.5-del reset_wsdl')
+        self.log('SERVICE_14 reset_wsdl')
 
-        # TEST PLAN 2.2.5 error handling - reset service WSDL to original
+        # UC SERVICE_14 error handling - reset service WSDL to original
 
         # Open an SSH connection to the webserver
         webserver_connect(self, ssh_host, ssh_username, ssh_password)
 
-        self.log('2.2.5-del set the correct WSDL file: {0}'.format(wsdl_correct))
+        self.log('SERVICE_14-del set the correct WSDL file: {0}'.format(wsdl_correct))
         webserver_set_wsdl(self, wsdl_source_filename=wsdl_local_path.format(wsdl_correct),
                            wsdl_target_filename=wsdl_local_path.format(wsdl_filename))
 

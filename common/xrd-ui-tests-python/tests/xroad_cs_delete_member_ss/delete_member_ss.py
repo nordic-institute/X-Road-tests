@@ -19,11 +19,11 @@ from view_models.sidebar import KEYSANDCERTIFICATES_BTN_CSS
 class deleteMemberSS(unittest.TestCase):
     def test_delete_member_ss(self):
         """
-        MEMBER_25 Deleting security server
-        RIA URL: https://jira.ria.ee/browse/XTKB-133
+        MEMBER_25 Delete a Security Server
+        RIA URL: https://jira.ria.ee/browse/XT-377, https://jira.ria.ee/browse/XTKB-133
         Depends on finishing other test(s):
         Requires helper scenarios: client_certification
-        X-Road version: 6.9.4
+        X-Road version: 6.16.0
         :return:
         """
         main = MainController(self)

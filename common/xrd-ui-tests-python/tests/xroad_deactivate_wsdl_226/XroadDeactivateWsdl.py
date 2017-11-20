@@ -8,19 +8,23 @@ from main.maincontroller import MainController
 
 class XroadDeactivateWsdl(unittest.TestCase):
     """
-    SERVICE_13 3a, 6
+    UC SERVICE_12 Enable a Security Server Client's WSDL
+    UC SERVICE_13 Disable a Security Server Client's WSDL (missing steps 4 and 4a that are covered by
+    XroadDisableWsdlInputs)
+    RIA URL: https://jira.ria.ee/browse/XT-269
+    RIA URL: https://jira.ria.ee/browse/XT-270
     RIA URL: https://jira.ria.ee/browse/XTKB-24
     RIA URL: https://jira.ria.ee/browse/XTKB-95
-    Depends on finishing other test(s): client_registration, configure_services
+    Depends on finishing other test(s): XroadSecurityServerClientRegistration, XroadConfigureService
     Requires helper scenarios:
-    X-Road version: 6.16
+    X-Road version: 6.16.0
     """
 
     def test_deactivate_wsdl(self):
         main = MainController(self)
 
         # Set test name and number
-        main.test_number = '2.2.6'
+        main.test_number = 'UC SERVICE_12/SERVICE_13'
         main.test_name = self.__class__.__name__
 
         ss_host = main.config.get('ss2.host')

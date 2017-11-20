@@ -16,7 +16,7 @@ class XroadLocalTls(unittest.TestCase):
     RIA URL: https://jira.ria.ee/browse/XTKB-93
     Depends on finishing other test(s): client_registration, configure_service
     Requires helper scenarios:
-    X-Road version: 6.16
+    X-Road version: 6.16.0
     """
 
     def test_tls_227(self):

@@ -22,8 +22,8 @@ class cert_and_csr_deletion_tests(unittest.TestCase):
     RIA URL: https://jira.ria.ee/browse/XTKB-100
     RIA URL: https://jira.ria.ee/browse/XTKB-126
     Depends on finishing other test(s):
-    Requires helper scenarios:
-    X-Road version: 6.16
+    Requires helper scenarios: SS_29, SS_30
+    X-Road version: 6.16.0
     """
 
     def test_cert_and_csr_deletion(self):

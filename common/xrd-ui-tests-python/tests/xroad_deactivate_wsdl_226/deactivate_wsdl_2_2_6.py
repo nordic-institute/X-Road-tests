@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 from helpers import xroad, soaptestclient
 from view_models import clients_table_vm, popups
 # These faults are checked when we need the result to be unsuccessful. Otherwise the checking function returns True.
-from view_models.log_constants import DISABLE_WSDL
+from view_models.log_constants import DISABLE_WSDL, ENABLE_WSDL
 
 faults_unsuccessful = ['Server.ServerProxy.ServiceDisabled']
 # These faults are checked when we need the result to be successful. Otherwise the checking function returns False.
@@ -69,21 +69,21 @@ def test_disable_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
         :return: None
         """
 
-        # TEST PLAN 2.2.6 deactivate WSDL
-        self.log('*** 2.2.6 / XT-470')
+        # UC SERVICE_13 Disable a WSDL
+        self.log('*** UC SERVICE_13 Disable a WSDL')
         if log_checker is not None:
             current_log_lines = log_checker.get_line_count()
 
         # Create an out of order message with timestamp and milliseconds. We need to compare the error we get later.
         out_of_order_message = 'Out of order: {0}'.format(int(round(time.time() * 1000)))
 
-        # TEST PLAN 2.2.6-1 test query from TS1 client CLIENT1:sub to service bodyMassIndex. Query should succeed.
-        self.log('2.2.6-1 test query {0} to bodyMassIndex. Query should succeed.'.format(query_filename))
+        # UC SERVICE_13 test query from TS1 client CLIENT1:sub to service bodyMassIndex. Query should succeed.
+        self.log('SERVICE_13 test query (1) {0} to bodyMassIndex. Query should succeed.'.format(query_filename))
 
-        case.is_true(testclient_http.check_success(), msg='2.2.6-1 test query failed')
+        case.is_true(testclient_http.check_success(), msg='SERVICE_13 test query (1) failed')
 
-        # TEST PLAN 2.2.6-2 disable/deactivate the WSDL.
-        self.log('2.2.6-2 disable the WSDL.')
+        # UC SERVICE_13 1 - select to disable WSDL
+        self.log('SERVICE_13 1 - select to disable WSDL')
 
         # Open client popup using shortcut button to open it directly at Services tab.
         clients_table_vm.open_client_popup_services(self, client_name=client_name, client_id=client_id)
@@ -106,8 +106,11 @@ def test_disable_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
         else:
             wsdl_found_url = wsdl_url
 
-        # Find and click the "Disable" button to enable the WSDL.
+        # Find and click the "Disable" button to disable the WSDL.
         self.by_id(popups.CLIENT_DETAILS_POPUP_DISABLE_WSDL_BTN_ID).click()
+
+        # UC SERVICE_13 2 - system asks for notice message that will be sent to service clients
+        self.log('SERVICE_13 2 - system asks for notice message that will be sent to service clients')
 
         # Wait until the "Disable WSDL" dialog opens.
         self.wait_until_visible(popups.DISABLE_WSDL_POPUP_XPATH, type=By.XPATH)
@@ -116,7 +119,7 @@ def test_disable_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
         self.by_xpath(popups.DISABLE_WSDL_POPUP_CANCEL_BTN_XPATH).click()
         self.wait_jquery()
 
-        # Find and click the "Disable" button to enable the WSDL.
+        # Find and click the "Disable" button to disable the WSDL.
         self.by_id(popups.CLIENT_DETAILS_POPUP_DISABLE_WSDL_BTN_ID).click()
 
         # Get the OK button
@@ -124,6 +127,9 @@ def test_disable_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
 
         # Get the disabled notice input.
         disable_notice_input = self.by_id(popups.DISABLE_WSDL_POPUP_NOTICE_ID)
+
+        # UC SERVICE_13 3 - insert the notice message
+        self.log('SERVICE_13 3 - insert the notice message')
 
         # Clear the disabled notice input and set a new text
         self.input(disable_notice_input, out_of_order_message)
@@ -141,8 +147,9 @@ def test_disable_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
                                                from_line=current_log_lines + 1)
             self.is_true(logs_found)
 
-        # TEST PLAN 2.2.6-2 sub: check that the WSDL is written in red text (class "disabled") and starts with
+        # UC SERVICE_13 5 - check that the WSDL is written in red text (class "disabled") and starts with
         # "WSDL DISABLED"
+        self.log('SERVICE_13 5 - check if the service is disabled')
 
         # Try to find the same WSDL row again
         wsdl_row = clients_table_vm.client_services_popup_select_wsdl(self, wsdl_index=wsdl_index,
@@ -153,7 +160,7 @@ def test_disable_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
 
         # Check that WSDL element has class "disabled" (red text)
         self.is_equal(wsdl_disabled_class in self.get_classes(wsdl_row), True,
-                      msg='2.2.6-4 error - WSDL still has "{0}" class (red text): {1}'.format(wsdl_disabled_class,
+                      msg='SERVICE_13 error - WSDL still has "{0}" class (red text): {1}'.format(wsdl_disabled_class,
                                                                                               wsdl_url))
 
         # Get the WSDL row text and verify that it starts with "WSDL DISABLED". As we have a regex for it that matches
@@ -161,23 +168,23 @@ def test_disable_wsdl(case, client=None, client_name=None, client_id=None, wsdl_
         # change the "DISABLED" text in the future)
         self.log(wsdl_element.text + " " + popups.CLIENT_DETAILS_POPUP_WSDL_URL_REGEX)
         wsdl_text = re.match(popups.CLIENT_DETAILS_POPUP_WSDL_URL_REGEX, wsdl_element.text).group(1)
-        self.not_equal(wsdl_text, '', msg='2.2.6-4 WSDL row starts with "WSDL DISABLED": {0}'.format(wsdl_url))
+        self.not_equal(wsdl_text, '', msg='SERVICE_13 5 - WSDL row starts with "WSDL DISABLED": {0}'.format(wsdl_url))
 
-        # TEST PLAN 2.2.6-3 test query from TS1 client CLIENT1:sub to service bodyMassIndex. Query should fail.
-        self.log('2.2.6-3 test query {0} to bodyMassIndex. Query should fail.'.format(query_filename))
-        case.is_true(testclient_http.check_fail(), msg='2.2.6-3 test query succeeded')
+        # UC SERVICE_13 test query from SS1 client 1 subsystem to service bodyMassIndex. Query should fail.
+        self.log('SERVICE_13 5 - test query (2) {0} to bodyMassIndex. Query should fail.'.format(query_filename))
+        case.is_true(testclient_http.check_fail(), msg='SERVICE_13 5 - test query (2) succeeded')
 
         # Check if the returned message was the same we specified earlier. As this is appended to a generic error, only
         # compare the ending. We should have unique enough message using milliseconds.
         self.is_equal(testclient_http.fault_message.endswith(out_of_order_message), True,
-                      msg='2.2.6-3 fault message expected "{0}", got "{1}"'.format(out_of_order_message,
+                      msg='SERVICE_13 fault message expected "{0}", got "{1}"'.format(out_of_order_message,
                                                                                    testclient_http.fault_message))
 
     return disable_wsdl
 
 
 def test_enable_wsdl(case, client=None, client_name=None, client_id=None, wsdl_index=None, wsdl_url=None,
-                     requester=None):
+                     requester=None, log_checker=None):
     '''
     MainController test function. Re-enables a WSDL for a client and tests if queries work after.
     :param client: dict | None - client XRoad data
@@ -232,10 +239,14 @@ def test_enable_wsdl(case, client=None, client_name=None, client_id=None, wsdl_i
         :return: None
         ''"""
 
-        self.log('2.2.6 enable_wsdl')
+        # UC SERVICE_12 Enable a WSDL
+        self.log('*** UC SERVICE_12 Enable a WSDL')
 
-        # TEST PLAN 2.2.6-4 reactivate the WSDL
-        self.log('2.2.6-4 reactivate the WSDL.')
+        if log_checker is not None:
+            current_log_lines = log_checker.get_line_count()
+
+        # UC SERVICE_12 1 - select to enable WSDL
+        self.log('SERVICE_12 1 - select to enable WSDL.')
 
         # Enable WSDL that we added to restore original state.
 
@@ -268,8 +279,9 @@ def test_enable_wsdl(case, client=None, client_name=None, client_id=None, wsdl_i
         # Wait until ajax query finishes
         self.wait_jquery()
 
-        # TEST PLAN 2.2.6-4 sub: Check that the WSDL is in black (does not have class "disabled") and does not start
+        # UC SERVICE_12 2 - check that the WSDL is in black (does not have class "disabled") and does not start
         # with "DISABLED".
+        self.log('SERVICE_12 2 - check if the system activated the WSDL')
 
         # Now try to find the same WSDL again
         wsdl_row = clients_table_vm.client_services_popup_select_wsdl(self, wsdl_index=wsdl_index,
@@ -280,7 +292,7 @@ def test_enable_wsdl(case, client=None, client_name=None, client_id=None, wsdl_i
 
         # Check that WSDL element does not have class "disabled" (red text)
         self.is_equal(wsdl_disabled_class in self.get_classes(wsdl_row), False,
-                      msg='2.2.6-4 error - WSDL still has "{0}" class (red text): {1}'.format(wsdl_disabled_class,
+                      msg='SERVICE_12 2 - WSDL still has "{0}" class (red text): {1}'.format(wsdl_disabled_class,
                                                                                               wsdl_url))
 
         # Get the WSDL row text and verify that it starts with "WSDL DISABLED". As we have a regex for it that matches
@@ -288,10 +300,17 @@ def test_enable_wsdl(case, client=None, client_name=None, client_id=None, wsdl_i
         # change the "DISABLED" text in the future)
         self.log(wsdl_element.text + " " + popups.CLIENT_DETAILS_POPUP_WSDL_URL_REGEX)
         wsdl_text = re.match(popups.CLIENT_DETAILS_POPUP_WSDL_URL_REGEX, wsdl_element.text).group(1)
-        self.is_equal(wsdl_text, '', msg='2.2.6-4 WSDL row starts with "WSDL DISABLED": {0}'.format(wsdl_url))
+        self.is_equal(wsdl_text, '', msg='SERVICE_12 2 WSDL row starts with "WSDL DISABLED": {0}'.format(wsdl_url))
 
-        # TEST PLAN 2.2.6-5 test query from TS1 client CLIENT1:sub to service bodyMassIndex. Query should succeed.
-        self.log('2.2.6-5 test query {0} to bodyMassIndex. Query should succeed.'.format(query_filename))
-        case.is_true(testclient_http.check_success(), msg='2.2.6-5 test query failed')
+        # UC SERVICE_12 2 test query from SS1 client 1 subsystem to service bodyMassIndex. Query should succeed.
+        self.log('SERVICE_12 2 test query (1) {0} to bodyMassIndex. Query should succeed.'.format(query_filename))
+        case.is_true(testclient_http.check_success(), msg='SERVICE_12 2 test query (1) failed')
+
+        if log_checker is not None:
+            expected_log_msg = ENABLE_WSDL
+            self.log('SERVICE_12 3. System logs the event "{0}"'.format(expected_log_msg))
+            logs_found = log_checker.check_log(expected_log_msg,
+                                               from_line=current_log_lines + 1)
+            self.is_true(logs_found)
 
     return enable_wsdl

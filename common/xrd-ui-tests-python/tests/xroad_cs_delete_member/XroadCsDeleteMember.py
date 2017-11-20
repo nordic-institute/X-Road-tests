@@ -11,10 +11,10 @@ from tests.xroad_ss_client_certification_213 import client_certification_2_1_3
 class XroadCsDeleteMemberWithSubSystem(unittest.TestCase):
     """
     MEMBER_26 Delete an X-Road Member 5.a The member's subsystems are clients of security servers
-    RIA URL: https://jira.ria.ee/browse/XTKB-41
+    RIA URL: https://jira.ria.ee/browse/XT-378, https://jira.ria.ee/browse/XTKB-41
     Depends on finishing other test(s): XroadSecurityServerClientDeletion or run as first test
     Requires helper scenarios:
-    X-Road version: 6.16
+    X-Road version: 6.16.0
     """
 
     def test_xroad_cs_delete_member_with_subsystem(self):
@@ -82,7 +82,7 @@ class XroadCsDeleteMemberWithGlobalGroup(unittest.TestCase):
     RIA URL: https://jira.ria.ee/browse/XTKB-41
     Depends on finishing other test(s): XroadSecurityServerClientDeletion or run as first test
     Requires helper scenarios: remove global group
-    X-Road version: 6.16
+    X-Road version: 6.16.0
     """
 
     def test_xroad_cs_delete_member_with_global_group(self):
@@ -140,7 +140,7 @@ class XroadCsDeleteMemberWithSecurityServer(unittest.TestCase):
     RIA URL: https://jira.ria.ee/browse/XTKB-138
     Depends on finishing other test(s): XroadSecurityServerClientDeletion or run as first test
     Requires helper scenarios: revoke requests, add member, import certificate, generate csr
-    X-Road version: 6.16
+    X-Road version: 6.16.0
     """
 
     def test_xroad_cs_delete_member_with_security_server(self):

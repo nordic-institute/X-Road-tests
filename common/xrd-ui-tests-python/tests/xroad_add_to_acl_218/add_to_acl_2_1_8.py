@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 from helpers import xroad
 
 from view_models import popups, clients_table_vm
+from view_models.log_constants import ADD_ACCESS_RIGHTS_TO_SERVICE, REMOVE_ACCESS_RIGHTS_FROM_SERVICE
 
 
 def select_existing_acl_subjects(self, subjects, select_duplicate=False):
@@ -66,23 +67,24 @@ def remove_subjects_from_acl(self, service_subjects, select_duplicate=False):
     :param select_duplicate: Boolean to allow selecting duplicate rows from the table (if there are duplicate IDs)
     :return: None
     '''
-
+    self.log('SERVICE_18 1. Removing selection of subjects from the access rights list of the service')
     # Wait until first ACL row is visible (this means that the data has been parsed and loaded into a table)
     self.log(
         'Waiting until visible: {0}'.format(popups.CLIENT_DETAILS_POPUP_EXISTING_ACL_SUBJECTS_FIRST_SUBJECT_ROW_CSS))
     self.wait_until_visible(popups.CLIENT_DETAILS_POPUP_EXISTING_ACL_SUBJECTS_FIRST_SUBJECT_ROW_CSS,
                             type=By.CSS_SELECTOR)
 
-    self.log('Removing subjects: {0}'.format(', '.join(service_subjects)))
+    self.log('SERVICE_18 2. Selecting subjects to be removed. '
+             '\n Removing subjects: {0}'.format(', '.join(service_subjects)))
     if service_subjects:
-        # If subject list is not empty, select the subjects in it (click on them)
+        self.log('If subject list is not empty, select the subjects in it (click on them)')
         select_existing_acl_subjects(self, service_subjects, select_duplicate=select_duplicate)
 
-        # Find the "Remove selected" button and click it.
+        self.log('Click on the "Remove selected" button')
         remove_selected_button = self.by_id(popups.CLIENT_DETAILS_POPUP_ACL_SUBJECTS_REMOVE_SELECTED_BTN_ID)
         remove_selected_button.click()
 
-        # A confirmation dialog should open, confirm what you're asked.
+        self.log('Confirm removal confirmation popup')
         popups.confirm_dialog_click(self)
     else:
         # Subject list empty, do not remove anything.
@@ -96,15 +98,16 @@ def remove_all_subjects_from_acl(self):
     :return: None
     '''
 
-    # Wait until first ACL row is visible (this means that the data has been parsed and loaded into a table)
+    self.log('SERVICE_18 1. Removing all subjects from access rights list')
+    self.log('Wait until first ACL row is visible (this means that the data has been parsed and loaded into a table)')
     self.wait_until_visible(popups.CLIENT_DETAILS_POPUP_EXISTING_ACL_SUBJECTS_FIRST_SUBJECT_ROW_CSS,
                             type=By.CSS_SELECTOR, timeout=20)
 
-    # Find the "Remove all" button and click it
+    self.log('Clicking "Remove all" button')
     remove_all_button = self.by_id(popups.CLIENT_DETAILS_POPUP_ACL_SUBJECTS_REMOVE_ALL_BTN_ID)
     remove_all_button.click()
 
-    # A confirmation dialog should open, confirm what you're asked.
+    self.log('Confirm removing confirmation popup')
     popups.confirm_dialog_click(self)
 
 
@@ -244,8 +247,10 @@ def restore_original_subject_list(case, current_subjects, added_subjects, allow_
 
     # Restore the original ACL subjects list
 
-    # If we are allowed to use "Remove all" and the initial list is empty, use "Remove all"
-    if allow_remove_all and not current_subjects:
+    pre_delete_subject_list = get_current_acl_subjects(self)
+
+    # If we are allowed to use "Remove all"
+    if allow_remove_all:
         self.log('Removing all subjects at once.')
         remove_all_subjects_from_acl(self)
     # If not, select each item and then click "Remove selected"
@@ -258,6 +263,8 @@ def restore_original_subject_list(case, current_subjects, added_subjects, allow_
 
     # Get the post-restore subject list (for double-checking if restore was successful).
     restored_subject_list = get_current_acl_subjects(self)
+    self.log('SERVICE_18 3. System deletes the access right(s) from the system configuration')
+    self.not_equal(pre_delete_subject_list, restored_subject_list)
 
     # True if original ACL list matches restored ACL list (restore successful)
     original_list_restored = (sorted(current_subjects) == sorted(restored_subject_list))
@@ -280,7 +287,7 @@ def test_add_subjects(case, client=None, client_name=None, client_id=None, wsdl_
                       service_name=None, service_subjects=[],
                       remove_data=True,
                       allow_remove_all=True,
-                      remove_current=False):
+                      remove_current=False, log_checker=None):
     '''
     Test function. Adds specified subjects to a specified client's ACL.
     :param client_name: string | None - name of the client whose ACL we modify (this or client_id must be set)
@@ -301,85 +308,82 @@ def test_add_subjects(case, client=None, client_name=None, client_id=None, wsdl_
         :param self: MainController class object
         :return: None
         ''"""
-
-        # TEST PLAN 2.1.8
-        self.log('*** 2.1.8 / XT-462 / helper. Add access from service view.')
-
+        current_log_lines = None
+        if log_checker is not None:
+            current_log_lines = log_checker.get_line_count()
         # Select duplicate elements (if database, for some reason, contains duplicate IDs). Not actually configurable
         # but can be moved to parameters if necessary.
         select_duplicate = True
 
-        #
-        # TEST PLAN 2.1.8-1 Security server clients view: choose a client and open their Services tab.
-        #
-        self.log('2.1.8-1 Security server clients view: choose a client and open their Services tab.')
-
-        # Open client popup using shortcut button to open it directly at Services tab.
+        self.log('Open client popup using shortcut button to open it directly at Services tab.')
         clients_table_vm.open_client_popup_services(self, client_name=client_name, client_id=client_id)
 
-        # Find the table that lists all WSDL files and services
+        self.log('Find the table that lists all WSDL files and services')
         services_table = self.by_id(popups.CLIENT_DETAILS_POPUP_SERVICES_TABLE_ID)
-        # Wait until that table is visible (opened in a popup)
+        self.log('Wait until that table is visible (opened in a popup)')
         self.wait_until_visible(services_table)
 
-        # Find the WSDL, expand it and select service
+        self.log('Find the WSDL, expand it and select service')
         clients_table_vm.client_services_popup_open_wsdl_acl(self, services_table=services_table,
                                                              service_index=service_index, service_name=service_name,
                                                              wsdl_index=wsdl_index, wsdl_url=wsdl_url)
 
         # A popup has been opened that lists current services. This may load for a few seconds with big lists.
 
-        # We'll wait until the "Add subjects" button is visible (popup is open and list has been fully loaded)
+        self.log('"Add subjects" button is visible (popup is open and list has been fully loaded)')
         self.wait_until_visible(popups.CLIENT_DETAILS_POPUP_EXISTING_ACL_SUBJECTS_ADD_SUBJECTS_BTN_CSS, type=By.ID,
                                 timeout=20)
 
-        # As we need to check that only the subjects that we add later make it to this list, we get the current list of
-        # subjects for later comparison.
+        self.log('As we need to check that only the subjects that we add later make it to this list, '
+                 'we get the current list of subjects for later comparison.')
         current_subjects = get_current_acl_subjects(self)
         self.log('Current ACL subjects: {0}'.format(', '.join(current_subjects)))
 
         if remove_current:
             remove_all_subjects_from_acl(self)
 
-        #
-        # TEST PLAN 2.1.8-2. Do an empty search to show all subjects that are registered in the system.
-        #
-        self.log('2.1.8-2 Do an empty search to show all subjects that are registered in the system.')
+        self.log('Do an empty search to show all subjects that are registered in the system.')
         search_all_subjects(self)
 
-        #
-        # TEST PLAN 2.1.8-3. Select subjects from search results and click "Add Selected to ACL" button to add them.
-        #
-
-        self.log(
-            '2.1.8-3. Select subjects from search results and click "Add Selected to ACL" button to add them.')
+        self.log('SERVICE_17 2. Select subjects from search results and click "Add Selected to ACL" button to add them.')
         self.added_subjects = add_subjects_to_acl(self, service_subjects, select_duplicate=select_duplicate)
 
         # Wait until ajax query that adds the subjects finishes.
         self.wait_jquery()
 
-        # TEST PLAN 2.1.8-4. Check if ACL list has been updated and only the subjects we selected have been added.
-        self.log('2.1.8-4. Check if ACL list has been updated and only the subjects we selected have been added.')
+        self.log('SERVICE_17 3. Check if ACL list has been updated and only the subjects we selected have been added.')
         all_subjects_added, added_subjects_count = verify_added_subjects(self, current_subjects, self.added_subjects,
                                                                          strict_check_duplicates=True)
+        if current_log_lines is not None:
+            expected_log_msg = ADD_ACCESS_RIGHTS_TO_SERVICE
+            self.log('SERVICE_17 4. System logs the event "{}"'.format(expected_log_msg))
+            logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
+            self.is_true(logs_found)
 
         #
         # TEST PLAN general: UNDO THE CHANGES WE MADE
         #
 
-        # Restore the original subject list if remove_data is True
         if remove_data:
+            self.log('Restoring ACL subject list')
+            if log_checker is not None:
+                current_log_lines = log_checker.get_line_count()
             restore_original_subject_list(self, current_subjects, self.added_subjects, allow_remove_all,
                                           remove_duplicates=select_duplicate)
+            if current_log_lines is not None:
+                expected_log_msg = REMOVE_ACCESS_RIGHTS_FROM_SERVICE
+                self.log('SERVICE_18 4. System logs the event "{}"'.format(expected_log_msg))
+                logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1, strict=False)
+                self.is_true(logs_found)
         else:
-            self.log('2.1.8 Not restoring original ACL subject list')
+            self.log('Not restoring original ACL subject list')
 
-        # Close all open dialogs (pre-logout, not essential)
+        self.log('Close all open dialogs')
         popups.close_all_open_dialogs(self)
 
-        # Assertion if all selected subjects were added and found in the new subject list.
+        self.log('Assertion if all selected subjects were added and found in the new subject list.')
         self.is_true(all_subjects_added,
-                      msg='2.1.8 Some subjects were not added, tried to add {0}, succeeded {1}'.format(
+                      msg='Some subjects were not added, tried to add {0}, succeeded {1}'.format(
                           len(self.added_subjects), added_subjects_count))
         return current_subjects
 
@@ -389,7 +393,7 @@ def test_add_subjects(case, client=None, client_name=None, client_id=None, wsdl_
 def test_add_all_subjects(case, client=None, client_name=None, client_id=None, wsdl_index=None, wsdl_url=None,
                           service_index=None,
                           service_name=None, remove_data=True,
-                          allow_remove_all=True):
+                          allow_remove_all=True, log_checker=None):
     '''
     MainController test function. Very similar to test_add_subjects but adds ALL subjects to a specified subject's ACL.
     :param client_name: string | None - name of the client whose ACL we modify (this or client_id must be set)
@@ -409,9 +413,9 @@ def test_add_all_subjects(case, client=None, client_name=None, client_id=None, w
         :param self: MainController class object
         :return: None
         ''"""
-
         self.log('2.1.8 add all to ACL')
 
+        current_log_lines = None
         # Select duplicate elements (if database, for some reason, contains duplicate IDs). Not actually configurable
         # but can be moved to parameters if necessary.
         select_duplicate = True
@@ -470,9 +474,16 @@ def test_add_all_subjects(case, client=None, client_name=None, client_id=None, w
 
         # Restore the original subject list
         if remove_data:
+            if log_checker is not None:
+                current_log_lines = log_checker.get_line_count()
             self.log('Added subject count: {0}'.format(len(self.added_subjects)))
             restore_original_subject_list(self, current_subjects, self.added_subjects, allow_remove_all,
                                           remove_duplicates=select_duplicate)
+            if current_log_lines is not None:
+                expected_log_msg = REMOVE_ACCESS_RIGHTS_FROM_SERVICE
+                self.log('SERVICE_18 4. System logs the event "{}"'.format(expected_log_msg))
+                logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1, strict=False)
+                self.is_true(logs_found)
         else:
             self.log('Not restoring original ACL subject list')
 

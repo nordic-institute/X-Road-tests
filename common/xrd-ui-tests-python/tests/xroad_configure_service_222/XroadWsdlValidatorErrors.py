@@ -17,9 +17,9 @@ class XroadWsdlValidatorErrors(unittest.TestCase):
     so the whole test worst case running time is around 40 minutes
     RIA URL: https://jira.ria.ee/browse/XTKB-22
     RIA URL: https://jira.ria.ee/browse/XTKB-26
-    Depends on finishing other test(s): client_registration
+    Depends on finishing other test(s): XroadSecurityServerClientRegistration
     Requires helper scenarios: add wsdl, refresh wsdl
-    X-Road version: 6.16
+    X-Road version: 6.16.0
     """
 
     def test_xroad_wsdl_validator_errors(self):

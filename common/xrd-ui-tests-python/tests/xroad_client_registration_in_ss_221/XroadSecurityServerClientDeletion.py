@@ -16,7 +16,7 @@ class XroadSecurityServerClientDeletion(unittest.TestCase):
     RIA URL: https://jira.ria.ee/browse/XTKB-131
     Depends on finishing other test(s): client registration, global group
     Requires helper scenarios:
-    X-Road version: 6.16
+    X-Road version: 6.16.0
     """
 
     def test_client_deletion(self):

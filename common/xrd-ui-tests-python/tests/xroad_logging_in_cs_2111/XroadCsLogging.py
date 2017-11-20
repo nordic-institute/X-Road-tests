@@ -14,7 +14,7 @@ class XroadLoggingInCentralServer(unittest.TestCase):
     RIA URL: https://jira.ria.ee/browse/XTKB-39
     Depends on finishing other test(s): client_registration
     Requires helper scenarios:
-    X-Road version: 6.16
+    X-Road version: 6.16.0
     """
 
     def test_loggin_in_central_server_2_11_1(self):

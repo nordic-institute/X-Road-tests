@@ -10,8 +10,12 @@ from view_models import members_table, clients_table_vm, sidebar, popups, \
     keys_and_certificates_table as keyscertificates_constants, cs_security_servers, log_constants, messages, \
     groups_table
 from view_models.keys_and_certificates_table import APPROVED
-from view_models.log_constants import DELETE_SUBSYSTEM, REVOKE_AUTH_REGISTRATION_REQUEST, DELETE_CLIENT
+from view_models.log_constants import DELETE_SUBSYSTEM, REVOKE_AUTH_REGISTRATION_REQUEST, DELETE_CLIENT, \
+    UNREGISTER_CLIENT, REVOKE_CLIENT_REGISTRATION_REQUEST, UNREGISTER_CLIENT_FAILED
 from view_models.members_table import MANAGEMENT_REQUEST_TABLE_ID
+from view_models.messages import ERROR_MESSAGE_CSS, UNREGISTER_CLIENT_SEND_REQUEST_FAIL
+from view_models.popups import CONFIRM_POPUP_CANCEL_BTN_XPATH, CLIENT_DETAILS_POPUP_DISABLE_WSDL_BTN_ID, \
+    DISABLE_WSDL_POPUP_OK_BTN_XPATH, CLIENT_DETAILS_POPUP_ENABLE_WSDL_BTN_ID, confirm_dialog_click
 
 SYSTEM_TYPE = 'SUBSYSTEM'
 
@@ -393,9 +397,11 @@ def test_test(case, cs_host, cs_username, cs_password,
                                 cs_member=cs_member, ss_1_client=ss_1_client, ss_2_client=ss_2_client,
                                 ss_2_client_2=ss_2_client_2, ca_ssh_host=ca_ssh_host, ca_ssh_username=ca_ssh_username,
                                 ca_ssh_password=ca_ssh_password, cs_ssh_host=cs_ssh_host, cs_ssh_username=cs_ssh_user,
-                                cs_ssh_password=cs_ssh_pass, ss_1_client_2=ss_1_client_2, global_group=global_group)
+                                cs_ssh_password=cs_ssh_pass, ss_1_client_2=ss_1_client_2, global_group=global_group,
+                                check_logs=False)
                 except:
                     self.log('2.2.1 Client deletion FAILED')
+                    traceback.print_exc()
             # If we got an error previously, raise an exception
             if error:
                 assert False, '2.2.1 failed'
@@ -1155,7 +1161,7 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
                 cs_member, ss_1_client, ss_1_client_2, ss_2_client, ss_2_client_2,
                 ca_ssh_host=None, ca_ssh_username=None, ca_ssh_password=None,
                 cs_ssh_host=None, cs_ssh_username=None, cs_ssh_password=None,
-                global_group=None):
+                global_group=None, check_logs=True):
     '''
     Removes the data that was created during tests.
     :param global_group: str - global group name
@@ -1191,47 +1197,70 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
     self.log('2.2.1-del Removing test data')
     self.logout(cs_host)
 
+    test_success = True
+
     '''Delete client from ss1'''
-    log_checker_ss1 = auditchecker.AuditChecker(host=sec_1_ssh_host, username=sec_1_ssh_username,
-                                                password=sec_1_ssh_password)
-    current_log_lines = log_checker_ss1.get_line_count()
-    self.reload_webdriver(sec_1_host, sec_1_password, sec_1_password)
-    safe(self, remove_client_with_cert_and_cancelling, ss_1_client,
-         'Client removal with cert and deletion cancelling failed')
-    expected_log_msg = DELETE_CLIENT
-    self.log('MEMBER_53 8. System logs the event "{0}"'.format(expected_log_msg))
-    logs_found = log_checker_ss1.check_log(expected_log_msg, from_line=current_log_lines + 1, strict=False)
-    self.is_true(logs_found)
+    if check_logs:
+        log_checker_ss1 = auditchecker.AuditChecker(host=sec_1_ssh_host, username=sec_1_ssh_username,
+                                                    password=sec_1_ssh_password)
+        current_log_lines = log_checker_ss1.get_line_count()
+    self.reload_webdriver(sec_1_host, sec_1_username, sec_1_password)
+    safe_success = safe(self, remove_client_with_cert_and_cancelling, ss_1_client,
+                        'Client removal with cert and deletion cancelling failed: {0}'.format(ss_1_client))
+    test_success = test_success and safe_success
+
+    if check_logs:
+        expected_log_msg = DELETE_CLIENT
+        self.log('MEMBER_53 8. System logs the event "{0}"'.format(expected_log_msg))
+        logs_found = log_checker_ss1.check_log(expected_log_msg, from_line=current_log_lines + 1, strict=False)
+        self.is_true(logs_found)
 
     '''Delete subsystem with global group from member'''
+    try:
+        self.reload_webdriver(cs_host, cs_username, cs_password)
+        group = global_group
+        self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.GLOBAL_GROUPS_CSS).click()
+        group_member_count = self.wait_until_visible(type=By.XPATH,
+                                                     element=groups_table.GLOBAL_GROUP_TR_BY_TD_TEXT_XPATH.format(
+                                                         group)).find_elements_by_tag_name('td')[2].text
+    except:
+        traceback.print_exc()
+        test_success = False
+
+    if check_logs:
+        log_checker = auditchecker.AuditChecker(host=cs_ssh_host,
+                                                username=cs_ssh_username,
+                                                password=cs_ssh_password)
+        current_log_lines = log_checker.get_line_count()
+
     self.reload_webdriver(cs_host, cs_username, cs_password)
-    group = global_group
-    self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.GLOBAL_GROUPS_CSS).click()
-    group_member_count = self.wait_until_visible(type=By.XPATH,
-                                                 element=groups_table.GLOBAL_GROUP_TR_BY_TD_TEXT_XPATH.format(
-                                                     group)).find_elements_by_tag_name('td')[2].text
-    log_checker = auditchecker.AuditChecker(host=cs_ssh_host,
-                                            username=cs_ssh_username,
-                                            password=cs_ssh_password)
-    current_log_lines = log_checker.get_line_count()
-    expected_log_msg = DELETE_SUBSYSTEM
-    self.reload_webdriver(cs_host, cs_username, cs_password)
-    safe(self, remove_client_subsystem_with_canceling, ss_1_client,
-         'Removing client {0} with subsystem'.format(ss_1_client))
-    self.log('MEMBER_14 6. System logs the event {0}'.format(expected_log_msg))
-    logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
-    self.is_true(logs_found)
+    safe_success = safe(self, remove_client_subsystem_with_canceling, ss_1_client,
+                        'Removing client {0} with subsystem'.format(ss_1_client))
+    test_success = test_success and safe_success
+
+    if check_logs:
+        expected_log_msg = DELETE_SUBSYSTEM
+        self.log('MEMBER_14 6. System logs the event {0}'.format(expected_log_msg))
+        logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
+        self.is_true(logs_found)
+
     popups.close_all_open_dialogs(self)
     self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.GLOBAL_GROUPS_CSS).click()
     self.log('MEMBER_14 4. Subsystem, which was deleted is removed from global group')
-    group_member_count_after = self.wait_until_visible(type=By.XPATH,
-                                                       element=groups_table.GLOBAL_GROUP_TR_BY_TD_TEXT_XPATH.format(
-                                                           group)).find_elements_by_tag_name('td')[2].text
-    self.is_true(group_member_count > group_member_count_after)
+    try:
+        group_member_count_after = self.wait_until_visible(type=By.XPATH,
+                                                           element=groups_table.GLOBAL_GROUP_TR_BY_TD_TEXT_XPATH.format(
+                                                               group)).find_elements_by_tag_name('td')[2].text
+        self.is_true(group_member_count > group_member_count_after)
+    except:
+        traceback.print_exc()
+        test_success = False
 
     self.log('Removing members from central server')
-    safe(self, remove_member, cs_member, 'Removing member {0} failed'.format(cs_member))
-    safe(self, remove_member, ss_1_client_2, 'Removing member {0} failed'.format(ss_1_client_2))
+    safe_success = safe(self, remove_member, cs_member, 'Removing member {0} failed'.format(cs_member))
+    test_success = test_success and safe_success
+    safe_success = safe(self, remove_member, ss_1_client_2, 'Removing member {0} failed'.format(ss_1_client_2))
+    test_success = test_success and safe_success
 
     '''Reload the CS homepage'''
     self.reset_webdriver(cs_host, cs_username, cs_password)
@@ -1242,6 +1271,7 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
     except:
         self.log('2.2.1-del revoking requests failed')
         traceback.print_exc()
+        test_success = False
 
     '''Remove client 2 from ss1'''
     '''Go to security server 1'''
@@ -1249,9 +1279,11 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
     login(self, sec_1_host, sec_1_username, sec_1_password)
     '''Try to remove client with canceling deletion and confirming certificate removal popup from ss1'''
     self.driver.get(self.url)
-    safe(self, remove_client_keep_cert, ss_1_client_2, 'Removing client from security server 1 failed')
+    safe_success = safe(self, remove_client_keep_cert, ss_1_client_2, 'Removing client from security server 1 failed')
+    test_success = test_success and safe_success
     '''Remove client 2 certificate from ss1'''
-    safe(self, remove_certificate, ss_1_client_2, 'Removing certificate from security server 1 failed')
+    safe_success = safe(self, remove_certificate, ss_1_client_2, 'Removing certificate from security server 1 failed')
+    test_success = test_success and safe_success
 
     # Connect to CA over SSH
     try:
@@ -1277,6 +1309,7 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
     except:
         self.log('Failed to revoke security server 1 added client certificates')
         traceback.print_exc()
+        test_success = False
 
     self.log('Check if log contains delete client event')
 
@@ -1286,13 +1319,16 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
     except:
         self.log('2.2.1-del Removing certificate from security server 1 failed')
         traceback.print_exc()
+        test_success = False
 
     self.log('2.2.1-del removing client from security server 1')
 
     '''Logchecker for security server 2'''
-    log_checker = auditchecker.AuditChecker(host=sec_2_ssh_host, username=sec_2_ssh_username,
-                                            password=sec_2_ssh_password)
-    current_log_lines = log_checker.get_line_count()
+    if check_logs:
+        log_checker = auditchecker.AuditChecker(host=sec_2_ssh_host, username=sec_2_ssh_username,
+                                                password=sec_2_ssh_password)
+        current_log_lines = log_checker.get_line_count()
+
     '''Go to security server 2'''
     self.log('2.2.1-del removing certificate from security server 2')
     login(self, sec_2_host, sec_2_username, sec_2_password)
@@ -1302,43 +1338,56 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
     except:
         self.log('2.2.1-del Removing certificate from security server 2 failed')
         traceback.print_exc()
+        test_success = False
 
     if ca_ssh_client is not None:
         ca_ssh_client.close()
 
     self.driver.get(self.url)
     '''Try to remove client from security server 2'''
-    safe(self, remove_client, ss_2_client, 'Removing client {0} failed'.format(ss_2_client))
+    safe_success = safe(self, remove_client, ss_2_client, 'Removing client {0} failed'.format(ss_2_client))
+    test_success = test_success and safe_success
     '''Check if log contains Delete client event'''
     log_errors = []
-    expected_log_msg = DELETE_CLIENT
-    self.log('MEMBER_53 8. System logs the event {0}'.format(expected_log_msg))
-    logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
-    if not logs_found:
-        log_error = 'SS2 client 1 delete: some log entries were missing. Expected: "{0}", found: "{1}"'.format(
-            log_constants.DELETE_CLIENT,
-            log_checker.found_lines)
-        self.log(log_error)
-        log_errors.append(log_error)
-    current_log_lines = log_checker.get_line_count()
+
+    if check_logs:
+        expected_log_messages = [UNREGISTER_CLIENT, DELETE_CLIENT]
+        self.log('MEMBER_52 8. System logs the events {0}'.format(UNREGISTER_CLIENT))
+        self.log('MEMBER_53 8. System logs the events {0}'.format(DELETE_CLIENT))
+        logs_found = log_checker.check_log(expected_log_messages, from_line=current_log_lines + 1)
+        if not logs_found:
+            log_error = 'SS2 client 1 delete: some log entries were missing. Expected: "{0}", found: "{1}"'.format(
+                expected_log_messages,
+                log_checker.found_lines)
+            self.log(log_error)
+            log_errors.append(log_error)
+        current_log_lines = log_checker.get_line_count()
 
     self.driver.get(self.url)
     '''Try to remove second client from security server 2'''
-    safe(self, remove_client, ss_2_client_2, 'Removing client {0} failed'.format(ss_2_client_2))
-    expected_log_msg = DELETE_CLIENT
-    self.log('MEMBER_53 8. System logs the event {0}'.format(expected_log_msg))
-    logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
-    if not logs_found:
-        log_error = 'SS2 client 2 delete: some log entries were missing. Expected: "{0}", found: "{1}"'.format(
-            log_constants.DELETE_CLIENT,
-            log_checker.found_lines)
-        self.log(log_error)
-        log_errors.append(log_error)
+    safe_success = safe(self, remove_client, ss_2_client_2, 'Removing client {0} failed'.format(ss_2_client_2))
+    test_success = test_success and safe_success
+
+    if check_logs:
+        expected_log_msg = DELETE_CLIENT
+        self.log('MEMBER_53 8. System logs the event {0}'.format(expected_log_msg))
+        logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
+        if not logs_found:
+            log_error = 'SS2 client 2 delete: some log entries were missing. Expected: "{0}", found: "{1}"'.format(
+                log_constants.DELETE_CLIENT,
+                log_checker.found_lines)
+            self.log(log_error)
+            log_errors.append(log_error)
     login(self, cs_host, cs_username, cs_password)
-    safe(self, remove_client_subsystem, ss_2_client_2,
-         '2.2.1-del Removing security server 1 client subsystem failed')
+    safe_success = safe(self, remove_client_subsystem, ss_2_client_2,
+                        '2.2.1-del Removing security server 1 client subsystem failed')
+    test_success = test_success and safe_success
+
     if log_errors:
         self.is_true(False, msg='2.2.1-del Log error count {0}, errors: {1}'.format(len(log_errors), log_errors))
+
+    if not test_success:
+        self.is_true(False, msg='Test failed, see log.')
 
 
 def remove_member(self, member):
@@ -1415,6 +1464,7 @@ def remove_client(self, client, delete_cert=False, cancel_deletion=False, deny_c
     self.log('Open "Security servers tab"')
     self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.CLIENTS_BTN_CSS).click()
     self.wait_jquery()
+    deletion_in_progress_state_rows = self.js('return $(".fail").length')
 
     '''Edit client details'''
     self.log('Opening client details')
@@ -1422,12 +1472,21 @@ def remove_client(self, client, delete_cert=False, cancel_deletion=False, deny_c
     self.wait_jquery()
 
     '''Unregister the client'''
-    self.log('Unregister Client')
     try:
+        self.log('MEMBER_52 1. Unregister Client')
         self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_UNREGISTER_BUTTON_ID).click()
         self.wait_jquery()
-        '''Confirm unregistering'''
+        self.log('MEMBER_52 2. System prompts for confirmation')
+        self.log('MEMBER_52 3a. Confirmation dialog is canceled')
+        self.wait_until_visible(type=By.XPATH, element=CONFIRM_POPUP_CANCEL_BTN_XPATH).click()
+        self.log('MEMBER_52 1. Unregister Client button is pressed again')
+        self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_UNREGISTER_BUTTON_ID).click()
+        self.wait_jquery()
+        self.log('MEMBER_52 3. Confirmation dialog is confirmed')
         popups.confirm_dialog_click(self)
+        deletion_in_progress_state_rows_after_unregister = self.js('return $(".fail").length')
+        self.log('MEMBER_52 7. System sets the state of the client to deletion in progress')
+        self.is_true(deletion_in_progress_state_rows_after_unregister > deletion_in_progress_state_rows)
         try:
             self.log('MEMBER_53 1. Client deletion process is started')
             self.wait_jquery()
@@ -1743,9 +1802,62 @@ def revoke_requests(self, try_cancel=False, auth=False, log_checker=None):
         cs_security_servers.CLIENT_DELETION_REQUEST_DETAILS_DIALOG_COMMENTS_INPUT_CLASS).text
     self.is_equal(comment, delete_request_comment.format(request_id))
     if current_log_lines is not None:
-        expected_log_msg = REVOKE_AUTH_REGISTRATION_REQUEST
+        if auth:
+            expected_log_msg = REVOKE_AUTH_REGISTRATION_REQUEST
+        else:
+            expected_log_msg = REVOKE_CLIENT_REGISTRATION_REQUEST
         logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
-        self.is_true(logs_found)
+        self.is_true(logs_found, msg='MEMBER_39 log check failed')
+
+
+def disable_management_wsdl(self, client_id, management_wsdl_url):
+    def disable_mngmnt_wsdl():
+        clients_table_vm.open_client_popup_services(self, client_id=client_id)
+        wsdl_index = clients_table_vm.find_wsdl_by_name(self, management_wsdl_url)
+        clients_table_vm.client_services_popup_get_wsdl(self, wsdl_index=wsdl_index).click()
+        self.wait_until_visible(type=By.ID, element=CLIENT_DETAILS_POPUP_DISABLE_WSDL_BTN_ID).click()
+        self.wait_until_visible(type=By.XPATH, element=DISABLE_WSDL_POPUP_OK_BTN_XPATH).click()
+        self.wait_jquery()
+
+    return disable_mngmnt_wsdl
+
+
+def enable_management_wsdl(self, client_id, management_wsdl_url):
+    def enable_mngmnt_wsdl():
+        clients_table_vm.open_client_popup_services(self, client_id=client_id)
+        wsdl_index = clients_table_vm.find_wsdl_by_name(self, management_wsdl_url)
+        clients_table_vm.client_services_popup_get_wsdl(self, wsdl_index=wsdl_index).click()
+        self.wait_until_visible(type=By.ID, element=CLIENT_DETAILS_POPUP_ENABLE_WSDL_BTN_ID).click()
+        self.wait_jquery()
+
+    return enable_mngmnt_wsdl
+
+
+def unregister_client(self, client, client_path=None, log_checker=None, request_fail=False):
+    def unreg_client():
+        current_log_lines = None
+        if log_checker is not None:
+            current_log_lines = log_checker.get_line_count()
+        self.log('Open client details')
+        added_client_row(self, client).find_element_by_css_selector(clients_table_vm.DETAILS_TAB_CSS).click()
+        self.log('MEMBER_52 1. Click unregister button')
+        self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_UNREGISTER_BUTTON_ID).click()
+        self.wait_jquery()
+        self.log('MEMBER_52 3. Confirm unregister confirmation popup')
+        confirm_dialog_click(self)
+        if request_fail:
+            service_path = '{}/clientDeletion'.format(client_path)
+            expected_error_msg = UNREGISTER_CLIENT_SEND_REQUEST_FAIL.format(service_path)
+            self.log('MEMBER_52 5a.1 System displays the error message "{}"'.format(expected_error_msg))
+            error_msg = self.wait_until_visible(type=By.CSS_SELECTOR, element=ERROR_MESSAGE_CSS).text
+            self.is_equal(expected_error_msg, error_msg)
+        if current_log_lines is not None:
+            expected_log_msg = UNREGISTER_CLIENT_FAILED
+            self.log('MEMBER_52 5a.2 System logs the event {} to the audit log'.format(expected_log_msg))
+            logs_found = log_checker.check_log(UNREGISTER_CLIENT_FAILED, from_line=current_log_lines + 1)
+            self.is_true(logs_found)
+
+    return unreg_client
 
 
 def safe(self, func, member, message):
@@ -1760,9 +1872,12 @@ def safe(self, func, member, message):
     """
     try:
         func(self, member)
+        self.log('safe succeeded')
         return True
-    except Exception, e:
+    except Exception:
+        self.log('safe failed {0}'.format(self.debug))
         if self.debug:
             self.log('Got an exception in safe(): {0}'.format(message))
         traceback.print_exc()
         # raise AssertionError
+        return False

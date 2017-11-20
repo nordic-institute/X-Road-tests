@@ -8,11 +8,36 @@ from selenium.webdriver.common.by import By
 
 from helpers import xroad, auditchecker, ssh_server_actions
 from view_models import clients_table_vm, popups, messages, ss_system_parameters, log_constants
+from view_models.clients_table_vm import SERVICE_CLASS_NAME
 from view_models.log_constants import EDIT_WSDL_FAILED, EDIT_SERVICE_PARAMS_FAILED, ADD_WSDL_FAILED, DELETE_WSDL
 from view_models.messages import WSDL_EDIT_ERROR_WSDL_EXISTS, WSDL_EDIT_ERROR_VALIDATION_FAILED, \
     WSDL_EDIT_ERROR_FILE_DOES_NOT_EXIST, SERVICE_EDIT_INVALID_URL, SERVICE_EDIT_INFINITE_TIMEOUT_WARNING, \
     SERVICE_EDIT_INVALID_TIMEOUT, WSDL_ERROR_ADDRESS_EXISTS, WSDL_ERROR_DUPLICATE_SERVICE, WSDL_ERROR_VALIDATION_FAILED
-from view_models.popups import EDIT_WSDL_POPUP_CANCEL_BTN_XPATH, CLIENT_DETAILS_POPUP_EDIT_WSDL_BTN_ID
+from view_models.popups import EDIT_WSDL_POPUP_CANCEL_BTN_XPATH, CLIENT_DETAILS_POPUP_EDIT_WSDL_BTN_ID, \
+    EDIT_WSDL_BUTTON_ID, CLIENT_DETAILS_POPUP_ACCESS_RIGHTS_BTN_ID, WSDL_SERVICE_CODE_REGEX, \
+    WSDL_SERVICE_CODE_DATE_REGEX, WSDL_SERVICE_URL_REGEX, WSDL_SERVICE_TIMEOUT_REGEX, \
+    CLIENT_DETAILS_POPUP_EXISTING_ACL_SUBJECTS_FIRST_SUBJECT_ROW_CSS, XROAD_IDENTIFIER_REGEX, \
+    CLIENT_DETAILS_POPUP_EXISTING_ACL_SUBJECTS_ADD_SUBJECTS_BTN_CSS, \
+    CLIENT_DETAILS_POPUP_ACL_SUBJECTS_REMOVE_ALL_BTN_ID, CLIENT_DETAILS_POPUP_ACL_SUBJECTS_REMOVE_SELECTED_BTN_ID
+
+
+def view_wsdl(self, client, client_name, expected_wsdl_url):
+    def view_wsdl():
+        self.log('SERVICE_06 1. View security server client\'s WSDLs')
+        clients_table_vm.open_client_popup_services(self, client=client, client_name=client_name)
+        self.log('SERVICE_06 2. System displays the WSDL')
+        wsdl_row = self.wait_until_visible(type=By.CLASS_NAME, element='wsdl')
+        self.log('Get wsdl row columns')
+        wsdl_cols = wsdl_row.find_elements_by_tag_name('td')
+        expected_wsdl_url_col = 'WSDL ({})'.format(expected_wsdl_url)
+        self.log('SERVICE_06 2. System displays the URL of the WSDL {}'.format(expected_wsdl_url))
+        wsdl_url = wsdl_cols[1].text
+        self.is_equal(expected_wsdl_url_col, wsdl_url)
+        self.log('SERVICE_06 2. System displays the date of when the WSDL was last refresh')
+        wsdl_refresh_date = wsdl_cols[-1].text
+        self.is_true(re.match(WSDL_SERVICE_CODE_DATE_REGEX, wsdl_refresh_date))
+
+    return view_wsdl
 
 
 def add_wsdl(self,
@@ -825,3 +850,80 @@ def test_delete_service(case, client=None, client_name=None, client_id=None, wsd
             self.is_true(logs_found)
 
     return delete_service
+
+
+def view_services(self, client, client_name, wsdl_url):
+    def view_service():
+        self.log('SERVICE_07 1. View security server client\'s services')
+        clients_table_vm.open_client_popup_services(self, client=client, client_name=client_name)
+        self.log('Expanding wsdl services')
+        wsdl_index = clients_table_vm.find_wsdl_by_name(self, wsdl_url)
+        wsdl_row = clients_table_vm.client_services_popup_get_wsdl(self, wsdl_index=wsdl_index)
+        wsdl_row.find_element_by_css_selector(
+            popups.CLIENT_DETAILS_POPUP_WSDL_CLOSED_SERVICE_CSS).click()
+
+        self.log('SERVICE_07 2. System displays the services')
+        services = self.wait_until_visible(type=By.CLASS_NAME, element=SERVICE_CLASS_NAME, multiple=True)
+        for service in services:
+            service.click()
+            self.log('SERVICE_07 2. "Edit" button is visible')
+            self.is_not_none(self.wait_until_visible(type=By.ID, element=EDIT_WSDL_BUTTON_ID))
+            self.log('SERVICE_07 2. "Access Rights" button is visible')
+            self.is_not_none(self.wait_until_visible(type=By.ID, element=CLIENT_DETAILS_POPUP_ACCESS_RIGHTS_BTN_ID))
+            tds = service.find_elements_by_tag_name('td')
+            self.log('SERVICE_07 2. The code and the version of the service is visible(formatted as "code.version")')
+            self.is_true(re.match(WSDL_SERVICE_CODE_REGEX, tds[1].text))
+            self.log('SERVICE_07 2. The title of the service is visible')
+            self.is_true(len(tds[2].text) > 0)
+            self.log('SERVICE_07 2. The connection type for accessing the service is visible')
+            self.is_not_none(tds[3].find_element_by_tag_name('i'))
+            self.log('SERVICE_07 2. The url of the service is visible and starts with http or https')
+            self.is_true(re.match(WSDL_SERVICE_URL_REGEX, tds[3].text))
+            self.log('SERVICE_07 2. The timeout of the service is visible and is integer')
+            self.is_true(re.match(WSDL_SERVICE_TIMEOUT_REGEX, tds[4].text))
+            self.log('SERVICE_07 2. The date of the service WSDL refresh date is visible')
+            self.is_true(re.match(WSDL_SERVICE_CODE_DATE_REGEX, tds[5].text))
+
+    return view_service
+
+
+def view_service_access_rights(self, client, client_name, wsdl_url):
+    def view_service_access_right():
+        self.log('Open client services tab')
+        clients_table_vm.open_client_popup_services(self, client=client, client_name=client_name)
+        self.log('Expanding service wsdl-s')
+        wsdl_index = clients_table_vm.find_wsdl_by_name(self, wsdl_url)
+        wsdl_row = clients_table_vm.client_services_popup_get_wsdl(self, wsdl_index=wsdl_index)
+        wsdl_row.find_element_by_css_selector(
+            popups.CLIENT_DETAILS_POPUP_WSDL_CLOSED_SERVICE_CSS).click()
+
+        self.log('Get wsdl service rows')
+        services = self.wait_until_visible(type=By.CLASS_NAME, element=SERVICE_CLASS_NAME, multiple=True)
+        for service in services:
+            service.click()
+            self.log('SERVICE_16 1. View security server client\'s services')
+            self.wait_until_visible(type=By.ID, element=CLIENT_DETAILS_POPUP_ACCESS_RIGHTS_BTN_ID).click()
+            access_rights_table_rows = self.wait_until_visible(type=By.CSS_SELECTOR,
+                                                               element=CLIENT_DETAILS_POPUP_EXISTING_ACL_SUBJECTS_FIRST_SUBJECT_ROW_CSS,
+                                                               multiple=True)
+            self.log('SERVICE_16 2. System displays the list of service clients '
+                     'that have been given access rights to the service.')
+            for member in access_rights_table_rows:
+                self.log('Get member row columns')
+                tds = member.find_elements_by_tag_name('td')
+                self.log('SERVICE_16 2. The name of the X-Road member is visible')
+                self.is_true(len(tds[0].text) > 0)
+                self.log('SERVICE_16 2. The X-Road identifier is visible')
+                self.is_true(re.match(XROAD_IDENTIFIER_REGEX, tds[1].text))
+                self.log('SERVICE_16 2. The date of when the access right to the service was granted is visible')
+                self.is_true(re.match(WSDL_SERVICE_CODE_DATE_REGEX, tds[2].text))
+                self.log('SERVICE_16 2. "Add subjects" button is visible')
+                self.is_not_none(self.by_id(CLIENT_DETAILS_POPUP_EXISTING_ACL_SUBJECTS_ADD_SUBJECTS_BTN_CSS))
+                self.log('SERVICE_16 2. "Remove selected" button is visible')
+                self.is_not_none(self.by_id(CLIENT_DETAILS_POPUP_ACL_SUBJECTS_REMOVE_SELECTED_BTN_ID))
+                self.log('SERVICE_16 2. "Remove all" button is visible')
+                self.is_not_none(self.by_id(CLIENT_DETAILS_POPUP_ACL_SUBJECTS_REMOVE_ALL_BTN_ID))
+                self.log('Close access rights popup')
+                popups.close_all_open_dialogs(self, limit=1)
+
+    return view_service_access_right

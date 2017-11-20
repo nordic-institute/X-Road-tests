@@ -13,10 +13,10 @@ from tests.xroad_logging_service_ss_2112.logging_service_ss_2_11_2 import certif
 class testDeclineRegistrationRequest(unittest.TestCase):
     """
     MEMBER_38 Decline a Registration Request
-    RIA URL: https://jira.ria.ee/browse/XTKB-137
+    RIA URL: https://jira.ria.ee/browse/XT-390, https://jira.ria.ee/browse/XTKB-137
     Depends on finishing other test(s):
     Requires helper scenarios:
-    X-Road version: 6.9.4
+    X-Road version: 6.16.0
     """
     def test_decline_registration_request(self):
         main = MainController(self)

@@ -8,6 +8,15 @@ import sys
 
 
 class XroadAuditLog(unittest.TestCase):
+    """
+    Stand-alone test for checking X-Road audit.log after running tests that generate log entries.
+    Gets the parameters of the server to connect to from the configuration, specified by parameter audit.server.
+    RIA URL: https://jira.ria.ee/browse/XTKB-8
+    Depends on finishing other test(s):
+    Requires helper scenarios:
+    X-Road version: 6.16.0
+    """
+
     def test_xroad_audit_log(self):
         '''
         audit.log checking test. Checks if audit.log of a specified server contains specified (in configuration or

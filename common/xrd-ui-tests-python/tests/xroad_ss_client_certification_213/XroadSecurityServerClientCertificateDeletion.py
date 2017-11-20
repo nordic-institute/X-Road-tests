@@ -13,7 +13,7 @@ class XroadSecurityServerClientCertificateDeletion(unittest.TestCase):
     RIA URL: https://jira.ria.ee/browse/XTKB-88
     Depends on finishing other test(s): client registration, client certification
     Requires helper scenarios:
-    X-Road version: 6.16
+    X-Road version: 6.16.0
     """
 
     def test_security_server_certificate_deletion(self):

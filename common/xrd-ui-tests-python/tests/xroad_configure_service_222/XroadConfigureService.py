@@ -13,15 +13,17 @@ class XroadConfigureService(unittest.TestCase):
     SERVICE_09 3, 5, 3a, 4a, 5a Edit the Address of a WSDL
     SERVICE_10 2a Download and Parse WSDL
     SERVICE_15 1-5 Delete a WSDL
+    SERVICE_17 Add Access Rights to a Service
     SERVICE_19 4, 4a, 5, 5a Edit the address of a service
     SERVICE_21 4a, 4b Edit the timeout of a service
+    RIA URL: https://jira.ria.ee/browse/XTKB-172
     RIA URL: https://jira.ria.ee/browse/XTKB-95
     RIA URL: https://jira.ria.ee/browse/XTKB-94
     RIA URL: https://jira.ria.ee/browse/XTKB-23
     RIA URL: https://jira.ria.ee/browse/XTKB-28
-    Depends on finishing other test(s): client_registration
+    Depends on finishing other test(s): XroadSecurityServerClientRegistration
     Requires helper scenarios:
-    X-Road version: 6.16
+    X-Road version: 6.16.0
     """
 
     def test_xroad_configure_service(self):
@@ -88,13 +90,9 @@ class XroadConfigureService(unittest.TestCase):
             # TEST PLAN 2.2.2-1, 2.2.2-2 add WSDL and configure service
             test_configure_service()
 
-            # TEST PLAN 2.2.2-3 configure service ACL
-            main.log('2.2.2-3 configure service ACL')
             main.reload_webdriver(url=ss_host, username=ss_user, password=ss_pass)
             test_configure_service_acl()
 
-            # TEST PLAN 2.2.2-3 configure second service ACL
-            main.log('2.2.2-3 configure second service ACL')
             main.reload_webdriver(url=ss_host, username=ss_user, password=ss_pass)
             test_configure_service_acl_2()
 

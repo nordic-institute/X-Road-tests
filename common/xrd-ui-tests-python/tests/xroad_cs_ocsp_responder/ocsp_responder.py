@@ -7,7 +7,7 @@ from selenium.webdriver.common.by import By
 from helpers import xroad, ssh_client, auditchecker
 from tests.xroad_cs_ca import ca_management
 from tests.xroad_cs_ca.ca_management import edit_ca_settings
-from tests.xroad_ss_client_certification_213 import client_certification_2_1_3 as client_certification
+from tests.xroad_ss_client_certification_213 import client_certification as client_certification
 from view_models import popups, messages, sidebar, certification_services, log_constants
 from view_models.certification_services import OCSP_RESPONSE_TAB, get_ocsp_by_td_text
 from view_models.sidebar import CERTIFICATION_SERVICES_CSS

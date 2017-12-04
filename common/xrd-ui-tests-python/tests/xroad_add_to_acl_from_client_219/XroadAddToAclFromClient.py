@@ -5,8 +5,8 @@ import unittest
 
 from helpers import xroad
 from main.maincontroller import MainController
-from tests.xroad_add_to_acl_from_client_219 import add_to_acl_client_2_1_9 as test_add_to_acl_client
-from tests.xroad_configure_service_222 import configure_service_2_2_2
+from tests.xroad_add_to_acl_from_client_219 import add_to_acl_client as test_add_to_acl_client
+from tests.xroad_configure_service_222 import configure_service
 from tests.xroad_parse_users_inputs import xroad_parse_user_inputs
 from view_models import clients_table_vm
 
@@ -15,13 +15,13 @@ class AddToAclFromClient(unittest.TestCase):
     """
     SERVICE_01 View the Service Clients of a Security Server Client
     SERVICE_02 View the Access Rights of a Service Client
-    SERVICE_03 4. Add Access Rights for a Service Client
-    SERVICE_05 4. Remove Access Rights from a Service Client
-    RIA URL: https://jira.ria.ee/browse/XTKB-78
-    RIA URL: https://jira.ria.ee/browse/XTKB-81
-    RIA URL: https://jira.ria.ee/browse/XTKB-166
-    RIA URL: https://jira.ria.ee/browse/XTKB-167
-    Depends on finishing other test(s): client registration, configure service
+    SERVICE_03 Add Access Rights for a Service Client
+    SERVICE_05 Remove Access Rights from a Service Client
+    RIA URL: https://jira.ria.ee/browse/XT-258, https://jira.ria.ee/browse/XTKB-166
+    RIA URL: https://jira.ria.ee/browse/XT-259, https://jira.ria.ee/browse/XTKB-167
+    RIA URL: https://jira.ria.ee/browse/XT-260, https://jira.ria.ee/browse/XTKB-78
+    RIA URL: https://jira.ria.ee/browse/XT-262, https://jira.ria.ee/browse/XTKB-81
+    Depends on finishing other test(s): XroadSecurityServerClientRegistration, XroadConfigureService
     Requires helper scenarios:
     X-Road version: 6.16.0
     """
@@ -60,9 +60,9 @@ class AddToAclFromClient(unittest.TestCase):
         test_add_all_service_to_existing = test_add_to_acl_client.test_existing_client(rows_to_select=[[1], [0]],
                                                                                        remove_data=True,
                                                                                        client_name=client_name)
-        delete_added_wsdl = configure_service_2_2_2.test_delete_service(main, client_name=client_name,
-                                                                        client_id=client_id,
-                                                                        wsdl_url=wsdl_three_services)
+        delete_added_wsdl = configure_service.test_delete_service(main, client_name=client_name,
+                                                                  client_id=client_id,
+                                                                  wsdl_url=wsdl_three_services)
         try:
             main.log('Add WSDL with 3 services to security server client')
             main.reload_webdriver(ss_host, ss_user, ss_pass)

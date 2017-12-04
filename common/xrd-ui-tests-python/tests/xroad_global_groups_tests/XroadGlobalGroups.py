@@ -28,6 +28,7 @@ class XroadGlobalGroups(unittest.TestCase):
         cs_pass = main.config.get('cs.pass')
 
         group = main.config.get('cs.global_group')
+        group_1 = main.config.get('cs.global_group_1')
 
         cs_ssh_host = main.config.get('cs.ssh_host')
         cs_ssh_user = main.config.get('cs.ssh_user')
@@ -89,6 +90,8 @@ class XroadGlobalGroups(unittest.TestCase):
             main.log('SERVICE_32 Add a Global Group')
             add_group(main, group, check_global_groups_inputs=True,
                       cs_ssh_host=cs_ssh_host, cs_ssh_user=cs_ssh_user, cs_ssh_pass=cs_ssh_pass)
+            main.reload_webdriver(cs_host, cs_user, cs_pass)
+            add_group(main, group_1)
             main.log('SERVICE_33 Add Members to a Global Group')
             add_member_to_group(main, client, group, ss2_host, ss2_user, ss2_pass, wsdl_url, service_name,
                                 identifier, testclient=testclient, log_checker=log_checker)
@@ -96,6 +99,9 @@ class XroadGlobalGroups(unittest.TestCase):
             main.wait_until_visible(type=By.CSS_SELECTOR, element=GLOBAL_GROUPS_CSS).click()
             add_member_to_group(main, client_1, group, ss2_host, ss2_user, ss2_pass, wsdl_url, service_name,
                                 identifier)
-            close_all_open_dialogs(main)
+            main.reload_webdriver(cs_host, cs_user, cs_pass)
+            main.wait_until_visible(type=By.CSS_SELECTOR, element=GLOBAL_GROUPS_CSS).click()
+            add_member_to_group(main, client, group_1, ss2_host, ss2_user, ss2_pass, wsdl_url, service_name,
+                                identifier)
         finally:
             main.tearDown()

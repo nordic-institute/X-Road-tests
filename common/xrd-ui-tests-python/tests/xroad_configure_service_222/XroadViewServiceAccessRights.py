@@ -2,7 +2,7 @@ import unittest
 
 from helpers import xroad
 from main.maincontroller import MainController
-from tests.xroad_configure_service_222 import configure_service_2_2_2
+from tests.xroad_configure_service_222 import configure_service
 
 
 class XroadViewServiceAccessRights(unittest.TestCase):
@@ -27,7 +27,7 @@ class XroadViewServiceAccessRights(unittest.TestCase):
         service_wsdl = main.config.get('wsdl.service_wsdl')
         wsdl_url = remote_path.format(service_wsdl)
 
-        test_view_service_access_rights = configure_service_2_2_2.view_service_access_rights(main, client, client_name, wsdl_url)
+        test_view_service_access_rights = configure_service.view_service_access_rights(main, client, client_name, wsdl_url)
 
         try:
             main.reload_webdriver(ss_host, ss_user, ss_pass)

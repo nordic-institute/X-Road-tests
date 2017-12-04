@@ -3,8 +3,8 @@ import unittest
 from helpers import xroad
 from helpers.auditchecker import AuditChecker
 from main.maincontroller import MainController
-from tests.xroad_client_registration_in_ss_221 import client_registration_in_ss_2_2_1
-from tests.xroad_client_registration_in_ss_221.client_registration_in_ss_2_2_1 import unregister_client
+from tests.xroad_client_registration_in_ss_221 import client_registration_in_ss
+from tests.xroad_client_registration_in_ss_221.client_registration_in_ss import unregister_client
 
 
 class XroadUnregisterClientFail(unittest.TestCase):
@@ -34,12 +34,12 @@ class XroadUnregisterClientFail(unittest.TestCase):
         client['subsystem_code'] = client['subsystem']
         client_path = xroad.get_xroad_path(client, client_type='SERVICE')
 
-        disable_management_service = client_registration_in_ss_2_2_1.disable_management_wsdl(main,
-                                                                                             client_id,
-                                                                                             management_wsdl_url)
-        enable_management_service = client_registration_in_ss_2_2_1.enable_management_wsdl(main,
-                                                                                           client_id,
-                                                                                           management_wsdl_url)
+        disable_management_service = client_registration_in_ss.disable_management_wsdl(main,
+                                                                                       client_id,
+                                                                                       management_wsdl_url)
+        enable_management_service = client_registration_in_ss.enable_management_wsdl(main,
+                                                                                     client_id,
+                                                                                     management_wsdl_url)
         test_unregister_client_req_fail = unregister_client(main,
                                                             client,
                                                             client_path,

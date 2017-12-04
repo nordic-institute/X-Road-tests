@@ -82,6 +82,14 @@ CLIENT_STATUS_REGISTRATION = 'registration in progress'
 SERVICE_CLASS_NAME = 'service'
 
 TEST_DATA = 'test1'
+def subsystem_ss(client_instance, client_class, client_code, random_code):
+ return 'SUBSYSTEM : {0} : {1} : {2} : {3}'.format(client_instance, client_class, client_code, random_code)
+
+def server_cs(client_instance, client_class, client_code, client_subsystem):
+    return 'SERVER:{0}/{1}/{2}/{3}'.format(client_instance, client_class, client_code, client_subsystem)
+def subsystem_cs(client_instance, client_class, client_code, random_code):
+    return 'SUBSYSTEM:{0}/{1}/{2}/{3}'.format(client_instance, client_class, client_code, random_code)
+
 def get_client_id(partial_id):
     return '//table[@id="clients"]//span[contains(text(), "{0}")]'.format(partial_id)
 

@@ -1,7 +1,7 @@
 # coding=utf-8
 import unittest
 
-import add_to_acl_2_1_8
+import add_to_acl
 from main.maincontroller import MainController
 from helpers import xroad, auditchecker
 
@@ -10,8 +10,9 @@ class XroadAddToAcl(unittest.TestCase):
     """
     SERVICE_17 Add Access Rights to a Service
     SERVICE_18 Remove Access Rights from a Service
-    RIA URL: https://jira.ria.ee/browse/XTKB-173
-    Depends on finishing other test(s): configure service
+    RIA URL: https://jira.ria.ee/browse/XT-274, https://jira.ria.ee/browse/XTKB-172
+    RIA URL: https://jira.ria.ee/browse/XT-275, https://jira.ria.ee/browse/XTKB-173
+    Depends on finishing other test(s): XroadConfigureService
     Requires helper scenarios:
     X-Road version: 6.16.0
     """
@@ -19,7 +20,7 @@ class XroadAddToAcl(unittest.TestCase):
         main = MainController(self)
 
         # Set test name and number
-        main.test_number = '2.1.8'
+        main.test_number = 'SERVICE_17 / SERVICE_18'
         main.test_name = self.__class__.__name__
 
         ss_host = main.config.get('ss2.host')
@@ -40,15 +41,15 @@ class XroadAddToAcl(unittest.TestCase):
 
         service_name = main.config.get('services.test_service')
 
-        test_add_subjects = add_to_acl_2_1_8.test_add_subjects(main, client=client, wsdl_url=wsdl_url,
-                                                               service_name=service_name, service_subjects=subject_list,
-                                                               remove_data=True,
-                                                               allow_remove_all=False, log_checker=log_checker)
+        test_add_subjects = add_to_acl.test_add_subjects(main, client=client, wsdl_url=wsdl_url,
+                                                         service_name=service_name, service_subjects=subject_list,
+                                                         remove_data=True,
+                                                         allow_remove_all=False, log_checker=log_checker)
 
-        test_add_all_subjects = add_to_acl_2_1_8.test_add_all_subjects(main, client=client,
-                                                                       wsdl_url=wsdl_url, service_name=service_name,
-                                                                       remove_data=True,
-                                                                       allow_remove_all=True, log_checker=log_checker)
+        test_add_all_subjects = add_to_acl.test_add_all_subjects(main, client=client,
+                                                                 wsdl_url=wsdl_url, service_name=service_name,
+                                                                 remove_data=True,
+                                                                 allow_remove_all=True, log_checker=log_checker)
 
         try:
             # Test add one user to ACL

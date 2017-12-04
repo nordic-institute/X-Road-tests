@@ -10,7 +10,7 @@ from tests.xroad_cs_ca.ca_management import test_add_ca
 from tests.xroad_cs_ocsp_responder import ocsp_responder
 from tests.xroad_cs_ocsp_responder.ocsp_responder import test_add_ocsp_responder
 from tests.xroad_ss_client.ss_client_management import add_ss_client, delete_client, edit_client
-from tests.xroad_ss_client_certification_213.client_certification_2_1_3 import start_xroad_conf_client, \
+from tests.xroad_ss_client_certification_213.client_certification import start_xroad_conf_client, \
     expire_global_conf
 from tests.xroad_ss_import_certificate_from_token import xroad_import_cert_token
 from tests.xroad_ss_import_certificate_from_token.xroad_import_cert_token import test_import_cert_from_token

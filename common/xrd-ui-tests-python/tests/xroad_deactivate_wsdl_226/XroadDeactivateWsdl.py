@@ -1,7 +1,7 @@
 # coding=utf-8
 import unittest
 
-import deactivate_wsdl_2_2_6
+import deactivate_wsdl
 from helpers import xroad, auditchecker
 from main.maincontroller import MainController
 
@@ -42,11 +42,11 @@ class XroadDeactivateWsdl(unittest.TestCase):
 
         log_checker = auditchecker.AuditChecker(ss_ssh_host, ss_ssh_user, ss_ssh_pass)
         # Configure the service
-        test_deactivate_wsdl = deactivate_wsdl_2_2_6.test_disable_wsdl(main, client=client, wsdl_url=wsdl_url,
-                                                                       requester=requester, log_checker=log_checker)
+        test_deactivate_wsdl = deactivate_wsdl.test_disable_wsdl(main, client=client, wsdl_url=wsdl_url,
+                                                                 requester=requester, log_checker=log_checker)
 
-        test_reactivate_wsdl = deactivate_wsdl_2_2_6.test_enable_wsdl(main, client=client, wsdl_url=wsdl_url,
-                                                                      requester=requester)
+        test_reactivate_wsdl = deactivate_wsdl.test_enable_wsdl(main, client=client, wsdl_url=wsdl_url,
+                                                                requester=requester)
 
         try:
             main.reload_webdriver(url=ss_host, username=ss_user, password=ss_pass)

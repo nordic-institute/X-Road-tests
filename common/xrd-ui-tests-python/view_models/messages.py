@@ -101,7 +101,7 @@ EDIT_CENTRAL_SERVICE_PROVIDER_NOT_FOUND_ERROR = 'Failed to update central servic
 
 UNREGISTER_CLIENT_SEND_REQUEST_FAIL = 'Failed to send deletion request: Service {0} is disabled: Out of order'
 GENERATE_CERTIFICATE_NOT_FOUND_ERROR = 'Failed to generate new key: /bin/sh: 1: {0}: not found'
-REGISTRATION_REQUEST_SENDING_FAILED = 'Failed to send registration request: Could not connect to any target host'
+REGISTRATION_REQUEST_SENDING_FAILED = 'Failed to send registration request: Service .* is disabled: Out of order'
 CERTIFICATE_DELETION_REQUEST_SENDING_FAILED = 'Failed to send certificate deletion request. Continue with certificate deletion anyway?'
 UNREGISTER_CERT_REQUEST_SENDING_FAILED = 'Failed to unregister certificate: Could not connect to any target host'
 SS_CONFIGURATION_BACKUP_ERROR = "Failed to back up configuration: Error making configuration backup, script exited with status code '1'"
@@ -136,6 +136,13 @@ SECURITY_SERVER_CODE_ALREADY_REGISTRED = 'Failed to add new owned server request
 AUTH_CERT_ALREADY_REGISTRED = "Failed to add new owned server request: Certificate is already registered, request id \'"
 RESTORE_CONFIGURATION_FAILED = 'Failed to restore configuration: Restoring configuration from file \'{0}\' failed.'
 BACKUP_CONFIGURATION_RESTORED_SUCCESSFUL = "Configuration restored successfully from file \'{0}\'."
+
+CP_CONF_DOWNLOAD_REQUEST_ERROR_1 = 'Failed to download configuration from any configuration location:'
+CP_CONF_DOWNLOAD_REQUEST_ERROR_2 = 'Error when downloading conf'
+CP_CONF_DOWNLOAD_REQUEST_ERROR_3 = 'HttpError: {0}'
+CP_DOWNLOAD_UPDATE_CONFIGURATION_ERROR = 'ERROR e.r.x.c.c.g.ConfigurationClient - Failed to download configuration from any configuration location:'
+CP_DOWNLOAD_UPDATE_CONFIGURATION_LOCATION_ERROR = 'location: http://{0}/internalconf?version=2; error: HttpError: {0}'
+CP_DOWNLOAD_SUCCESSFULL = 'Downloading configuration from http://{0}/internalconf?version=2'
 def get_error_message(self):
     '''
     Returns the first visible error message string (an element with class 'error' inside an element with class

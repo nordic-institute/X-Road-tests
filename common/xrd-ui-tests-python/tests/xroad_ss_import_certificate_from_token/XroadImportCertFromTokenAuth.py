@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 
 from helpers import xroad, ssh_client
 from main.maincontroller import MainController
-from tests.xroad_ss_client_certification_213.client_certification_2_1_3 import generate_auth_csr
+from tests.xroad_ss_client_certification_213.client_certification import generate_auth_csr
 from tests.xroad_ss_import_certificate_from_token.xroad_import_cert_token import import_auth_cert_from_token, \
     reset_hard_token
 from view_models.keys_and_certificates_table import KEY_TABLE_ROW_BY_LABEL_XPATH, DELETE_BTN_ID, AUTH_KEY_LABEL

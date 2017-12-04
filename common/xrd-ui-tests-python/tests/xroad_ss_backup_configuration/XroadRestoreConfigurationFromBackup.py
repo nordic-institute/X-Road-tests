@@ -2,7 +2,7 @@
 import unittest
 from main.maincontroller import MainController
 import ss_management
-from tests.xroad_ss_client_certification_213 import client_certification_2_1_3
+from tests.xroad_ss_client_certification_213 import client_certification
 
 
 class XroadRestoreConfigurationFromBackup(unittest.TestCase):
@@ -46,6 +46,6 @@ class XroadRestoreConfigurationFromBackup(unittest.TestCase):
             assert False
         finally:
             main.reload_webdriver(url=main.url, username=main.username, password=main.password)
-            client_certification_2_1_3.log_in_token(main)()
+            client_certification.log_in_token(main)()
             '''Test teardown'''
             main.tearDown()

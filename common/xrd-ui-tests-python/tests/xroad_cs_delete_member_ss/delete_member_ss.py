@@ -10,7 +10,7 @@ from main.maincontroller import MainController
 from tests.xroad_configure_service_222.wsdl_validator_errors import wait_until_server_up
 from tests.xroad_cs_delete_member.deleting_in_cs import test_add_security_server_to_member
 from tests.xroad_cs_delete_member_ss.XroadDeleteMemberSS import delete_member_ss
-from tests.xroad_ss_client_certification_213.client_certification_2_1_3 import register_cert, activate_cert
+from tests.xroad_ss_client_certification_213.client_certification import register_cert, activate_cert
 from view_models.keys_and_certificates_table import DELETE_BTN_ID, GLOBAL_ERROR_CERTIFICATE_ROW_XPATH
 from view_models.popups import confirm_dialog_click
 from view_models.sidebar import KEYSANDCERTIFICATES_BTN_CSS

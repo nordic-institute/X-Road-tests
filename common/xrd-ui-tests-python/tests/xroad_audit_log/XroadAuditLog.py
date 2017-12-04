@@ -26,7 +26,7 @@ class XroadAuditLog(unittest.TestCase):
         main = MainController(self)
 
         # Set test name and number
-        main.test_number = 'LOGCHECK'
+        main.test_number = 'XroadAuditLog'
         main.test_name = self.__class__.__name__
 
         # Get parameters from the configuration file.

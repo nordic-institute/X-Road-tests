@@ -9,7 +9,7 @@ from tests.xroad_subsystem_to_member import xroad_add_subsystem_to_member
 class XroadAddSubToMember(unittest.TestCase):
     """
     UC MEMBER_56 Add a Subsystem to an X-Road Member
-    RIA URL: https://jira.ria.ee/browse/XT-???, https://jira.ria.ee/browse/XTKB-146
+    RIA URL: https://jira.ria.ee/browse/XTKB-146
     Depends on finishing other test(s): None
     Requires helper scenarios: None
     X-Road version: 6.16.0

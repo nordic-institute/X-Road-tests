@@ -32,6 +32,7 @@ UNREGISTER_AUTH_CERT_FAILED = 'Unregister authentication certificate failed'
 
 ADD_WSDL_FAILED = 'Add WSDL failed'
 ADD_WSDL = 'Add WSDL'
+EDIT_WSDL = 'Edit WSDL'
 EDIT_WSDL_FAILED = 'Edit WSDL failed'
 EDIT_SERVICE_PARAMS_FAILED = 'Edit service parameters failed'
 DELETE_WSDL = 'Delete WSDL'

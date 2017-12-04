@@ -7,7 +7,7 @@ from tests.xroad_ss_client import ss_client_management
 
 class XroadCreateClientRegistrationRequest(unittest.TestCase):
     """
-     UC MEMBER_15 Create a Security Server Client Registration Request
+    UC MEMBER_15 Create a Security Server Client Registration Request
     RIA URL: https://jira.ria.ee/browse/XT-367, https://jira.ria.ee/browse/XTKB-40
     Depends on finishing other test(s):
     Requires helper scenarios:

@@ -7,8 +7,8 @@ from selenium.webdriver.common.by import By
 import tests.xroad_parse_users_inputs.xroad_parse_user_inputs as user_input_check
 from helpers import auditchecker
 from helpers import ssh_server_actions, xroad
-from tests.xroad_add_to_acl_218 import add_to_acl_2_1_8
-from tests.xroad_add_to_acl_218.add_to_acl_2_1_8 import restore_original_subject_list
+from tests.xroad_add_to_acl_218 import add_to_acl
+from tests.xroad_add_to_acl_218.add_to_acl import restore_original_subject_list
 from view_models import members_table, sidebar, groups_table, popups, messages, log_constants, \
     sidebar as sidebar_constants, clients_table_vm
 from view_models.cs_security_servers import MEMBER_TABLE_CLICK_MEMBER
@@ -78,14 +78,14 @@ def add_member_to_group(self, client, group, ss2_host, ss2_user, ss2_pass,
         logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
         self.is_true(logs_found)
     if testclient is not None:
-        test_configure_service_acl = add_to_acl_2_1_8.test_add_subjects(case=self, client=client,
-                                                                        client_name=client_name,
-                                                                        wsdl_url=wsdl_url,
-                                                                        service_name=service_name,
-                                                                        service_subjects=subject_list,
-                                                                        remove_data=False,
-                                                                        allow_remove_all=False,
-                                                                        remove_current=True)
+        test_configure_service_acl = add_to_acl.test_add_subjects(case=self, client=client,
+                                                                  client_name=client_name,
+                                                                  wsdl_url=wsdl_url,
+                                                                  service_name=service_name,
+                                                                  service_subjects=subject_list,
+                                                                  remove_data=False,
+                                                                  allow_remove_all=False,
+                                                                  remove_current=True)
         self.log('Wait until servers synced')
         time.sleep(120)
         self.log('Add global group to {0} service ACL'.format(service_name))
@@ -140,8 +140,8 @@ def add_group(self, group, check_global_groups_inputs=False, cs_ssh_host=None, c
         self.log('Click "ADD" to add new group')
         self.wait_until_visible(type=By.ID, element=groups_table.ADD_GROUP_BTN_ID).click()
 
-        # TEST PLAN 2.11.1-8 fill in required fields and try again
-        self.log('2.11.1-8 add new group, fill in required fields')
+        # Fill in required fields and try again
+        self.log('Add new group, fill in required fields')
         self.log('Send {0} to code area input'.format(group))
         group_code_input = self.wait_until_visible(type=By.ID, element=groups_table.GROUP_CODE_AREA_ID)
         self.input(group_code_input, group)
@@ -152,7 +152,7 @@ def add_group(self, group, check_global_groups_inputs=False, cs_ssh_host=None, c
     if check_global_groups_inputs:
         '''SERVICE_32 step 3 System verifies global groups inputs in the central server'''
 
-        # TEST PLAN SERVICE_32 step 3 System verifies global groups inputs in the central server
+        # SERVICE_32 3. System verifies global groups inputs in the central server
         self.log('*** SERVICE_32_3 / XTKB-56')
         # Open global groups
         self.log('Open Global Groups tab')
@@ -216,7 +216,7 @@ def add_group(self, group, check_global_groups_inputs=False, cs_ssh_host=None, c
                     assert description in global_croup_description
 
                 # Delete added global group
-                remove_group(self, group, cs_ssh_host=cs_ssh_host, cs_ssh_user=cs_ssh_user, cs_ssh_pass=cs_ssh_pass)
+                remove_group(self, code, cs_ssh_host=cs_ssh_host, cs_ssh_user=cs_ssh_user, cs_ssh_pass=cs_ssh_pass)
 
             counter += 1
         if log_checker is not None:
@@ -312,7 +312,7 @@ def remove_group(self, group, cs_ssh_host=None, cs_ssh_user=None, cs_ssh_pass=No
     '''Find and select the group'''
     self.log('Select added group')
     self.wait_until_visible(type=By.XPATH,
-                            element=groups_table.GLOBAL_GROUP_ROW_BY_TD_TEXT_XPATH.format(group)).click()
+                            element=groups_table.GLOBAL_GROUP_ROW_BY_TD_TEXT_XPATH.format(group.strip())).click()
     '''Open group details and delete the group'''
     self.log('Open group details')
     self.wait_until_visible(type=By.ID, element=groups_table.GROUP_DETAILS_BTN_ID).click()
@@ -392,7 +392,7 @@ def enter_global_group(self, code, description, cs_ssh_host=None, cs_ssh_user=No
     self.wait_until_visible(type=By.ID, element=groups_table.ADD_GROUP_BTN_ID).click()
 
     # Add new group
-    self.log('2.11.1-8 add new group, fill in required fields')
+    self.log('Add new group, fill in required fields')
     self.log('Send {0} to code area input'.format(code))
     group_code_input = self.wait_until_visible(type=By.ID, element=groups_table.GROUP_CODE_AREA_ID)
     self.input(group_code_input, code)
@@ -461,7 +461,7 @@ def test_view_global_group_details(self):
         self.is_true(len(self.wait_until_visible(type=By.ID, element=GROUP_DESCRIPTION_INPUT_ID).text) > 0)
         self.log('SERVICE_31 2. The number of group members is visible')
         group_member_count_with_parenthesis = self.by_id(GROUP_DETAILS_MEMBER_COUNT_ID).text
-        group_member_count = int(re.search(MEMBER_COUNT_REGEX, group_member_count_with_parenthesis).group(1))
+        group_member_count = int(re.search(MEMBER_COUNT_REGEX, group_member_count_with_parenthesis).group(0))
         self.is_not_none(group_member_count)
         self.log('SERVICE_31 2. The list of the members of the group is visible')
         group_members = self.wait_until_visible(type=By.CSS_SELECTOR, element=GROUP_MEMBERS_TR, multiple=True)

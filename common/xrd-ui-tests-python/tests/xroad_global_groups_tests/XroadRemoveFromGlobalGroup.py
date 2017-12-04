@@ -2,7 +2,7 @@ import unittest
 
 from helpers import xroad, soaptestclient, auditchecker
 from main.maincontroller import MainController
-from tests.xroad_add_to_acl_218 import add_to_acl_2_1_8
+from tests.xroad_add_to_acl_218 import add_to_acl
 from tests.xroad_global_groups_tests import global_groups_tests
 
 
@@ -72,14 +72,14 @@ class XroadRemoveFromGlobalGroup(unittest.TestCase):
         log_checker = auditchecker.AuditChecker(cs_ssh_host, cs_ssh_user, cs_ssh_pass)
 
         subject_list = ['GLOBALGROUP : {0} : {1}'.format(identifier, group)]
-        test_configure_service_acl = add_to_acl_2_1_8.test_add_subjects(case=main, client=client,
-                                                                        client_name=client['name'],
-                                                                        wsdl_url=wsdl_url,
-                                                                        service_name=testservice_name,
-                                                                        service_subjects=subject_list,
-                                                                        remove_data=False,
-                                                                        allow_remove_all=False,
-                                                                        remove_current=True)
+        test_configure_service_acl = add_to_acl.test_add_subjects(case=main, client=client,
+                                                                  client_name=client['name'],
+                                                                  wsdl_url=wsdl_url,
+                                                                  service_name=testservice_name,
+                                                                  service_subjects=subject_list,
+                                                                  remove_data=False,
+                                                                  allow_remove_all=False,
+                                                                  remove_current=True)
         test_remove_selected_from_global_group = global_groups_tests.test_remove_from_global_group(main, group=group,
                                                                                                    testclient=testclient,
                                                                                                    log_checker=log_checker,
@@ -161,14 +161,14 @@ class XroadRemoveFromGlobalGroup(unittest.TestCase):
         log_checker = auditchecker.AuditChecker(cs_ssh_host, cs_ssh_user, cs_ssh_pass)
 
         subject_list = ['GLOBALGROUP : {0} : {1}'.format(identifier, group)]
-        test_configure_service_acl = add_to_acl_2_1_8.test_add_subjects(case=main, client=client,
-                                                                        client_name=client['name'],
-                                                                        wsdl_url=wsdl_url,
-                                                                        service_name=testservice_name,
-                                                                        service_subjects=subject_list,
-                                                                        remove_data=False,
-                                                                        allow_remove_all=False,
-                                                                        remove_current=True)
+        test_configure_service_acl = add_to_acl.test_add_subjects(case=main, client=client,
+                                                                  client_name=client['name'],
+                                                                  wsdl_url=wsdl_url,
+                                                                  service_name=testservice_name,
+                                                                  service_subjects=subject_list,
+                                                                  remove_data=False,
+                                                                  allow_remove_all=False,
+                                                                  remove_current=True)
         test_remove_all_from_global_group = global_groups_tests.test_remove_from_global_group(main, group=group,
                                                                                               testclient=testclient,
                                                                                               log_checker=log_checker)

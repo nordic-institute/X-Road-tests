@@ -6,7 +6,7 @@ from selenium.webdriver.support.select import Select
 
 from helpers import ssh_client, auditchecker
 from helpers.ssh_server_actions import get_server_name
-from tests.xroad_ss_client_certification_213.client_certification_2_1_3 import get_cert, put_file_in_ss
+from tests.xroad_ss_client_certification_213.client_certification import get_cert, put_file_in_ss
 from view_models.keys_and_certificates_table import HARDTOKEN_BY_LABEL_XPATH, GENERATEKEY_BTN_ID, GENERATECSR_BTN_ID, \
     GENERATE_CSR_SIGNING_REQUEST_APPROVED_CA_DROPDOWN_ID, GENERATE_CSR_SIGNING_REQUEST_POPUP_OK_BTN_XPATH, \
     SUBJECT_DISTINGUISHED_NAME_POPUP_OK_BTN_XPATH, GENERATE_CSR_SIGNING_REQUEST_CSR_FORMAT_DROPDOWN_ID, DELETE_BTN_ID, \

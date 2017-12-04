@@ -47,15 +47,16 @@ class Cs_conf_mgm_enter_pin(CommonUtils):
     TITLE = (By.ID, u'ui-id-8') # x: 770 y: 400 width: 67 height: 21, tag: span, type: , name: None, form_id: , checkbox: , table_id: , href: None
     PIN = (By.XPATH, u'//div[9]/div[2]/div[1]/table[1]/tbody[1]/tr[1]/td[1]') # x: 775 y: 451 width: 57 height: 43, tag: td, type: , name: None, form_id: , checkbox: , table_id: 5, href:
     ID_ACTIVATE_TOKEN_PIN = (By.ID, u'activate_token_pin') # x: 836 y: 456 width: 306 height: 33, tag: input, type: password, name: activate_token_pin, form_id: , checkbox: , table_id: 5, href:
-    BUTTON_CLOSE = (By.XPATH, u'//div[9]/div[3]/div[1]/button[2]') # x: 1033 y: 544 width: 67 height: 37, tag: button, type: button, name: None, form_id: , checkbox: , table_id: 5, href:
     BUTTON_OK = (By.XPATH, u'//div[9]/div[3]/div[1]/button[1]') # x: 1110 y: 544 width: 45 height: 37, tag: button, type: button, name: None, form_id: , checkbox: , table_id: 5, href:
+    # Dynamic objects:
+    CLOSE_BUTTON = (By.XPATH, u'(//div[@aria-describedby = \'activate_token_dialog\']//span[@class = \'ui-button-text\' and text() = \'Close\'])[2]') # x: 1049 y: 555 width: 39 height: 18, tag: span, type: , name: None, form_id: , checkbox: , table_id: , href: None
 
     def input_text_to_id_activate_token_pin(self, parameters=None):
         """
         Input text to activate token pin
 
         :param parameters:  Test data section dictionary
-        
+
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.input_text`, *self.ID_ACTIVATE_TOKEN_PIN*, *parameters['pin']*
         """
@@ -65,9 +66,12 @@ class Cs_conf_mgm_enter_pin(CommonUtils):
     def click_button_ok(self):
         """
         Click button to ok the dialog
-        
+
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
         """
         # AutoGen method
         self.click_element(self.BUTTON_OK)
+
+    def close_dialog(self, parameters=None):
+        self.click_element(self.CLOSE_BUTTON)

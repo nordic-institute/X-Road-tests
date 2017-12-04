@@ -73,6 +73,7 @@ class Cs_conf_mgm(CommonUtils):
     CONFPARTS = (By.ID, u'conf_parts') # x: 301 y: 707 width: 1578 height: 30, tag: table, type: , name: None, form_id: , checkbox: , table_id: , href:
     OK_PIN_LOGIN_BUTTON = (By.XPATH, u'//div[8]/div[3]/div[1]/button[1]') # x: 1111 y: 539 width: 44 height: 36, tag: button, type: button, name: None, form_id: , checkbox: , table_id: , href:
     LOGIN = (By.CLASS_NAME, u'login') # x: 1778 y: 536 width: 70 height: 33, tag: button, type: submit, name: None, form_id: , checkbox: , table_id: , href:
+    CONFPARTS1 = (By.ID, u'conf_parts') # x: 301 y: 636 width: 1568 height: 185, tag: table, type: , name: None, form_id: , checkbox: , table_id: , href:
 
     def click_link_internal_configuration(self):
         """
@@ -197,7 +198,7 @@ class Cs_conf_mgm(CommonUtils):
         Verify that download url contains given text
 
         :param text:  String value for text
-        
+
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.element_should_contain`, *self.ID_CONF_URL*, *text*
         """
@@ -249,7 +250,7 @@ class Cs_conf_mgm(CommonUtils):
     def click_oldest_signing_key(self):
         """
         Click oldest signing key on the signing keys table
-        
+
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
@@ -260,3 +261,39 @@ class Cs_conf_mgm(CommonUtils):
         rows = [row for row in rows if len(row.find_elements_by_xpath(".//td"))]
         oldest = min(rows, key=lambda p: p.find_elements_by_xpath(".//td")[1].text)
         oldest.click()
+
+    def verify_signing_keys(self):
+        """
+        Verify that signing keys does not contain 'Signing key'
+        """
+        locator = self.SIGNINGKEYS
+        table = self.find_element(locator)
+        rows = table.find_elements_by_xpath(".//tr")
+
+        for row in rows:
+            columns = row.find_elements_by_xpath(".//td")
+            if len(columns):
+                assert(all(column.text for column in columns)), "Signing key info is empty"
+
+    def click_element_from_table_conf_parts(self, text=u'foo.xml'):
+        # Element search
+        locator = self.CONFPARTS1
+        value = text
+        row = u'TBODY/TR'
+        cell = u'TD'
+        element_info = self.get_table_column_and_row_by_text(locator, value, row, cell)
+
+        # Searched element info
+        row_number = element_info[2]
+        column_number = element_info[3]
+        row_element = element_info[0]
+        element = element_info[1]
+
+        # Action for the element
+        self.click_element(element)
+
+    def click_conf_upload(self):
+        self.click_element(self.ID_UPLOAD_CONF_PART)
+
+    def click_download(self, parameters=None):
+        self.click_element(self.ID_DOWNLOAD_CONF_PART)

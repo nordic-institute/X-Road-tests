@@ -143,7 +143,7 @@ class Lxd_help_scripts(SetupTest):
         self.common_utils.open_url(TESTDATA[u'cs_url']['url'])
         self.component_cs_sidebar.open_global_configuration_view()
         try:
-            self.component_cs_conf_mgm.insert_pin_from_login_button(u'cs_url')
+            self.component_cs_conf_mgm.log_in_to_software_token(u'cs_url')
         except:
             print("Pin not needed?")
 

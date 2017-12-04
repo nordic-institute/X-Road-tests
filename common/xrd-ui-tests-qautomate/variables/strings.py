@@ -8,6 +8,7 @@ login_user_failed = u'Log in user failed'
 
 login_token = u'Log in to token'
 logout_token = u'Log out from token'
+login_token_failed = u'Log in to token failed'
 
 add_timestamping_services = u'Add timestamping service'
 add_timestamping_services_failed = u'Add timestamping service failed'
@@ -21,6 +22,7 @@ edit_cs_address_failed = u'Edit central server address failed'
 recreate_internal_configuration_anchor = u'Re-create internal configuration anchor'
 generate_internal_config_signing_key = u'Generate internal configuration signing key'
 activate_internal_config_signing_key = u'Activate internal configuration signing key'
+activate_internal_config_signing_key_failed = u'Activate internal configuration signing key failed'
 delete_internal_config_signing_key = u'Delete internal configuration signing key'
 
 recreate_external_configuration_anchor = u'Re-create external configuration anchor'
@@ -35,6 +37,9 @@ upload_backup_audit_log = u'Upload backup file'
 upload_backup_failed_audit_log = u'Upload backup file failed'
 generate_backup_audit_log = u'Back up configuration'
 failed_generate_backup_audit_log = u'Back up configuration failed'
+
+configuration_part_upload_audit_log = u'Upload configuration part'
+failed_configuration_part_upload_audit_log = u'Upload configuration part failed'
 
 # Ui strings
 authentication_failed = u'Authentication failed'
@@ -60,6 +65,13 @@ backup_file_uploaded = u'New backup file uploaded successfully'
 backup_file_upload_invalid_char = u"Failed to upload new backup file: Filename '{}' contains invalid characters. Valid characters include: (A-Z), (a-z), (0-9), (_), (.), (-)."
 backup_file_uploaded_invalid_extension = u"Failed to upload new backup file: Uploaded file name '{}' has an invalid extension, the only valid one is 'tar'"
 backup_file_uploaded_invalid_format = u"Failed to upload new backup file: Content of uploaded file must be in tar format"
+configuration_file_upload = "Configuration file for content identifier '{}' uploaded successfully."
+configuration_file_upload_validation_fail = "Failed to upload configuration part: Validation of configuration file with content identifier '{}' failed."
+
+login_software_token_missing_pin = u"Missing parameter: pin"
+login_software_token_invalid_pin = u'PIN incorrect'
+
+failed_to_activae_signing_key = u'Failed to activate signing key: token or key not available'
 
 lanquage_eng = u'ENGLISH (EN)'
 
@@ -78,6 +90,8 @@ backup_directory = "/var/lib/xroad/backup"
 
 invalid_backup_file_name = "invalid.tar"
 invalid_backup_file = os.path.join(backup_directory, invalid_backup_file_name)
+
+configuration_parts_directory = "/etc/xroad/configuration-parts"
 
 devices_file = "/etc/xroad/devices.ini"
 

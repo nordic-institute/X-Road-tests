@@ -6,6 +6,7 @@ from webframework.extension.util.common_utils import *
 from webframework.extension.util.webtimings import get_measurements
 from webframework.extension.parsers.parameter_parser import get_parameter
 from time import sleep
+from common_lib.common_lib import Common_lib
 
 class Open_application(CommonUtils):
     """
@@ -39,13 +40,14 @@ class Open_application(CommonUtils):
     # Pagemodel type: root
     # Links found: 0
     # Page model constants:
+    common_lib = Common_lib()
 
     def open_application_url(self, parameters=None):
         """
         Open url with parameter 'url'
 
         :param parameters:  Test data section dictionary
-        
+
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.open_url`, *url=parameters['url']*
         """

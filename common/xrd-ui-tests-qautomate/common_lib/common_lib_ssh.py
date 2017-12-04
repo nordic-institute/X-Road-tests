@@ -129,7 +129,22 @@ class Common_lib_ssh(CommonUtils):
 
         self.run_bash_command(command, True)
 
-    def generate_empty_file(self, section, path):
+    def delete_file(self, section="cs_url", path=u'/var/lib/xroad/backup/file.xml'):
+        """
+        :param section:  Test data section name
+        """
+        server = TESTDATA[section][u'server_address']
+        if strings.server_environment_type() == strings.lxd_type_environment:
+            server = server.split(".lxd")[0]
+            command = "lxc exec {} -- sudo rm {}".format(server, path)
+        elif strings.server_environment_type() == strings.ssh_type_environment:
+            command = "ssh {} sudo rm {}".format(server, path)
+        else:
+            raise Exception(errors.enviroment_type_not_valid)
+
+        self.run_bash_command(command, True)
+
+    def generate_empty_file(self, section="cs_url", path=u'/var/lib/xroad/backup'):
         """
         :param section:  Test data section name
         """
@@ -139,6 +154,24 @@ class Common_lib_ssh(CommonUtils):
             command = "lxc exec {} -- sudo touch {}".format(server, path)
         elif strings.server_environment_type() == strings.ssh_type_environment:
             command = "ssh {} sudo touch {}".format(server, path)
+        else:
+            raise Exception(errors.enviroment_type_not_valid)
+
+        self.run_bash_command(command, True)
+
+    def generate_and_write_to_file_as_xroad(self, section="cs_url", path=u'/var/lib/xroad/backup', text=""):
+        """
+        :param section:  Test data section name
+        """
+        server = TESTDATA[section][u'server_address']
+        file_name = os.path.basename(path)
+        directory = os.path.dirname(path)
+        if strings.server_environment_type() == strings.lxd_type_environment:
+            server = server.split(".lxd")[0]
+            command = 'lxc exec {} -- su xroad sh -c "cd {} && echo -e \'{}\' > {}"'.format(server, directory,
+                                                                                            text, file_name)
+        elif strings.server_environment_type() == strings.ssh_type_environment:
+            command = 'ssh {} sudo  echo -e "{}" > {}'.format(server, text, path)
         else:
             raise Exception(errors.enviroment_type_not_valid)
 

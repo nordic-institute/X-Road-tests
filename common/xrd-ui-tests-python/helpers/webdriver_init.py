@@ -66,8 +66,7 @@ def get_firefox(download_dir='', log_dir='', marionette=False):
     profile.set_preference("browser.download.folderList", 2)
 
     profile.set_preference("browser.download.dir", download_dir)
-    profile.set_preference('browser.helperApps.neverAsk.saveToDisk', 'application/octet-stream')
-    profile.set_preference('browser.helperApps.neverAsk.saveToDisk', 'application/xml')
+    profile.set_preference('browser.helperApps.neverAsk.saveToDisk', 'application/octet-stream, application/xml')
 
     # Set the logfile
     profile.set_preference("webdriver.log.file", log_dir)

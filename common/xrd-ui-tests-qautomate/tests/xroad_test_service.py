@@ -88,8 +88,6 @@ class Xroad_test_service(BaseTest):
                 * **Step 2:** :func:`~common_lib.common_lib.Common_lib.get_version_information`
         """
         self.start_log_time = self.common_lib.get_log_utc_time()
-        if "test-" in TESTDATA[u'ss1_static_url']['url']:
-            self.common_lib.get_version_information()
 
     def tearDown(self):
         """

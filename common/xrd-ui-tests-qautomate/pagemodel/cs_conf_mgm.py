@@ -17,7 +17,7 @@ class Cs_conf_mgm(CommonUtils):
         | Docstrings updated
     """
     # Pagemodel timestamp: 20160330092643
-    # Pagemodel url: https://test-cs.i.palveluvayla.com:4000/configuration_management
+    # Pagemodel url: https://xroad-lxd-cs.lxd:4000/configuration_management
     # Pagemodel area: (270, 0, 1647, 885)
     # Pagemodel screen resolution: (1920, 1080)
     # Use project settings: True
@@ -43,9 +43,9 @@ class Cs_conf_mgm(CommonUtils):
     # Links found: 0
     # Page model constants:
     ID_HEADING = (By.ID, u'heading') # x: 290 y: 14 width: 249 height: 22, tag: span, type: , name: None, form_id: , checkbox: , table_id: , href: None
-    INTERNAL_CONFIQURATION = (By.ID, u'ui-id-3') # x: 856 y: 71 width: 171 height: 29, tag: a, type: , name: None, form_id: , checkbox: , table_id: , href: https://test-cs.i.palveluvayla.com:4000/configuration_management#source_tab
-    EXTERNAL_CONFIGURATION = (By.ID, u'ui-id-4') # x: 1028 y: 71 width: 173 height: 29, tag: a, type: , name: None, form_id: , checkbox: , table_id: , href: https://test-cs.i.palveluvayla.com:4000/configuration_management#source_tab
-    TRUSTED_ANCHOR = (By.ID, u'ui-id-5') # x: 1202 y: 71 width: 132 height: 29, tag: a, type: , name: None, form_id: , checkbox: , table_id: , href: https://test-cs.i.palveluvayla.com:4000/configuration_management#trusted_anchors_tab
+    INTERNAL_CONFIQURATION = (By.ID, u'ui-id-3') # x: 856 y: 71 width: 171 height: 29, tag: a, type: , name: None, form_id: , checkbox: , table_id: , href: None
+    EXTERNAL_CONFIGURATION = (By.ID, u'ui-id-4') # x: 1028 y: 71 width: 173 height: 29, tag: a, type: , name: None, form_id: , checkbox: , table_id: , href: None
+    TRUSTED_ANCHOR = (By.ID, u'ui-id-5') # x: 1202 y: 71 width: 132 height: 29, tag: a, type: , name: None, form_id: , checkbox: , table_id: , href: None
     ANCHOR = (By.XPATH, u'//div[1]/div[1]/div[1]/span[1]') # x: 300 y: 126 width: 65 height: 26, tag: span, type: , name: None, form_id: , checkbox: , table_id: conf_parts, href: None
     ID_GENERATE_SOURCE_ANCHOR = (By.ID, u'generate_source_anchor') # x: 1665 y: 126 width: 96 height: 33, tag: button, type: submit, name: None, form_id: , checkbox: , table_id: , href:
     ID_DOWNLOAD_SOURCE_ANCHOR = (By.ID, u'download_source_anchor') # x: 1771 y: 126 width: 109 height: 33, tag: button, type: submit, name: None, form_id: , checkbox: , table_id: , href:
@@ -82,7 +82,6 @@ class Cs_conf_mgm(CommonUtils):
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.INTERNAL_CONFIQURATION*
         """
-        # AutoGen method click_link: https://test-cs.i.palveluvayla.com:4000/configuration_management#source_tab
         self.click_element(self.INTERNAL_CONFIQURATION)
 
     def click_link_external_configuration(self):
@@ -92,7 +91,6 @@ class Cs_conf_mgm(CommonUtils):
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.EXTERNAL_CONFIGURATION*
         """
-        # AutoGen method click_link: https://test-cs.i.palveluvayla.com:4000/configuration_management#source_tab
         self.click_element(self.EXTERNAL_CONFIGURATION)
 
     def click_button_id_generate_source_anchor(self):
@@ -198,7 +196,7 @@ class Cs_conf_mgm(CommonUtils):
         Verify that download url contains given text
 
         :param text:  String value for text
-
+        
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.element_should_contain`, *self.ID_CONF_URL*, *text*
         """
@@ -276,6 +274,12 @@ class Cs_conf_mgm(CommonUtils):
                 assert(all(column.text for column in columns)), "Signing key info is empty"
 
     def click_element_from_table_conf_parts(self, text=u'foo.xml'):
+        """
+        :param text:  String value for text
+        
+        **Test steps:**
+            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *element*
+        """
         # Element search
         locator = self.CONFPARTS1
         value = text
@@ -293,7 +297,17 @@ class Cs_conf_mgm(CommonUtils):
         self.click_element(element)
 
     def click_conf_upload(self):
+        """
+        **Test steps:**
+            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_UPLOAD_CONF_PART*
+        """
         self.click_element(self.ID_UPLOAD_CONF_PART)
 
     def click_download(self, parameters=None):
+        """
+        :param parameters:  Test data section dictionary
+        
+        **Test steps:**
+            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_DOWNLOAD_CONF_PART*
+        """
         self.click_element(self.ID_DOWNLOAD_CONF_PART)

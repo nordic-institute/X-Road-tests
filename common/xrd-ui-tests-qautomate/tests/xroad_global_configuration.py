@@ -118,9 +118,11 @@ class Xroad_global_configuration(SetupTest):
         Method that runs before every test case
 
         **Test steps:**
-                * **Step 1:** :func:`~pagemodel.start_log_time = self.Start_log_time = self.common_lib`
-                * **Step 2:** :func:`~common_lib.common_lib_ssh.Common_lib_ssh.empty_all_logs_from_server`, *"ss1_url"*
-                * **Step 3:** :func:`~common_lib.common_lib_ssh.Common_lib_ssh.empty_all_logs_from_server`, *"cs_url"*
+            * **Step 1: set to default before test case**
+                * :func:`~common_lib.common_lib.Common_lib.delete_files_with_extension`, *TESTDATA[u'paths'][u'downloads_folder']*, *u'.xml'*
+                * :func:`~pagemodel.start_log_time = self.Start_log_time = self.common_lib`
+                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.empty_all_logs_from_server`, *"ss1_url"*
+                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.empty_all_logs_from_server`, *"cs_url"*
         """
         # Step Set to default before test case
         self.common_lib.delete_files_with_extension(TESTDATA[u'paths'][u'downloads_folder'], u'.xml')
@@ -136,6 +138,9 @@ class Xroad_global_configuration(SetupTest):
             * **Step 1: log out if logged in**
                 * :func:`~pagemodel.open_application.Open_application.open_application_url`, *TESTDATA[u'cs_url']*
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
+            * **Step 2: revert to defaults**
+                * :func:`~common_lib.common_lib.Common_lib.delete_files_with_extension`, *TESTDATA[u'paths'][u'downloads_folder']*, *u'.xml'*
+                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.delete_conf_part_file`, *self.INI_FILE*
         """
         stop_log_time = self.common_lib.get_log_utc_time()
         if not self.is_last_test_passed():
@@ -212,7 +217,7 @@ class Xroad_global_configuration(SetupTest):
                 * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.download_source_anchor_from_cs`
             * **Step 3: recreate configuration source anchor**
                 * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.recreate_source_anchor_from_cs`
-            * **Step 6: log out**
+            * **Step 4: log out**
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
         """
         # Step Login to central server and open configuration view
@@ -242,14 +247,14 @@ class Xroad_global_configuration(SetupTest):
             * **Step 1: login to central server and open configuration view**
                 * :func:`~common_lib.component_cs.Component_cs.login`, *section=u'cs_url'*
                 * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_global_configuration_view`
-            * **Step 2: log out token**
-                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.logout_signing_key`
-            * **Step 3: verify log out token audit log**
-                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *section=u'cs_url'*, *event=strings.logout_token*
-            * **Step 4: log in token**
-                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.insert_pin_from_login_button`, *section=u'cs_url'*
-            * **Step 5: verify log in audit log audit log**
-                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *section=u'cs_url'*, *event=strings.login_token*
+            * **Step 2: log out software token**
+                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.logout_software_token`
+            * **Step 3: log in software token empty pin**
+                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.log_in_to_software_token_empty_pin`, *section=u'empty_pin'*
+            * **Step 4: log in software token invalid pin**
+                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.log_in_to_software_token_invalid_pin`, *section=u'invalid_cs_url'*
+            * **Step 5: log in software token**
+                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.log_in_to_software_token`, *section=u'cs_url'*
             * **Step 6: log out**
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
         """
@@ -296,22 +301,20 @@ class Xroad_global_configuration(SetupTest):
                 * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_global_configuration_view`
             * **Step 2: generate signing key**
                 * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.generate_new_internal_config_key_in_cs`
-            * **Step 3: verify config generation audit log**
-                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *section=u'cs_url'*, *event=strings.generate_internal_config_signing_key*
-            * **Step 4: activate signing_key**
+            * **Step 3: activate signing_key**
                 * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.activate_newest_signing_key`
-            * **Step 5: verify active signing key audit log**
+            * **Step 4: verify active signing key audit log**
                 * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *section=u'cs_url'*, *event=strings.activate_internal_config_signing_key*
-            * **Step 6: activate old signing key**
+            * **Step 5: activate old signing key**
                 * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.activate_oldest_signing_key`
-            * **Step 7: delete signing key**
+            * **Step 6: delete signing key**
                 * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.delete_newest_signing_key`
-            * **Step 8: verify delete signing key audit log**
+            * **Step 7: verify delete signing key audit log**
                 * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *section=u'cs_url'*, *event=strings.delete_internal_config_signing_key*
-            * **Step 9: verify delete messages**
+            * **Step 8: verify delete messages**
                 * :func:`~common_lib.component_common.Component_common.verify_notice_message`, *message=strings.internal_conf_anchor_generated_success*
                 * :func:`~common_lib.component_common.Component_common.verify_notice_message`, *message=strings.token_key_removed*
-            * **Step 10: log out**
+            * **Step 9: log out**
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
         """
         # Step Login to central server and open configuration view
@@ -353,9 +356,7 @@ class Xroad_global_configuration(SetupTest):
                 * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_global_configuration_view`
             * **Step 2: generate signing key**
                 * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.generate_new_internal_config_key_in_cs`
-            * **Step 3: verify config generation audit log**
-                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *section=u'cs_url'*, *event=strings.generate_internal_config_signing_key*
-            * **Step 4: log out**
+            * **Step 3: log out**
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
         """
         # Step Login to central server and open configuration view
@@ -454,13 +455,23 @@ class Xroad_global_configuration(SetupTest):
                 * 4b. The validation succeeded with validation warnings. (not found)
                 * 6a. No previous file for this optional part exists in the system's database. (not found)
             * '2.2.6'_: Download a Configuration Part File
+        **Test steps:**
+            * **Step 1: login to central server and open configuration view**
+                * :func:`~common_lib.component_cs.Component_cs.login`, *section=u'cs_url'*
+                * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_global_configuration_view`
+                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.generate_conf_part_file`, *self.INI_FILE*, *new_identifier*, *new_file_name*, *new_val_script*
+                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.upload_configuration_part_file`, *new_identifier*, *downloaded_part_file*
+                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.upload_conf_part_validation_fail`, *monitoring_identifier*, *downloaded_part_file*
+                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.delete_conf_part_file`, *self.INI_FILE*
+            * **Step 2: log out**
+                * :func:`~common_lib.common_lib.Common_lib.log_out`
         """
         # Configuration parts informations
         private_params_identifier = u'PRIVATE-PARAMETERS'
         monitoring_identifier = u'MONITORING'
         new_identifier = u'FOO'
         new_file_name = u'foo.xml'
-        new_val_script = u'/usr/share/xroad/scripts/validate-foo.sh'
+        new_val_script = u'/usr/share/xroad/scripts/validate-foo.sh/usr/share/xroad/scripts/validate-monitoring-params.sh'
 
         # Step Login to central server and open configuration view
         self.component_cs.login(section=u'cs_url')

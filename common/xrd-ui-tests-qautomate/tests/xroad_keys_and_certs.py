@@ -113,8 +113,6 @@ class Xroad_keys_and_certs(SetupTest):
         self.start_log_time = self.common_lib.get_log_utc_time()
         self.common_lib_ssh.empty_all_logs_from_server("ss1_url")
         self.common_lib_ssh.empty_all_logs_from_server("cs_url")
-        if "test-" in TESTDATA[u'ss1_url']['url']:
-            self.common_lib.get_version_information()
 
     def tearDown(self):
         """

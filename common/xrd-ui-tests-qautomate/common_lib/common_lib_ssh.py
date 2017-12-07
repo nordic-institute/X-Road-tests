@@ -19,7 +19,6 @@ class Common_lib_ssh(CommonUtils):
     * 11.07.2017
         | Documentation updated
     """
-
     def __init__(self):
         """
         Initilization method for moving test data to class
@@ -79,7 +78,6 @@ class Common_lib_ssh(CommonUtils):
 
         return has_error
 
-    # server="jenkins@test-cs2.i.palveluvayla.com" or xroad-lxd-cs
     def empty_server_log_files(self, server):
         """
         **Test steps:**
@@ -162,6 +160,7 @@ class Common_lib_ssh(CommonUtils):
     def generate_and_write_to_file_as_xroad(self, section="cs_url", path=u'/var/lib/xroad/backup', text=""):
         """
         :param section:  Test data section name
+        :param text:  String value for text
         """
         server = TESTDATA[section][u'server_address']
         file_name = os.path.basename(path)

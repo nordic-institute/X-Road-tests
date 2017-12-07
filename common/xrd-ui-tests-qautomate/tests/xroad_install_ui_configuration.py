@@ -340,7 +340,7 @@ class Xroad_install_ui_configuration(SetupTest):
                 * :func:`~common_lib.component_cs_system_settings.Component_cs_system_settings.add_init_member_class`, *u'member_mgm_configuration'*
             * **Step 3: add ca certification services in central server**
                 * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_certification_services_view`
-                * :func:`~common_lib.component_cs_cert_services.Component_cs_cert_services.add_certification_service_and_upload_ca_root_to_cs`, *u'paths'*, *u'cs_url'*, *u'server_environment'*
+                * :func:`~common_lib.component_cs_cert_services.Component_cs_cert_services.add_certification_service_and_upload_ca_root_to_cs`
             * **Step 4: add timestamping to central server**
                 * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_timestamping_services_view`
                 * :func:`~common_lib.component_cs_tsp_services.Component_cs_tsp_services.add_timestamping_service_to_cs`, *u'paths'*, *u'cs_url'*

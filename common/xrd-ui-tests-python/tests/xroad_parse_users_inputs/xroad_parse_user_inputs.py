@@ -1224,7 +1224,7 @@ def test_edit_time_out_value_service():
                     assert service_timeout in get_service_timeout
                     self.log('Found service with timeout- ' + get_service_timeout)
 
-        ''' SERVICE_21 6. System logs the event ā€Edit service parametersā€¯ to the audit log. '''
+        ''' SERVICE_21 6. System logs the event Edit service parameters to the audit log. '''
         logs_found = log_checker.check_log(log_constants.EDIT_SERVICE_PARAMS,
                                            from_line=current_log_lines + 1)
 

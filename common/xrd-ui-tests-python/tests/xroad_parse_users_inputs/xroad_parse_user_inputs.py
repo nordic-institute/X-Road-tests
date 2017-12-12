@@ -8,7 +8,8 @@ from helpers import auditchecker
 from view_models import sidebar as sidebar_constants, clients_table_vm, members_table, \
     keys_and_certificates_table as keyscertificates_constants, popups as popups, messages, \
     groups_table, central_services, log_constants
-from view_models.log_constants import ADD_MEMBER_FAILED, EDIT_MEMBER_NAME_FAILED, GENERATE_KEY_FAILED, ADD_WSDL_FAILED
+from view_models.log_constants import ADD_MEMBER_FAILED, EDIT_MEMBER_NAME_FAILED, GENERATE_KEY_FAILED, ADD_WSDL_FAILED, \
+    EDIT_MEMBER_NAME
 
 
 def test_key_label_inputs():
@@ -324,6 +325,65 @@ def test_disable_wsdl_inputs():
 
     return test_case
 
+def edit_service(self, service_url, service_timeout=None, verify_tls=None):
+    '''
+    Tries to enter WSDL url to "Edit WSDL Parameters" dialog URL input field and press "OK"
+    :param self:
+    :param url: str - URL that contains the WSDL
+    :param clear_field: Boolean - clear the field before entering anything
+    :return:
+    '''
+
+    self.log('Setting new service URL with timeout {1}: {0}'.format(service_timeout, service_url))
+
+    # Find the "Edit Service Parameters" dialog. Because this function can be called from a state where the dialog is open and
+    # a state where it is not, we'll first check if the dialog is open. If it is not, we'll click the "Edit"
+    # button to open it.
+    wsdl_dialog = self.by_xpath(popups.EDIT_SERVICE_POPUP_XPATH)
+
+    # Open the dialog if it is not already open
+    if not wsdl_dialog.is_displayed():
+        # Find "Edit" button and click it.
+        edit_wsdl_button = self.by_id(popups.CLIENT_DETAILS_POPUP_EDIT_WSDL_BTN_ID)
+        edit_wsdl_button.click()
+
+        # Find the dialog and wait until it is visible.
+        self.wait_until_visible(wsdl_dialog)
+
+    # Now an "Edit Service Parameters" dialog with a URL prompt should be open. Let's try to set the service URL.
+
+    # Find the URL input element
+    service_url_input = self.by_id(popups.EDIT_SERVICE_POPUP_URL_ID)
+    service_timeout_input = self.by_id(popups.EDIT_SERVICE_POPUP_TIMEOUT_ID)
+
+    # Enter the service URL.
+    self.input(service_url_input, service_url)
+
+    # Set service timeout if specified
+    if service_timeout is not None:
+        # UC SERVICE_timeout_input.clear()
+        # UC SERVICE_timeout_input.send_keys(service_timeout)
+        self.input(service_timeout_input, service_timeout)
+
+    # Set "Verify TLS" if specified
+    if verify_tls is not None:
+        service_tls_checkbox = self.wait_until_visible(popups.EDIT_SERVICE_POPUP_TLS_ENABLED_XPATH, By.XPATH)
+        checked = service_tls_checkbox.get_attribute('checked')
+
+        if ((checked != '' and checked is not None) and not verify_tls) or (checked is None and verify_tls):
+            service_tls_checkbox.click()
+
+    # Find the "OK" button in "Edit WSDL Parameters" dialog
+    wsdl_dialog_ok_button = self.by_xpath(popups.EDIT_SERVICE_POPUP_OK_BTN_XPATH)
+    wsdl_dialog_ok_button.click()
+
+    # Clicking the button starts an ajax query. Wait until request is complete.
+    self.wait_jquery()
+
+    warning_message = messages.get_warning_message(self)  # Warning message
+    error_message = messages.get_error_message(self)  # Error message (anywhere)
+
+    return warning_message, error_message
 
 def test_edit_address_service():
     def test_case(self):
@@ -453,7 +513,39 @@ def test_edit_address_service():
         '''Delete added client'''
         delete_added_client(self, client_id)
 
+
+        '''SERVICE_19/1 SS administrator selects to edit the address of a service.'''
+        self.log('Click on "EDIT" button')
+        self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_EDIT_WSDL_BTN_ID).click()
+
+        '''SERVICE_19/2 SS administrator inserts the address.'''
+        self.log('Enter service URL (string length = {0}) - {1}'.format(len(service_url), service_url))
+
+        wsdl_correct_url = self.config.get('wsdl.remote_path').format(
+            self.config.get('wsdl.service_wsdl'))  # Correct URL that returns a WSDL file
+        self.log('Replace url with https version')
+        service_url_input = self.by_id(popups.EDIT_SERVICE_POPUP_URL_ID)
+
+        self.log('Replace url with https version')
+        wsdl_correct_url_https = wsdl_correct_url.replace('http:', 'https:')
+        self.input(service_url_input, wsdl_correct_url_https)
+        self.log('SERVICE_19 5. System sets the TLS certification verification to "true" when url starts with https')
+        service_tls_checkbox = self.by_xpath(popups.EDIT_SERVICE_POPUP_TLS_ENABLED_XPATH)
+        self.is_equal('true', service_tls_checkbox.get_attribute('checked'))
+        self.log('Click OK')
+        self.by_xpath(popups.EDIT_SERVICE_POPUP_OK_BTN_XPATH).click()
+        self.wait_jquery()
+        self.log('Click on edit button again')
+        self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_EDIT_WSDL_BTN_ID).click()
+        self.wait_until_visible(type=By.XPATH, element=popups.EDIT_SERVICE_POPUP_XPATH)
+        self.log('Replace url with http version')
+        self.input(service_url_input, wsdl_correct_url)
+        self.log('SERVICE_19 5a. System sets the TLS certification verification to "false" when url starts with http')
+        self.is_false(self.by_id(popups.EDIT_SERVICE_POPUP_TLS_ID).is_enabled())
+        self.by_xpath(popups.EDIT_SERVICE_POPUP_OK_BTN_XPATH).click()
+
         counter += 1
+
 
     return test_case
 
@@ -636,6 +728,12 @@ def test_edit_cs_member_inputs():
                 self.wait_until_visible(type=By.XPATH,
                                         element=members_table.MEMBER_DETAILS_NAME_POPUP_CLOSE_BTN_XPATH).click()
                 self.wait_jquery()
+
+                expected_log_msg = EDIT_MEMBER_NAME
+                self.log('MEMBER_11 5. System logs the event {0}'.format(expected_log_msg))
+                logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
+                self.is_true(logs_found)
+
                 '''MEMBER 54 2. System verifies that mandatory fields are filled.'''
                 self.log('''MEMBER 54 2. System verifies that mandatory fields are filled.''')
                 '''MEMBER 54 2. System verifies that the user input does not exceed 255 characters.'''
@@ -1092,6 +1190,7 @@ def test_edit_time_out_value_service():
             '''SERVICE 21 / 3 System parses the user input'''
             '''Check for the error messages'''
             error_messages(self, error, error_message, error_message_label)
+            self.log('SERVICE_21 5. System saves the inserted service timeout value to the system configuration.')
 
             if error:
                 '''SERVICE 21/3a.2 System logs the event "Edit service parameters failed" to the audit log.'''
@@ -1102,6 +1201,7 @@ def test_edit_time_out_value_service():
                 self.log('Click on "CANCEL" button')
                 self.wait_until_visible(type=By.XPATH, element=popups.EDIT_SERVICE_POPUP_CANCEL_BTN_XPATH).click()
             else:
+
                 '''SERVICE 11 2. System verifies that mandatory fields are filled.'''
                 self.log('''SERVICE 11 2. System verifies that mandatory fields are filled.''')
                 '''SERVICE 11 3. System verifies that the user input does not exceed 255 characters.'''
@@ -1112,6 +1212,9 @@ def test_edit_time_out_value_service():
                                                                                     service_timeout.strip())
                 get_service_timeout = get_service_timeout.text
                 self.log('Found service timeout - {0}'.format(get_service_timeout))
+
+                self.log('SERVICE_21 5. System saves the inserted service timeout value to the system configuration.')
+
                 '''Verify that there is not inputs with whitespaces'''
                 if whitespaces:
                     '''SERVICE 11 1. System removes leading and trailing whitespaces.'''
@@ -1120,6 +1223,45 @@ def test_edit_time_out_value_service():
                 else:
                     assert service_timeout in get_service_timeout
                     self.log('Found service with timeout- ' + get_service_timeout)
+
+        ''' SERVICE_21 6. System logs the event ā€Edit service parametersā€¯ to the audit log. '''
+        logs_found = log_checker.check_log(log_constants.EDIT_SERVICE_PARAMS,
+                                           from_line=current_log_lines + 1)
+
+        self.is_true(logs_found, msg="Edit service paramters not found in audit log")
+
+        '''Activate a authCertDeletion service row'''
+        self.log('Click on authCertDeletion service row')
+        self.wait_until_visible(type=By.XPATH, element=popups.
+                                CLIENT_DETAILS_POPUP_WSDL_SERVICES_AUTHCERTDELETION_XPATH).click()
+        '''SERVICE 21 / 1 SS administrator selects to edit the timeout value of a service.'''
+        self.log('Click on "EDIT" button')
+        self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_EDIT_WSDL_BTN_ID).click()
+        entered_service_timeout = self.wait_until_visible(type=By.ID, element=popups.EDIT_SERVICE_POPUP_TIMEOUT_ID)
+        self.log('SERVICE_21 4a. The inserted timeout value is 0')
+        self.input(entered_service_timeout, '0')
+
+        self.log('Click on "OK" button')
+        self.wait_until_visible(type=By.XPATH, element=popups.EDIT_SERVICE_POPUP_OK_BTN_XPATH).click()
+        warning = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.WARNING_MESSAGE_CSS).text
+        expected_warning_message = messages.SERVICE_EDIT_INFINITE_TIMEOUT_WARNING
+        self.log('SERVICE_21 4a.1 System displays a warning message "{0}"'.format(
+            messages.SERVICE_EDIT_INFINITE_TIMEOUT_WARNING))
+        self.is_equal(expected_warning_message, warning)
+
+        '''Click "Cancel" button'''
+        self.wait_until_visible(type=By.XPATH, element=popups.WARNING_POPUP_CANCEL_XPATH).click()
+        self.log('Click on "OK" button')
+        self.wait_until_visible(type=By.XPATH, element=popups.EDIT_SERVICE_POPUP_OK_BTN_XPATH).click()
+        '''Click continue button'''
+        self.wait_until_visible(type=By.XPATH, element=popups.WARNING_POPUP_CONTINUE_XPATH).click()
+        self.wait_jquery()
+        '''Get timeout value'''
+        timeout_value = self.wait_until_visible(type=By.XPATH,
+                                                element=popups.CLIENT_DETAILS_POPUP_WSDL_SERVICES_AUTHCERTDELETION_XPATH2).text
+        '''Verify timeout value'''
+        self.is_equal(timeout_value, '0',
+                      msg='Timeout value is wrong')
 
         '''Close a pop-up window of the client details'''
         self.wait_jquery()

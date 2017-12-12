@@ -12,6 +12,177 @@ from view_models.messages import WSDL_ERROR_VALIDATOR_COMMAND_NOT_EXECUTABLE, \
     WSDL_ADD_ERROR_VALIDATOR_COMMAND_NOT_FOUND, WSDL_REFRESH_ERROR_VALIDATOR_COMMAND_NOT_FOUND, \
     WSDL_REFRESH_ERROR_VALIDATOR_COMMAND_NOT_EXECUTABLE, WSDL_ERROR_VALIDATION_FAILED
 
+from selenium.webdriver.common.by import By
+
+from helpers import xroad, auditchecker
+from view_models import clients_table_vm, popups, messages
+
+from view_models.messages import WSDL_ERROR_VALIDATION_FAILED
+
+
+def add_wsdl(self,
+             wsdl_url, clear_field=True):
+    '''
+    Tries to enter WSDL url to "Add WSDL" URL input field and click "OK"
+    :param self:
+    :param wsdl_url: str - URL that contains the WSDL
+    :param clear_field: Boolean - clear the field before entering anything
+    :return:
+    '''
+
+    self.log('Adding WSDL: {0}'.format(wsdl_url))
+
+    # Find the "Add WSDL" dialog. Because this function can be called from a state where the dialog is open and
+    # a state where it is not, we'll first check if the dialog is open. If it is not, we'll click the "Add WSDL"
+    # button to open it.
+    wsdl_dialog = self.by_xpath(popups.ADD_WSDL_POPUP_XPATH)
+
+    # Open the dialog if it is not already open
+    if not wsdl_dialog.is_displayed():
+        # Find "Add WSDL" button and click it.
+        add_wsdl_button = self.by_id(popups.CLIENT_DETAILS_POPUP_ADD_WSDL_BTN_ID)
+        add_wsdl_button.click()
+
+        # Find the dialog and wait until it is visible.
+        self.wait_until_visible(wsdl_dialog)
+
+    # Now an "Add WSDL" dialog with a URL prompt should be open. Let's try to add the WSDL.
+
+    # Find the URL input element
+    wsdl_url_input = self.by_id(popups.ADD_WSDL_POPUP_URL_ID)
+
+    # Clear the field if told so
+    if clear_field:
+        wsdl_url_input.clear()
+
+    # Enter the WSDL URL into the input.
+    # wsdl_url_input.send_keys(wsdl_url)
+    self.input(wsdl_url_input, wsdl_url)
+
+    # Find the "OK" button in "Add WSDL" dialog
+    wsdl_dialog_ok_button = self.by_xpath(popups.ADD_WSDL_POPUP_OK_BTN_XPATH)
+    wsdl_dialog_ok_button.click()
+
+    # Clicking the button starts an ajax query. Wait until request is complete.
+    self.wait_jquery()
+
+    console_output = messages.get_console_output(self)  # Console message (displayed if WSDL validator gives a warning)
+    warning_message = messages.get_warning_message(self)  # Warning message
+    error_message = messages.get_error_message(self)  # Error message (anywhere)
+
+    if console_output is not None:
+        popups.close_console_output_dialog(self)
+
+    return warning_message, error_message, console_output
+
+
+
+def test_configure_service(case, client=None, client_name=None, client_id=None, service_name=None, service_url=None,
+                           service_2_name=None, service_2_url=None, check_add_errors=True, check_edit_errors=True,
+                           check_parameter_errors=True):
+    '''
+    MainController test function. Configures a new service.
+    '''
+
+    self = case
+
+    ss2_host = self.config.get('ss2.host')
+    ss2_user = self.config.get('ss2.user')
+    ss2_pass = self.config.get('ss2.pass')
+    ss2_ssh_host = self.config.get('ss2.ssh_host')
+    ss2_ssh_user = self.config.get('ss2.ssh_user')
+    ss2_ssh_pass = self.config.get('ss2.ssh_pass')
+
+
+    wsdl_correct_url = self.config.get('wsdl.remote_path').format(
+        self.config.get('wsdl.service_wsdl'))  # Correct URL that returns a WSDL file
+
+
+    wsdl_error_url = self.config.get('wsdl.remote_path').format(
+        self.config.get('wsdl.service_wsdl_error_filename'))  # WSDL that cannot be validated
+
+    wsdl_warning_url = self.config.get('wsdl.remote_path').format(
+        self.config.get('wsdl.service_wsdl_warning_filename'))  # WSDL that gives a validator warning
+
+
+    client_id = xroad.get_xroad_subsystem(client)
+
+    def configure_service():
+        """
+        :param self: MainController class object
+        :return: None
+        ''"""
+
+        # UC SERVICE_08 Add a WSDL to a Security Server Client
+        self.log('*** SERVICE_08 Add a WSDL to a Security Server Client')
+
+        self.reload_webdriver(url=ss2_host, username=ss2_user, password=ss2_pass)
+
+        log_checker = auditchecker.AuditChecker(host=ss2_ssh_host, username=ss2_ssh_user, password=ss2_ssh_pass)
+        # UC SERVICE_08 1. Select to add test service WSDL
+        self.log('SERVICE_08 1. Select to add test service WSDL')
+
+        # Open client popup using shortcut button to open it directly at Services tab.
+        clients_table_vm.open_client_popup_services(self, client_name=client_name, client_id=client_id)
+
+        # Find the table that lists all WSDL files and services
+        services_table = self.by_id(popups.CLIENT_DETAILS_POPUP_SERVICES_TABLE_ID)
+        # Wait until that table is visible (opened in a popup)
+        self.wait_jquery()
+        self.wait_until_visible(services_table)
+
+        # Test precondition: the WSDL has not been added already. Check if finding service with wsdl_correct_url
+        # returns None (= not found).
+        self.is_none(clients_table_vm.find_wsdl_by_name(self, wsdl_correct_url),
+                     msg='SERVICE_08 1. WSDL {0} has already been added. Remove the service and try again.'
+                     .format(wsdl_correct_url))
+
+
+
+        if check_add_errors:
+
+
+            self.log('SERVICE_08 6b. The process of downloading and parsing the '
+                     'WSDL file terminated with an error message')
+            warning, error, console = add_wsdl(self, wsdl_error_url)
+            expected_error_msg = WSDL_ERROR_VALIDATION_FAILED.format(wsdl_error_url)
+            self.log(
+                'SERVICE_08 6b.1/SERVICE_44 1a. System displays the error message "{0}"'.format(expected_error_msg))
+            self.is_not_none(error, msg='Add invalid WSDL: no error shown for WSDL {0}'.format(wsdl_error_url))
+            self.is_equal(expected_error_msg, error,
+                          msg='Add invalid WSDL: wrong error shown for WSDL {0} : {1}'.format(wsdl_error_url, error))
+            self.is_none(warning, msg='Add invalid WSDL: got warning for WSDL {0} : {1}'
+                         .format(wsdl_error_url, warning))
+            self.is_not_none(console, msg='Add invalid WSDL: no console output shown for WSDL {0} : {1}'
+                             .format(wsdl_error_url, console))
+            self.log('Error message: {0}'.format(error))
+            self.log('Console output: {0}'.format(console))
+
+
+            # UC SERVICE_08 6c. Add WSDL that gives a validator warning
+            self.log(
+                'SERVICE_08 6c./SERVICE_44 1b. Add WSDL that gives a validator warning: {0}'.format(wsdl_warning_url))
+            warning, error, console = add_wsdl(self, wsdl_warning_url)
+            self.is_none(error,
+                         msg='SERVICE_08 6c.1. Add WSDL with validator warnings: got error for WSDL {0}'.format(
+                             wsdl_warning_url))
+            self.is_not_none(warning,
+                             msg='SERVICE_08 6c.1. Add WSDL with validator warnings: no warning shown for WSDL {0} : {1}'
+                             .format(wsdl_warning_url, warning))
+            self.is_none(console,
+                         msg='SERVICE_08 6c.1. Add WSDL with validator warnings: got console output for WSDL {0} : {1}'
+                         .format(wsdl_warning_url, console))
+            self.log('SERVICE_08 6c.1. Warning message: {0}'.format(warning))
+
+            # We're not adding the WSDL that gives us warnings, so find the "Cancel" button and click it.
+            self.wait_until_visible(type=By.XPATH, element=popups.WARNING_POPUP_CANCEL_XPATH).click()
+            self.wait_jquery()
+
+            # Now we need to cancel the "Add WSDL" popup. Find the "Cancel" button and click it.
+            self.wait_until_visible(type=By.XPATH, element=popups.ADD_WSDL_POPUP_CANCEL_BTN_XPATH).click()
+
+    return configure_service
+
 
 def test_wsdl_validator_crash(self, wsdl_url, ssh_host, ssh_username, ssh_password, ss_host, ss_user, ss_pass,
                               client_name, client_id, wsdl_validator_wrapper_path):

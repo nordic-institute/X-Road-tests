@@ -1652,7 +1652,7 @@ def generate_csr(self, client_code, client_class, server_name, client_ss_name=No
         self.is_equal(number_of_cert_requests_after_confirming, keys_after_another_csr_generation)
 
 
-def delete_added_key(self, client_code, client_class, cancel_deletion=False, log_checker=None):
+def delete_added_key(self, client, cancel_deletion=False, log_checker=None):
     '''
     Delete the CSR from the list.
     :param self: MainController object
@@ -1688,8 +1688,8 @@ def delete_added_key(self, client_code, client_class, cancel_deletion=False, log
     self.log('Delete added CSR')
     self.wait_jquery()
     self.wait_until_visible(type=By.XPATH,
-                            element=keyscertificates_constants.get_generated_key_row_xpath(client_code,
-                                                                                           client_class)).click()
+                            element=keyscertificates_constants.get_generated_key_row_xpath(client['code'],
+                                                                                           client['class'])).click()
     '''Deleting generated key'''
     self.wait_until_visible(type=By.ID, element=keyscertificates_constants.DELETE_BTN_ID).click()
 

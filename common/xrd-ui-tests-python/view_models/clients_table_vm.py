@@ -43,8 +43,10 @@ WSDL_DISABLE_NOTICES = [[256 * 'A', True, "Parameter '{0}' input exceeds 255 cha
                         ['   Out of order   ', False, None, None]
                         ]
 
+
 SERVICE_URLS_DATA = [['', True, 'Missing parameter: {0}', 'params_url', False],
                      ['{0}#256#/managementservice/', True, "Parameter '{0}' input exceeds 255 characters", 'params_url', False],
+                     ['invalid_url', True, "'invalid_url' is an invalid URL, examples of valid URL-s: 'http://www.example.com', 'https://www.example.com'", 'params_url', False],
                      ['{0}#255#/managementservice/', False, None, None, False],
                      ['{0}managementservice/', False, None, None, False],
                      ['    {0}managementservice/    ', False, None, None, True]
@@ -52,6 +54,9 @@ SERVICE_URLS_DATA = [['', True, 'Missing parameter: {0}', 'params_url', False],
 
 SERVICE_TIMEOUTS_DATA = [[0, '', True, 'Missing parameter: {0}', 'params_timeout', False],
                          [256, '12', True, "Parameter '{0}' input exceeds 255 characters", 'params_timeout', False],
+                         [0, '-1', True,"Parameter {0}".format(messages.SERVICE_EDIT_INVALID_TIMEOUT), 'params_timeout', False],
+                         [0, 'hello', True,"Parameter {0}".format(messages.SERVICE_EDIT_INVALID_TIMEOUT), 'params_timeout', False],
+                         [0, '10error', True,"Parameter {0}".format(messages.SERVICE_EDIT_INVALID_TIMEOUT), 'params_timeout', False],
                          [0, '    12   ', False, None, None, True],
                          ]
 

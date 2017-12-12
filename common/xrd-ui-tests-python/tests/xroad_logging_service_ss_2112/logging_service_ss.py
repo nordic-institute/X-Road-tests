@@ -713,7 +713,7 @@ def remove_member(self, cent_host, cent_username, cent_password, member):
     row = members_table.get_row_by_columns(table, [member['name'], member['class'], member['code']])
     if row is None:
         self.log('Did not find member row')
-        raise
+        raise AssertionError
 
     # MEMBER_26 1. Select to delete a member
     self.log('MEMBER_26 1. Select to delete a member')

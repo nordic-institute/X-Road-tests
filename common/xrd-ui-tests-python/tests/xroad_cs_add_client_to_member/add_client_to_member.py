@@ -1,111 +1,162 @@
-# coding=utf-8
+import time
 
-from view_models import messages, sidebar, log_constants, cs_security_servers
 from selenium.webdriver.common.by import By
+
 from helpers import xroad, auditchecker
+from view_models import cs_security_servers, sidebar, members_table, keys_and_certificates_table, messages, \
+    log_constants
+from view_models.log_constants import REGISTER_MEMBER_AS_SEC_SERVER_CLIENT
+
+test_name = 'ADD SUBSYSTEM TO SERVER CLIENT'
 
 
-def open_servers_clients(self, code):
-    '''
-    Open security servers and their clients in UI.
+def add_subsystem_to_server_client(self, server_code, client, wait_input=3, log_checker=None):
+    """
+    Adds a subsystem to server client.
     :param self: MainController object
-    :param code: str - server name
-    :return: None
-    '''
-    self.log('Open Security servers')
-    self.reset_page()
-    self.wait_jquery()
-    self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.SECURITY_SERVERS_CSS).click()
-    self.wait_jquery()
-
-    # Get the table
-    table = self.wait_until_visible(type=By.ID, element=cs_security_servers.SECURITY_SERVER_TABLE_ID)
-    self.wait_jquery()
-
-    # Find the client and click on it
-    self.log('Click on client row')
-    rows = table.find_elements_by_tag_name('tr')
-    for row in rows:
-        if row.text is not u'':
-            if row.find_element_by_tag_name('td').text == code:
-                row.click()
-
-    # Open details
-    self.log('Click on Details button')
-    self.wait_until_visible(type=By.ID, element=cs_security_servers.SECURITY_SERVER_CLIENT_DETAILS_BTN_ID).click()
-    self.wait_jquery()
-
-    # Open clients tab
-    self.log('Click on clients tab')
-    self.wait_until_visible(type=By.XPATH, element=cs_security_servers.SERVER_CLIENT_TAB).click()
-    self.wait_jquery()
-
-
-def search_and_select_client(self, client):
-    '''
-    Opens the client search dialog and selects a specified client from the displayed list.
-    :param self: MainController object
+    :param server_code: str - server code
     :param client: dict - client data
+    :param wait_input: int - seconds to wait before entering text to inputs
     :return: None
-    '''
-    # Search for the client
-    self.log('Click on search client')
+    """
+
+    current_log_lines = None
+    if log_checker:
+        current_log_lines = log_checker.get_line_count()
+    # Open clients list for server
+    open_servers_clients(self, server_code)
+
+    # UC MEMBER_15 1. Select to add a subsystem to an X-Road member
+    self.log('MEMBER_15 1. Select to add a subsystem to an X-Road member')
+    self.wait_until_visible(type=By.ID, element=cs_security_servers.ADD_CLIENT_TO_SECURITYSERVER_BTN_ID).click()
+    self.wait_jquery()
+
+    # Search for the member
+    self.log('Search for the member')
     self.wait_until_visible(type=By.ID, element=cs_security_servers.SEARCH_BTN_ID).click()
     self.wait_jquery()
+    time.sleep(wait_input)
 
     # Get the table and look for the client
     table = self.wait_until_visible(type=By.XPATH, element=cs_security_servers.MEMBERS_SEARCH_TABLE_XPATH)
     rows = table.find_elements_by_tag_name('tr')
-    self.log('Finding client from table')
+    self.log('Finding member from table: {0} : {1} : {2}'.format(client['class'], client['code'], client['name']))
     for row in rows:
         tds = row.find_elements_by_tag_name('td')
         if tds[0].text is not u'':
             if (tds[0].text == client['name']) & (tds[1].text == client['code']) & (tds[2].text == client['class']) & (
-                        tds[3].text == u''):
+                    tds[3].text == u''):
                 row.click()
                 break
 
     self.wait_until_visible(type=By.XPATH, element=cs_security_servers.SELECT_MEMBER_BTN_XPATH).click()
     self.wait_jquery()
+    time.sleep(wait_input)
 
+    # UC MEMBER_15 2. Enter subsystem code
+    self.log('MEMBER_15 2. Enter subsystem code: {0}'.format(client['subsystem_code']))
+    subsystem_input = self.wait_until_visible(type=By.ID, element=cs_security_servers.SUBSYSTEM_CODE_AREA_ID)
 
-def fill_server_data(self, server_code, server_owner=None):
-    '''
-    Checks if server data was prefilled in the request dialog and fills in the data that was not.
-    :param self: MainController object
-    :param server_code: str - server code
-    :param server_owner: dict|None - server owner data; filled only if specified
-    :return: None
-    '''
-
-    server_owner_code = self.by_id(cs_security_servers.SECURITYSERVER_CLIENT_SERVER_OWNER_CODE_ID)
-    server_owner_class = self.by_id(cs_security_servers.SECURITYSERVER_CLIENT_SERVER_OWNER_CLASS_ID)
-    server_owner_name = self.by_id(cs_security_servers.SECURITYSERVER_CLIENT_SERVER_OWNER_NAME_ID)
-    server_code_element = self.by_id(cs_security_servers.SECURITYSERVER_CLIENT_SERVER_CODE_ID)
-    if server_owner is not None:
-        if server_owner_code.tag_name == 'input':
-            self.input(server_owner_code, server_owner['code'])
-        if server_owner_class.tag_name == 'input':
-            self.input(server_owner_class, server_owner['class'])
-        if server_owner_name.tag_name == 'input':
-            self.input(server_owner_name, server_owner['subsystem'])
-    if server_code_element.tag_name == 'input':
-        self.input(server_owner_name, server_code)
-
-
-def start_adding_client(self, client):
-    '''
-    Opens the "Add client" dialog, searches for and selects the specified client.
-    :param self: MainController object
-    :param client: dict - client data
-    :return: None
-    '''
-    # Start adding new client
-    self.wait_until_visible(type=By.ID, element=cs_security_servers.ADD_CLIENT_TO_SECURITYSERVER_BTN_ID).click()
+    # Clear the input and set value
+    subsystem_input.click()
+    subsystem_input.clear()
+    subsystem_input.send_keys(client['subsystem_code'])
     self.wait_jquery()
 
-    # Click "Search" and select the client
-    search_and_select_client(self, client)
+    # Submit the form
+    self.wait_until_visible(type=By.ID,
+                            element=cs_security_servers.SECURITYSERVER_CLIENT_REGISTER_SUBMIT_BTN_ID).click()
+    self.wait_jquery()
+    # UC MEMBER_15 3. System parses the user input.
+    self.log('MEMBER_15 3. System parses the user input.')
+    # UC MEMBER_15 4. System verifies that the subsystem is new
+    self.log('MEMBER_15 4. System verifies that the subsystem is new')
+    if current_log_lines:
+        expected_log_msg = REGISTER_MEMBER_AS_SEC_SERVER_CLIENT
+        self.log('MEMBER_15 6. System logs the event "{}"'.format(expected_log_msg))
+        logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
+        self.is_true(logs_found, msg="Log check failed")
+
+
+def add_sub_as_client_to_member(self, system_code, client, step='', check_request=True):
+    """
+    Adds a subsystem to member and as a client.
+    :param self: MainController object
+    :param system_code: str - subsystem code
+    :param client: dict - client data
+    :param wait_input: int - seconds to wait before inputs
+    :param step: str - prefix to be added to logs
+    :return:
+    """
+
+    # Open the members table
+    self.log(step + 'Open members table')
+    self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.MEMBERS_CSS).click()
+
+    self.wait_jquery()
+
+    table = self.wait_until_visible(type=By.ID, element=members_table.MEMBERS_TABLE_ID)
+    self.wait_jquery()
+
+    # Open client details
+    self.log(step + 'Open client details')
+    members_table.get_row_by_columns(table, [client['name'], client['class'], client['code']]).click()
+    self.wait_until_visible(type=By.ID, element=members_table.MEMBERS_DETATILS_BTN_ID).click()
+    self.wait_jquery()
+
+    # Open servers tab
+    self.log(step + 'Open user servers tab')
+    self.wait_until_visible(type=By.XPATH, element=members_table.USED_SERVERS_TAB).click()
+    self.wait_jquery()
+
+    # Start adding the client, fill fields
+    self.log(step + 'Add new client')
+    self.wait_until_visible(type=By.XPATH, element=members_table.REGISTER_SECURITYSERVER_CLIENT_ADD_BTN_ID).click()
+    self.log(step + 'Enter ' + client['subsystem_code'] + ' to "subsystem code" area')
+
+    subsystem_input = self.wait_until_visible(type=By.ID,
+                                              element=members_table.CLIENT_REGISTRATION_SUBSYSTEM_CODE_AREA_ID)
+    self.input(subsystem_input, client['subsystem_code'])
+    self.wait_jquery()
+
+    self.wait_until_visible(type=By.ID, element=members_table.USED_SERVERS_SEARCH_BTN_ID).click()
+    self.wait_jquery()
+
+    # Try to find the subsystem in list
+    rows = self.wait_until_visible(type=By.XPATH,
+                                   element=members_table.SECURITY_SERVERS_TABLE_ROWS_XPATH).find_elements_by_tag_name(
+        'tr')
+    for row in rows:
+        if str(row.find_elements_by_tag_name('td')[3].text) == system_code:
+            row.click()
+            break
+
+    self.wait_until_visible(type=By.ID, element=members_table.SELECT_SECURITY_SERVER_BTN_ID).click()
+    self.wait_jquery()
+
+    self.wait_until_visible(type=By.ID, element=members_table.CLIENT_REGISTRATION_SUBMIT_BTN_ID).click()
+    self.wait_jquery()
+
+    # Reload main page
+    self.driver.get(self.url)
+
+    # Open management requests again
+    self.log(step + 'Open management requests table')
+    self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.MANAGEMENT_REQUESTS_CSS).click()
+
+    self.wait_jquery()
+
+    # Check if last requests have been submitted for approval
+    if check_request:
+        # Get the table and wait for it to load
+        requests_table = self.wait_until_visible(type=By.ID, element=members_table.MANAGEMENT_REQUEST_TABLE_ID)
+        rows = requests_table.find_element_by_tag_name('tbody').find_elements_by_tag_name('tr')[0:1]
+        for row in rows:
+            self.is_true(keys_and_certificates_table.SUBMITTED_FOR_APPROVAL_STATE in row.text, test_name,
+                         step + 'CHECKING FOR "{0}" FROM THE LATEST REQUEST ROW FAILED"'.format(
+                             keys_and_certificates_table.SUBMITTED_FOR_APPROVAL_STATE),
+                         step + 'Look "{0}" from the latest requests row: {0}'.format(
+                             keys_and_certificates_table.SUBMITTED_FOR_APPROVAL_STATE in row.text))
 
 
 def add_subsystem_to_client(self, server_code, client, server=None, check_errors=True, duplicate_client=None):
@@ -199,7 +250,7 @@ def add_subsystem_to_client(self, server_code, client, server=None, check_errors
                   msg='Wrong message displayed, expected: {0}'.format(expected_message))
 
     # Check if we get an error when trying to add a client that already exists
-    if duplicate_client is not None:
+    if duplicate_client:
         # MEMBER_15 5a - check if an error message is displayed when trying to create a request with the same data
         self.log(
             'MEMBER_15 5a - check if an error message is displayed when trying to create a request for an existing client')
@@ -273,8 +324,7 @@ def add_subsystem_to_client(self, server_code, client, server=None, check_errors
 
 
 def test_create_registration_request(case, server, client_name, client=None, client_id=None, duplicate_client=None,
-                                     ssh_host=None,
-                                     ssh_user=None, ssh_pass=None):
+                                     log_checker=None):
     '''
     UC MEMBER_15 main test method. Tries to create a registration request for a subsystem and check logs if
     cs_ssh_host is set.
@@ -292,6 +342,9 @@ def test_create_registration_request(case, server, client_name, client=None, cli
     self = case
 
     def create_registration_request():
+        current_log_lines = None
+        if log_checker:
+            current_log_lines = log_checker.get_line_count()
         self.logdata = []
 
         if client is None:
@@ -303,15 +356,11 @@ def test_create_registration_request(case, server, client_name, client=None, cli
 
         server_code = server['subsystem']
 
-        if ssh_host is not None:
-            log_checker = auditchecker.AuditChecker(host=ssh_host, username=ssh_user, password=ssh_pass)
-            current_log_lines = log_checker.get_line_count()
-
         # UC MEMBER_15 1 - select to create a security server registration request for a subsystem
         self.log('UC MEMBER_15 1 - select to create a security server registration request for a subsystem')
         add_subsystem_to_client(self, server_code, client_data, duplicate_client=duplicate_client, server=server)
 
-        if ssh_host is not None:
+        if current_log_lines is not None:
             # UC MEMBER_15 4a, 5a, 6a, 10 Check logs for entries
             self.log('MEMBER_15 4a, 5a, 6a, 10 - checking logs for: {0}'.format(self.logdata))
             logs_found = log_checker.check_log(self.logdata, from_line=current_log_lines + 1)
@@ -320,6 +369,109 @@ def test_create_registration_request(case, server, client_name, client=None, cli
                                                                                                    log_checker.log_output))
 
     return create_registration_request
+
+
+def open_servers_clients(self, code):
+    '''
+    Open security servers and their clients in UI.
+    :param self: MainController object
+    :param code: str - server name
+    :return: None
+    '''
+    self.log('Open Security servers')
+    self.reset_page()
+    self.wait_jquery()
+    self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.SECURITY_SERVERS_CSS).click()
+    self.wait_jquery()
+
+    # Get the table
+    table = self.wait_until_visible(type=By.ID, element=cs_security_servers.SECURITY_SERVER_TABLE_ID)
+    self.wait_jquery()
+
+    # Find the client and click on it
+    self.log('Click on client row')
+    rows = table.find_elements_by_tag_name('tr')
+    for row in rows:
+        if row.text is not u'':
+            if row.find_element_by_tag_name('td').text == code:
+                row.click()
+
+    # Open details
+    self.log('Click on Details button')
+    self.wait_until_visible(type=By.ID, element=cs_security_servers.SECURITY_SERVER_CLIENT_DETAILS_BTN_ID).click()
+    self.wait_jquery()
+
+    # Open clients tab
+    self.log('Click on clients tab')
+    self.wait_until_visible(type=By.XPATH, element=cs_security_servers.SERVER_CLIENT_TAB).click()
+    self.wait_jquery()
+
+
+def search_and_select_client(self, client):
+    '''
+    Opens the client search dialog and selects a specified client from the displayed list.
+    :param self: MainController object
+    :param client: dict - client data
+    :return: None
+    '''
+    # Search for the client
+    self.log('Click on search client')
+    self.wait_until_visible(type=By.ID, element=cs_security_servers.SEARCH_BTN_ID).click()
+    self.wait_jquery()
+
+    # Get the table and look for the client
+    table = self.wait_until_visible(type=By.XPATH, element=cs_security_servers.MEMBERS_SEARCH_TABLE_XPATH)
+    rows = table.find_elements_by_tag_name('tr')
+    self.log('Finding client from table')
+    for row in rows:
+        tds = row.find_elements_by_tag_name('td')
+        if tds[0].text is not u'':
+            if (tds[0].text == client['name']) & (tds[1].text == client['code']) & (tds[2].text == client['class']) & (
+                    tds[3].text == u''):
+                row.click()
+                break
+
+    self.wait_until_visible(type=By.XPATH, element=cs_security_servers.SELECT_MEMBER_BTN_XPATH).click()
+    self.wait_jquery()
+
+
+def fill_server_data(self, server_code, server_owner=None):
+    '''
+    Checks if server data was prefilled in the request dialog and fills in the data that was not.
+    :param self: MainController object
+    :param server_code: str - server code
+    :param server_owner: dict|None - server owner data; filled only if specified
+    :return: None
+    '''
+
+    server_owner_code = self.by_id(cs_security_servers.SECURITYSERVER_CLIENT_SERVER_OWNER_CODE_ID)
+    server_owner_class = self.by_id(cs_security_servers.SECURITYSERVER_CLIENT_SERVER_OWNER_CLASS_ID)
+    server_owner_name = self.by_id(cs_security_servers.SECURITYSERVER_CLIENT_SERVER_OWNER_NAME_ID)
+    server_code_element = self.by_id(cs_security_servers.SECURITYSERVER_CLIENT_SERVER_CODE_ID)
+    if server_owner is not None:
+        if server_owner_code.tag_name == 'input':
+            self.input(server_owner_code, server_owner['code'])
+        if server_owner_class.tag_name == 'input':
+            self.input(server_owner_class, server_owner['class'])
+        if server_owner_name.tag_name == 'input':
+            self.input(server_owner_name, server_owner['subsystem'])
+    if server_code_element.tag_name == 'input':
+        self.input(server_owner_name, server_code)
+
+
+def start_adding_client(self, client):
+    '''
+    Opens the "Add client" dialog, searches for and selects the specified client.
+    :param self: MainController object
+    :param client: dict - client data
+    :return: None
+    '''
+    # Start adding new client
+    self.wait_until_visible(type=By.ID, element=cs_security_servers.ADD_CLIENT_TO_SECURITYSERVER_BTN_ID).click()
+    self.wait_jquery()
+
+    # Click "Search" and select the client
+    search_and_select_client(self, client)
 
 
 def check_inputs(self, input_element, final_value, save_btn, label_name='cert_profile_info', input_element_type=By.ID,

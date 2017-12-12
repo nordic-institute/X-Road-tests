@@ -69,6 +69,7 @@ CLIENT_DETAILS_POPUP_GROUP_ADD_BTN_ID = 'group_add'
 CLIENT_DETAILS_POPUP_CLOSE_BTN_XPATH = '//div[@class="ui-dialog-buttonset"]//button[span="Close"]'
 CLIENT_DETAILS_POPUP_WSDL_URL_DETAILS_CLASS = 'closed'
 CLIENT_DETAILS_POPUP_WSDL_SERVICES_AUTHCERTDELETION_XPATH = '//table[@id="services"]//td[text()="authCertDeletion (0)"]'
+CLIENT_DETAILS_POPUP_WSDL_SERVICES_AUTHCERTDELETION_XPATH2 = '//table[@id="services"]//td[text()="authCertDeletion (0)"]/../td[5]'
 CLIENT_DETAILS_POPUP_LOCAL_GROUPS_TAB_XPATH = '//li[@aria-controls="local_groups_tab"]'
 CLIENT_DETAILS_POPUP_SERVICES_TAB_XPATH = '//li[@aria-controls="services_tab"]'
 

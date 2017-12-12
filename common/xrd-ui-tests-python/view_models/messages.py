@@ -2,6 +2,7 @@ from selenium.common.exceptions import NoSuchElementException
 
 from view_models import popups
 
+CLIENT_ALREADY_EXISTS_ERROR = 'Client already exists'
 DELETE_AUTH_CERT_REQ_ADDED = 'Request of deleting authentication certificate from security server \'{0}\' added successfully'
 ERROR_MESSAGE_CSS = '.messages .error'
 ERROR_MESSAGE_CLOSE_CSS = '.messages .error i'
@@ -20,6 +21,8 @@ WSDL_ERROR_VALIDATION_FAILED = 'Failed to add WSDL: WSDL ({0}) validation failed
 WSDL_EDIT_ERROR_VALIDATION_FAILED = 'Failed to edit WSDL: WSDL ({0}) validation failed'
 WSDL_EDIT_ERROR_FILE_DOES_NOT_EXIST = 'Failed to edit WSDL: Downloading WSDL failed. WSDL URL must point to a WSDL file.'
 WSDL_EDIT_ERROR_WSDL_EXISTS = 'Failed to edit WSDL: WSDL address already exists.'
+WSDL_EDIT_INCORRECT_STRUCTURE = 'Failed to edit WSDL: Incorrect file structure. WSDL URL must point to a WSDL file.'
+
 
 WSDL_ADD_ERROR_VALIDATOR_COMMAND_NOT_FOUND = 'Failed to add WSDL: Running WSDL validator failed. Command not found.'
 WSDL_REFRESH_ERROR_VALIDATOR_COMMAND_NOT_FOUND = 'Failed to refresh WSDL(s): Running WSDL validator failed. Command not found.'

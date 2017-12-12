@@ -13,7 +13,7 @@ from view_models import members_table, clients_table_vm, sidebar, popups, \
     groups_table
 from view_models.keys_and_certificates_table import APPROVED
 from view_models.log_constants import DELETE_SUBSYSTEM, REVOKE_AUTH_REGISTRATION_REQUEST, DELETE_CLIENT, \
-    UNREGISTER_CLIENT, REVOKE_CLIENT_REGISTRATION_REQUEST, UNREGISTER_CLIENT_FAILED
+    UNREGISTER_CLIENT, REVOKE_CLIENT_REGISTRATION_REQUEST, UNREGISTER_CLIENT_FAILED, APPROVE_CLIENT_REGISTRATION_REQUST
 from view_models.members_table import MANAGEMENT_REQUEST_TABLE_ID
 from view_models.messages import ERROR_MESSAGE_CSS, UNREGISTER_CLIENT_SEND_REQUEST_FAIL, \
     REGISTRATION_REQUEST_SENDING_FAILED
@@ -841,7 +841,7 @@ def add_subsystem_to_server_client(self, server_code, client, wait_input=3):
     self.log('MEMBER_56 4. System verifies that the subsystem is new')
 
 
-def approve_requests(self, use_case='', step='', cancel_confirmation=False):
+def approve_requests(self, use_case='', step='', cancel_confirmation=False, log_checker=None):
     """
     Approve the management requests.
     :param self: MainController object
@@ -849,6 +849,9 @@ def approve_requests(self, use_case='', step='', cancel_confirmation=False):
     :return: None
     """
 
+    current_log_lines = None
+    if log_checker:
+        current_log_lines = log_checker.get_line_count()
     # Open main page
     self.log(step + 'Open central server')
     self.driver.get(self.url)
@@ -894,14 +897,19 @@ def approve_requests(self, use_case='', step='', cancel_confirmation=False):
             # UC MEMBER_37 3. Confirm request approval
             self.log('MEMBER_37 3. Confirm request approval')
             popups.confirm_dialog_click(self)
-            td = self.by_xpath(members_table.get_requests_row_by_td_text(APPROVED))
-            last_approved_request_id = td.find_elements_by_tag_name('td')[0].text
+            status = self.wait_until_visible(type=By.XPATH, element=
+            members_table.get_requests_row_by_td_text(request_id), timeout=60).find_elements_by_tag_name('td')[-1].text
             # UC MEMBER_37 4. System saves the registration relation
             self.log('MEMBER_37 4. System saves the registration relation')
             # UC MEMBER_37 5. System sets the state of the request to "approved"
             self.log('MEMBER_37 5. System sets the state of the request to "{0}"'.format(APPROVED))
-            self.is_equal(request_id, last_approved_request_id)
+            self.is_equal(APPROVED, status)
             # Find the next request waiting to be approved
+            if current_log_lines:
+                expected_log_msg = APPROVE_CLIENT_REGISTRATION_REQUST
+                self.log('MEMBER_37 6. System logs the eventt "{}"'.format(expected_log_msg))
+                logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
+                self.is_true(logs_found, msg='No approval log found')
             try:
                 td = self.by_xpath(
                     members_table.get_requests_row_by_td_text(keyscertificates_constants.SUBMITTED_FOR_APPROVAL_STATE))

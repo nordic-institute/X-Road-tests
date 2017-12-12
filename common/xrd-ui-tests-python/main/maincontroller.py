@@ -70,7 +70,7 @@ class MainController(AssertHelper):
     test_number = ''  # Test number (eg CS_01)
     test_name = ''  # Test name (eg "System test")
 
-    def __init__(self, case):
+    def __init__(self, case, empty_downloads=True):
         '''
         Initialize the class.
 
@@ -109,7 +109,10 @@ class MainController(AssertHelper):
         # Browser log. Relative to main_path or absolute.
         self.browser_log = self.get_path(self.config.get_string('config.browser_log', self.browser_log))
 
-        self.empty_download_directory = self.config.get_bool('config.empty_download_dir', self.empty_download_directory)
+        if empty_downloads:
+            self.empty_download_directory = self.config.get_bool('config.empty_download_dir', self.empty_download_directory)
+        else:
+            self.empty_download_directory = False
         self.create_directories = self.config.get_bool('config.create_directories', self.create_directories)
 
         self.disable_mock_service = not self.config.get_bool('mockrunner.enabled', True)

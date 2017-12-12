@@ -91,7 +91,7 @@ def test_test(ssh_host, ssh_username, ssh_password, users, client_id, client_nam
 
             # UC SERVICE_33 Add the new subsystem to the new group
             self.log('SERVICE_33 Add the new subsystem to the new group')
-            add_client_to_group(self, ssh_client, user, member=client, group=group)
+            add_client_to_group(self, user, member=client, group=group, ssh_client=ssh_client)
 
             # UC MEMBER_15 Add new registration request for the new subsystem
             self.log('MEMBER_15 Add new registration request for the new subsystem')
@@ -112,7 +112,7 @@ def test_test(ssh_host, ssh_username, ssh_password, users, client_id, client_nam
 
             # UC MEMBER_26 Delete the member from central server
             self.log('MEMBER_26 Delete the member from central server')
-            delete_client(self, ssh_client, user, member=client, cancel_deletion=True)
+            delete_member(self, ssh_client, user, member=client, cancel_deletion=True)
         except:
             # Had an error, set error to be True and print traceback.
             traceback.print_exc()
@@ -127,7 +127,7 @@ def test_test(ssh_host, ssh_username, ssh_password, users, client_id, client_nam
                     try:
                         # UC MEMBER_26 Delete the member from central server
                         self.log('MEMBER_26 Delete the member from central server')
-                        delete_client(self, ssh_client, user, member=client)
+                        delete_member(self, ssh_client, user, member=client)
                     except:
                         self.log('MEMBER_26 Deleting member failed')
 
@@ -400,7 +400,7 @@ def add_group(self, ssh_client, user, group, try_empty=False):
                  'SERVICE_32 6. Log check for added group')
 
 
-def add_client_to_group(self, ssh_client, user, member, group):
+def add_client_to_group(self, user, member, group, ssh_client=None):
     '''
     Adds a member to a group and checks if it was logged.
     :param self: MainController object
@@ -438,10 +438,11 @@ def add_client_to_group(self, ssh_client, user, member, group):
     # UC SERVICE_33 3. System adds the members to group.
     self.log('SERVICE_33 3. System adds the members to group.')
 
-    bool_value, data, date_time = check_logs_for(ssh_client, ADD_MEMBER_TO_GROUP, user[USERNAME])
-    self.is_true(bool_value, test_name,
-                 'SERVICE_33 4. Check logs for adding member to group - check failed',
-                 'SERVICE_33 4. Check logs for adding member to group')
+    if ssh_client:
+        bool_value, data, date_time = check_logs_for(ssh_client, ADD_MEMBER_TO_GROUP, user[USERNAME])
+        self.is_true(bool_value, test_name,
+                     'SERVICE_33 4. Check logs for adding member to group - check failed',
+                     'SERVICE_33 4. Check logs for adding member to group')
 
 
 def register_subsystem_to_security_server(self, ssh_client, user, member, server_id):
@@ -605,7 +606,7 @@ def remove_group(self, group):
     popups.confirm_dialog_click(self)
 
 
-def delete_client(self, ssh_client, user, member, cancel_deletion=False):
+def delete_member(self, ssh_client, user, member, cancel_deletion=False):
     '''
     Deletes a member from the system. Checks if the action was logged.
     :param self: MainController object

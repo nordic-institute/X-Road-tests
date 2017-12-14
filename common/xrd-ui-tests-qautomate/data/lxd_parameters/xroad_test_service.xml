@@ -5,7 +5,7 @@
 		<parameter name="member_code" value="00000002"/>
 		<parameter name="instance_identifier" value="XRD1"/>
 		<parameter name="member_class" value="GOV"/>
-		<parameter name="member_class_description" value="Goverment"/>
+		<parameter name="member_class_description" value="Government"/>
 		<parameter name="subsystem_code" value="SUB_MEMBER_SERVICE"/>
 		<parameter name="security_server_code" value="xroad-lxd-ss2"/>
 		<parameter name="server_address" pagemodel="" validation="" value="xroad-lxd-ss2.lxd" verify=""/>

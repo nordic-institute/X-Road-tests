@@ -209,6 +209,7 @@ class Common_lib(CommonUtils):
 
             # Servers
             self.add_dynamic_content_to_parameters(parameters, "tsp_url", TSP_URL, u'cs_url')
+            self.add_dynamic_content_to_parameters(parameters, "tsp_url", TSP_URL, u'ss_mgm_url')
             self.add_dynamic_content_to_parameters(parameters, "ocsp_responder_url", OCSP_RESPONDER_URL, u'cs_url')
             self.add_dynamic_content_to_parameters(parameters, "url", CS_SERVER_FULL_URL + "/login", u'cs_url')
             self.add_dynamic_content_to_parameters(parameters, "url", SS_MGM_CS_SERVER_FULL_URL + "/login",

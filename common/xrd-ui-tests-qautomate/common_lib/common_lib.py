@@ -73,7 +73,7 @@ class Common_lib(CommonUtils):
                 auth_key = "-i " + SIGN_CERT_SSH_KEY
             self.add_dynamic_content_to_parameters(parameters, "sign_cert_format", SIGNED_KEY_FORMAT, u'paths')
             if not "lxc" in SIGN_CERT_SERVER:
-                self.add_dynamic_content_to_parameters(parameters, "sign_cert_server_connect_parameters", "ssh " + SIGN_CERT_SERVER + " " + auth_key, u'paths')
+                self.add_dynamic_content_to_parameters(parameters, "sign_cert_server_connect_parameters", "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no " + SIGN_CERT_SERVER + " " + auth_key, u'paths')
             else:
                 self.add_dynamic_content_to_parameters(parameters, "sign_cert_server_connect_parameters", SIGN_CERT_SERVER, u'paths')
 
@@ -176,7 +176,7 @@ class Common_lib(CommonUtils):
                 auth_key = "-i " + SIGN_CERT_SSH_KEY
             self.add_dynamic_content_to_parameters(parameters, "sign_cert_format", SIGNED_KEY_FORMAT, u'paths')
             if not "lxc" in SIGN_CERT_SERVER:
-                self.add_dynamic_content_to_parameters(parameters, "sign_cert_server_connect_parameters", "ssh " + SIGN_CERT_SERVER + " " + auth_key, u'paths')
+                self.add_dynamic_content_to_parameters(parameters, "sign_cert_server_connect_parameters", "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no " + SIGN_CERT_SERVER + " " + auth_key, u'paths')
             else:
                 self.add_dynamic_content_to_parameters(parameters, "sign_cert_server_connect_parameters", SIGN_CERT_SERVER, u'paths')
 

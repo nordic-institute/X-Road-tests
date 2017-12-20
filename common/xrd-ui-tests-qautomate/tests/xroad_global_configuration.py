@@ -14,6 +14,7 @@ from common_lib.common_lib_ssh import Common_lib_ssh
 from common_lib.component_cs_conf_mgm import Component_cs_conf_mgm
 from common_lib.component_cs_sidebar import Component_cs_sidebar
 from common_lib.component_cs_system_settings import Component_cs_system_settings
+from pagemodel.cs_conf_mgm import Cs_conf_mgm
 
 class Xroad_global_configuration(SetupTest):
     """
@@ -40,33 +41,25 @@ class Xroad_global_configuration(SetupTest):
         * `2.2.1`_: View a Configuration Source
         * `2.2.2`_: Download a Configuration Source Anchor File
         * `2.2.3`_: Re-Create a Configuration Source Anchor
-            * 2a. The process of generating the anchor terminated with an error message. (postponed)
+            * 2a. The process of generating the anchor terminated with an error message. (postpone)
         * '2.2.4'_: Describe Optional Configuration Part Data
         * '2.2.5'_: Upload an Optional Configuration Part File
-            * 3a. A validator is not described for this configuration part. (not found)
-            * 3b. The system is unable to find the described validation program. (not found)
-            * 3c. The communication with the validation program closed unexpectedly. (not found)
-            * 3d. An error occurred while running the validation program. (not found)
+            * 3a. A validator is not described for this configuration part.
+            * 3b. The system is unable to find the described validation program.
             * 4a. The validation succeeded with validation errors.
-            * 4b. The validation succeeded with validation warnings. (not found)
-            * 6a. No previous file for this optional part exists in the system's database. (not found)
         * '2.2.6'_: Download a Configuration Part File
         * `2.2.7`_: Log In to a Software Security Token
             * 3a: The parsing of the user input terminated with an error message.
             * 4a: The entered PIN code is incorrect.
         * `2.2.9`_: Log Out of a Software Security Token
         * `2.2.11`_: Add a Configuration Source Signing Key
-            * 3a. The desired token is not on the list (not found)
-            * 4a. Key generation fails because the token is not logged in to (not found)
-            * 4b. Key generation fails (not found)
-            * 5a. Generation of the self-signed certificate fails (not found)
-            * 7a. The selected source does not have an active key (not found)
+            * 4a. Key generation fails because the token is not logged in to
+            * 4b. Key generation fails (postpone)
         * `2.2.12`_: Activate a Configuration Source Signing Key
             * 3a: CS administrator cancels the key activation
-            * 4a: The key to be activated is not accessible. (postponed)
         * `2.2.13`_: Delete a Configuration Source Signing Key
             * 3a: CS administrator cancels the key deletion
-            * 7a: System fails to delete the signing key form the security token. (postponed)
+            * 7a: System fails to delete the signing key form the security token.
         * `2.2.14`_: View System Parameters
         * `2.2.15`_: Edit the Address of the Central Server
             * 3a: The parsing of the user input terminated with an error message
@@ -75,7 +68,7 @@ class Xroad_global_configuration(SetupTest):
     **Changelog:**
         * ?.?.2017
             * Test cases done
-            * '2.2.4'_, '2.2.5'_, '2.2.6'_, `2.2.7`_: 3a 4a, `2.2.11`_, `2.2.12`_: 4a, `2.2.13`_: 7a
+            * '2.2.4'_, '2.2.5'_, '2.2.6'_, `2.2.7`_: 3a 4a, `2.2.11`_, `2.2.13`_: 7a
         * 20.09.2017
             * Links added to md use case documentation
         * 11.07.2017
@@ -92,6 +85,7 @@ class Xroad_global_configuration(SetupTest):
     component_cs_sidebar = Component_cs_sidebar()
     component_cs_system_settings = Component_cs_system_settings()
     INI_FILE = "foo.ini"
+    cs_conf_mgm = Cs_conf_mgm()
 
     @classmethod
     def setUpTestSet(self):
@@ -142,6 +136,19 @@ class Xroad_global_configuration(SetupTest):
                 * :func:`~common_lib.common_lib.Common_lib.delete_files_with_extension`, *TESTDATA[u'paths'][u'downloads_folder']*, *u'.xml'*
                 * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.delete_conf_part_file`, *self.INI_FILE*
         """
+        # Step log out if logged in
+        if not self.ss_login.verify_is_login_page():
+            self.open_application.open_application_url(TESTDATA[u'cs_url'])
+            self.common_lib.log_out()
+
+        # Step revert to defaults
+        self.common_lib.delete_files_with_extension(TESTDATA[u'paths'][u'downloads_folder'], u'.xml')
+        try:
+            # Delete generated conf part file
+            self.component_cs_conf_mgm.delete_conf_part_file(self.INI_FILE)
+        except:
+            pass
+
         stop_log_time = self.common_lib.get_log_utc_time()
         if not self.is_last_test_passed():
             _, copy_log = self.get_log_file_paths()
@@ -155,19 +162,6 @@ class Xroad_global_configuration(SetupTest):
                                                                   stop_log_time,
                                                                   u'cs_url',
                                                                   copy_log)
-
-        # Step log out if logged in
-        if not self.ss_login.verify_is_login_page():
-            self.open_application.open_application_url(TESTDATA[u'cs_url'])
-            self.common_lib.log_out()
-
-        # Step revert to defaults
-        self.common_lib.delete_files_with_extension(TESTDATA[u'paths'][u'downloads_folder'], u'.xml')
-        try:
-            # Delete generated conf part file
-            self.component_cs_conf_mgm.delete_conf_part_file(self.INI_FILE)
-        except:
-            pass
 
     def test_global_configuration_view_source(self):
         """
@@ -207,7 +201,7 @@ class Xroad_global_configuration(SetupTest):
         **Use cases:**
             * `2.2.2`_: Download a Configuration Source Anchor File
             * `2.2.3`_: Re-Create a Configuration Source Anchor
-                * 2a. The process of generating the anchor terminated with an error message. (postponed)
+                * 2a. The process of generating the anchor terminated with an error message. (postpone)
 
         **Test steps:**
             * **Step 1: login to central server and open configuration view**
@@ -261,6 +255,7 @@ class Xroad_global_configuration(SetupTest):
         # Step Login to central server and open configuration view
         self.component_cs.login(section=u'cs_url')
         self.component_cs_sidebar.open_global_configuration_view()
+        self.component_cs_sidebar.open_global_configuration_view()
 
         # Step Log out software token
         self.component_cs_conf_mgm.logout_software_token()
@@ -283,17 +278,13 @@ class Xroad_global_configuration(SetupTest):
 
         **Use cases:**
             * `2.2.11`_: Add a Configuration Source Signing Key
-                * 3a. The desired token is not on the list (not found)
-                * 4a. Key generation fails because the token is not logged in to (not found)
-                * 4b. Key generation fails (not found)
-                * 5a. Generation of the self-signed certificate fails (not found)
-                * 7a. The selected source does not have an active key (not found)
+                * 4a. Key generation fails because the token is not logged in to
+                * 4b. Key generation fails (postpone)
             * `2.2.12`_: Activate a Configuration Source Signing Key
                 * 3a: CS administrator cancels the key activation
-                * 4a: The key to be activated is not accessible. (postponed)
             * `2.2.13`_: Delete a Configuration Source Signing Key
                 * 3a: CS administrator cancels the key deletion
-                * 7a: System fails to delete the signing key form the security token. (postponed)
+                * 7a: System fails to delete the signing key form the security token.
 
         **Test steps:**
             * **Step 1: login to central server and open configuration view**
@@ -322,49 +313,31 @@ class Xroad_global_configuration(SetupTest):
         self.component_cs_sidebar.open_global_configuration_view()
 
         # Step Generate signing key
-        self.component_cs_conf_mgm.generate_new_internal_config_key_in_cs()
+        self.component_cs_conf_mgm.generate_config_key()
 
         # Step Activate signing_key
         self.component_cs_conf_mgm.activate_newest_signing_key()
-        # Step Verify active signing key audit log
-        self.common_lib_ssh.verify_audit_log(section=u'cs_url', event=strings.activate_internal_config_signing_key)
 
         # Step Activate old signing key
         self.component_cs_conf_mgm.activate_oldest_signing_key()
 
         # Step Delete signing key
         self.component_cs_conf_mgm.delete_newest_signing_key()
-        # Step Verify delete signing key audit log
-        self.common_lib_ssh.verify_audit_log(section=u'cs_url', event=strings.delete_internal_config_signing_key)
-        # Step Verify delete messages
-        self.component_common.verify_notice_message(message=strings.internal_conf_anchor_generated_success)
-        self.component_common.verify_notice_message(message=strings.token_key_removed)
-
-        # Step Log out
-        self.common_lib.log_out()
-
-    def test_generate_config_signing_key(self):
-        """
-        Test case for generating config signing key
-
-        **Use cases:**
-            * `2.2.11`_: Add a Configuration Source Signing Key
-
-        **Test steps:**
-            * **Step 1: login to central server and open configuration view**
-                * :func:`~common_lib.component_cs.Component_cs.login`, *section=u'cs_url'*
-                * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_global_configuration_view`
-            * **Step 2: generate signing key**
-                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.generate_new_internal_config_key_in_cs`
-            * **Step 3: log out**
-                * :func:`~common_lib.common_lib.Common_lib.log_out`
-        """
-        # Step Login to central server and open configuration view
-        self.component_cs.login(section=u'cs_url')
-        self.component_cs_sidebar.open_global_configuration_view()
 
         # Step Generate signing key
-        self.component_cs_conf_mgm.generate_new_internal_config_key_in_cs()
+        self.component_cs_conf_mgm.generate_config_key()
+        # Step Get newest signing key
+        key = self.cs_conf_mgm.get_newest_key_id()
+        # Step Delete signing key from console
+        self.common_lib_ssh.delete_signing_key_from_signer_console(section=u'cs_url', key=key)
+        # Step Delete signing key
+        self.component_cs_conf_mgm.delete_signing_key_fail(key=key)
+
+        # Step log out and generate key with out log in
+        self.component_cs_conf_mgm.logout_software_token()
+        self.component_cs_conf_mgm.generate_config_key_not_logged_in(u'cs_url')
+        # Step Delete signing key
+        self.component_cs_conf_mgm.delete_newest_signing_key()
 
         # Step Log out
         self.common_lib.log_out()
@@ -447,14 +420,12 @@ class Xroad_global_configuration(SetupTest):
         **Use cases:**
             * '2.2.4'_: Describe Optional Configuration Part Data
             * '2.2.5'_: Upload an Optional Configuration Part File
-                * 3a. A validator is not described for this configuration part. (not found)
-                * 3b. The system is unable to find the described validation program. (not found)
-                * 3c. The communication with the validation program closed unexpectedly. (not found)
-                * 3d. An error occurred while running the validation program. (not found)
+                * 3a. A validator is not described for this configuration part.
+                * 3b. The system is unable to find the described validation program.
                 * 4a. The validation succeeded with validation errors.
-                * 4b. The validation succeeded with validation warnings. (not found)
-                * 6a. No previous file for this optional part exists in the system's database. (not found)
+                * 4a. The validation succeeded with validation errors.
             * '2.2.6'_: Download a Configuration Part File
+
         **Test steps:**
             * **Step 1: login to central server and open configuration view**
                 * :func:`~common_lib.component_cs.Component_cs.login`, *section=u'cs_url'*
@@ -466,30 +437,42 @@ class Xroad_global_configuration(SetupTest):
             * **Step 2: log out**
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
         """
-        # Configuration parts informations
-        private_params_identifier = u'PRIVATE-PARAMETERS'
-        monitoring_identifier = u'MONITORING'
-        new_identifier = u'FOO'
-        new_file_name = u'foo.xml'
-        new_val_script = u'/usr/share/xroad/scripts/validate-foo.sh/usr/share/xroad/scripts/validate-monitoring-params.sh'
+        # Configuration part upload files
+        valid_part_file = os.path.join(os.getcwd(), "data", "valid_conf_part.xml")
+        invalid_part_file = os.path.join(os.getcwd(), "data", "invalid_conf_part.xml")
+
+        # Generated conf part file
+        identifier = u'FOO'
+        file_name = u'foo.xml'
+        existing_val_script = u'/usr/share/xroad/scripts/validate-monitoring-params.sh'
+        missing_val_script = u'/usr/share/xroad/scripts/validate.sh'
 
         # Step Login to central server and open configuration view
         self.component_cs.login(section=u'cs_url')
         self.component_cs_sidebar.open_global_configuration_view()
 
-        # Download configuration part file
-        downloaded_part_file = self.component_cs_conf_mgm.download_configuration_part_file(private_params_identifier)
+        # Step Generate optional configuration part file with validation file
+        self.component_cs_conf_mgm.generate_conf_part_file(self.INI_FILE, identifier, file_name, existing_val_script)
+        # Step Upload configuration part file
+        self.component_cs_conf_mgm.upload_configuration_part_file(identifier, valid_part_file)
+        # Step Download configuration part file
+        self.component_cs_conf_mgm.download_configuration_part_file(identifier)
 
-        # Generate optional configuration part file
-        self.component_cs_conf_mgm.generate_conf_part_file(self.INI_FILE, new_identifier, new_file_name, new_val_script)
+        # Step Upload configuration part file fail
+        self.component_cs_conf_mgm.upload_conf_part_validation_fail(identifier, invalid_part_file)
 
-        # Upload configuration part file
-        self.component_cs_conf_mgm.upload_configuration_part_file(new_identifier, downloaded_part_file)
+        # Step Generate optional configuration part file with out validation file
+        self.component_cs_conf_mgm.generate_conf_part_file(self.INI_FILE, identifier, file_name)
+        # Step Upload configuration part file
+        self.component_cs_conf_mgm.upload_configuration_part_file(identifier, valid_part_file)
 
-        # Upload configuration part file fail
-        self.component_cs_conf_mgm.upload_conf_part_validation_fail(monitoring_identifier, downloaded_part_file)
+        # Step Generate optional configuration part file with missing validation file
+        self.component_cs_conf_mgm.generate_conf_part_file(self.INI_FILE, identifier, file_name, missing_val_script)
+        # Step Upload configuration part file fail missing validation
+        self.component_cs_conf_mgm.upload_conf_part_validation_fail_missing_validation(identifier, valid_part_file,
+                                                                                       missing_val_script)
 
-        # Delete generated conf part file
+        # Step Delete generated conf part file
         self.component_cs_conf_mgm.delete_conf_part_file(self.INI_FILE)
 
         # Step Log out

@@ -176,6 +176,21 @@ class Common_lib_ssh(CommonUtils):
 
         self.run_bash_command(command, True)
 
+    def delete_signing_key_from_signer_console(self, section="cs_url", key=""):
+        """
+        :param section:  Test data section name
+        """
+        server = TESTDATA[section][u'server_address']
+        if strings.server_environment_type() == strings.lxd_type_environment:
+            server = server.split(".lxd")[0]
+            command = 'lxc exec {} -- su xroad sh -c "signer-console dk {}"'.format(server, key)
+        elif strings.server_environment_type() == strings.ssh_type_environment:
+            command = 'ssh {} sudo {}'.format(server, key)
+        else:
+            raise Exception(errors.enviroment_type_not_valid)
+
+        self.run_bash_command(command, True)
+
     def change_file_permission(self, section, path, permission):
         """
         :param section:  Test data section name
@@ -279,7 +294,6 @@ class Common_lib_ssh(CommonUtils):
             self.fail(errors.log_event_fail(event) + "\n" + self.parse_log_file_tail(log_output))
         if not user == newest_log["user"]:
             self.fail(errors.log_user_fail(user) + "\n" + self.parse_log_file_tail(log_output))
-
 
     def get_all_logs_from_server(self, section):
         """

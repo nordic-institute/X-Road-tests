@@ -62,3 +62,15 @@ class Component_common(CommonUtils):
         """
         self.wait_until_jquery_ajax_loaded()
         self.common_elements.verify_message_contains(message)
+
+    def verify_error_message(self, message=u'Internal configuration anchor generation failed'):
+        """
+        Verify notice message
+
+        :param message:  String value for message
+
+        **Test steps:**
+                * **Step 2:** :func:`~common_lib.common_elements.Common_elements.verify_message_contains`, *message*
+        """
+        self.wait_until_jquery_ajax_loaded()
+        self.common_elements.verify_error_contains(message)

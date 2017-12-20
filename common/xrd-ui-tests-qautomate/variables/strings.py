@@ -54,6 +54,7 @@ reg_auth_cert_deletion = u'Authentication certificate deletion'
 key_success_deleted_from_cs = u'Key successfully deleted from central server configuration'
 internal_conf_anchor_generated_success = u'Internal configuration anchor generated successfully'
 token_key_removed = u'Key successfully deleted from token'
+token_key_removed_fail = u"Failed to delete key from token '{}': Key '{}' not found"
 change_address_error = u'Central server address must be DNS name or IP address'
 external_conf_anchor_generated_success = u'External configuration anchor generated successfully'
 restore_failed = u"Failed to restore configuration: Restoring configuration from file '{}' failed."
@@ -65,8 +66,10 @@ backup_file_uploaded = u'New backup file uploaded successfully'
 backup_file_upload_invalid_char = u"Failed to upload new backup file: Filename '{}' contains invalid characters. Valid characters include: (A-Z), (a-z), (0-9), (_), (.), (-)."
 backup_file_uploaded_invalid_extension = u"Failed to upload new backup file: Uploaded file name '{}' has an invalid extension, the only valid one is 'tar'"
 backup_file_uploaded_invalid_format = u"Failed to upload new backup file: Content of uploaded file must be in tar format"
-configuration_file_upload = "Configuration file for content identifier '{}' uploaded successfully."
-configuration_file_upload_validation_fail = "Failed to upload configuration part: Validation of configuration file with content identifier '{}' failed."
+configuration_file_upload = u"Configuration file for content identifier '{}' uploaded successfully."
+configuration_file_upload_validation_fail = u"Failed to upload configuration part: Validation of configuration file with content identifier '{}' failed."
+configuration_file_upload_missing_validation_fail = u"Failed to upload configuration part: Validation program '{}' does not exist in the file system."
+
 
 login_software_token_missing_pin = u"Missing parameter: pin"
 login_software_token_invalid_pin = u'PIN incorrect'

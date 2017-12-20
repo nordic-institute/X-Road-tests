@@ -466,12 +466,13 @@ class Xroad_install_ui_configuration(SetupTest):
 
         # Step Set global conf internal conf key in central server
         self.component_cs_sidebar.open_global_configuration_view()
-        self.component_cs_conf_mgm.generate_new_internal_config_key_in_cs()
+        self.component_cs_conf_mgm.generate_config_key()
         self.component_cs_conf_mgm.try_insert_pin_code(u'cs_url')
         self.common_utils.wait_until_jquery_ajax_loaded()
 
         # Step Set global conf external key in central server
-        self.component_cs_conf_mgm.generate_new_external_config_key_in_cs()
+        self.cs_conf_mgm.click_link_external_configuration()
+        self.component_cs_conf_mgm.generate_config_key()
 
         ## Might show double pin dialog
         self.component_cs_conf_mgm.try_insert_pin_code(u'cs_url')

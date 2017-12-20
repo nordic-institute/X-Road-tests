@@ -50,13 +50,14 @@ class Cs_conf_mgm_enter_pin(CommonUtils):
     BUTTON_OK = (By.XPATH, u'//div[9]/div[3]/div[1]/button[1]') # x: 1110 y: 544 width: 45 height: 37, tag: button, type: button, name: None, form_id: , checkbox: , table_id: 5, href:
     # Dynamic objects:
     CLOSE_BUTTON = (By.XPATH, u'(//div[@aria-describedby = \'activate_token_dialog\']//span[@class = \'ui-button-text\' and text() = \'Close\'])[2]') # x: 1049 y: 555 width: 39 height: 18, tag: span, type: , name: None, form_id: , checkbox: , table_id: , href: None
+    OK_BUTTON = (By.XPATH, u'//*[contains(@aria-describedby,\"activate_token_dialog\")]/div/div/button[1]/span') # x: 1124 y: 559 width: 18 height: 18, tag: span, type: , name: None, form_id: , checkbox: , table_id: , href: None
 
     def input_text_to_id_activate_token_pin(self, parameters=None):
         """
         Input text to activate token pin
 
         :param parameters:  Test data section dictionary
-        
+
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.input_text`, *self.ID_ACTIVATE_TOKEN_PIN*, *parameters['pin']*
         """
@@ -71,13 +72,19 @@ class Cs_conf_mgm_enter_pin(CommonUtils):
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
         """
         # AutoGen method
-        self.click_element(self.BUTTON_OK)
+        self.click_element(self.OK_BUTTON)
 
     def close_dialog(self, parameters=None):
         """
         :param parameters:  Test data section dictionary
-        
+
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.CLOSE_BUTTON*
         """
         self.click_element(self.CLOSE_BUTTON)
+
+    def verify_pin_dialog_is_open(self):
+        """
+        Verify pin dialog
+        """
+        self.element_should_be_present(self.ID_ACTIVATE_TOKEN_PIN)

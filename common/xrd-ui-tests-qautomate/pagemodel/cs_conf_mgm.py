@@ -71,7 +71,6 @@ class Cs_conf_mgm(CommonUtils):
     # Dynamic objects:
     SIGNINGKEYS = (By.ID, u'signing_keys') # x: 301 y: 531 width: 1578 height: 43, tag: table, type: , name: None, form_id: , checkbox: , table_id: , href:
     CONFPARTS = (By.ID, u'conf_parts') # x: 301 y: 707 width: 1578 height: 30, tag: table, type: , name: None, form_id: , checkbox: , table_id: , href:
-    OK_PIN_LOGIN_BUTTON = (By.XPATH, u'//div[8]/div[3]/div[1]/button[1]') # x: 1111 y: 539 width: 44 height: 36, tag: button, type: button, name: None, form_id: , checkbox: , table_id: , href:
     LOGIN = (By.CLASS_NAME, u'login') # x: 1778 y: 536 width: 70 height: 33, tag: button, type: submit, name: None, form_id: , checkbox: , table_id: , href:
     CONFPARTS1 = (By.ID, u'conf_parts') # x: 301 y: 636 width: 1568 height: 185, tag: table, type: , name: None, form_id: , checkbox: , table_id: , href:
 
@@ -164,15 +163,6 @@ class Cs_conf_mgm(CommonUtils):
         """
         self.click_element(self.LOGIN)
 
-    def click_element_ok_pin_login_button(self):
-        """
-        Click button to ok pin login
-
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.OK_PIN_LOGIN_BUTTON*
-        """
-        self.click_element(self.OK_PIN_LOGIN_BUTTON)
-
     def verify_hash_value_is_visible(self):
         """
         Verify that hash value is visible on the page
@@ -196,7 +186,7 @@ class Cs_conf_mgm(CommonUtils):
         Verify that download url contains given text
 
         :param text:  String value for text
-        
+
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.element_should_contain`, *self.ID_CONF_URL*, *text*
         """
@@ -276,7 +266,7 @@ class Cs_conf_mgm(CommonUtils):
     def click_element_from_table_conf_parts(self, text=u'foo.xml'):
         """
         :param text:  String value for text
-        
+
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *element*
         """
@@ -306,8 +296,17 @@ class Cs_conf_mgm(CommonUtils):
     def click_download(self, parameters=None):
         """
         :param parameters:  Test data section dictionary
-        
+
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_DOWNLOAD_CONF_PART*
         """
         self.click_element(self.ID_DOWNLOAD_CONF_PART)
+
+    def get_newest_key_id(self, parameters=None):
+        self.wait_until_jquery_ajax_loaded()
+        locator = self.SIGNINGKEYS
+        table = self.find_element(locator)
+        rows = table.find_elements_by_xpath(".//tr")
+        rows = [row for row in rows if len(row.find_elements_by_xpath(".//td"))]
+        newest = max(rows, key=lambda p: p.find_elements_by_xpath(".//td")[1].text)
+        return newest.text.split(" ")[1]

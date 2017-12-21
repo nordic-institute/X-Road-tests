@@ -135,6 +135,10 @@ class Xroad_global_configuration(SetupTest):
             * **Step 2: revert to defaults**
                 * :func:`~common_lib.common_lib.Common_lib.delete_files_with_extension`, *TESTDATA[u'paths'][u'downloads_folder']*, *u'.xml'*
                 * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.delete_conf_part_file`, *self.INI_FILE*
+                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.get_all_logs_from_server`, *u'ss1_url'*
+                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.find_exception_from_logs_and_save`
+                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.get_all_logs_from_server`, *u'cs_url'*
+                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.find_exception_from_logs_and_save`
         """
         # Step log out if logged in
         if not self.ss_login.verify_is_login_page():
@@ -241,6 +245,7 @@ class Xroad_global_configuration(SetupTest):
             * **Step 1: login to central server and open configuration view**
                 * :func:`~common_lib.component_cs.Component_cs.login`, *section=u'cs_url'*
                 * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_global_configuration_view`
+                * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_global_configuration_view`
             * **Step 2: log out software token**
                 * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.logout_software_token`
             * **Step 3: log in software token empty pin**
@@ -291,21 +296,26 @@ class Xroad_global_configuration(SetupTest):
                 * :func:`~common_lib.component_cs.Component_cs.login`, *section=u'cs_url'*
                 * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_global_configuration_view`
             * **Step 2: generate signing key**
-                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.generate_new_internal_config_key_in_cs`
+                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.generate_config_key`
             * **Step 3: activate signing_key**
                 * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.activate_newest_signing_key`
-            * **Step 4: verify active signing key audit log**
-                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *section=u'cs_url'*, *event=strings.activate_internal_config_signing_key*
-            * **Step 5: activate old signing key**
+            * **Step 4: activate old signing key**
                 * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.activate_oldest_signing_key`
-            * **Step 6: delete signing key**
+            * **Step 5: delete signing key**
                 * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.delete_newest_signing_key`
-            * **Step 7: verify delete signing key audit log**
-                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *section=u'cs_url'*, *event=strings.delete_internal_config_signing_key*
-            * **Step 8: verify delete messages**
-                * :func:`~common_lib.component_common.Component_common.verify_notice_message`, *message=strings.internal_conf_anchor_generated_success*
-                * :func:`~common_lib.component_common.Component_common.verify_notice_message`, *message=strings.token_key_removed*
-            * **Step 9: log out**
+            * **Step 6: generate signing key**
+                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.generate_config_key`
+            * **Step 7: get newest signing key**
+            * **Step 8: delete signing key from console**
+                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.delete_signing_key_from_signer_console`, *section=u'cs_url'*, *key=key*
+            * **Step 9: delete signing key**
+                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.delete_signing_key_fail`, *key=key*
+            * **Step 10: log out and generate key with out log in**
+                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.logout_software_token`
+                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.generate_config_key_not_logged_in`, *u'cs_url'*
+            * **Step 11: delete signing key**
+                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.delete_newest_signing_key`
+            * **Step 12: log out**
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
         """
         # Step Login to central server and open configuration view
@@ -430,11 +440,25 @@ class Xroad_global_configuration(SetupTest):
             * **Step 1: login to central server and open configuration view**
                 * :func:`~common_lib.component_cs.Component_cs.login`, *section=u'cs_url'*
                 * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_global_configuration_view`
-                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.generate_conf_part_file`, *self.INI_FILE*, *new_identifier*, *new_file_name*, *new_val_script*
-                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.upload_configuration_part_file`, *new_identifier*, *downloaded_part_file*
-                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.upload_conf_part_validation_fail`, *monitoring_identifier*, *downloaded_part_file*
+            * **Step 2: generate optional configuration part file with validation file**
+                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.generate_conf_part_file`, *self.INI_FILE*, *identifier*, *file_name*, *existing_val_script*
+            * **Step 3: upload configuration part file**
+                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.upload_configuration_part_file`, *identifier*, *valid_part_file*
+            * **Step 4: download configuration part file**
+                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.download_configuration_part_file`, *identifier*
+            * **Step 5: upload configuration part file fail**
+                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.upload_conf_part_validation_fail`, *identifier*, *invalid_part_file*
+            * **Step 6: generate optional configuration part file with out validation file**
+                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.generate_conf_part_file`, *self.INI_FILE*, *identifier*, *file_name*
+            * **Step 7: upload configuration part file**
+                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.upload_configuration_part_file`, *identifier*, *valid_part_file*
+            * **Step 8: generate optional configuration part file with missing validation file**
+                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.generate_conf_part_file`, *self.INI_FILE*, *identifier*, *file_name*, *missing_val_script*
+            * **Step 9: upload configuration part file fail missing validation**
+                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.upload_conf_part_validation_fail_missing_validation`
+            * **Step 10: delete generated conf part file**
                 * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.delete_conf_part_file`, *self.INI_FILE*
-            * **Step 2: log out**
+            * **Step 11: log out**
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
         """
         # Configuration part upload files

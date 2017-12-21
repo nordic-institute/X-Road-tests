@@ -186,7 +186,7 @@ class Cs_conf_mgm(CommonUtils):
         Verify that download url contains given text
 
         :param text:  String value for text
-
+        
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.element_should_contain`, *self.ID_CONF_URL*, *text*
         """
@@ -265,8 +265,9 @@ class Cs_conf_mgm(CommonUtils):
 
     def click_element_from_table_conf_parts(self, text=u'foo.xml'):
         """
-        :param text:  String value for text
 
+        :param text:  String value for text
+        
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *element*
         """
@@ -295,14 +296,21 @@ class Cs_conf_mgm(CommonUtils):
 
     def click_download(self, parameters=None):
         """
-        :param parameters:  Test data section dictionary
 
+        :param parameters:  Test data section dictionary
+        
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_DOWNLOAD_CONF_PART*
         """
         self.click_element(self.ID_DOWNLOAD_CONF_PART)
 
     def get_newest_key_id(self, parameters=None):
+        """
+        :param parameters:  Test data section dictionary
+        
+        **Test steps:**
+            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+        """
         self.wait_until_jquery_ajax_loaded()
         locator = self.SIGNINGKEYS
         table = self.find_element(locator)

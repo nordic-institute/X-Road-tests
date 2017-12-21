@@ -55,9 +55,9 @@ Pagemodel
         Verify bottom message text
 
         :param message:  String value for message
-
+        
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.element_should_contain`, *self.MESSAGE*, *message*
+            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.element_should_contain`, *self.ERROR_MESSAGE*, *message*
         """
         self.element_should_contain(self.ERROR_MESSAGE, message)
 

@@ -7,6 +7,9 @@ from webframework.extension.parsers.parameter_parser import get_parameter
 from time import sleep
 
 class Cs_conf_upload_configuration_part(CommonUtils):
+    """
+
+    """
     # Pagemodel timestamp: 20171220130401
     # Pagemodel url: https://xroad-lxd-cs.lxd:4000/configuration_management
     # Pagemodel area: (611, 376, 700, 233)
@@ -49,10 +52,22 @@ class Cs_conf_upload_configuration_part(CommonUtils):
     CANCEL = (By.XPATH, u'(//*[contains(@data-name,\'cancel\')])[1]') # x: 1176 y: 565 width: 75 height: 36, tag: button, type: button, name: cancel, form_id: , checkbox: , table_id: , href: 
 
     def click_browse(self):
+        """
+        **Test steps:**
+            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.FILE_UPLOAD_BUTTON*
+        """
         self.click_element(self.FILE_UPLOAD_BUTTON)
 
     def click_ok(self):
+        """
+        **Test steps:**
+            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_FILE_UPLOAD_SUBMIT*
+        """
         self.click_element(self.ID_FILE_UPLOAD_SUBMIT)
 
     def click_close(self):
+        """
+        **Test steps:**
+            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.CANCEL*
+        """
         self.click_element(self.CANCEL)

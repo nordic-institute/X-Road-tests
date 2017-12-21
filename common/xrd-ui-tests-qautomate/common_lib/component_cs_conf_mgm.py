@@ -47,7 +47,7 @@ class Component_cs_conf_mgm(CommonUtils):
         """
         self.cs_conf_mgm.click_button_id_download_source_anchor()
 
-    def generate_config_key(self):
+    def generate_config_key(self, key_type=u'internal'):
         """
         Generate new internal configuration key in central server
 
@@ -56,25 +56,26 @@ class Component_cs_conf_mgm(CommonUtils):
                 * :func:`~pagemodel.cs_conf_mgm.Cs_conf_mgm.click_button_id_generate_signing_key`
                 * :func:`~pagemodel.cs_conf_mgm_internal_new_key.Cs_conf_mgm_internal_new_key.click_button_ok`
             * **Step 2: verify config generation audit log**
-                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *section=u'cs_url'*, *event=strings.generate_internal_config_signing_key*
+                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *section=u'cs_url'*, *event=strings.generate_config_signing_key.format(key_type*
         """
         # Step Generate config key
         self.cs_conf_mgm.click_button_id_generate_signing_key()
         self.cs_conf_mgm_internal_new_key.click_button_ok()
         # Step Verify config generation audit log
-        self.common_lib_ssh.verify_audit_log(section=u'cs_url', event=strings.generate_internal_config_signing_key)
+        self.common_lib_ssh.verify_audit_log(section=u'cs_url', event=strings.generate_config_signing_key.format(key_type))
 
         self.wait_until_jquery_ajax_loaded()
 
-    def generate_config_key_not_logged_in(self, section=u'cs_url'):
+    def generate_config_key_not_logged_in(self, section=u'cs_url', key_type=u'internal'):
         """
+        
         :param section:  Test data section name
         
         **Test steps:**
             * **Step 1: insert pin**
                 * :func:`~pagemodel.cs_conf_mgm_enter_pin.Cs_conf_mgm_enter_pin.verify_pin_dialog_is_open`
             * **Step 2: verify config generation audit log**
-                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *section=u'cs_url'*, *event=strings.generate_internal_config_signing_key*
+                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *section=u'cs_url'*, *event=strings.generate_config_signing_key.format(key_type*
         """
         # Generate config key
         self.cs_conf_mgm.click_button_id_generate_signing_key()
@@ -88,7 +89,7 @@ class Component_cs_conf_mgm(CommonUtils):
         self.wait_until_jquery_ajax_loaded()
 
         # Step Verify config generation audit log
-        self.common_lib_ssh.verify_audit_log(section=u'cs_url', event=strings.generate_internal_config_signing_key)
+        self.common_lib_ssh.verify_audit_log(section=u'cs_url', event=strings.generate_config_signing_key.format(key_type))
 
     def try_insert_pin_code(self, section=u'cs_url'):
         """
@@ -221,7 +222,7 @@ class Component_cs_conf_mgm(CommonUtils):
         self.cs_conf_mgm.verify_signing_keys()
         self.cs_conf_mgm.verify_conf_parts()
 
-    def recreate_source_anchor_from_cs(self):
+    def recreate_source_anchor_from_cs(self, key_type=u'internal'):
         """
         Recreate source anchor from central server
 
@@ -231,14 +232,14 @@ class Component_cs_conf_mgm(CommonUtils):
             * **Step 2: verify notice message**
                 * :func:`~common_lib.component_common.Component_common.verify_notice_message`, *message=strings.internal_conf_anchor_generated_success*
             * **Step 3: verify audit log**
-                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *section=u'cs_url'*, *event=strings.recreate_internal_configuration_anchor*
+                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *section=u'cs_url'*, *event=strings.recreate_configuration_anchor.format(key_type*
         """
         # Step Generate source anchor
         self.cs_conf_mgm.click_button_id_generate_source_anchor()
         # Step Verify notice message
         self.component_common.verify_notice_message(message=strings.internal_conf_anchor_generated_success)
         # Step Verify audit log
-        self.common_lib_ssh.verify_audit_log(section=u'cs_url', event=strings.recreate_internal_configuration_anchor)
+        self.common_lib_ssh.verify_audit_log(section=u'cs_url', event=strings.recreate_configuration_anchor.format(key_type))
 
     def logout_software_token(self):
         """
@@ -255,7 +256,7 @@ class Component_cs_conf_mgm(CommonUtils):
         # Step Verify log out token audit log
         self.common_lib_ssh.verify_audit_log(section=u'cs_url', event=strings.logout_token)
 
-    def activate_newest_signing_key(self):
+    def activate_newest_signing_key(self, key_type=u'internal'):
         """
         Activate newest signing key
 
@@ -263,13 +264,13 @@ class Component_cs_conf_mgm(CommonUtils):
                 * **Step 1:** :func:`~pagemodel.cs_conf_mgm.Cs_conf_mgm.click_newest_signing_key`
                 * **Step 2:** :func:`~pagemodel.cs_conf_mgm.Cs_conf_mgm.click_button_id_activate_signing_key`
                 * **Step 3:** :func:`~pagemodel.cs_conf_mgm_activate_confirm_dlg.Cs_conf_mgm_activate_confirm_dlg.click_confirm`
-                * **Step 4:** :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *section=u'cs_url'*, *event=strings.activate_internal_config_signing_key*
+                * **Step 4:** :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *section=u'cs_url'*, *event=strings.activate_config_signing_key.format(key_type*
         """
         self.cs_conf_mgm.click_newest_signing_key()
         self.cs_conf_mgm.click_button_id_activate_signing_key()
         self.cs_conf_mgm_activate_confirm_dlg.click_confirm()
 
-        self.common_lib_ssh.verify_audit_log(section=u'cs_url', event=strings.activate_internal_config_signing_key)
+        self.common_lib_ssh.verify_audit_log(section=u'cs_url', event=strings.activate_config_signing_key.format(key_type))
 
         self.wait_until_jquery_ajax_loaded()
 
@@ -288,13 +289,13 @@ class Component_cs_conf_mgm(CommonUtils):
 
         self.wait_until_jquery_ajax_loaded()
 
-    def delete_newest_signing_key(self):
+    def delete_newest_signing_key(self, key_type=u'internal'):
         """
         Delete newest signing key
 
         **Test steps:**
             * **Step 1: verify delete signing key audit log**
-                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *section=u'cs_url'*, *event=strings.delete_internal_config_signing_key*
+                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *section=u'cs_url'*, *event=strings.delete_config_signing_key.format(key_type*
             * **Step 2: verify delete messages**
                 * :func:`~common_lib.component_common.Component_common.verify_notice_message`, *message=strings.internal_conf_anchor_generated_success*
                 * :func:`~common_lib.component_common.Component_common.verify_notice_message`, *message=strings.token_key_removed*
@@ -305,14 +306,14 @@ class Component_cs_conf_mgm(CommonUtils):
         self.cs_conf_mgm_delete_confirm_dlg.click_confirm()
 
         # Step Verify delete signing key audit log
-        self.common_lib_ssh.verify_audit_log(section=u'cs_url', event=strings.delete_internal_config_signing_key)
+        self.common_lib_ssh.verify_audit_log(section=u'cs_url', event=strings.delete_config_signing_key.format(key_type))
         # Step Verify delete messages
         self.component_common.verify_notice_message(message=strings.internal_conf_anchor_generated_success)
         self.component_common.verify_notice_message(message=strings.token_key_removed)
 
         self.wait_until_jquery_ajax_loaded()
 
-    def delete_signing_key_fail(self, key=""):
+    def delete_signing_key_fail(self, key="", key_type=u'internal'):
         """
         Delete newest signing key
 
@@ -322,7 +323,7 @@ class Component_cs_conf_mgm(CommonUtils):
                 * :func:`~pagemodel.cs_conf_mgm.Cs_conf_mgm.click_button_id_delete_signing_key`
                 * :func:`~pagemodel.cs_conf_mgm_delete_confirm_dlg.Cs_conf_mgm_delete_confirm_dlg.click_confirm`
             * **Step 2: verify delete signing key audit log**
-                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *section=u'cs_url'*, *event=strings.delete_internal_config_signing_key*
+                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *section=u'cs_url'*, *event=strings.delete_config_signing_key.format(key_type*
             * **Step 3: verify delete messages**
                 * :func:`~common_lib.component_common.Component_common.verify_notice_message`, *message=strings.internal_conf_anchor_generated_success*
                 * :func:`~common_lib.component_common.Component_common.verify_error_message`, *message=strings.token_key_removed_fail.format("softToken-0"*, *key*
@@ -333,7 +334,7 @@ class Component_cs_conf_mgm(CommonUtils):
         self.cs_conf_mgm_delete_confirm_dlg.click_confirm()
 
         # Step Verify delete signing key audit log
-        self.common_lib_ssh.verify_audit_log(section=u'cs_url', event=strings.delete_internal_config_signing_key)
+        self.common_lib_ssh.verify_audit_log(section=u'cs_url', event=strings.delete_config_signing_key.format(key_type))
         # Step Verify delete messages
         self.component_common.verify_notice_message(message=strings.internal_conf_anchor_generated_success)
         self.component_common.verify_error_message(message=strings.token_key_removed_fail.format("softToken-0", key))

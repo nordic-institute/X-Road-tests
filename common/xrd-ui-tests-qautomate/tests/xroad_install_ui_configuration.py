@@ -354,12 +354,12 @@ class Xroad_install_ui_configuration(SetupTest):
                 * :func:`~common_lib.component_cs_system_settings.Component_cs_system_settings.edit_mgm_service_provider_in_cs`, *u'member_mgm_configuration'*
             * **Step 8: set global conf internal conf key in central server**
                 * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_global_configuration_view`
-                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.generate_config_key`
+                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.generate_config_key`, *key_type="internal"*
                 * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.try_insert_pin_code`, *u'cs_url'*
                 * :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
             * **Step 9: set global conf external key in central server**
                 * :func:`~pagemodel.cs_conf_mgm.Cs_conf_mgm.click_link_external_configuration`
-                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.generate_config_key`
+                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.generate_config_key`, *key_type="external"*
                 * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.try_insert_pin_code`, *u'cs_url'*
                 * :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
             * **Step 10: set ocsp responder in central server**
@@ -467,13 +467,13 @@ class Xroad_install_ui_configuration(SetupTest):
 
         # Step Set global conf internal conf key in central server
         self.component_cs_sidebar.open_global_configuration_view()
-        self.component_cs_conf_mgm.generate_config_key()
+        self.component_cs_conf_mgm.generate_config_key(key_type="internal")
         self.component_cs_conf_mgm.try_insert_pin_code(u'cs_url')
         self.common_utils.wait_until_jquery_ajax_loaded()
 
         # Step Set global conf external key in central server
         self.cs_conf_mgm.click_link_external_configuration()
-        self.component_cs_conf_mgm.generate_config_key()
+        self.component_cs_conf_mgm.generate_config_key(key_type="external")
 
         ## Might show double pin dialog
         self.component_cs_conf_mgm.try_insert_pin_code(u'cs_url')

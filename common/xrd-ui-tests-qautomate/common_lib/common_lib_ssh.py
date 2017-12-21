@@ -170,8 +170,8 @@ class Common_lib_ssh(CommonUtils):
             command = 'lxc exec {} -- su xroad sh -c "cd {} && echo -e \'{}\' > {}"'.format(server, directory,
                                                                                             text, file_name)
         elif strings.server_environment_type() == strings.ssh_type_environment:
-            command = 'ssh {} sh -c "su xroad && cd {} && echo -e \'{}\' > {}"'.format(server, directory,
-                                                                                       text, file_name)
+            command = 'ssh -t {} sudo -u xroad sh -c "cd {} && echo -e \'{}\' > {}"'.format(server, directory,
+                                                                                            text, file_name)
         else:
             raise Exception(errors.enviroment_type_not_valid)
 
@@ -186,7 +186,7 @@ class Common_lib_ssh(CommonUtils):
             server = server.split(".lxd")[0]
             command = 'lxc exec {} -- su xroad sh -c "signer-console dk {}"'.format(server, key)
         elif strings.server_environment_type() == strings.ssh_type_environment:
-            command = 'ssh {} sh -c "su xroad && signer-console dk {}"'.format(server, key)
+            command = 'ssh {} sudo -u xroad sh -c "signer-console dk {}"'.format(server, key)
         else:
             raise Exception(errors.enviroment_type_not_valid)
 

@@ -358,11 +358,10 @@ class Xroad_global_configuration(SetupTest):
         self.component_cs_conf_mgm.logout_software_token()
         self.login_to_token = True
         self.component_cs_conf_mgm.generate_config_key_not_logged_in(u'cs_url')
+        self.login_to_token = False
         # Step Delete signing key
         self.component_cs_conf_mgm.delete_newest_signing_key()
-        # Step Log in software token
-        self.component_cs_conf_mgm.log_in_to_software_token(section=u'cs_url')
-        self.login_to_token = False
+
 
         # Step Log out
         self.common_lib.log_out()

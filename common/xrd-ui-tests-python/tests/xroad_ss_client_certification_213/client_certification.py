@@ -11,10 +11,14 @@ import tests.xroad_parse_users_inputs.xroad_parse_user_inputs as user_input_chec
 from helpers import ssh_client, ssh_server_actions, xroad, login, auditchecker
 from helpers.ssh_server_actions import get_key_conf_keys_count, get_key_conf_token_count, get_key_conf_csr_count
 from tests.xroad_configure_service_222.wsdl_validator_errors import wait_until_server_up
+from tests.xroad_cs_ca.ca_management import configure_ca, edit_ca_settings
 from tests.xroad_global_groups_tests import global_groups_tests
 from view_models import sidebar as sidebar_constants, keys_and_certificates_table as keyscertificates_constants, \
     popups as popups, certification_services, clients_table_vm, messages, keys_and_certificates_table, \
     ss_system_parameters, log_constants, cs_security_servers
+from view_models.certification_services import CA_SETTINGS_TAB_XPATH
+from view_models.keys_and_certificates_table import SUBJECT_DISTINGUISHED_NAME_POPUP_O_XPATH, \
+    SUBJECT_DISTINGUISHED_NAME_POPUP_OK_BTN_XPATH
 from view_models.log_constants import ADD_AUTH_CERTIFICATE_FOR_SECURITY_SERVER_FAILED, GENERATE_KEY_FAILED, \
     GENERATE_CSR_FAILED, GENERATE_KEY, GENERATE_CSR, DELETE_KEY, DELETE_CSR, IMPORT_CERTIFICATE_FROM_FILE, \
     IMPORT_CERTIFICATE_FROM_FILE_FAILED, ENABLE_CERTIFICATE
@@ -22,7 +26,9 @@ from view_models.members_table import SS_DETAILS_AUTH_CERT_TAB_XPATH, MEMBER_FIR
     SS_DETAILS_ADD_AUTH_CERT_BTN_ID, ADD_AUTH_CERT_UPLOAD_BTN_ID, ADD_AUTH_CERT_SUBMIT_BTN_ID, \
     ADD_AUTH_CERT_CANCEL_BTN_XPATH
 from view_models.messages import ERROR_MESSAGE_CSS, AUTH_CERT_IMPORT_FILE_FORMAT_ERROR, \
-    CERT_ALREADY_SUBMITTED_ERROR_BEGINNING
+    CERT_ALREADY_SUBMITTED_ERROR_BEGINNING, MISSING_PARAMETER, INPUT_EXCEEDS_255_CHARS
+from view_models.popups import close_all_open_dialogs
+from view_models.sidebar import CERTIFICATION_SERVICES_CSS
 
 
 def test_generate_csr_and_import_cert(client_code, client_class, usage_auth=False, key_label=None, check_inputs=False,
@@ -1333,7 +1339,8 @@ def put_file_in_ss(client, local_path, remote_path):
     sftp.close()
 
 
-def get_cert(client, service, file_path, local_path, remote_cert_path, remote_csr_path, convert_der=False, close_client=True):
+def get_cert(client, service, file_path, local_path, remote_cert_path, remote_csr_path, convert_der=False,
+             close_client=True):
     '''
     Gets the certificate (sign or auth) from the CA.
 
@@ -2310,3 +2317,89 @@ def delete_cert_from_ss(self, client, cs_ssh_host, cs_ssh_user, cs_ssh_pass):
         self.is_true(logs_found)
 
     return del_cert_from_ss
+
+
+def generate_csr_input_parsing(self, log_checker=None):
+    def generate_csr_input():
+        current_log_lines = None
+        self.log('Open keys and certificates tab')
+        self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar_constants.KEYSANDCERTIFICATES_BTN_CSS).click()
+        self.wait_jquery()
+        self.log('Click on softtoken row')
+        self.wait_until_visible(type=By.XPATH, element=keyscertificates_constants.SOFTTOKEN_TABLE_ROW_XPATH).click()
+        self.log('Click on "Generate key" button')
+        self.wait_until_visible(type=By.ID, element=keyscertificates_constants.GENERATEKEY_BTN_ID).click()
+        key_label = 'test_csr_input_parsing'
+        self.log('SS_28 3. Insert {0} to "LABEL" area'.format(key_label))
+        key_label_input = self.wait_until_visible(type=By.ID, element=popups.GENERATE_KEY_POPUP_KEY_LABEL_AREA_ID)
+        self.input(key_label_input, key_label)
+        self.log('Click on "OK" button')
+        self.wait_until_visible(type=By.XPATH, element=popups.GENERATE_KEY_POPUP_OK_BTN_XPATH).click()
+        self.wait_jquery()
+
+        self.log('Click on generated key row')
+        self.wait_until_visible(type=By.XPATH,
+                                element=keyscertificates_constants.KEY_TABLE_ROW_BY_LABEL_XPATH.format(
+                                    key_label)).click()
+
+        # UC SS_29 1. Select to generate a CSR for the key
+        self.log('SS_29 1. Select to generate a CSR for the key')
+
+        # Generate the CSR from the key.
+        self.log('Click on "GENERATE CSR" button')
+        self.wait_until_visible(type=By.ID, element=keyscertificates_constants.GENERATECSR_BTN_ID).click()
+
+        # UC SS_29 4b CSR generation is cancelled
+        self.log('UC SS_29 4b CSR generation is cancelled')
+        self.log('Select "certification service"')
+        select = Select(self.wait_until_visible(type=By.ID,
+                                                element=keyscertificates_constants.GENERATE_CSR_SIGNING_REQUEST_APPROVED_CA_DROPDOWN_ID))
+        self.wait_jquery()
+        select.select_by_index(1)
+
+        self.log('Click on "OK" button')
+        self.wait_until_visible(type=By.XPATH,
+                                element=keyscertificates_constants.GENERATE_CSR_SIGNING_REQUEST_POPUP_OK_BTN_XPATH).click()
+        self.wait_jquery()
+        editable_field = self.wait_until_visible(type=By.XPATH, element=SUBJECT_DISTINGUISHED_NAME_POPUP_O_XPATH)
+        code_256_chars = 'A' * 256
+        code_255_chars = ' {} '.format('A' * 255)
+        inputs = [
+            ['', MISSING_PARAMETER.format('O'), GENERATE_CSR_FAILED, 'Missing parameter'],
+            [code_256_chars, INPUT_EXCEEDS_255_CHARS.format('O'), GENERATE_CSR_FAILED, 'Too long value(256 chars)'],
+            [code_255_chars, None, GENERATE_CSR, 'Max length field with whitespaces']
+        ]
+        for input in inputs:
+            if log_checker:
+                current_log_lines = log_checker.get_line_count()
+            text = input[0]
+            error = input[1]
+            log_event = input[2]
+            log_msg = input[3]
+            self.log('SS_29 5a. Testing user input parsing in CSR, testing "{}"'.format(log_msg))
+            self.input(editable_field, text)
+            self.by_xpath(SUBJECT_DISTINGUISHED_NAME_POPUP_OK_BTN_XPATH).click()
+            self.wait_jquery()
+            error_msg = messages.get_error_message(self)
+            self.is_equal(error_msg, error, msg='Error message different from expected "{}"'.format(error_msg))
+            if current_log_lines:
+                logs_found = log_checker.check_log(log_event, from_line=current_log_lines + 1)
+                self.is_true(logs_found, msg='Log event "{}" not found'.format(log_event))
+
+    return generate_csr_input
+
+
+def changeCAToFi(self, cs_host, cs_user, cs_pass, ca_name, sshclient):
+    self.log('Setting ca profile to FiVRK')
+    self.reload_webdriver(cs_host, cs_user, cs_pass)
+    self.wait_until_visible(type=By.CSS_SELECTOR, element=CERTIFICATION_SERVICES_CSS).click()
+    self.wait_jquery()
+    edit_ca_settings(self, ca_name)
+    self.by_xpath(CA_SETTINGS_TAB_XPATH).click()
+    self.wait_jquery()
+    configure_ca(self, auth_only_certs=None,
+                 certificate_classpath='ee.ria.xroad.common.certificateprofile.impl.FiVRKCertificateProfileInfoProvider')
+    sshclient.exec_command('service xroad-confclient restart', sudo=True)
+    self.log('Waiting until new profile is loaded in security server')
+    time.sleep(120)
+    return self.driver

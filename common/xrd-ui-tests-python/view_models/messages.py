@@ -116,6 +116,21 @@ FAILED_TO_REGISTER_HOST_NOT_KNOWN_ERROR = 'Failed to register certificate: Unkno
 UPLOAD_CONTAIN_INVALID_CHARACTERS = 'Failed to upload new backup file: Filename \'{0}\' contains invalid characters. Valid characters include: (A-Z), (a-z), (0-9), (_), (.), (-).'
 UPLOAD_WRONG_EXTENSION = 'Failed to upload new backup file: Uploaded file name \'{0}\' has an invalid extension, the only valid one is \'tar\''
 
+DELETE_ANCHOR_SUCCESS_MSG = 'Configuration anchor of instance \'{}\' deleted successfully.'
+UPLOAD_ANCHOR_SIGNATURE_ERROR = 'Failed to save uploaded trusted anchor: ' \
+                                 'Signature of configuration cannot be verified'
+UPLOAD_ANCHOR_EXPIRED_ERROR = 'Failed to save uploaded trusted anchor: ' \
+                                 'Configuration from source is out of date'
+UPLOAD_ANCHOR_URL_UNREACHABLE_ERROR = 'Failed to save uploaded trusted anchor: ' \
+                                 'Configuration source cannot be reached, check source URL in uploaded anchor file'
+UPLOAD_ANCHOR_INVALID_FILE_ERROR = 'Failed to upload trusted anchor: ' \
+                                 'Incorrect file structure.'
+UPLOAD_ANCHOR_UNKNOWN_ERROR = 'Failed to save uploaded trusted anchor: ' \
+                                 'Configuration from source failed verification'
+UPLOAD_ANCHOR_INTERNAL_CONF_ERROR = 'Failed to save uploaded trusted anchor: ' \
+                                 'Anchor points to an internal configuration source. ' \
+                                 'Only external configuration source anchors are supported as trusted anchors'
+UPLOAD_ANCHOR_SAME_INSTANCE_ERROR = 'Failed to upload trusted anchor: Anchors originating from this instance are not supported as trusted anchors.'
 CERT_ALREADY_SUBMITTED_ERROR_BEGINNING = 'Failed to add authentication certificate adding request: Certificate is already submitted for registration with request'
 UPLOAD_WRONG_FORMAT = 'Failed to upload new backup file: Content of uploaded file must be in tar format'
 UPLOAD_EXISTS = 'Backup file with name \'{0}\' already exists, do you want to overwrite it?'
@@ -130,7 +145,10 @@ HARDTOKEN_LOGIN_FAILED = 'Login failed: CKR_USER_PIN_NOT_INITIALIZED'
 HARDTOKEN_LOGOUT_FAILED = 'CKR_DEVICE_ERROR'
 HARDTOKEN_KEY_DELETE_FAILED = "Failed to delete key: Failed to delete private key \'{0}\' on token 'utimaco-UTIMACO CS000000-CryptoServer PKCS11 Token': iaik.pkcs.pkcs11.wrapper.PKCS11Exception: CKR_DEVICE_ERROR"
 
+KEY_DELETE_FAILED_CONNECTION_REFUSED = 'Failed to delete key: ConnectException: Connection refused (Connection refused)'
 
+KEY_DELETE_FAILED_SERVICE_DISABLED_ERROR_MSG = 'Failed to delete key: Service SERVICE:KS1/GOV/TS1OWNER/Management Services/authCertDeletion is disabled: Out of order'
+KEY_DELETE_SENDING_FAILED = 'Failed to delete key: Could not connect to any target host ([https://ss.asa:5500/])'
 MANAGEMENT_SERVICE_REGISTERED = 'Management service provider \'.*\' registered as security server \'.*\' client'
 MANAGEMENT_SERVICE_ADDED_COMMENT = 'Management service provider registration'
 DECLINED_REQUEST_NOTICE = 'Successfully declined request with id \'{0}\''

@@ -1,8 +1,14 @@
 # coding=utf-8
-from selenium.webdriver.common.by import By
-from helpers import auditchecker, xroad, ssh_client
-from view_models import sidebar, keys_and_certificates_table, popups, messages, log_constants
 import time
+
+from selenium.webdriver.common.by import By
+
+from helpers import auditchecker, ssh_client
+from helpers.ssh_server_actions import get_key_conf_token_count, get_keyconf_update_timeout
+from tests.xroad_configure_service_222.wsdl_validator_errors import wait_until_server_up
+from tests.xroad_ss_client_certification_213.client_certification import generate_auth_csr
+from view_models import sidebar, keys_and_certificates_table, popups, messages, log_constants
+from view_models.messages import ERROR_MESSAGE_CSS
 
 
 def test_hardware_key_delete(case, ssh_host=None, ssh_username=None, ssh_password=None):
@@ -20,9 +26,12 @@ def test_hardware_key_delete(case, ssh_host=None, ssh_username=None, ssh_passwor
         self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.KEYSANDCERTIFICATES_BTN_CSS).click()
         self.wait_jquery()
 
-        '''If token is loged out then log in'''
-        if self.driver.find_element_by_xpath(keys_and_certificates_table.HARDTOKEN_ERROR_LOGIN2).is_displayed():
+        # '''If token is loged out then log in'''
+        try:
+            self.by_xpath(keys_and_certificates_table.HARDTOKEN_ERROR_LOGIN2)
             hardware_token_login(self)
+        except:
+            pass
 
         '''Add key deletion failed message to logdata'''
         self.logdata.append(log_constants.DELETE_KEY_FAILED)
@@ -33,6 +42,14 @@ def test_hardware_key_delete(case, ssh_host=None, ssh_username=None, ssh_passwor
 
         '''Add key to token'''
         add_key_hardware_token(self)
+        generate_auth_csr(self, 'ca.asa', change_usage=False)
+
+        sshclient = ssh_client.SSHClient(ssh_host, ssh_username, ssh_password)
+        timeout = get_keyconf_update_timeout(sshclient)
+        self.log('Waiting {} seconds for keyconf update'.format(timeout))
+        time.sleep(timeout)
+        self.log('Get initial token count')
+        token_count = get_key_conf_token_count(sshclient)
 
         '''Click on key'''
         self.wait_until_visible(type=By.XPATH,
@@ -41,7 +58,7 @@ def test_hardware_key_delete(case, ssh_host=None, ssh_username=None, ssh_passwor
 
         self.log('Click on "Details" button')
         self.wait_until_visible(type=By.ID, element=keys_and_certificates_table.DETAILS_BTN_ID).click()
-        self.wait_jquery
+        self.wait_jquery()
         '''Get key details'''
         token_info = self.wait_until_visible(type=By.XPATH, element=popups.KEY_DETAILS_TOKEN_INFO_XPATH)
         token_info = token_info.text.encode('utf-8').split()
@@ -49,7 +66,7 @@ def test_hardware_key_delete(case, ssh_host=None, ssh_username=None, ssh_passwor
         token_id = token_info[2]
         '''Click cancel button'''
         self.wait_until_visible(type=By.XPATH, element=popups.KEY_DETAILS_POPUP_POPUP_CANCEL_BTN_XPATH).click()
-        self.wait_jquery
+        self.wait_jquery()
 
         '''Click on key'''
         self.wait_until_visible(type=By.XPATH,
@@ -69,7 +86,7 @@ def test_hardware_key_delete(case, ssh_host=None, ssh_username=None, ssh_passwor
 
         self.log('UC SS_37:  4a. Deletion failed')
         '''Get error message'''
-        ui_error = messages.get_error_message(self)
+        ui_error = self.wait_until_visible(type=By.CSS_SELECTOR, element=ERROR_MESSAGE_CSS).text
 
         '''Verify error message'''
         self.is_equal(ui_error, messages.HARDTOKEN_KEY_DELETE_FAILED.format(token_id),
@@ -83,7 +100,7 @@ def test_hardware_key_delete(case, ssh_host=None, ssh_username=None, ssh_passwor
         sshclient.exec_command('docker run -p3001:3001 -dt --rm --name cssim410_test cssim410_test', sudo=True)
         '''Restart xroad-signer service'''
         sshclient.exec_command('service xroad-signer restart', sudo=True)
-        time.sleep(7)
+        wait_until_server_up(self.url)
         '''Reload page'''
         self.reset_page()
         self.wait_jquery()
@@ -105,6 +122,14 @@ def test_hardware_key_delete(case, ssh_host=None, ssh_username=None, ssh_passwor
         self.logdata.append(log_constants.GENERATE_KEY)
         '''Add delete key message to logdata'''
         self.logdata.append(log_constants.DELETE_KEY)
+
+        sshclient = ssh_client.SSHClient(ssh_host, ssh_username, ssh_password)
+        timeout = get_keyconf_update_timeout(sshclient)
+        self.log('Waiting {} seconds for keyconf update'.format(timeout))
+        time.sleep(timeout)
+        self.log('SS_35 6. Token is deleted from system configuration when no other keys present')
+        token_count_after_delete = get_key_conf_token_count(sshclient)
+        self.is_true(token_count_after_delete < token_count)
 
         '''Check audit log'''
         if ssh_host is not None:
@@ -131,12 +156,12 @@ def hardware_token_login(self):
 
     '''Insert correct PIN'''
     self.input(key_label_input, keys_and_certificates_table.TOKEN_PIN)
-    self.wait_jquery
+    self.wait_jquery()
     self.logdata.append(log_constants.SOFTTOKEN_LOGIN_SUCCESS)
 
     '''Click "OK" button'''
     self.wait_until_visible(type=By.XPATH, element=popups.TOKEN_LOGIN_OK_BTN_XPATH).click()
-    self.wait_jquery
+    self.wait_jquery()
     time.sleep(2)
 
     return self.logdata

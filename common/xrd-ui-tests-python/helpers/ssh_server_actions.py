@@ -136,3 +136,9 @@ def cp(ssh_client_instance, src, destination, sudo=False):
 def mv(ssh_client_instance, src, destination, sudo=False):
     mv_command = 'mv {0} {1}'.format(src, destination)
     return ssh_client_instance.exec_command(mv_command, sudo)
+
+def get_keyconf_update_timeout(sshclient):
+    server_time = int(sshclient.exec_command('date +"%s"')[0][0])
+    file_modified = int(sshclient.exec_command('date +"%s" -r {}'.format('/etc/xroad/signer/keyconf.xml'), sudo=True)[0][0])
+    ago = server_time - file_modified
+    return 65 - ago

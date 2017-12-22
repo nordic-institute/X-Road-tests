@@ -306,6 +306,7 @@ class Cs_conf_mgm(CommonUtils):
 
     def get_newest_key_id(self, parameters=None):
         """
+        
         :param parameters:  Test data section dictionary
         
         **Test steps:**

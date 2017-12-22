@@ -140,6 +140,14 @@ class Xroad_global_configuration(SetupTest):
                 * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.get_all_logs_from_server`, *u'cs_url'*
                 * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.find_exception_from_logs_and_save`
         """
+
+        if self.login_to_token:
+            if self.ss_login.verify_is_login_page():
+                self.component_cs.login(section=u'cs_url')
+            self.component_cs_sidebar.open_global_configuration_view()
+            self.component_cs_conf_mgm.log_in_to_software_token(section=u'cs_url')
+
+
         # Step log out if logged in
         if not self.ss_login.verify_is_login_page():
             self.open_application.open_application_url(TESTDATA[u'cs_url'])
@@ -152,6 +160,7 @@ class Xroad_global_configuration(SetupTest):
             self.component_cs_conf_mgm.delete_conf_part_file(self.INI_FILE)
         except:
             pass
+
 
         stop_log_time = self.common_lib.get_log_utc_time()
         if not self.is_last_test_passed():
@@ -226,7 +235,7 @@ class Xroad_global_configuration(SetupTest):
         self.component_cs_conf_mgm.download_source_anchor_from_cs()
 
         # Step Recreate configuration source anchor
-        self.component_cs_conf_mgm.recreate_source_anchor_from_cs()
+        self.component_cs_conf_mgm.recreate_source_anchor_from_self.login_to_tokencs()
 
         # Step Log out
         self.common_lib.log_out()
@@ -260,10 +269,10 @@ class Xroad_global_configuration(SetupTest):
         # Step Login to central server and open configuration view
         self.component_cs.login(section=u'cs_url')
         self.component_cs_sidebar.open_global_configuration_view()
-        self.component_cs_sidebar.open_global_configuration_view()
 
         # Step Log out software token
         self.component_cs_conf_mgm.logout_software_token()
+        self.login_to_token = True
 
         # Step Log in software token empty pin
         self.component_cs_conf_mgm.log_in_to_software_token_empty_pin(section=u'empty_pin')
@@ -273,6 +282,7 @@ class Xroad_global_configuration(SetupTest):
 
         # Step Log in software token
         self.component_cs_conf_mgm.log_in_to_software_token(section=u'cs_url')
+        self.login_to_token = False
 
         # Step Log out
         self.common_lib.log_out()
@@ -345,9 +355,13 @@ class Xroad_global_configuration(SetupTest):
 
         # Step log out and generate key with out log in
         self.component_cs_conf_mgm.logout_software_token()
+        self.login_to_token = True
         self.component_cs_conf_mgm.generate_config_key_not_logged_in(u'cs_url')
         # Step Delete signing key
         self.component_cs_conf_mgm.delete_newest_signing_key()
+        # Step Log in software token
+        self.component_cs_conf_mgm.log_in_to_software_token(section=u'cs_url')
+        self.login_to_token = False
 
         # Step Log out
         self.common_lib.log_out()

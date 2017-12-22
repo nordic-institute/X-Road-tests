@@ -236,7 +236,7 @@ class Xroad_global_configuration(SetupTest):
         self.component_cs_conf_mgm.download_source_anchor_from_cs()
 
         # Step Recreate configuration source anchor
-        self.component_cs_conf_mgm.recreate_source_anchor_from_self()
+        self.component_cs_conf_mgm.recreate_source_anchor_from_cs()
 
         # Step Log out
         self.common_lib.log_out()

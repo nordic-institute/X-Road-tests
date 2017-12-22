@@ -118,6 +118,7 @@ class Xroad_global_configuration(SetupTest):
                 * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.empty_all_logs_from_server`, *"ss1_url"*
                 * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.empty_all_logs_from_server`, *"cs_url"*
         """
+        self.login_to_token = False
         # Step Set to default before test case
         self.common_lib.delete_files_with_extension(TESTDATA[u'paths'][u'downloads_folder'], u'.xml')
         self.start_log_time = self.common_lib.get_log_utc_time()

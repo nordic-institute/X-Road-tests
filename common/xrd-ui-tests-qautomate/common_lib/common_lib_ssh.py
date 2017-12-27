@@ -163,19 +163,22 @@ class Common_lib_ssh(CommonUtils):
         :param text:  String value for text
         """
         server = TESTDATA[section][u'server_address']
-        file_name = os.path.basename(path)
-        directory = os.path.dirname(path)
         if strings.server_environment_type() == strings.lxd_type_environment:
+            file_name = os.path.basename(path)
+            directory = os.path.dirname(path)
             server = server.split(".lxd")[0]
             command = 'lxc exec {} -- su xroad sh -c "cd {} && echo -e \'{}\' > {}"'.format(server, directory,
                                                                                             text, file_name)
+            self.run_bash_command(command, True)
         elif strings.server_environment_type() == strings.ssh_type_environment:
-            command = 'ssh {} sudo -u xroad sh -c "cd {} && echo -e \'{}\' > {} && sudo chown xroad foo.ini && ls -li"'.format(server, directory,
-                                                                                                                               text, file_name)
+            lines = text.split("\n")
+            for line in lines:
+                command = 'echo "{}" | ssh {} sudo -u xroad tee -a {} >/dev/null'.format(line, server, path)
+                self.run_bash_command(command, True)
         else:
             raise Exception(errors.enviroment_type_not_valid)
 
-        self.run_bash_command(command, True)
+
 
     def delete_signing_key_from_signer_console(self, section="cs_url", key=""):
         """

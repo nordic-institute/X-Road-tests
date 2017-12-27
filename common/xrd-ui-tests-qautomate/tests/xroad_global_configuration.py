@@ -148,7 +148,6 @@ class Xroad_global_configuration(SetupTest):
             self.component_cs_sidebar.open_global_configuration_view()
             self.component_cs_conf_mgm.log_in_to_software_token(section=u'cs_url')
 
-
         # Step log out if logged in
         if not self.ss_login.verify_is_login_page():
             self.open_application.open_application_url(TESTDATA[u'cs_url'])

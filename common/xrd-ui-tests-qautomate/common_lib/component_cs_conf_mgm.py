@@ -123,7 +123,11 @@ class Component_cs_conf_mgm(CommonUtils):
         """
         # Step Login to software token
         self.cs_conf_mgm.click_element_login()
-        self.try_insert_pin_code(section)
+        self.wait_until_jquery_ajax_loaded()
+
+        self.cs_conf_mgm_enter_pin.input_text_to_id_activate_token_pin(TESTDATA[section])
+        self.cs_conf_mgm_enter_pin.click_button_ok()
+        self.wait_until_jquery_ajax_loaded()
 
         # Step Verify log in token audit log audit log
         self.common_lib_ssh.verify_audit_log(section=u'cs_url', event=strings.login_token)
@@ -145,7 +149,11 @@ class Component_cs_conf_mgm(CommonUtils):
         """
         # Step Login to software token
         self.cs_conf_mgm.click_element_login()
-        self.try_insert_pin_code(section)
+        self.wait_until_jquery_ajax_loaded()
+
+        self.cs_conf_mgm_enter_pin.input_text_to_id_activate_token_pin(TESTDATA[section])
+        self.cs_conf_mgm_enter_pin.click_button_ok()
+        self.wait_until_jquery_ajax_loaded()
 
         # Step Verify log in token invalid pin audit log audit log
         self.common_lib_ssh.verify_audit_log(section=u'cs_url', event=strings.login_token_failed)
@@ -173,7 +181,11 @@ class Component_cs_conf_mgm(CommonUtils):
         """
         # Step Login to software token
         self.cs_conf_mgm.click_element_login()
-        self.try_insert_pin_code(section)
+        self.wait_until_jquery_ajax_loaded()
+
+        self.cs_conf_mgm_enter_pin.input_text_to_id_activate_token_pin(TESTDATA[section])
+        self.cs_conf_mgm_enter_pin.click_button_ok()
+        self.wait_until_jquery_ajax_loaded()
 
         # Step Verify log in token invalid pin audit log audit log
         self.common_lib_ssh.verify_audit_log(section=u'cs_url', event=strings.login_token_failed)

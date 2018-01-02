@@ -232,6 +232,8 @@ class Common_lib_ssh(CommonUtils):
         """
         if to_print:
             print(command)
+        if strings.server_environment_type() == strings.ssh_type_environment:
+            command.replace("ssh ", "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ")
         p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         output, com_errors = p.communicate()
         if com_errors:

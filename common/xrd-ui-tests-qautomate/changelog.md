@@ -1,4 +1,6 @@
 ## Changelog
+- 2.1.2017
+    * 2.2.4, 2.2.5, 2.2.6, 2.2.7, 2.2.11, 2.2.13 Global configuration cases done
 - 6.11.2017
    * Sphinx html removed from branch
 - 25.10.2017

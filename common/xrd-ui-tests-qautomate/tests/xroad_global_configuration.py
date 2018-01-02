@@ -66,9 +66,8 @@ class Xroad_global_configuration(SetupTest):
             * 4a: The inserted address is not valid
 
     **Changelog:**
-        * ?.?.2017
-            * Test cases done
-            * '2.2.4'_, '2.2.5'_, '2.2.6'_, `2.2.7`_: 3a 4a, `2.2.11`_, `2.2.13`_: 7a
+        * 2.1.2017
+            * '2.2.4'_, '2.2.5'_, '2.2.6'_, `2.2.7`_, `2.2.11`_, `2.2.13`_ Test cases done
         * 20.09.2017
             * Links added to md use case documentation
         * 11.07.2017

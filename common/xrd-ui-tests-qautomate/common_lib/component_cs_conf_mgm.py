@@ -61,6 +61,10 @@ class Component_cs_conf_mgm(CommonUtils):
         # Step Generate config key
         self.cs_conf_mgm.click_button_id_generate_signing_key()
         self.cs_conf_mgm_internal_new_key.click_button_ok()
+
+        # Step Try if inserting pin is needed
+        self.try_insert_pin_code()
+
         # Step Verify config generation audit log
         self.common_lib_ssh.verify_audit_log(section=u'cs_url', event=strings.generate_config_signing_key.format(key_type))
 

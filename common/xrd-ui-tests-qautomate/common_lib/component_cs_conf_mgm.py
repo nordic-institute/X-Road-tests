@@ -55,7 +55,8 @@ class Component_cs_conf_mgm(CommonUtils):
             * **Step 1: generate config key**
                 * :func:`~pagemodel.cs_conf_mgm.Cs_conf_mgm.click_button_id_generate_signing_key`
                 * :func:`~pagemodel.cs_conf_mgm_internal_new_key.Cs_conf_mgm_internal_new_key.click_button_ok`
-            * **Step 2: verify config generation audit log**
+            * **Step 2: try if inserting pin is needed**
+            * **Step 3: verify config generation audit log**
                 * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *section=u'cs_url'*, *event=strings.generate_config_signing_key.format(key_type*
         """
         # Step Generate config key
@@ -122,6 +123,8 @@ class Component_cs_conf_mgm(CommonUtils):
         **Test steps:**
             * **Step 1: login to software token**
                 * :func:`~pagemodel.cs_conf_mgm.Cs_conf_mgm.click_element_login`
+                * :func:`~pagemodel.cs_conf_mgm_enter_pin.Cs_conf_mgm_enter_pin.input_text_to_id_activate_token_pin`, *TESTDATA[section]*
+                * :func:`~pagemodel.cs_conf_mgm_enter_pin.Cs_conf_mgm_enter_pin.click_button_ok`
             * **Step 2: verify log in token audit log audit log**
                 * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *section=u'cs_url'*, *event=strings.login_token*
         """
@@ -145,6 +148,8 @@ class Component_cs_conf_mgm(CommonUtils):
         **Test steps:**
             * **Step 1: login to software token**
                 * :func:`~pagemodel.cs_conf_mgm.Cs_conf_mgm.click_element_login`
+                * :func:`~pagemodel.cs_conf_mgm_enter_pin.Cs_conf_mgm_enter_pin.input_text_to_id_activate_token_pin`, *TESTDATA[section]*
+                * :func:`~pagemodel.cs_conf_mgm_enter_pin.Cs_conf_mgm_enter_pin.click_button_ok`
             * **Step 2: verify log in token invalid pin audit log audit log**
                 * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *section=u'cs_url'*, *event=strings.login_token_failed*
                 * :func:`~common_lib.component_common.Component_common.verify_notice_message`, *message=strings.login_software_token_invalid_pin*
@@ -177,6 +182,8 @@ class Component_cs_conf_mgm(CommonUtils):
         **Test steps:**
             * **Step 1: login to software token**
                 * :func:`~pagemodel.cs_conf_mgm.Cs_conf_mgm.click_element_login`
+                * :func:`~pagemodel.cs_conf_mgm_enter_pin.Cs_conf_mgm_enter_pin.input_text_to_id_activate_token_pin`, *TESTDATA[section]*
+                * :func:`~pagemodel.cs_conf_mgm_enter_pin.Cs_conf_mgm_enter_pin.click_button_ok`
             * **Step 2: verify log in token invalid pin audit log audit log**
                 * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *section=u'cs_url'*, *event=strings.login_token_failed*
                 * :func:`~common_lib.component_common.Component_common.verify_notice_message`, *message=strings.login_software_token_missing_pin*

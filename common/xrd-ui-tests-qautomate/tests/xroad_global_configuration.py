@@ -42,12 +42,12 @@ class Xroad_global_configuration(SetupTest):
         * `2.2.2`_: Download a Configuration Source Anchor File
         * `2.2.3`_: Re-Create a Configuration Source Anchor
             * 2a. The process of generating the anchor terminated with an error message. (postpone)
-        * '2.2.4'_: Describe Optional Configuration Part Data
-        * '2.2.5'_: Upload an Optional Configuration Part File
+        * `2.2.4`_: Describe Optional Configuration Part Data
+        * `2.2.5`_: Upload an Optional Configuration Part File
             * 3a. A validator is not described for this configuration part.
             * 3b. The system is unable to find the described validation program.
             * 4a. The validation succeeded with validation errors.
-        * '2.2.6'_: Download a Configuration Part File
+        * `2.2.6`_: Download a Configuration Part File
         * `2.2.7`_: Log In to a Software Security Token
             * 3a: The parsing of the user input terminated with an error message.
             * 4a: The entered PIN code is incorrect.
@@ -67,7 +67,7 @@ class Xroad_global_configuration(SetupTest):
 
     **Changelog:**
         * 2.1.2017
-            * '2.2.4'_, '2.2.5'_, '2.2.6'_, `2.2.7`_, `2.2.11`_, `2.2.13`_ Test cases done
+            * `2.2.4`_, `2.2.5`_, `2.2.6`_, `2.2.7`_, `2.2.11`_, `2.2.13`_ Test cases done
         * 20.09.2017
             * Links added to md use case documentation
         * 11.07.2017
@@ -160,7 +160,6 @@ class Xroad_global_configuration(SetupTest):
         except:
             pass
 
-
         stop_log_time = self.common_lib.get_log_utc_time()
         if not self.is_last_test_passed():
             _, copy_log = self.get_log_file_paths()
@@ -252,7 +251,6 @@ class Xroad_global_configuration(SetupTest):
         **Test steps:**
             * **Step 1: login to central server and open configuration view**
                 * :func:`~common_lib.component_cs.Component_cs.login`, *section=u'cs_url'*
-                * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_global_configuration_view`
                 * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_global_configuration_view`
             * **Step 2: log out software token**
                 * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.logout_software_token`
@@ -360,7 +358,6 @@ class Xroad_global_configuration(SetupTest):
         # Step Delete signing key
         self.component_cs_conf_mgm.delete_newest_signing_key()
 
-
         # Step Log out
         self.common_lib.log_out()
 
@@ -440,13 +437,13 @@ class Xroad_global_configuration(SetupTest):
         Test all optional configuration part cases
 
         **Use cases:**
-            * '2.2.4'_: Describe Optional Configuration Part Data
-            * '2.2.5'_: Upload an Optional Configuration Part File
+            * `2.2.4`_: Describe Optional Configuration Part Data
+            * `2.2.5`_: Upload an Optional Configuration Part File
                 * 3a. A validator is not described for this configuration part.
                 * 3b. The system is unable to find the described validation program.
                 * 4a. The validation succeeded with validation errors.
                 * 4a. The validation succeeded with validation errors.
-            * '2.2.6'_: Download a Configuration Part File
+            * `2.2.6`_: Download a Configuration Part File
 
         **Test steps:**
             * **Step 1: login to central server and open configuration view**

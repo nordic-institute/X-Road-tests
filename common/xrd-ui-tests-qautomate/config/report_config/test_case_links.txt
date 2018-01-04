@@ -1,1 +1,1 @@
-Documentation = http://xroad-tests-qautomate.s3-website-eu-west-1.amazonaws.com/code_documentation/tests/{TestSet}.html#{SphinxTestCase}
+Documentation = https://qautomate-tests.palveluvayla.com/code_documentation/tests/{TestSet}.html#{SphinxTestCase}

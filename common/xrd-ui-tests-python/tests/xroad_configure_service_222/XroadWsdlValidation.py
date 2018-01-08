@@ -8,7 +8,7 @@ from tests.xroad_configure_service_222.wsdl_validator_errors import restore_wsdl
 from view_models import ss_system_parameters
 
 
-class XroadWsdlValidatorCrash(unittest.TestCase):
+class XroadWsdlValidation(unittest.TestCase):
     """
     SERVICE_44: Validate a WSDL
     RIA URL: https://jira.ria.ee/browse/XTKB-30

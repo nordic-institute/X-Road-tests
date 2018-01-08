@@ -56,4 +56,4 @@ class XroadGenerateCSRInputParsing(unittest.TestCase):
                 sshclient.exec_command('service xroad-confclient restart', sudo=True)
                 sshclient.close()
                 time.sleep(120)
-            main.tearDown()
+                main.tearDown()

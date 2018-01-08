@@ -26,10 +26,10 @@ class XroadTrustViewApprovedCertService(unittest.TestCase):
         cs_host = main.config.get('cs.host')
         cs_user = main.config.get('cs.user')
         cs_pass = main.config.get('cs.pass')
-        ca_name = 'ca.asa'
+        approved_cert_sercive = str(main.config.get('ca.name'))
 
         '''Configure the service'''
-        test_view_approved_cert_servives = view_management.test_verify_approved_cert_services(case=main, ca_name=ca_name)
+        test_view_approved_cert_servives = view_management.test_verify_approved_cert_services(case=main, approved_cert_sercive=approved_cert_sercive)
 
         try:
             '''Open webdriver'''

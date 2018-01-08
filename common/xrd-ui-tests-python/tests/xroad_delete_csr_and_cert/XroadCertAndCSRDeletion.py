@@ -12,7 +12,7 @@ from tests.xroad_parse_users_inputs.xroad_parse_user_inputs import add_key_label
 from tests.xroad_ss_client_certification_213.client_certification import register_cert, activate_cert, \
     test_generate_csr_and_import_cert, test_add_cert_to_ss
 from view_models import sidebar
-from view_models.keys_and_certificates_table import SIGNING_KEY_LABEL, AUTH_KEY_LABEL
+from view_models.keys_and_certificates_table import SIGNING_KEY_LABEL
 
 
 class XroadCertAndCSRDeletion(unittest.TestCase):
@@ -52,6 +52,7 @@ class XroadCertAndCSRDeletion(unittest.TestCase):
         client_code = client['code']
         client_class = client['class']
         client['name'] = client_name
+        auth_key_label = main.config.get('certs.ss_auth_key_label')
 
         log_checker = auditchecker.AuditChecker(ss_ssh_host, ss_ssh_user, ss_ssh_pass)
         delete_csr_key_has_more = test_delete_csr_key_has_more_items(main, sshclient, log_checker, client_code,
@@ -86,7 +87,7 @@ class XroadCertAndCSRDeletion(unittest.TestCase):
                                               cancel_csr_generation=False, generate_same_csr_twice=False)(main)
             main.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.KEYSANDCERTIFICATES_BTN_CSS).click()
             main.wait_jquery()
-            add_key_label(main, AUTH_KEY_LABEL)
+            add_key_label(main, auth_key_label)
             test_register_cert()
             test_activate_cert()
             test_add_cert_to_ss(main, cs_host, cs_user, cs_pass, client, cert_path,

@@ -28,6 +28,7 @@ class XroadRegisterCert(unittest.TestCase):
 
         cs_ssh_host = main.config.get('cs.ssh_host')
 
+        ca_name = main.config.get('ca.name')
         ca_ssh_host = main.config.get('ca.ssh_host')
         ca_ssh_user = main.config.get('ca.ssh_user')
         ca_ssh_pass = main.config.get('ca.ssh_pass')
@@ -38,16 +39,23 @@ class XroadRegisterCert(unittest.TestCase):
         member['name'] = member_name
 
         cert_path = 'temp.pem'
+        auth_key_label = main.config.get('certs.ss_auth_key_label')
+        dns = None
+        organization = None
+        if main.config.get_bool('config.harmonized_environment', False):
+            dns = ss_ssh_host
+            organization = main.config.get('ss2.organization')
 
         test_register_cert = client_certification.register_cert(main, ss_ssh_host, ss_ssh_user, ss_ssh_pass,
                                                                 cs_host=cs_ssh_host, client=member,
                                                                 ca_ssh_host=ca_ssh_host, ca_ssh_user=ca_ssh_user,
-                                                                ca_ssh_pass=ca_ssh_pass,
-                                                                check_inputs=True, cert_path=cert_path)
+                                                                ca_ssh_pass=ca_ssh_pass, ca_name=ca_name,
+                                                                check_inputs=True, cert_path=cert_path,
+                                                                dns=dns, organization=organization)
 
         try:
             main.reload_webdriver(ss_host, ss_user, ss_pass)
-            delete_auth_cert(main)
+            delete_auth_cert(main, auth_key_label)
             test_register_cert()
         except:
             main.save_exception_data()

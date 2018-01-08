@@ -547,13 +547,8 @@ def client_servers_popup_delete_tls_certs(self, cancel_deletion=False):
     return deleted_certs
 
 
-def get_client_id_by_member_code_subsystem_code(self, member_code, subsystem_code):
-    client_id = self.config.get('ss2.client_id')
-    client_id = client_id.split(' : ')
-    instance = client_id[0]
-    client_class = client_id[1]
-    return '//span[text()= "SUBSYSTEM : ' + instance + ' : ' + client_class + ' : ' + member_code + ' : ' + \
-           subsystem_code + '"]'
+def get_client_id_by_member_code_subsystem_code(member_code, subsystem_code):
+    return '//tr[contains(., "' + member_code + '") and contains(., "' + subsystem_code + '")]'
 
 
 def get_client_subsystem_xpath(self, client):

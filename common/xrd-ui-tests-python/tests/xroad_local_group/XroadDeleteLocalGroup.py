@@ -4,7 +4,7 @@ import unittest
 
 from main.maincontroller import MainController
 from tests.xroad_local_group import xroad_local_group
-
+from helpers import xroad
 
 class XroadDeleteLocalGroup(unittest.TestCase):
     """
@@ -27,12 +27,14 @@ class XroadDeleteLocalGroup(unittest.TestCase):
         main.url = main.config.get('ss2.host')
         main.username = main.config.get('ss2.user')
         main.password = main.config.get('ss2.pass')
-
+        client_name = main.config.get('ss2.client_name')
+        subsystem_row = xroad.split_xroad_subsystem(main.config.get('ss2.client_id'))
+        subsystem = subsystem_row['subsystem']
         try:
             '''Open webdriver'''
             main.reload_webdriver(main.url, main.username, main.password)
             '''Run the test'''
-            test_func = xroad_local_group.test_delete_local_group()
+            test_func = xroad_local_group.test_delete_local_group(client_name=client_name, subsystem=subsystem)
             test_func(main)
         except:
             main.log('XroadDeleteLocalGroup: Failed to delete a local group')

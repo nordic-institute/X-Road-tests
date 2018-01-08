@@ -28,7 +28,7 @@ class XroadVerifyTS(unittest.TestCase):
         cs_user = main.config.get('cs.user')
         cs_pass = main.config.get('cs.pass')
 
-        ts_name = main.config.get('tsa.host')
+        ts_name = main.config.get('tsa.name')
 
         # Configure the service
         test_view_approved_ts = ts_management.test_view_approved_ts(case=main, ts_name=ts_name)

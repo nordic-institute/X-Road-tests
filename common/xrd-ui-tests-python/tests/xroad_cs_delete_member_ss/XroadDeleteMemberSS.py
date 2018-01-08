@@ -1,58 +1,111 @@
+import time
+import unittest
+
 from selenium.webdriver.common.by import By
 
-from view_models import popups
-from view_models.cs_security_servers import SECURITY_SERVER_CLIENT_DETAILS_BTN_ID, SECURITY_SERVER_DELETE_BTN_ID, \
-    MANAGEMENT_REQUESTS_CLIENT_DELETION_XPATH, MANAGEMENT_REQUESTS_CERT_DELETION_XPATH, \
-    CLIENT_DELETION_REQUEST_COMMENTS_INPUT_XPATH, \
-    AUTH_CERT_DELETION_REQUEST_COMMENTS_INPUT_XPATH
-from view_models.log_constants import DELETE_SECURITY_SERVER
-from view_models.members_table import get_row_by_td_text, MANAGEMENT_REQUEST_DETAILS_BTN_ID
-from view_models.popups import CONFIRM_POPUP_CANCEL_BTN_XPATH, confirm_dialog_click
-from view_models.sidebar import SECURITY_SERVERS_CSS, MANAGEMENT_REQUESTS_CSS
+from helpers import xroad, ssh_client
+from helpers.auditchecker import AuditChecker
+from helpers.ssh_server_actions import refresh_ocsp
+from main.maincontroller import MainController
+from tests.xroad_configure_service_222.wsdl_validator_errors import wait_until_server_up
+from tests.xroad_cs_delete_member.deleting_in_cs import test_add_security_server_to_member
+from tests.xroad_cs_delete_member_ss.delete_member_ss import delete_member_ss
+from tests.xroad_ss_client_certification_213.client_certification import register_cert, activate_cert
+from view_models.keys_and_certificates_table import DELETE_BTN_ID, GLOBAL_ERROR_CERTIFICATE_ROW_XPATH
+from view_models.popups import confirm_dialog_click
+from view_models.sidebar import KEYSANDCERTIFICATES_BTN_CSS
 
 
-def delete_member_ss(self, server_name, try_cancel=False, log_checker=None):
-    def delete_ss():
-        current_log_lines = None
-        if log_checker is not None:
-            current_log_lines = log_checker.get_line_count()
-        self.log('Open security servers tab')
-        self.wait_until_visible(type=By.CSS_SELECTOR, element=SECURITY_SERVERS_CSS).click()
-        self.wait_jquery()
-        self.log('Click on security server {0}'.format(server_name))
-        self.wait_until_visible(type=By.XPATH, element=get_row_by_td_text(server_name)).click()
-        self.log('Open security server client details')
-        self.wait_until_visible(type=By.ID, element=SECURITY_SERVER_CLIENT_DETAILS_BTN_ID).click()
-        self.log('MEMBER_25 1. Security server delete button is clicked')
-        self.wait_until_visible(type=By.ID, element=SECURITY_SERVER_DELETE_BTN_ID).click()
-        self.log('MEMBER_25 2. System prompts for confirmation')
-        if try_cancel:
-            self.log('MEMBER_25 3a. Cancel button is pressed')
-            self.wait_until_visible(type=By.XPATH, element=CONFIRM_POPUP_CANCEL_BTN_XPATH).click()
-            self.log('Delete button is clicked again')
-            self.wait_until_visible(type=By.ID, element=SECURITY_SERVER_DELETE_BTN_ID).click()
-        self.log('MEMBER_25 3. Confirmation popup is confirmed')
-        confirm_dialog_click(self)
-        if current_log_lines is not None:
-            expected_log_msg = DELETE_SECURITY_SERVER
-            self.log('MEMBER_25 7. System logs the event {0}'.format(expected_log_msg))
-            logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
-            self.is_true(logs_found)
-        self.log('Open center server management requests tab')
-        self.wait_until_visible(type=By.CSS_SELECTOR, element=MANAGEMENT_REQUESTS_CSS).click()
-        self.log('MEMBER_25 4a.1 System creates and saves a security server client deletion request')
-        self.wait_until_visible(type=By.XPATH, element=MANAGEMENT_REQUESTS_CLIENT_DELETION_XPATH).click()
-        self.wait_until_visible(type=By.ID, element=MANAGEMENT_REQUEST_DETAILS_BTN_ID).click()
-        client_del_req_comment = self.wait_until_visible(type=By.XPATH,
-                                                         element=CLIENT_DELETION_REQUEST_COMMENTS_INPUT_XPATH).text
-        self.is_true(client_del_req_comment.endswith('deletion'))
-        popups.close_all_open_dialogs(self)
-        self.log('MEMBER_25 5a.1 System creates and saves a security server cert deletion request')
-        self.wait_until_visible(type=By.XPATH, element=MANAGEMENT_REQUESTS_CERT_DELETION_XPATH).click()
-        self.wait_until_visible(type=By.ID, element=MANAGEMENT_REQUEST_DETAILS_BTN_ID).click()
-        cert_del_req_comment = self.wait_until_visible(type=By.XPATH,
-                                                       element=AUTH_CERT_DELETION_REQUEST_COMMENTS_INPUT_XPATH).text
-        self.log('Check if cert and client deletion comments are same')
-        self.is_equal(client_del_req_comment, cert_del_req_comment)
+class XroadDeleteMemberSS(unittest.TestCase):
+    def test_delete_member_ss(self):
+        """
+        MEMBER_25 Delete a Security Server
+        RIA URL: https://jira.ria.ee/browse/XT-377, https://jira.ria.ee/browse/XTKB-133
+        Depends on finishing other test(s):
+        Requires helper scenarios: client_certification
+        X-Road version: 6.16.0
+        :return:
+        """
+        main = MainController(self, empty_downloads=False)
+        cs_host = main.config.get('cs.host')
+        cs_user = main.config.get('cs.user')
+        cs_pass = main.config.get('cs.pass')
 
-    return delete_ss
+        ss_host = main.config.get('ss1.host')
+        ss_user = main.config.get('ss1.user')
+        ss_pass = main.config.get('ss1.pass')
+
+        ss_ssh_host = main.config.get('ss1.ssh_host')
+        ss_ssh_user = main.config.get('ss1.ssh_user')
+        ss_ssh_pass = main.config.get('ss1.ssh_pass')
+
+        ss1_server_name = main.config.get('ss1.server_name')
+
+        cs_ssh_host = main.config.get('cs.ssh_host')
+        cs_ssh_user = main.config.get('cs.ssh_user')
+        cs_ssh_pass = main.config.get('cs.ssh_pass')
+
+        ca_ssh_host = main.config.get('ca.ssh_host')
+        ca_ssh_user = main.config.get('ca.ssh_user')
+        ca_ssh_pass = main.config.get('ca.ssh_pass')
+
+        client_id = main.config.get('ss1.server_id')
+        client = xroad.split_xroad_subsystem(client_id)
+        client['name'] = main.config.get('ss1.management_name')
+        client['server_name'] = main.config.get('ss1.server_name')
+        cert_path = 'temp.pem'
+        ca_name = main.config.get('ca.name')
+
+        delete_ss = delete_member_ss(main,
+                                     server_name=ss1_server_name,
+                                     log_checker=AuditChecker(cs_ssh_host, cs_ssh_user, cs_ssh_pass),
+                                     try_cancel=True)
+        test_register_cert = register_cert(main, ss_ssh_host, ss_ssh_user, ss_ssh_pass,
+                                           cs_host=cs_ssh_host, client=client,
+                                           ca_ssh_host=ca_ssh_host, ca_ssh_user=ca_ssh_user,
+                                           ca_ssh_pass=ca_ssh_pass,
+                                           cert_path=cert_path, ca_name=ca_name, dns=ss_ssh_host, organization='MemberMGMltwd')
+        test_add_ss_to_cs_member = test_add_security_server_to_member(main, cs_host, cs_user,
+                                                                      cs_pass,
+                                                                      cs_ssh_host, cs_ssh_user,
+                                                                      cs_ssh_pass,
+                                                                      client, cert_path=cert_path
+                                                                      )
+        test_activate_cert = activate_cert(main, ss_ssh_host, ss_ssh_user, ss_ssh_pass,
+                                                                      registered=True)
+        ss_ssh_client = ssh_client.SSHClient(ss_ssh_host, ss_ssh_user, ss_ssh_pass)
+        try:
+            main.reload_webdriver(cs_host, cs_user, cs_pass)
+            delete_ss()
+        finally:
+            try:
+                main.log('Restoring security server')
+                main.log('Waiting until servers synced')
+                time.sleep(120)
+                main.log('Refresh security server ocsp and cert statuses')
+                refresh_ocsp(ss_ssh_client)
+                main.log('Wait until server is up again')
+                wait_until_server_up(ss_host)
+                main.log('Open security server page')
+                main.reload_webdriver(ss_host, ss_user, ss_pass)
+                main.log('Open keys and certificates tab')
+                main.wait_until_visible(type=By.CSS_SELECTOR, element=KEYSANDCERTIFICATES_BTN_CSS).click()
+                main.log('Clicking on certificate with global error status')
+                try:
+                    main.wait_until_visible(type=By.XPATH, element=GLOBAL_ERROR_CERTIFICATE_ROW_XPATH).click()
+                except:
+                    main.driver.refresh()
+                    main.wait_until_visible(type=By.XPATH, element=GLOBAL_ERROR_CERTIFICATE_ROW_XPATH).click()
+                main.log('Deleting certificate with global error')
+                main.by_id(DELETE_BTN_ID).click()
+                main.log('Confirming certificate deletion')
+                confirm_dialog_click(main)
+                main.wait_jquery()
+                test_register_cert()
+                test_activate_cert()
+                test_add_ss_to_cs_member()
+            except:
+                main.save_exception_data()
+                raise
+            finally:
+                main.tearDown()

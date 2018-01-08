@@ -4,6 +4,7 @@ from selenium.webdriver.common.by import By
 
 from helpers import xroad, auditchecker
 from view_models import log_constants, clients_table_vm, popups
+from view_models.clients_table_vm import DETAILS_TAB_CSS
 from view_models.log_constants import REGISTER_CLIENT
 
 
@@ -15,7 +16,7 @@ def edit_client(self, client_row):
     :return: None
     """
     self.log('Open client details')
-    self.double_click(client_row)
+    client_row.find_element_by_css_selector(DETAILS_TAB_CSS).click()
     self.wait_jquery()
 
 

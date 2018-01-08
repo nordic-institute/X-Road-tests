@@ -67,6 +67,7 @@ EDIT_OCSP_FAILED = 'Edit OCSP responder failed'
 DISABLE_CERT = 'Disable certificate'
 
 ADD_TS_FAILED = 'Add timestamping service failed'
+EDIT_TS_FAILED = 'Edit timestamping service failed'
 ADD_TS_EXISTING_URL = 'An approved timestamping service with the inserted URL and certificate already exists'
 
 UNREGISTER_CLIENT = 'Unregister client'

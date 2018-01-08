@@ -95,12 +95,15 @@ class XroadAddOwnedServer(unittest.TestCase):
         member = xroad.split_xroad_subsystem(member_id)
         member['name'] = member_name
         cert_path = 'temp.pem'
+        server_name = main.config.get('ss2.server_name')
 
         test_add_ss_to_cs_member = test_add_owned_server(main, cs_host, cs_user,
                                                          cs_pass,
                                                          cs_ssh_host, cs_ssh_user,
                                                          cs_ssh_pass,
-                                                         member, cert_path=cert_path)
+                                                         member,
+                                                         server_name=server_name,
+                                                         cert_path=cert_path)
 
         try:
             test_add_ss_to_cs_member()
@@ -110,7 +113,7 @@ class XroadAddOwnedServer(unittest.TestCase):
         finally:
             main.tearDown()
 
-    def test_d_add_existing_owned_server(self):
+    def test_d_add_existing_cert(self):
         main = MainController(self, empty_downloads=False)
 
         cs_host = main.config.get('cs.host')
@@ -126,6 +129,7 @@ class XroadAddOwnedServer(unittest.TestCase):
         member = xroad.split_xroad_subsystem(member_id)
         member['name'] = member_name
         cert_path = 'temp.pem'
+        server_name = main.config.get('ss2.server_name')
 
         test_add_ss_to_cs_member_check_server = test_add_owned_server(main, cs_host,
                                                                       cs_user,
@@ -136,7 +140,43 @@ class XroadAddOwnedServer(unittest.TestCase):
                                                                       member,
                                                                       cert_path=cert_path,
                                                                       cert_used_already=True,
-                                                                      check_server=False)
+                                                                      server_name=server_name)
+        try:
+            test_add_ss_to_cs_member_check_server()
+        except:
+            main.save_exception_data()
+            raise
+        finally:
+            main.tearDown()
+
+    def test_e_add_existing_owned_server(self):
+        main = MainController(self, empty_downloads=False)
+
+        cs_host = main.config.get('cs.host')
+        cs_user = main.config.get('cs.user')
+        cs_pass = main.config.get('cs.pass')
+
+        cs_ssh_host = main.config.get('cs.ssh_host')
+        cs_ssh_user = main.config.get('cs.ssh_user')
+        cs_ssh_pass = main.config.get('cs.ssh_pass')
+
+        member_id = main.config.get('ss2.client2_id')
+        member_name = main.config.get('ss2.client2_name')
+        member = xroad.split_xroad_subsystem(member_id)
+        member['name'] = member_name
+        cert_path = 'temp.pem'
+        server_name = main.config.get('ss2.server_name')
+
+        test_add_ss_to_cs_member_check_server = test_add_owned_server(main, cs_host,
+                                                                      cs_user,
+                                                                      cs_pass,
+                                                                      cs_ssh_host,
+                                                                      cs_ssh_user,
+                                                                      cs_ssh_pass,
+                                                                      member,
+                                                                      cert_path=cert_path,
+                                                                      check_server=True,
+                                                                      server_name=server_name)
         try:
             test_add_ss_to_cs_member_check_server()
         except:

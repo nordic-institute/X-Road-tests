@@ -25,9 +25,9 @@ class XroadTrustViewDetailsCsCaCertificate(unittest.TestCase):
         cs_host = main.config.get('cs.host')
         cs_user = main.config.get('cs.user')
         cs_pass = main.config.get('cs.pass')
-        ca_host = main.config.get('ca.host')
+        ca_name = main.config.get('ca.name')
         '''Configure the service'''
-        test_view_details_cs_ca_cert = view_management.test_ca_cs_details_view_cert(case=main, ca_host=ca_host)
+        test_view_details_cs_ca_cert = view_management.test_ca_cs_details_view_cert(case=main, ca_name=ca_name)
 
         try:
             '''Open webdriver'''

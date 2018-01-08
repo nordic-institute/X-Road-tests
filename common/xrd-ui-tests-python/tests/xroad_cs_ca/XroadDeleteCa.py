@@ -23,7 +23,7 @@ class XroadDeleteCa(unittest.TestCase):
         cs_user = main.config.get('cs.user')
         cs_pass = main.config.get('cs.pass')
 
-        ca_name = main.config.get('ca.host')
+        ca_name = main.config.get('ca.name')
 
         cs_ssh_host = main.config.get('cs.ssh_host')
         cs_ssh_user = main.config.get('cs.ssh_user')
@@ -32,7 +32,6 @@ class XroadDeleteCa(unittest.TestCase):
         test_delete_ca = ca_management.test_delete_ca(case=main, ca_name=ca_name, cs_ssh_host=cs_ssh_host,
                                                       cs_ssh_user=cs_ssh_user, cs_ssh_pass=cs_ssh_pass,
                                                       cancel_deletion=True)
-
         try:
             # Open webdriver
             main.reload_webdriver(url=cs_host, username=cs_user, password=cs_pass)

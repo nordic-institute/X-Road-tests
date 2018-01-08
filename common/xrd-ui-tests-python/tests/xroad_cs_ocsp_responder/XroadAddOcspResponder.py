@@ -23,7 +23,7 @@ class XroadAddOcspResponder(unittest.TestCase):
         cs_user = main.config.get('cs.user')
         cs_pass = main.config.get('cs.pass')
 
-        ca_name = main.config.get('ca.host')
+        ca_name = main.config.get('ca.name')
         ca_ssh_host = main.config.get('ca.ssh_host')
         ca_ssh_user = main.config.get('ca.ssh_user')
         ca_ssh_pass = main.config.get('ca.ssh_pass')
@@ -68,7 +68,6 @@ class XroadAddOcspResponder(unittest.TestCase):
 
             # Test adding OCSP responder
             test_add_ocsp_responder()
-
             # Test editing the added OCSP responder
             test_edit_ocsp_responder()
         except:

@@ -7,7 +7,7 @@ from main.maincontroller import MainController
 from tests.xroad_ss_client_certification_213.client_certification import generate_auth_csr
 from tests.xroad_ss_import_certificate_from_token.xroad_import_cert_token import import_auth_cert_from_token, \
     reset_hard_token
-from view_models.keys_and_certificates_table import KEY_TABLE_ROW_BY_LABEL_XPATH, DELETE_BTN_ID, AUTH_KEY_LABEL
+from view_models.keys_and_certificates_table import KEY_TABLE_ROW_BY_LABEL_XPATH, DELETE_BTN_ID
 from view_models.popups import confirm_dialog_click
 from view_models.sidebar import KEYSANDCERTIFICATES_BTN_CSS
 
@@ -34,11 +34,12 @@ class XroadImportCertFromTokenAuth(unittest.TestCase):
         ca_ssh_client = ssh_client.SSHClient(main.config.get('ca.ssh_host'), main.config.get('ca.ssh_user'),
                                       main.config.get('ca.ssh_pass'))
         token_name = main.config.get('utimaco.token_name')
+        auth_key_label = main.config.get('certs.ss_auth_key_label')
 
         try:
             main.reload_webdriver(ss2_host, ss2_user, ss2_pass)
             main.wait_until_visible(type=By.CSS_SELECTOR, element=KEYSANDCERTIFICATES_BTN_CSS).click()
-            main.wait_until_visible(type=By.XPATH, element=KEY_TABLE_ROW_BY_LABEL_XPATH.format(AUTH_KEY_LABEL)).click()
+            main.wait_until_visible(type=By.XPATH, element=KEY_TABLE_ROW_BY_LABEL_XPATH.format(auth_key_label)).click()
             generate_auth_csr(main, ca_name=ca_name)
             import_auth_cert_from_token(main, ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass, ss_id, ca_ssh_client, cert_type='sign')
         finally:
@@ -58,11 +59,12 @@ class XroadImportCertFromTokenAuth(unittest.TestCase):
                                              main.config.get('ca.ssh_pass'))
         ss_id = xroad.split_xroad_subsystem(main.config.get('ss2.server_id'))
         token_name = main.config.get('utimaco.token_name')
+        auth_key_label = main.config.get('certs.ss_auth_key_label')
 
         try:
             main.reload_webdriver(ss2_host, ss2_user, ss2_pass)
             main.wait_until_visible(type=By.CSS_SELECTOR, element=KEYSANDCERTIFICATES_BTN_CSS).click()
-            main.wait_until_visible(type=By.XPATH, element=KEY_TABLE_ROW_BY_LABEL_XPATH.format(AUTH_KEY_LABEL)).click()
+            main.wait_until_visible(type=By.XPATH, element=KEY_TABLE_ROW_BY_LABEL_XPATH.format(auth_key_label)).click()
             generate_auth_csr(main, ca_name=ca_name)
             import_auth_cert_from_token(main, ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass, ca_ssh_client=ca_ssh_client, ss_id=ss_id)
         finally:

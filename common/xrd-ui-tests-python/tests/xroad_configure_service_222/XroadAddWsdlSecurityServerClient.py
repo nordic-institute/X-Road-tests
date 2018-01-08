@@ -6,7 +6,7 @@ from main.maincontroller import MainController
 from tests.xroad_configure_service_222 import configure_add_wsdl
 
 
-class XroadConfigureService(unittest.TestCase):
+class XroadAddWsdlSecurityServerClient(unittest.TestCase):
     """
     UC SERVICE_08: Add a WSDL to a Security Server Client
     RIA URL: https://jira.ria.ee/browse/XT-265, https://jira.ria.ee/browse/XTKB-94

@@ -1,5 +1,6 @@
 import time
 
+from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 
 from helpers import xroad, auditchecker
@@ -46,6 +47,7 @@ def add_subsystem_to_server_client(self, server_code, client, wait_input=3, log_
         if tds[0].text is not u'':
             if (tds[0].text == client['name']) & (tds[1].text == client['code']) & (tds[2].text == client['class']) & (
                     tds[3].text == u''):
+                self.js("arguments[0].scrollIntoView();", row)
                 row.click()
                 break
 
@@ -428,6 +430,7 @@ def search_and_select_client(self, client):
         if tds[0].text is not u'':
             if (tds[0].text == client['name']) & (tds[1].text == client['code']) & (tds[2].text == client['class']) & (
                     tds[3].text == u''):
+                self.js("arguments[0].scrollIntoView();", row)
                 row.click()
                 break
 

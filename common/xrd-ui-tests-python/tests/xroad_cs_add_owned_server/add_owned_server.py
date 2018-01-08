@@ -1,5 +1,6 @@
 import os
 
+import sys
 from selenium.webdriver.common.by import By
 
 from helpers import auditchecker, xroad
@@ -14,7 +15,7 @@ from view_models.messages import CERTIFICATE_IMPORT_SUCCESSFUL, CERTIFICATE_ADDI
 
 
 def test_add_owned_server(case, cs_host, cs_username, cs_password, cs_ssh_host, cs_ssh_user, cs_ssh_pass,
-                          client, cert_path, check_inputs=False, verify_cert=False,
+                          client, cert_path, server_name=None, check_inputs=False, verify_cert=False,
                           cert_used_already=False, check_server=False):
     """
     MEMBER_12 ALL steps
@@ -56,7 +57,6 @@ def test_add_owned_server(case, cs_host, cs_username, cs_password, cs_ssh_host, 
                                                                element=cs_security_servers.OWNED_SERVERS_UPLOAD_OWNER_CLASS_ID).text)
         self.is_equal(client['code'], self.wait_until_visible(type=By.ID,
                                                               element=cs_security_servers.OWNED_SERVERS_UPLOAD_OWNER_CODE_ID).text)
-        self.wait_until_visible(type=By.ID, element=cs_security_servers.ADD_OWNED_SERVER_SUBMIT_BUTTON_ID).click()
         server_code_input = self.wait_until_visible(type=By.ID,
                                                     element=cs_security_servers.OWNED_SERVERS_SERVER_CODE_INPUT_ID)
         self.log('Submit button disabled when fields are empty')
@@ -65,8 +65,11 @@ def test_add_owned_server(case, cs_host, cs_username, cs_password, cs_ssh_host, 
         file_upload = self.by_id(cs_security_servers.OWNED_SERVERS_UPLOAD_CERT_BTN_ID)
         self.log('Uploading certificate to central server')
         if verify_cert:
-            wrong_local_cert_path = self.get_download_path('test')
-            wrong_file_abs_path = os.path.abspath(wrong_local_cert_path)
+            if sys.platform == 'windows':
+                wrong_local_cert_path = self.get_download_path('test')
+                wrong_file_abs_path = os.path.abspath(wrong_local_cert_path)
+            else:
+                wrong_file_abs_path = '/dev/null'
             self.log('MEMBER_12 6a The uploaded file is not in PEM or DER format')
             xroad.fill_upload_input(self, file_upload, wrong_file_abs_path)
             expected_error_msg = messages.AUTH_CERT_IMPORT_FILE_FORMAT_ERROR
@@ -145,22 +148,19 @@ def test_add_owned_server(case, cs_host, cs_username, cs_password, cs_ssh_host, 
 
             logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines)
             self.is_true(logs_found)
-
-            test_add_owned_server(self, cs_host, cs_username, cs_password, cs_ssh_host, cs_ssh_user,
-                                  cs_ssh_pass, client, cert_path, check_server=True)()
             return
 
         if check_server:
             current_log_lines = log_checker.get_line_count()
             self.log('Insert server code to server code field')
-            self.input(element=server_code_input, text=client['name'])
+            self.input(element=server_code_input, text=server_name)
             self.log('Click ok')
             self.wait_until_visible(type=By.ID, element=cs_security_servers.ADD_OWNED_SERVER_SUBMIT_BUTTON_ID).click()
             self.wait_jquery()
             'Get error message'
             error_msg = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
             expected_error_msg = messages.SECURITY_SERVER_CODE_ALREADY_REGISTRED.format(client['class'], client['code'],
-                                                                                        client['name'])
+                                                                                        server_name)
             self.is_equal(expected_error_msg, error_msg)
 
             '''Expected log message'''
@@ -170,17 +170,16 @@ def test_add_owned_server(case, cs_host, cs_username, cs_password, cs_ssh_host, 
 
             logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines)
             self.is_true(logs_found)
-
             return
 
         self.log('MEMBER_12 3. Insert server code to server code field')
-        self.input(element=server_code_input, text=client['name'])
+        self.input(element=server_code_input, text=server_name)
         self.log('MEMBER_12 5. Registration request is submitted')
         self.wait_until_visible(type=By.ID, element=cs_security_servers.ADD_OWNED_SERVER_SUBMIT_BUTTON_ID).click()
         self.wait_jquery()
         self.log('Check if certificate adding request is present')
         expected_notice_msg = CERTIFICATE_ADDING_NEW_SERVER_REQUEST_ADDED_NOTICE.format(
-            '{0}/{1}/{2}/{3}'.format(client['instance'], client['class'], client['code'], client['name']))
+            '{0}/{1}/{2}/{3}'.format(client['instance'], client['class'], client['code'], server_name))
         self.log('MEMBER_12 11. System displays the message \n"{0}"'.format(expected_notice_msg))
         self.is_equal(expected_notice_msg, messages.get_notice_message(self))
         expected_log_msg = ADD_SECURITY_SERVER
@@ -195,7 +194,7 @@ def test_add_owned_server(case, cs_host, cs_username, cs_password, cs_ssh_host, 
         self.log('MEMBER_36 4a. System saves the security server information found in the registration request to the '
                  'system configuration as an owned security server of the X-Road member')
         ss_table = self.wait_until_visible(type=By.CSS_SELECTOR, element=SECURITY_SERVER_TABLE_CSS)
-        self.is_not_none(members_table.get_row_by_columns(ss_table, [client['name'], client['name'], client['class'],
+        self.is_not_none(members_table.get_row_by_columns(ss_table, [server_name, client['name'], client['class'],
                                                                      client['code']]))
 
     return add_owned_server

@@ -26,7 +26,7 @@ class XroadDeleteOcspResponder(unittest.TestCase):
         cs_user = main.config.get('cs.user')
         cs_pass = main.config.get('cs.pass')
 
-        ca_name = main.config.get('ca.host')
+        ca_name = main.config.get('ca.name')
 
         cs_ssh_host = main.config.get('cs.ssh_host')
         cs_ssh_user = main.config.get('cs.ssh_user')

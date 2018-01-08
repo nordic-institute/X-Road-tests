@@ -13,7 +13,7 @@ faults_unsuccessful = ['Server.ServerProxy.ServiceDisabled', 'Client.InternalErr
 # These faults are checked when we need the result to be successful. Otherwise the checking function returns False.
 faults_successful = ['Server.ServerProxy.AccessDenied', 'Server.ServerProxy.UnknownService',
                      'Server.ServerProxy.ServiceDisabled', 'Server.ClientProxy.*', 'Client.*',
-                     'Server.ServerProxy.ServiceFailed.InvalidContentType']
+                     'Server.ServerProxy.ServiceFailed.InvalidContentType', 'Server.ServerProxy.ServiceFailed.NetworkError']
 
 
 def set_central_service_provider_fields(self, provider):

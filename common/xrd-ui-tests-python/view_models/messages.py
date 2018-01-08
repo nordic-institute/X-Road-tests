@@ -111,7 +111,7 @@ SS_CONFIGURATION_BACKUP_ERROR = "Failed to back up configuration: Error making c
 SS_SUCCESSFUL_DELETE = 'Selected backup deleted successfully'
 INPUT_EXCEEDS_255_CHARS = 'Parameter \'{0}\' input exceeds 255 characters'
 INVALID_HOST_ADDRESS = 'Invalid host address'
-FAILED_TO_REGISTER_HOST_NOT_KNOWN_ERROR = 'Failed to register certificate: UnknownHostException: {0}: Name or service not known'
+FAILED_TO_REGISTER_CONNECTION_REFUSED_ERROR = 'Failed to register certificate: ConnectException: Connection refused (Connection refused)'
 
 UPLOAD_CONTAIN_INVALID_CHARACTERS = 'Failed to upload new backup file: Filename \'{0}\' contains invalid characters. Valid characters include: (A-Z), (a-z), (0-9), (_), (.), (-).'
 UPLOAD_WRONG_EXTENSION = 'Failed to upload new backup file: Uploaded file name \'{0}\' has an invalid extension, the only valid one is \'tar\''

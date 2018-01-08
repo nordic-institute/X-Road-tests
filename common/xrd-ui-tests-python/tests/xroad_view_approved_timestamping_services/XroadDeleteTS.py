@@ -25,7 +25,7 @@ class XroadDeleteTS(unittest.TestCase):
         cs_host = main.config.get('cs.host')
         cs_user = main.config.get('cs.user')
         cs_pass = main.config.get('cs.pass')
-        ts_name = main.config.get('tsa.host')
+        ts_name = str(main.config.get('tsa.name'))
 
         cs_ssh_host = main.config.get('cs.ssh_host')
         cs_ssh_user = main.config.get('cs.ssh_user')

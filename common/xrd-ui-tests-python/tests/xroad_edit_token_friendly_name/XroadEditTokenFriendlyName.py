@@ -1,11 +1,11 @@
 # coding=utf-8
 import unittest
-from main.maincontroller import MainController
+
 import kc_management
+from main.maincontroller import MainController
 
 
-class XroadEditFriendlyName(unittest.TestCase):
-
+class XroadEditTokenFriendlyName(unittest.TestCase):
     """
     UC SS_22: Edit the Friendly Name of a Token
     RIA URL: https://jira.ria.ee/browse/XTKB-74
@@ -14,10 +14,7 @@ class XroadEditFriendlyName(unittest.TestCase):
     X-Road version: 6.16.0
     """
 
-
-
-
-    def test_xroad_edit_friendly_name(self):
+    def test_xroad_edit_token_friendly_name(self):
         main = MainController(self)
 
         '''Set test name and number'''

@@ -25,10 +25,9 @@ class XroadSsServiceLocalGroupsView(unittest.TestCase):
         ss_host = main.config.get('ss2.host')
         ss_user = main.config.get('ss2.user')
         ss_pass = main.config.get('ss2.pass')
-        ss_client_id = main.config.get('ss2.client_id')
 
         '''Configure the service'''
-        test_logout = view_management.test_verify_local_group_client(case=main, ss_client_id=ss_client_id)
+        test_logout = view_management.test_verify_local_group_client(case=main)
 
         try:
             '''Open webdriver'''

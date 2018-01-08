@@ -8,10 +8,11 @@ from main.maincontroller import MainController
 from tests.xroad_add_to_acl_from_client_219 import add_to_acl_client as test_add_to_acl_client
 from tests.xroad_configure_service_222 import configure_service
 from tests.xroad_parse_users_inputs import xroad_parse_user_inputs
+from tests.xroad_ss_client.ss_client_management import edit_client
 from view_models import clients_table_vm
 
 
-class AddToAclFromClient(unittest.TestCase):
+class XroadAddToAclFromClient(unittest.TestCase):
     """
     SERVICE_01 View the Service Clients of a Security Server Client
     SERVICE_02 View the Access Rights of a Service Client
@@ -67,7 +68,7 @@ class AddToAclFromClient(unittest.TestCase):
             main.log('Add WSDL with 3 services to security server client')
             main.reload_webdriver(ss_host, ss_user, ss_pass)
             row = clients_table_vm.get_client_row_element(self=main, client_name=client_name)
-            main.double_click(row)
+            edit_client(main, row)
             xroad_parse_user_inputs.add_wsdl_url(main, wsdl_three_services)
 
             main.log('SERVICE_03 Add a service client to a security server client(1 service)')

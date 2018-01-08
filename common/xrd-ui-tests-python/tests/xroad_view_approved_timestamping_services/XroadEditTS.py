@@ -24,7 +24,7 @@ class XroadEditTS(unittest.TestCase):
         cs_host = main.config.get('cs.host')
         cs_user = main.config.get('cs.user')
         cs_pass = main.config.get('cs.pass')
-        ts_name = main.config.get('tsa.host')
+        ts_name = main.config.get('tsa.name')
         ts_url = main.config.get('tsa.tsa_host')
 
         test_name = self._testMethodName

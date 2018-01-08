@@ -2,7 +2,6 @@ import unittest
 
 from helpers import xroad, auditchecker
 from main.maincontroller import MainController
-from tests.xroad_client_registration_in_ss_221.client_registration_in_ss import add_sub_as_client_to_member
 from tests.xroad_cs_revoke_requests.revoke_requests import revoke_requests
 
 

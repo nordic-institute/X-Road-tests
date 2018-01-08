@@ -2,19 +2,19 @@
 from selenium.webdriver.common.by import By
 from view_models import popups, clients_table_vm, groups_table
 from time import gmtime, strftime
+from helpers import xroad
 
 
-def test_verify_local_group_client(case, ss_client_id=None):
+def test_verify_local_group_client(case):
     '''
 
     :param case: MainController object
-    :param ss_client_id: string client id information
     :return:
     '''
     self = case
 
     def local_group_ss_client():
-        create_local_group(self, ss_client_id=ss_client_id)
+        create_local_group(self)
         verify_local_group_security_server_client(self)
         delete_local_group(self)
 
@@ -65,11 +65,24 @@ def verify_local_group_security_server_client(self):
                   msg='Wrong local group update date')
 
 
-def create_local_group(self, ss_client_id):
+def create_local_group(self):
     self.log('Open clients details, by double clicking on client id')
 
-    ss_client_id_row = self.wait_until_visible(type=By.XPATH, element=clients_table_vm.get_client_id(ss_client_id))
-    self.double_click(ss_client_id_row)
+    client_name = self.config.get('ss2.client2_name')
+    subsystem_row = xroad.split_xroad_subsystem(self.config.get('ss2.client2_id'))
+    subsystem = subsystem_row['subsystem']
+
+    '''Click on client row'''
+    client_row = self.wait_until_visible(type=By.XPATH, element=clients_table_vm.
+                                             get_client_id_by_member_code_subsystem_code(client_name,subsystem))
+
+
+    '''Click on "Details" button'''
+    client_row.find_element_by_css_selector(clients_table_vm.DETAILS_TAB_CSS).click()
+
+
+
+
     self.log('SERVICE_23 1.SS administrator selects to view the local groups of a security server client.')
 
     self.wait_until_visible(type=By.XPATH, element=popups.LOCAL_GROUPS_TAB).click()

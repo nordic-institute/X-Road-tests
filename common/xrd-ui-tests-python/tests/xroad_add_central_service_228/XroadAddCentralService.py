@@ -162,10 +162,10 @@ class XroadAddCentralService(unittest.TestCase):
                     except:
                         main.log('XroadAddCentralService: Error deleting security server service')
                         main.save_exception_data()
-                        assert False
+                        raise
             except:
-                assert False
-            assert False
+                raise
+            raise
         finally:
             # Test teardown
-            main.tearDown(save_exception=False)
+            main.tearDown()

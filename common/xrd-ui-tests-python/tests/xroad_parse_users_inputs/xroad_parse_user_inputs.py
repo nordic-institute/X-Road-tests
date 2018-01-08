@@ -8,6 +8,7 @@ from helpers import auditchecker
 from view_models import sidebar as sidebar_constants, clients_table_vm, members_table, \
     keys_and_certificates_table as keyscertificates_constants, popups as popups, messages, \
     groups_table, central_services, log_constants
+from view_models.clients_table_vm import DETAILS_TAB_CSS
 from view_models.log_constants import ADD_MEMBER_FAILED, EDIT_MEMBER_NAME_FAILED, GENERATE_KEY_FAILED, ADD_WSDL_FAILED, \
     EDIT_MEMBER_NAME
 
@@ -72,8 +73,7 @@ def test_ss_client_inputs():
                 self.log('Find added Member Code == "' + member_code + ', Subsystem Code == ' + subsystem_code)
                 self.wait_jquery()
                 client_id = self.wait_until_visible(type=By.XPATH, element=clients_table_vm.
-                                                    get_client_id_by_member_code_subsystem_code(self,
-                                                                                                member_code.strip(),
+                                                    get_client_id_by_member_code_subsystem_code(member_code.strip(),
                                                                                                 subsystem_code.strip()))
 
                 client_id_text = client_id.text
@@ -119,9 +119,9 @@ def test_edit_wsdl_inputs():
         popups.confirm_dialog_click(self)
 
         self.log('Find added Member Code == "' + member_code + ', Subsystem Code == ' + subsystem_code)
-        client_id = self.wait_until_visible(type=By.XPATH, element=clients_table_vm.
-                                            get_client_id_by_member_code_subsystem_code(self, member_code,
-                                                                                        subsystem_code))
+        client_row = self.wait_until_visible(type=By.XPATH, element=clients_table_vm.
+                                             get_client_id_by_member_code_subsystem_code(member_code,
+                                                                                         subsystem_code))
         counter = 1
         management_wsdl_url = self.config.get('wsdl.management_service_wsdl_url')
         cs_host = self.config.get('cs.ssh_host')
@@ -130,7 +130,7 @@ def test_edit_wsdl_inputs():
         ss_2_ssh_pass = self.config.get('ss2.ssh_pass')
         self.wait_jquery()
         self.log("Open client details")
-        self.double_click(client_id)
+        client_row.find_element_by_css_selector(DETAILS_TAB_CSS).click()
         add_wsdl_url(self, management_wsdl_url)
         self.wait_jquery()
         '''Open WSDL URL services'''
@@ -167,7 +167,7 @@ def test_edit_wsdl_inputs():
             self.log('TEST - {0}'.format(counter))
 
             self.log("Open client details")
-            self.double_click(client_id)
+            client_row.find_element_by_css_selector(DETAILS_TAB_CSS).click()
 
             self.wait_jquery()
             self.log("Open 'Services' tab")
@@ -222,10 +222,10 @@ def test_edit_wsdl_inputs():
             counter += 1
 
         '''Delete added client'''
-        client_id = self.wait_until_visible(type=By.XPATH, element=clients_table_vm.
-                                            get_client_id_by_member_code_subsystem_code(self, member_code,
-                                                                                        subsystem_code))
-        delete_added_client(self, client_id)
+        client_row = self.wait_until_visible(type=By.XPATH, element=clients_table_vm.
+                                             get_client_id_by_member_code_subsystem_code(member_code,
+                                                                                         subsystem_code))
+        delete_added_client(self, client_row)
 
     return test_case
 
@@ -252,13 +252,13 @@ def test_disable_wsdl_inputs():
         popups.confirm_dialog_click(self)
 
         self.log('Find added Member Code == "' + member_code + ', Subsystem Code == ' + subsystem_code)
-        client_id = self.wait_until_visible(type=By.XPATH, element=clients_table_vm.
-                                            get_client_id_by_member_code_subsystem_code(self, member_code,
-                                                                                        subsystem_code))
+        client_row = self.wait_until_visible(type=By.XPATH, element=clients_table_vm.
+                                             get_client_id_by_member_code_subsystem_code(member_code,
+                                                                                         subsystem_code))
         self.wait_jquery()
         '''Add wsdl url'''
         self.log("Open client details")
-        self.double_click(client_id)
+        client_row.find_element_by_css_selector(DETAILS_TAB_CSS).click()
         add_wsdl_url(self, self.config.get('wsdl.management_service_wsdl_url'))
 
         self.log('Click on WSDL url row')
@@ -320,10 +320,11 @@ def test_disable_wsdl_inputs():
         self.wait_until_visible(type=By.XPATH, element=popups.CLIENT_DETAILS_POPUP_CLOSE_BTN_XPATH).click()
 
         self.log('Delete added client')
-        delete_added_client(self, client_id)
+        delete_added_client(self, client_row)
         counter += 1
 
     return test_case
+
 
 def edit_service(self, service_url, service_timeout=None, verify_tls=None):
     '''
@@ -385,6 +386,7 @@ def edit_service(self, service_url, service_timeout=None, verify_tls=None):
 
     return warning_message, error_message
 
+
 def test_edit_address_service():
     def test_case(self):
         """
@@ -416,13 +418,13 @@ def test_edit_address_service():
         self.wait_jquery()
         '''Get a client id as a parameter'''
         self.log('Find added Member Code == "' + member_code + ', Subsystem Code == ' + subsystem_code)
-        client_id = self.wait_until_visible(type=By.XPATH, element=clients_table_vm.
-                                            get_client_id_by_member_code_subsystem_code(self, member_code,
-                                                                                        subsystem_code))
+        client_row = self.wait_until_visible(type=By.XPATH, element=clients_table_vm.
+                                             get_client_id_by_member_code_subsystem_code(member_code,
+                                                                                         subsystem_code))
         self.wait_jquery()
         '''Add a wsdl url'''
         self.log("Open client details")
-        self.double_click(client_id)
+        client_row.find_element_by_css_selector(DETAILS_TAB_CSS).click()
 
         add_wsdl_url(self, self.config.get('wsdl.management_service_wsdl_url'))
 
@@ -507,11 +509,6 @@ def test_edit_address_service():
 
         '''Close a pop-up window of the client details'''
         self.wait_jquery()
-        self.log('Click on "CLOSE" button')
-        self.wait_until_visible(type=By.XPATH, element=popups.CLIENT_DETAILS_POPUP_CLOSE_BTN_XPATH).click()
-
-        '''Delete added client'''
-        delete_added_client(self, client_id)
 
 
         '''SERVICE_19/1 SS administrator selects to edit the address of a service.'''
@@ -543,9 +540,12 @@ def test_edit_address_service():
         self.log('SERVICE_19 5a. System sets the TLS certification verification to "false" when url starts with http')
         self.is_false(self.by_id(popups.EDIT_SERVICE_POPUP_TLS_ID).is_enabled())
         self.by_xpath(popups.EDIT_SERVICE_POPUP_OK_BTN_XPATH).click()
+        self.log('Click on "CLOSE" button')
+        self.wait_until_visible(type=By.XPATH, element=popups.CLIENT_DETAILS_POPUP_CLOSE_BTN_XPATH).click()
 
+        '''Delete added client'''
+        delete_added_client(self, client_row)
         counter += 1
-
 
     return test_case
 
@@ -1129,13 +1129,13 @@ def test_edit_time_out_value_service():
         self.wait_jquery()
         '''Get a client id as a parameter'''
         self.log('Find added Member Code == "' + member_code + ', Subsystem Code == ' + subsystem_code)
-        client_id = self.wait_until_visible(type=By.XPATH, element=clients_table_vm.
-                                            get_client_id_by_member_code_subsystem_code(self, member_code,
-                                                                                        subsystem_code))
+        client_row = self.wait_until_visible(type=By.XPATH, element=clients_table_vm.
+                                             get_client_id_by_member_code_subsystem_code(member_code,
+                                                                                         subsystem_code))
         self.wait_jquery()
         '''Add a wsdl url'''
         self.log("Open client details")
-        self.double_click(client_id)
+        client_row.find_element_by_css_selector(DETAILS_TAB_CSS).click()
 
         add_wsdl_url(self, self.config.get('wsdl.management_service_wsdl_url'))
 
@@ -1269,7 +1269,7 @@ def test_edit_time_out_value_service():
         self.wait_until_visible(type=By.XPATH, element=popups.CLIENT_DETAILS_POPUP_CLOSE_BTN_XPATH).click()
 
         '''Delete added client'''
-        delete_added_client(self, client_id)
+        delete_added_client(self, client_row)
 
         counter += 1
 
@@ -1303,9 +1303,9 @@ def test_added_wsdl_inputs():
         popups.confirm_dialog_click(self)
 
         self.log('Find added Member Code == "' + member_code + ', Subsystem Code == ' + subsystem_code)
-        client_id = self.wait_until_visible(type=By.XPATH, element=clients_table_vm.
-                                            get_client_id_by_member_code_subsystem_code(self, member_code,
-                                                                                        subsystem_code))
+        client_row = self.wait_until_visible(type=By.XPATH, element=clients_table_vm.
+                                             get_client_id_by_member_code_subsystem_code(member_code,
+                                                                                         subsystem_code))
         counter = 1
         management_wsdl_url = self.config.get('wsdl.management_service_wsdl_url')
         cs_host = self.config.get('cs.ssh_host')
@@ -1335,7 +1335,7 @@ def test_added_wsdl_inputs():
             self.log('Test-' + str(counter) + '. WSDL URL == "' + wsdl_url + '"')
 
             self.log("Open client details")
-            self.double_click(client_id)
+            client_row.find_element_by_css_selector(DETAILS_TAB_CSS).click()
 
             '''SERVICE 08 / 1 SS administrator selects to add a WSDL.'''
             '''SERVICE 08 / 2 SS administrator inserts the URL of the WSDL.'''
@@ -1375,11 +1375,11 @@ def test_added_wsdl_inputs():
             self.log('Click on "CLOSE" button')
             self.wait_until_visible(type=By.XPATH, element=popups.CLIENT_DETAILS_POPUP_CLOSE_BTN_XPATH).click()
 
-        client_id = self.wait_until_visible(type=By.XPATH, element=clients_table_vm.
-                                            get_client_id_by_member_code_subsystem_code(self, member_code,
-                                                                                        subsystem_code))
+        client_row = self.wait_until_visible(type=By.XPATH, element=clients_table_vm.
+                                             get_client_id_by_member_code_subsystem_code(member_code,
+                                                                                         subsystem_code))
         self.log('Delete added client')
-        delete_added_client(self, client_id)
+        delete_added_client(self, client_row)
         counter += 1
 
     return test_case
@@ -1434,8 +1434,8 @@ def error_messages(self, error, error_message, error_message_label):
         self.log('Get the error message')
         self.wait_jquery()
         get_error_message = messages.get_error_message(self)
-        self.log('Found error message - ' + get_error_message)
-        self.log('Expected error message  - ' + error_message.format(error_message_label))
+        self.log('Found error message - {}'.format(get_error_message))
+        self.log('Expected error message  - {}'.format(error_message.format(error_message_label)))
 
         self.log('Compare error message to the expected error message')
         assert get_error_message in error_message.format(error_message_label)
@@ -1573,6 +1573,7 @@ def add_ss_client(self, member_code, subsystem_code):
     self.wait_jquery()
     '''Save the client data'''
     self.log('Click on "OK" button')
+    time.sleep(1.5)
     self.wait_until_visible(type=By.XPATH, element=popups.ADD_CLIENT_POPUP_OK_BTN_XPATH).click()
 
 
@@ -1721,7 +1722,7 @@ def delete_added_member(self, member_name):
     self.wait_until_visible(type=By.XPATH, element=members_table.MEMBER_DELETE_CONFIRM_BTN_ID).click()
 
 
-def delete_added_client(self, client):
+def delete_added_client(self, client_row):
     """
     Delete the client row from the list.
     :param self: MainController object
@@ -1730,7 +1731,7 @@ def delete_added_client(self, client):
     """
     self.log('''Delete added client''')
     self.log("Open client details")
-    self.double_click(client)
+    client_row.find_element_by_css_selector(DETAILS_TAB_CSS).click()
     try:
         self.log('Click on "UNREGISTER" button')
         self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_UNREGISTER_BUTTON_ID).click()

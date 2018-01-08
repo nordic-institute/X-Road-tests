@@ -45,7 +45,7 @@ DECLINED_STATE = 'DECLINED'
 CERT_INACTIVE_ROW_BY_DATA_ID = '//tr[@data-id="{0}"]//following::tr[contains(@class, "cert-inactive")]'
 CERT_INACTIVE_ROW_BY_DATA_ID_IMPORT_BTN = '{0}//button'.format(CERT_INACTIVE_ROW_BY_DATA_ID)
 KEYS_AND_CERTIFICATES_TABLE_ID = 'keys'
-KEYS_AND_CERTIFICATES_TABLE_ROWS_CSS = '.keys tbody tr'
+KEYS_AND_CERTIFICATES_TABLE_ROWS_CSS = '#keys tbody tr'
 GLOBAL_ERROR_CERTIFICATE_ROW_XPATH = '//td[text()="global error"]'
 SAVED_CERTIFICATE_ROW_XPATH = '//td[text()="saved"]'
 REG_IN_PROGRESS_CERTIFICATE_ROW_XPATH = '//td[text()="registration in progress"]'

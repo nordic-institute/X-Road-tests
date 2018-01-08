@@ -34,7 +34,7 @@ class XroadSsClientInputs(unittest.TestCase):
         except:
             main.log('XroadSsClientInputs: Failed to to parse user inputs')
             main.save_exception_data()
-            assert False
+            raise
         finally:
             '''Test teardown'''
             main.tearDown()

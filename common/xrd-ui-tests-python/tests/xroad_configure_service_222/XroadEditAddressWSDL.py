@@ -6,7 +6,7 @@ from main.maincontroller import MainController
 from tests.xroad_configure_service_222 import configure_edit_wsdl
 
 
-class XroadConfigureService(unittest.TestCase):
+class XroadEditAddressWSDL(unittest.TestCase):
     """
     SERVICE_09 Edit the Address of a WSDL
     RIA URL: https://jira.ria.ee/browse/XT-266, https://jira.ria.ee/browse/XTKB-23

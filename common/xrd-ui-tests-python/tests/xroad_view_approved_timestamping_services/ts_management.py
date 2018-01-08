@@ -229,7 +229,7 @@ def test_edit_ts(case, cs_ssh_host=None, cs_ssh_user=None, cs_ssh_pass=None,
 
         # Configure TS certificates
         configure_ts(self, check_errors=True,
-                     log_success=log_constants.ADD_CA, log_fail=log_constants.ADD_TS_FAILED,
+                     log_success=log_constants.ADD_CA, log_fail=log_constants.EDIT_TS_FAILED,
                      save_button_id=certification_services.SUBMIT_TS_CERT_BTN_ID, ts_url=ts_url, test_name=test_name)
 
         # Clears URL value
@@ -258,7 +258,6 @@ def test_edit_ts(case, cs_ssh_host=None, cs_ssh_user=None, cs_ssh_pass=None,
 
         cert_name = self.wait_until_visible(type=By.ID, element='tsp_url').get_attribute('value')
         input_text_stripped = cert_name.strip(' ')
-
         # Compare inserted URL
         self.is_true(cert_name == (timestamp_services.TEST_URL),
                      msg='Sertificate has wrong name')
@@ -283,7 +282,7 @@ def test_edit_ts(case, cs_ssh_host=None, cs_ssh_user=None, cs_ssh_pass=None,
         cert_name = self.wait_until_visible(type=By.ID, element='tsp_url').get_attribute('value')
 
         self.logdata.append(log_constants.EDIT_TS)
-
+        self.logdata.append(log_constants.EDIT_TS)
         self.log(
         'UC TRUST_17 Compares and verifies new correct URL')
         # Compare URL
@@ -353,7 +352,6 @@ def set_ts_certificate(self, ts_certificate, close_errors=False):
     time.sleep(0.5)
     # If an ajax query is initiated, wait for it to finish.
     self.wait_jquery()
-
     # Get error messages if any
     console_output = messages.get_console_output(self)  # Console message (displayed if WSDL validator gives a warning)
     warning_message = messages.get_warning_message(self)  # Warning message
@@ -371,6 +369,7 @@ def set_ts_certificate(self, ts_certificate, close_errors=False):
 
 def set_invalid_ts_certificate(self, ts_certificate):
     warning, error, console = set_ts_certificate(self, ts_certificate)
+
     # Check if an error was shown and if the error was the correct one.
     self.is_not_none(error, msg='Set invalid TS certificate: no error shown'.format(ts_certificate))
     self.is_equal(error, messages.WRONG_FORMAT_TS_CERTIFICATE,
@@ -434,9 +433,9 @@ def configure_ts(self, certificate_classpath=None, check_errors=False, log_succe
                                                     test_name=test_name)
 
         # Save logged error messages and successes for later checking
+
         self.logdata += [log_fail] * errors
         self.logdata += [log_success] * successes
-
 
 def check_inputs(self, input_element, final_value, save_btn, label_name='tsp_url',
                  invalid_url=timestamp_services.INVALID_URL,

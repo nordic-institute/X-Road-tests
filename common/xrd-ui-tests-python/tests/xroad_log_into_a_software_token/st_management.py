@@ -6,7 +6,7 @@ from view_models import sidebar, keys_and_certificates_table, popups, messages, 
 import time
 
 
-def test_edit_conf(case, ssh_host=None, ssh_username=None, ssh_password=None):
+def test_edit_conf(case, ssh_host=None, ssh_username=None, ssh_password=None, token_pin=None):
     self = case
 
     def backup_conf():
@@ -32,9 +32,9 @@ def test_edit_conf(case, ssh_host=None, ssh_username=None, ssh_password=None):
         self.driver.find_element_by_xpath(keys_and_certificates_table.SOFTTOKEN_LOGIN).click()
         self.wait_jquery()
 
-        find_errors_login(self)
-        whitespace_login(self)
-        successful_login(self)
+        find_errors_login(self, token_pin=token_pin)
+        whitespace_login(self, token_pin=token_pin)
+        successful_login(self, token_pin=token_pin)
 
         '''Check audit log'''
 
@@ -51,7 +51,7 @@ def test_edit_conf(case, ssh_host=None, ssh_username=None, ssh_password=None):
     return backup_conf
 
 
-def successful_login(self):
+def successful_login(self, token_pin=None):
     self.log('Log out and log in for testing correct PIN')
     self.wait_jquery()
     '''Click "LOGOUT"'''
@@ -67,7 +67,7 @@ def successful_login(self):
     self.log('SS_24 2.SS administrator enters the PIN code of the token.')
 
     '''Insert correct PIN'''
-    self.input(key_label_input, keys_and_certificates_table.TOKEN_PIN)
+    self.input(key_label_input, token_pin)
     self.wait_jquery
 
     '''Click "OK" button'''
@@ -83,14 +83,14 @@ def successful_login(self):
     return self.logdata
 
 
-def find_errors_login(self):
+def find_errors_login(self, token_pin=None):
     error_count = 0
     success_count = 0
     KEY_LABEL_TEXT_AND_RESULTS = [
         [256 * 'S', messages.INPUT_EXCEEDS_255_CHARS.format(keys_and_certificates_table.SOFTTOKEN_PIN_ERROR_PARAMETER),
          None, False],
         ['', messages.MISSING_PARAMETER.format(keys_and_certificates_table.SOFTTOKEN_PIN_ERROR_PARAMETER), None, False],
-        [keys_and_certificates_table.TOKEN_PIN[::-1], messages.TOKEN_PIN_INCORRECT, None, False]]
+        [token_pin[::-1], messages.TOKEN_PIN_INCORRECT, None, False]]
 
     # Loop through different key label names and expected results
     counter = 1
@@ -135,14 +135,19 @@ def find_errors_login(self):
     return success_count, error_count, self.logdata
 
 
-def whitespace_login(self):
+def whitespace_login(self, token_pin=None):
     self.log('Log in with correct PIN that consist whitespaces')
 
     '''Input area'''
     key_label_input = self.wait_until_visible(type=By.NAME, element=popups.TOKEN_PIN_LABEL_AREA)
 
+    '''Token pin with whitespaces'''
+    token_pin_whitespaces = '{0}{1}{0}'.format('  ', token_pin)
+
     '''Inserting name correct PIN with whitespaces'''
-    self.input(key_label_input, keys_and_certificates_table.SOFTTOKEN_PIN_WHITESPACES)
+    self.input(key_label_input, token_pin_whitespaces)
+
+
     self.wait_jquery
 
     '''Click "OK" button'''

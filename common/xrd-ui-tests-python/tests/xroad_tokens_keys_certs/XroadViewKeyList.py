@@ -22,6 +22,10 @@ class XroadViewKeyList(unittest.TestCase):
         host = main.config.get('ca.host')
 
         test_func = tokens_keys_certs.test_view_list_of_tokens_keys_certs(host)
-        test_func(main)
-
-        main.tearDown()
+        try:
+            test_func(main)
+        except:
+            main.save_exception_data()
+            raise
+        finally:
+            main.tearDown()

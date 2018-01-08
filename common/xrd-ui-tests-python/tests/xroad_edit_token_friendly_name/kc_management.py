@@ -1,5 +1,6 @@
 # coding=utf-8
 from selenium.webdriver.common.by import By
+
 from helpers import auditchecker
 from view_models import sidebar, keys_and_certificates_table, popups, messages, log_constants
 
@@ -136,7 +137,8 @@ def find_errors(self):
 def whitespace_friendly_name(self):
     '''Set "Set friendly name to token" to logdata'''
     self.logdata.append(log_constants.KEYS_AND_SERTIFICATES_SET_TOKEN)
-    self.log('UC SS_22 1.SS administrator selects to change the friendly name of a security token and changes the name.')
+    self.log(
+        'UC SS_22 1.SS administrator selects to change the friendly name of a security token and changes the name.')
 
     clicking_buttons(self)
 
@@ -149,6 +151,7 @@ def whitespace_friendly_name(self):
     self.wait_until_visible(type=By.XPATH, element=popups.TOKEN_DETAILS_POPUP_OK_BTN_XPATH).click()
 
     '''Get the last word from token'''
+    self.wait_jquery()
     without_whitespaces = \
         self.wait_until_visible(type=By.XPATH,
                                 element=keys_and_certificates_table.SOFTTOKEN_TABLE_ROW_XPATH2).text.split(

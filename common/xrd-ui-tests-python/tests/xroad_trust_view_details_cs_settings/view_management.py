@@ -31,6 +31,9 @@ def view_cert_data(self, profile_class=None):
     '''Double click on approved CA row'''
     self.double_click(service_row)
 
+    '''Click on "Edit button"'''
+    self.by_id(certification_services.DETAILS_BTN_ID).click()
+
     self.log('UC TRUST_04 1.CS administrator selects to view the settings of a certification service.')
 
     self.wait_until_visible(type=By.XPATH, element=certification_services.CA_SETTINGS_TAB_XPATH).click()
@@ -54,6 +57,7 @@ def view_cert_data(self, profile_class=None):
                                                 element=certification_services.EDIT_CERTIFICATE_PROFILE_INFO_AREA_XPATH)
     profile_info = profile_info_area.get_attribute("value")
     '''Verify profile info'''
+
     self.is_equal(profile_info, profile_class,
                   msg='The name of the Java class that describes the certificate profile is wrong')
 

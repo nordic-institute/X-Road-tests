@@ -19,7 +19,7 @@ class XroadViewOcspResponder(unittest.TestCase):
         cs_user = main.config.get('cs.user')
         cs_pass = main.config.get('cs.pass')
 
-        ca_name = main.config.get('ca.ssh_host')
+        ca_name = main.config.get('ca.name')
         ocsp_url = main.config.get('ca.ocs_host')
 
         test_view_ocsp_responder = ocsp_responder.test_view_ocsp_responder(main, ca_name=ca_name,

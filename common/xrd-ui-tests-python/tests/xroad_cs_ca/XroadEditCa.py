@@ -23,7 +23,7 @@ class XroadEditCa(unittest.TestCase):
         cs_user = main.config.get('cs.user')
         cs_pass = main.config.get('cs.pass')
 
-        ca_name = main.config.get('ca.host')
+        ca_name = main.config.get('ca.name')
         certificate_classpath = main.config.get('ca.profile_class')
 
         cs_ssh_host = main.config.get('cs.ssh_host')

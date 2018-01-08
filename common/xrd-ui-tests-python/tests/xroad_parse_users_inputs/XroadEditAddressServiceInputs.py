@@ -27,7 +27,6 @@ class XroadEditAddressServiceInputs(unittest.TestCase):
         main.username = main.config.get('ss2.user')
         main.password = main.config.get('ss2.pass')
         client = xroad.split_xroad_id(main.config.get('ss2.client_id'))
-        client_code = client['code']
         try:
             '''Open webdriver'''
             main.reset_webdriver(main.url, main.username, main.password)

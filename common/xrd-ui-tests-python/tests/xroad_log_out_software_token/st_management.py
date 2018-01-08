@@ -5,7 +5,7 @@ from helpers import auditchecker
 from view_models import sidebar, keys_and_certificates_table, popups, log_constants
 
 
-def test_edit_conf(case, ssh_host=None, ssh_username=None, ssh_password=None):
+def test_edit_conf(case, ssh_host=None, ssh_username=None, ssh_password=None, token_pin=None):
     self = case
 
     def logging_conf():
@@ -34,7 +34,7 @@ def test_edit_conf(case, ssh_host=None, ssh_username=None, ssh_password=None):
                                                                                                    log_checker.found_lines))
 
         '''Log in again'''
-        software_token_login(self)
+        software_token_login(self, token_pin=token_pin)
 
     return logging_conf
 
@@ -73,7 +73,7 @@ def software_token_logout(self):
     return self.logdata
 
 
-def software_token_login(self):
+def software_token_login(self, token_pin=None):
     self.log('Log in again')
     '''Click "LOGIN"'''
     self.driver.find_element_by_xpath(keys_and_certificates_table.SOFTTOKEN_LOGIN).click()
@@ -83,7 +83,7 @@ def software_token_login(self):
     key_label_input = self.wait_until_visible(type=By.NAME, element=popups.TOKEN_PIN_LABEL_AREA)
 
     '''Insert correct PIN'''
-    self.input(key_label_input, keys_and_certificates_table.TOKEN_PIN)
+    self.input(key_label_input, token_pin)
     self.wait_jquery
 
     '''Click "OK" button'''

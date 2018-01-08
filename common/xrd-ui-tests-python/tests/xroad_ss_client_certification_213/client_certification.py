@@ -18,7 +18,7 @@ from view_models import sidebar as sidebar_constants, keys_and_certificates_tabl
     ss_system_parameters, log_constants, cs_security_servers
 from view_models.certification_services import CA_SETTINGS_TAB_XPATH
 from view_models.keys_and_certificates_table import SUBJECT_DISTINGUISHED_NAME_POPUP_O_XPATH, \
-    SUBJECT_DISTINGUISHED_NAME_POPUP_OK_BTN_XPATH
+    SUBJECT_DISTINGUISHED_NAME_POPUP_OK_BTN_XPATH, SUBJECT_DISTINGUISHED_NAME_POPUP_CN_XPATH
 from view_models.log_constants import ADD_AUTH_CERTIFICATE_FOR_SECURITY_SERVER_FAILED, GENERATE_KEY_FAILED, \
     GENERATE_CSR_FAILED, GENERATE_KEY, GENERATE_CSR, DELETE_KEY, DELETE_CSR, IMPORT_CERTIFICATE_FROM_FILE, \
     IMPORT_CERTIFICATE_FROM_FILE_FAILED, ENABLE_CERTIFICATE
@@ -222,8 +222,8 @@ def delete_csr(self, sshclient, log_checker=None, client_code=None, client_class
         self.is_true(csr_count_after < csr_count)
 
 
-def register_cert(self, ssh_host, ssh_user, ssh_pass, cs_host, client, ca_ssh_host, ca_ssh_user, ca_ssh_pass, cert_path,
-                  check_inputs=False):
+def register_cert(self, ssh_host, ssh_user, ssh_pass, cs_host, client, ca_ssh_host, ca_ssh_user, ca_ssh_pass, ca_name,
+                  cert_path, dns=None, organization=None, check_inputs=False):
     """
     SS_34 Register an Authentication Certificate
     :param cert_path:
@@ -249,12 +249,12 @@ def register_cert(self, ssh_host, ssh_user, ssh_pass, cs_host, client, ca_ssh_ho
         self.log('Click on the key, which certificate was just deleted')
         self.wait_until_visible(type=By.CSS_SELECTOR, element=keys_and_certificates_table.UNSAVED_KEY_CSS).click()
         self.log('Generate new auth certificate for the key')
-        generate_auth_csr(self, ca_name=ca_ssh_host, change_usage=True)
+        generate_auth_csr(self, dns=dns, organization=organization, ca_name=ca_name, change_usage=True)
         '''Current time'''
         now_date = datetime.datetime.now()
         '''Downloaded csr file name'''
         file_name = 'auth_csr_' + now_date.strftime('%Y%m%d') + '_securityserver_{0}_{1}_{2}_{3}.der'. \
-            format(client['instance'], client['class'], client['code'], client['name'])
+            format(client['instance'], client['class'], client['code'], '*')
         '''Downloaded csr file path'''
         file_path = glob.glob(self.get_download_path('_'.join(['*']) + file_name))[0]
         '''SSH client instance for ca'''
@@ -320,11 +320,10 @@ def register_cert(self, ssh_host, ssh_user, ssh_pass, cs_host, client, ca_ssh_ho
             self.log('SS_34 4. Trying to register with max length address(255 chars)')
             self.log('SS_34 6a. Creating or sending the error message failed')
             self.input(element=address_input, text=input_255_char)
-            hosts_replacement = 'cs.asd'
             self.log('Replacing central server in hosts file, so the request wont make it to the central server')
             self.ssh_client = ssh_client.SSHClient(ssh_host, ssh_user, ssh_pass)
             self.ssh_client.exec_command(
-                'sed -i -e "s/{0}/{1}/g" {2}'.format(cs_host, hosts_replacement, '/etc/hosts'),
+                'sed -i -e "$ a\\0.0.0.0 {}" {}'.format(cs_host, '/etc/hosts'),
                 sudo=True)
             try:
                 self.log('Clicking submit button')
@@ -332,7 +331,7 @@ def register_cert(self, ssh_host, ssh_user, ssh_pass, cs_host, client, ca_ssh_ho
                 self.wait_jquery()
                 self.log('SS_34 6a.1 System displays the error message')
                 error_msg = messages.get_error_message(self)
-                self.is_equal(messages.FAILED_TO_REGISTER_HOST_NOT_KNOWN_ERROR.format(cs_host), error_msg)
+                self.is_equal(messages.FAILED_TO_REGISTER_CONNECTION_REFUSED_ERROR.format(cs_host), error_msg)
                 messages.close_error_messages(self)
                 self.log('SS_34 6a.2 System logs the event {0}'.format(expected_log_event))
                 logs_found = log_checker.check_log(expected_log_event, from_line=current_log_lines + 1)
@@ -344,15 +343,19 @@ def register_cert(self, ssh_host, ssh_user, ssh_pass, cs_host, client, ca_ssh_ho
                 assert False
             finally:
                 self.log('Restore hosts file')
-                self.ssh_client.exec_command(
-                    'sed -i -e "s/{0}/{1}/g" {2}'.format(hosts_replacement, cs_host, '/etc/hosts'),
-                    sudo=True)
-        time.sleep(10)
+                self.ssh_client.exec_command('sed -i "$ d" {}'.format('/etc/hosts'), sudo=True)
+                time.sleep(15)
         self.log('SS_34 3. The DNS name of the server is inserted')
         self.input(element=address_input, text=ssh_host)
         self.log('Click ok')
         self.by_xpath(popups.REGISTRATION_DIALOG_OK_BUTTON_XPATH).click()
         self.wait_jquery()
+        if messages.get_error_message(self):
+            messages.close_error_messages(self)
+            time.sleep(15)
+            self.log('Click ok')
+            self.by_xpath(popups.REGISTRATION_DIALOG_OK_BUTTON_XPATH).click()
+            self.wait_jquery()
         self.log('SS_34 8. System displays the message {0}'.format(messages.REQUEST_SENT_NOTICE))
         notice_msg = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.NOTICE_MESSAGE_CSS).text
         self.is_equal(messages.REQUEST_SENT_NOTICE, notice_msg)
@@ -1815,7 +1818,7 @@ def added_client_row(self, client):
     return table_rows[client_row_index]
 
 
-def generate_auth_csr(self, ca_name, change_usage=True):
+def generate_auth_csr(self, ca_name, dns=None, organization=None, change_usage=True):
     """
     Generates the CSR (certificate request) for a client.
     :param change_usage: bool - when True changes usage to auth
@@ -1854,6 +1857,12 @@ def generate_auth_csr(self, ca_name, change_usage=True):
                             element=keyscertificates_constants.GENERATE_CSR_SIGNING_REQUEST_POPUP_OK_BTN_XPATH).click()
 
     self.wait_jquery()
+    if organization:
+        organization_input = self.wait_until_visible(type=By.XPATH, element=SUBJECT_DISTINGUISHED_NAME_POPUP_O_XPATH)
+        self.input(organization_input, organization)
+    if dns:
+        dns_input = self.wait_until_visible(type=By.XPATH, element=SUBJECT_DISTINGUISHED_NAME_POPUP_CN_XPATH)
+        self.input(dns_input, dns)
     self.log('Click on "OK" button')
     self.wait_until_visible(type=By.XPATH,
                             element=keyscertificates_constants.SUBJECT_DISTINGUISHED_NAME_POPUP_OK_BTN_XPATH).click()

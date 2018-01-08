@@ -1,6 +1,6 @@
 import unittest
 
-from helpers import auditchecker
+from helpers import auditchecker,xroad
 from main.maincontroller import MainController
 from tests.xroad_local_group.xroad_local_group import add_group_to_client
 
@@ -27,9 +27,12 @@ class XroadAddLocalGroupExtensions(unittest.TestCase):
 
         log_checker = auditchecker.AuditChecker(ssh_host, ssh_user, ssh_pass)
         client_id = main.config.get('ss1.client2_id')
+        client_name = main.config.get('ss1.client2_name')
+        subsystem_row = xroad.split_xroad_subsystem(main.config.get('ss1.client2_id'))
+        subsystem = subsystem_row['subsystem']
         try:
             main.reload_webdriver(ss_host, ss_user, ss_pass)
-            add_group_to_client(main, client_id, log_checker=log_checker)
+            add_group_to_client(main, client_id, log_checker=log_checker, client_name=client_name, subsystem=subsystem)
         except:
             main.save_exception_data()
             raise

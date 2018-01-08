@@ -6,7 +6,7 @@ from main.maincontroller import MainController
 from tests.xroad_configure_service_222 import configure_download_parse_url
 
 
-class XroadConfigureService(unittest.TestCase):
+class XroadDownloadParseURL(unittest.TestCase):
     """
     SERVICE_10 Download and Parse WSDL
     RIA URL: https://jira.ria.ee/browse/XT-267

@@ -20,8 +20,9 @@ class XroadAddClientToMemberExtensions(unittest.TestCase):
         cs_user = main.config.get('cs.user')
         cs_pass = main.config.get('cs.pass')
         server = xroad.split_xroad_id(main.config.get('ss1.server_id'), type='SERVER')
-        client_id = 'KS1 : COM : CLIENT1 : kalamaja'
-        client_name = 'Client One'
+        client = xroad.split_xroad_subsystem(main.config.get('ss1.client_id'))
+        client['subsystem'] = 'kalamaja'
+        client_name = main.config.get('ss1.client_name')
         existing_client = xroad.split_xroad_subsystem(main.config.get('ss1.client_id'))
         existing_client['name'] = main.config.get('ss1.client_name')
         cs_ssh_host = main.config.get('cs.ssh_host')
@@ -29,7 +30,7 @@ class XroadAddClientToMemberExtensions(unittest.TestCase):
         cs_ssh_pass = main.config.get('cs.ssh_pass')
         log_checker = auditchecker.AuditChecker(cs_ssh_host, cs_ssh_user, cs_ssh_pass)
         create_registration_request = test_create_registration_request(main, server, client_name,
-                                                                       client_id=client_id,
+                                                                       client=client,
                                                                        duplicate_client=existing_client,
                                                                        log_checker=log_checker)
         try:

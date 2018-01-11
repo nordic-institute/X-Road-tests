@@ -48,7 +48,7 @@ def add_subsystem_to_server_client(self, server_code, client, wait_input=3, log_
             if (tds[0].text == client['name']) & (tds[1].text == client['code']) & (tds[2].text == client['class']) & (
                     tds[3].text == u''):
                 self.js("arguments[0].scrollIntoView();", row)
-                row.click()
+                self.click(row)
                 break
 
     self.wait_until_visible(type=By.XPATH, element=cs_security_servers.SELECT_MEMBER_BTN_XPATH).click()
@@ -130,7 +130,7 @@ def add_sub_as_client_to_member(self, system_code, client, step='', check_reques
         'tr')
     for row in rows:
         if str(row.find_elements_by_tag_name('td')[3].text) == system_code:
-            row.click()
+            self.click(row)
             break
 
     self.wait_until_visible(type=By.ID, element=members_table.SELECT_SECURITY_SERVER_BTN_ID).click()
@@ -396,7 +396,7 @@ def open_servers_clients(self, code):
     for row in rows:
         if row.text is not u'':
             if row.find_element_by_tag_name('td').text == code:
-                row.click()
+                self.click(row)
 
     # Open details
     self.log('Click on Details button')
@@ -431,7 +431,7 @@ def search_and_select_client(self, client):
             if (tds[0].text == client['name']) & (tds[1].text == client['code']) & (tds[2].text == client['class']) & (
                     tds[3].text == u''):
                 self.js("arguments[0].scrollIntoView();", row)
-                row.click()
+                self.click(row)
                 break
 
     self.wait_until_visible(type=By.XPATH, element=cs_security_servers.SELECT_MEMBER_BTN_XPATH).click()

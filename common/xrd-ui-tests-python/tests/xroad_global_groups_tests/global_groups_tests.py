@@ -368,7 +368,7 @@ def open_member_details(self, member):
         pass
     '''Click the row. Raises an exception if member was not found. This can be caught outside of this function if 
     necessary.'''
-    row.click()
+    self.click(row)
     self.wait_jquery()
     self.log('Open Member Details')
     self.wait_until_visible(type=By.ID, element=members_table.MEMBERS_DETATILS_BTN_ID).click()
@@ -623,7 +623,7 @@ def test_member_add_to_global_group(self, member_name, client_code, global_group
         self.log('Find member "{}" row'.format(member_name))
         member_row = self.wait_until_visible(type=By.XPATH, element=MEMBER_TABLE_CLICK_MEMBER.format(member_name))
         self.log('Open member details')
-        member_row.click()
+        self.click(member_row)
         self.wait_until_visible(type=By.ID, element=members_table.MEMBERS_DETATILS_BTN_ID).click()
         self.wait_jquery()
         self.log('Open global groups tab')

@@ -64,7 +64,7 @@ def add_client_to_ss(self, client, retry_interval=0, retry_timeout=0, step='x.x.
             member_row = members_table.get_row_by_columns(table, [client['name'], client['class'], client['code']])
 
             self.wait_jquery()
-            member_row.click()
+            self.click(member_row)
             # If we got here, client was found
             self.log(step + 'Found client row')
             break

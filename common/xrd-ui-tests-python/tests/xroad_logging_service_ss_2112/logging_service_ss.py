@@ -719,7 +719,7 @@ def remove_member(self, cent_host, cent_username, cent_password, member):
     self.log('MEMBER_26 1. Select to delete a member')
 
     # Click on the row, open details and delete member
-    row.click()
+    self.click(row)
     self.log('Click on "DETAILS" button')
     self.wait_until_visible(type=By.ID, element=members_table.MEMBERS_DETATILS_BTN_ID).click()
     self.log('Click on "DELETE" button')

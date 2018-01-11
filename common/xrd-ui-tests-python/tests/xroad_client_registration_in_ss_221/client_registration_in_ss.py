@@ -502,7 +502,7 @@ def add_client_to_ss(self, client, retry_interval=0, retry_timeout=0, wait_input
             member_row = members_table.get_row_by_columns(table, [client['name'], client['class'], client['code']])
 
             self.wait_jquery()
-            member_row.click()
+            self.click(member_row)
             # If we got here, client was found
             self.log(step + 'Found client row')
             break
@@ -750,7 +750,7 @@ def add_sub_as_client_to_member(self, system_code, client, wait_input=2, step=''
         'tr')
     for row in rows:
         if str(row.find_elements_by_tag_name('td')[3].text) == system_code:
-            row.click()
+            self.click(row)
             break
 
     self.wait_until_visible(type=By.ID, element=members_table.SELECT_SECURITY_SERVER_BTN_ID).click()
@@ -814,7 +814,7 @@ def add_subsystem_to_server_client(self, server_code, client, wait_input=3):
         if tds[0].text is not u'':
             if (tds[0].text == client['name']) & (tds[1].text == client['code']) & (tds[2].text == client['class']) & (
                         tds[3].text == u''):
-                row.click()
+                self.click(row)
                 break
 
     self.wait_until_visible(type=By.XPATH, element=cs_security_servers.SELECT_MEMBER_BTN_XPATH).click()
@@ -939,7 +939,7 @@ def check_expected_result_cs(self, ss_1_client, ss_2_client, ss_2_client_2, chec
 
     client_row = members_table.get_row_by_columns(table, [ss_1_client['name'], ss_1_client['class'],
                                                           ss_1_client['code']])
-    client_row.click()
+    self.click(client_row)
 
     # Open the client details and subsystem tab
     self.wait_until_visible(type=By.ID, element=members_table.MEMBERS_DETATILS_BTN_ID).click()
@@ -1027,7 +1027,7 @@ def check_expected_result_cs(self, ss_1_client, ss_2_client, ss_2_client_2, chec
         if row.text is not u'':
             if row.find_elements_by_tag_name('td')[8].text == 'APPROVED':
                 counter += 1
-                row.click()
+                self.click(row)
                 self.wait_until_visible(type=By.ID, element=members_table.MANAGEMENT_REQUEST_DETAILS_BTN_ID).click()
                 self.wait_jquery()
 
@@ -1185,7 +1185,7 @@ def open_servers_clients(self, code):
     for row in rows:
         if row.text is not u'':
             if row.find_element_by_tag_name('td').text == code:
-                row.click()
+                self.click(row)
 
     # Open details
     self.log('Click on Details button')
@@ -1470,7 +1470,7 @@ def remove_member(self, member):
         assert False, 'Deletion member not found'
 
     # Click on the member
-    row.click()
+    self.click(row)
 
     # Open details
     self.log('Click on "DETAILS" button')
@@ -1653,7 +1653,7 @@ def remove_client_subsystem(self, client, try_cancel=False):
 
     subsys_row = self.wait_until_visible(type=By.XPATH, element=members_table.SUBSYSTEM_TR_BY_CODE_XPATH.format(
         client['subsystem_code']))
-    subsys_row.click()
+    self.click(subsys_row)
 
     # Click "Delete"
     self.log('MEMBER_14 1. Subsystem delete button is clicked')
@@ -1783,7 +1783,7 @@ def remove_key_and_revoke_certificates(self, client, ssh_client=None):
 
     # Click the key row
     self.log('Click on generated key row')
-    generated_key_row.click()
+    self.click(generated_key_row)
     self.wait_jquery()
 
     # Click "Delete"

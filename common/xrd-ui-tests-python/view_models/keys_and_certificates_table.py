@@ -95,6 +95,8 @@ HARDTOKEN_KEY = '{0}//following::tr[contains(@class, "token-active") and not(con
 
 
 IMPORT_CERTIFICATE_POPUP_XPATH = '//div[@aria-describedby="file_upload_dialog"]'
+IMPORT_CERTIFICATE_POPUP_XPATH_CANCEL = IMPORT_CERTIFICATE_POPUP_XPATH + '//div[@class="ui-dialog-buttonset"]//button[span="Cancel"]'
+
 
 GENERATE_CSR_SIGNING_REQUEST_POPUP_XPATH = '//div[@data-name="generate_csr_dialog"]'
 GENERATE_CSR_SIGNING_REQUEST_CSR_FORMAT_DROPDOWN_ID = 'csr_format'

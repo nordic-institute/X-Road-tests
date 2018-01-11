@@ -17,7 +17,7 @@ def check_client_in_cs(self, clients):
     client = clients[0]
     client_row = members_table.get_row_by_columns(table, [client['name'], client['class'],
                                                           client['code']])
-    client_row.click()
+    self.click(client_row)
 
     # Open the client details and subsystem tab
     self.wait_until_visible(type=By.ID, element=members_table.MEMBERS_DETATILS_BTN_ID).click()

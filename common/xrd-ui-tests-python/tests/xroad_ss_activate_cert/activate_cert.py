@@ -41,7 +41,7 @@ def activate_cert(self, ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass, registered=Fal
         '''Get the cert key label'''
         key_label = registration_in_progress_row.find_element_by_xpath('../preceding::tr[2]//td').text.split(' ')[1]
         '''Click on the certificate'''
-        registration_in_progress_row.click()
+        self.click(registration_in_progress_row)
         self.log('SS_32 1. "Activate a certificate" button is clicked')
         self.wait_until_visible(type=By.ID, element=ACTIVATE_BTN_ID).click()
         self.log('Waiting until keyconf is updated')

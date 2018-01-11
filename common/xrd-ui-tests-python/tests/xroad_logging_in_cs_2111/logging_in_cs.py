@@ -149,14 +149,14 @@ def test_test(ssh_host, ssh_username, ssh_password, users, client_id, client_nam
 
                         try:
                             while td is not None:
-                                td.click()
-                                self.wait_until_visible(type=By.ID,
-                                                        element=members_table.MANAGEMENT_REQUEST_DETAILS_BTN_ID).click()
+                                self.click(td)
+                                self.click(self.wait_until_visible(type=By.ID,
+                                                        element=members_table.MANAGEMENT_REQUEST_DETAILS_BTN_ID))
                                 self.wait_jquery()
                                 time.sleep(1)
                                 self.log('MEMBER_39 Revoking request')
-                                self.wait_until_visible(type=By.XPATH,
-                                                        element=members_table.DECLINE_REQUEST_BTN_XPATH).click()
+                                self.click(self.wait_until_visible(type=By.XPATH,
+                                                        element=members_table.DECLINE_REQUEST_BTN_XPATH))
                                 self.wait_jquery()
                                 popups.confirm_dialog_click(self)
                                 time.sleep(5)
@@ -224,7 +224,7 @@ def add_member_to_cs(self, ssh_client, user, member, existing_client=None, with_
         self.input(input_code, existing_member_code)
 
         self.log('Click OK')
-        self.wait_until_visible(type=By.XPATH, element=members_table.ADD_MEMBER_POPUP_OK_BTN_XPATH).click()
+        self.click(self.wait_until_visible(type=By.XPATH, element=members_table.ADD_MEMBER_POPUP_OK_BTN_XPATH))
         self.wait_jquery()
 
         expected_error_msg = MEMBER_ALREADY_EXISTS_ERROR.format(existing_member_class, existing_member_code)
@@ -252,7 +252,7 @@ def add_member_to_cs(self, ssh_client, user, member, existing_client=None, with_
     self.input(input_code, member['code'])
 
     self.log('Click "OK" to add member')
-    self.wait_until_visible(type=By.XPATH, element=members_table.ADD_MEMBER_POPUP_OK_BTN_XPATH).click()
+    self.click(self.wait_until_visible(type=By.XPATH, element=members_table.ADD_MEMBER_POPUP_OK_BTN_XPATH))
     self.wait_jquery()
 
     expected_log_msg = ADD_MEMBER
@@ -296,7 +296,7 @@ def add_subsystem_to_member(self, member, user=None, ssh_client=None):
 
     # Save data
     self.log('Confirm adding subsystem, click on "OK" button')
-    self.wait_until_visible(type=By.XPATH, element=members_table.SUBSYSTEM_POPUP_OK_BTN_XPATH).click()
+    self.click(self.wait_until_visible(type=By.XPATH, element=members_table.SUBSYSTEM_POPUP_OK_BTN_XPATH))
 
     # UC MEMBER_56 4, 5. System verifies new subsystem and saves it
     self.log('MEMBER_56 4, 5. System verifies new subsystem and saves it')
@@ -480,19 +480,19 @@ def register_subsystem_to_security_server(self, ssh_client, user, member, server
     self.wait_jquery()
 
     # Find the member from the table and click the row
-    members_table.get_row_by_columns(table,
+    self.click(members_table.get_row_by_columns(table,
                                      [member['name'], member['code'], member['class'], member['subsystem'],
                                       ssh_server_actions.get_server_name(self),
-                                      'SUBSYSTEM']).click()
+                                      'SUBSYSTEM']))
     self.wait_jquery()
     time.sleep(1)
-    self.wait_until_visible(type=By.XPATH, element=cs_security_servers.SELECT_MEMBER_BTN_XPATH).click()
+    self.click(self.wait_until_visible(type=By.XPATH, element=cs_security_servers.SELECT_MEMBER_BTN_XPATH))
     self.wait_jquery()
 
     # UC MEMBER_15 1. Select to create a registration request
     self.log('MEMBER_15 1. Select to create a registration request')
-    self.wait_until_visible(type=By.ID,
-                            element=cs_security_servers.SECURITYSERVER_CLIENT_REGISTER_SUBMIT_BTN_ID).click()
+    self.click(self.wait_until_visible(type=By.ID,
+                            element=cs_security_servers.SECURITYSERVER_CLIENT_REGISTER_SUBMIT_BTN_ID))
     self.wait_jquery()
 
     # UC MEMBER_15 5-8. Check if request can be sent.
@@ -539,14 +539,14 @@ def remove_subsystem_registration_request(self, ssh_client, user, server_id):
     # Get the latest requests
     tr = table.find_elements_by_tag_name('tr')[1]
     self.log('Clicking request index')
-    tr.find_element_by_tag_name('a').click()
+    self.click(tr.find_element_by_tag_name('a'))
 
     # UC MEMBER_39 1. Select to revoke registration request
     self.log('MEMBER_39 1. Select to revoke registration request')
     self.wait_jquery()
     time.sleep(10)
-    self.wait_until_visible(type=By.XPATH,
-                            element=cs_security_servers.REVOKE_CLIENT_MANAGEMENT_REQUEST_BTN_XPATH).click()
+    self.click(self.wait_until_visible(type=By.XPATH,
+                            element=cs_security_servers.REVOKE_CLIENT_MANAGEMENT_REQUEST_BTN_XPATH))
 
     # UC MEMBER_39 2. System prompts for confirmation
     self.log('MEMBER_39 2. System prompts for confirmation')
@@ -585,7 +585,7 @@ def remove_group(self, group):
     for row in rows:
         if row.text != '':
             if row.find_element_by_tag_name('td').text == group:
-                row.click()
+                self.click(row)
                 self.wait_jquery()
 
     # Open group details and delete the group
@@ -739,7 +739,7 @@ def open_member_details(self, member):
         self.log('Member not found')
         pass
     # Click the row. Raises an exception if member was not found. This can be caught outside of this function if necessary.
-    row.click()
+    self.click(row)
     self.wait_jquery()
     self.log('Open Member Details')
     self.wait_until_visible(type=By.ID, element=members_table.MEMBERS_DETATILS_BTN_ID).click()

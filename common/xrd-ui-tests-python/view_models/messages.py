@@ -164,6 +164,9 @@ CP_CONF_DOWNLOAD_REQUEST_ERROR_3 = 'HttpError: {0}'
 CP_DOWNLOAD_UPDATE_CONFIGURATION_ERROR = 'ERROR e.r.x.c.c.g.ConfigurationClient - Failed to download configuration from any configuration location:'
 CP_DOWNLOAD_UPDATE_CONFIGURATION_LOCATION_ERROR = 'location: http://{0}/internalconf?version=2; error: HttpError: {0}'
 CP_DOWNLOAD_SUCCESSFULL = 'Downloading configuration from http://{0}/internalconf?version=2'
+SECURITY_SERVER_CLIENT_DELETION_REQUEST = 'Request of deleting client \'SUBSYSTEM:{0}/{1}/{2}/{3}\' from security server \'SERVER:{4}/{5}/{6}/{7}\' added successfully'
+
+
 def get_error_message(self):
     '''
     Returns the first visible error message string (an element with class 'error' inside an element with class

@@ -416,7 +416,11 @@ _Table 8. MainController class methods_
 | async\_js(script, \*args) | Executes a JavaScript asynchronously (non-blocking) in the browser. |
 | wait\_jquery(timeout=120) | Waits until jQuery object is not active or a timeout of _timeout_ seconds occurs . Used when checking if jQuery-based AJAX queries have finished. |
 | get\_classes(element) | Returns a list of CSS classes associated with the specified _element_. |
+| scroll_to(element) | Uses JavaScript to scroll an element into viewport. |
+| click(element, type=None, scroll\_to=True, wait\_until\_clickable=False, timeout=60, wait\_ajax=False, ajax\_timeout=60) | Clicks on a visible element (scrolls into viewport if specified) and allows waiting for element to be enabled first |
+| double\_click(element) | Double-clicks on an element. |
 | input(element, text, click=True, clear=True) | Types _text_ into an HTML input/textarea element. If _click=True_, first clicks on the element. If _clear=True_, clears the field before typing. |
+| select(element, type=None, value=None, text=None, index=None) | Selects a value from a visible \<select\> element using the value itself, visible text, or numeric index. |
 | **Methods inherited from AssertHelper** |   |
 | is\_true(con1, test\_name=None, msg=&#39;Failed&#39;, log\_message=None) | If con1 is not True, raises an _AssertionException_ with message _msg_. Logs the assertion with _test\_name_ and _log\_message_ (if specified). |
 | is\_false(con1, test\_name=None, msg=&#39;Failed&#39;, log\_message=None) | If con1 is not False, raises an _AssertionException_ with message _msg_. Logs the assertion with _test\_name_ and _log\_message_ (if specified). |

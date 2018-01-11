@@ -187,7 +187,7 @@ def delete_csr(self, sshclient, log_checker=None, client_code=None, client_class
         csr_row = self.wait_until_visible(type=By.CSS_SELECTOR,
                                           element=keys_and_certificates_table.CERT_REQUESTS_TABLE_ROW_CSS)
     '''Click on the csr row'''
-    csr_row.click()
+    self.click(csr_row)
     self.log('SS_39 Delete Certificate Signing Request Notice from System Configuration')
     self.log('SS_39 1. Click on the delete button to delete CSR')
     self.by_id(keys_and_certificates_table.DELETE_BTN_ID).click()
@@ -479,7 +479,7 @@ def activate_cert(self, ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass, registered=Fal
         '''Get the cert key label'''
         key_label = registration_in_progress_row.find_element_by_xpath('../preceding::tr[2]//td').text.split(' ')[1]
         '''Click on the certificate'''
-        registration_in_progress_row.click()
+        self.click(registration_in_progress_row)
         self.log('SS_32 1. "Activate a certificate" button is clicked')
         self.wait_until_visible(type=By.ID, element=keys_and_certificates_table.ACTIVATE_BTN_ID).click()
         self.log('Waiting until keyconf is updated')
@@ -857,7 +857,7 @@ def failing_tests(file_client_name, file_client_class, file_client_code, file_cl
             # Find our CA and remove it
             for row in rows:
                 if self.config.get('ca.name') in row.text:
-                    row.click()
+                    self.click(row)
                     self.wait_until_visible(type=By.ID, element=certification_services.DELETE_BTN_ID).click()
                     popups.confirm_dialog_click(self)
 
@@ -2155,7 +2155,9 @@ def log_in_token(self):
         self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar_constants.KEYSANDCERTIFICATES_BTN_CSS).click()
         self.wait_until_visible(type=By.CLASS_NAME, element='activate_token').click()
         PIN_input = self.wait_until_visible(type=By.ID, element='activate_token_pin')
-        self.input(PIN_input, '1234')
+        token_pin = str(self.config.get('cp.token_pin'))
+
+        self.input(PIN_input, token_pin)
         self.by_xpath('//div[@aria-describedby="activate_token_dialog"]//span[contains(text(), "OK")]').click()
 
     return log_in

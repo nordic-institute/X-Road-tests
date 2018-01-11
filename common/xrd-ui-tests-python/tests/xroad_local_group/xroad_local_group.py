@@ -94,9 +94,7 @@ def test_add_member_to_local_group(client_name=None, subsystem=None):
         added_local_group_row = self.wait_until_visible(type=By.XPATH, element=popups.
                                                         get_local_group_row_by_code(added_local_group_code))
 
-
-
-        added_local_group_row.click()
+        self.click(added_local_group_row)
         self.wait_until_visible(type=By.ID,
                                 element=groups_table.GROUP_DETAILS_BTN_ID).click()
         self.log('Click on "ADD MEMBERS" button')
@@ -262,7 +260,7 @@ def test_edit_local_group_description():
 
 
             '''Click on local group row'''
-            added_local_group_row.click()
+            self.click(added_local_group_row)
             '''Click on "Details" button'''
             self.wait_until_visible(type=By.ID, element=GROUP_DETAILS_BTN_ID).click()
 
@@ -344,7 +342,7 @@ def test_edit_local_group_description():
         self.log('Double click on a added local group code - {0}'.format(added_local_group_code))
         added_local_group_row = self.wait_until_visible(type=By.XPATH, element=popups.
                                                         get_local_group_row_by_code(added_local_group_code))
-        added_local_group_row.click()
+        self.click(added_local_group_row)
         self.wait_until_visible(type=By.ID, element=GROUP_DETAILS_BTN_ID).click()
         '''Delete local group'''
         delete_local_group(self)
@@ -393,7 +391,7 @@ def test_remove_member_from_local_group():
         added_local_group_row = self.wait_until_visible(type=By.XPATH, element=popups.
                                                         get_local_group_row_by_code(added_local_group_code))
         '''Click on local group row'''
-        added_local_group_row.click()
+        self.click(added_local_group_row)
         '''Click on "Details" button'''
         self.wait_until_visible(type=By.ID, element=GROUP_DETAILS_BTN_ID).click()
 
@@ -519,7 +517,7 @@ def test_delete_local_group(client_name=None, subsystem=None):
         added_local_group_row = self.wait_until_visible(type=By.XPATH, element=popups.
                                                         get_local_group_row_by_code(added_local_group_code))
 
-        added_local_group_row.click()
+        self.click(added_local_group_row)
         self.wait_until_visible(type=By.ID, element=GROUP_DETAILS_BTN_ID).click()
 
 
@@ -926,7 +924,7 @@ def add_group_to_client(self, client_id, log_checker=None, subsystem=None, clien
     self.log('Double click on a added max length local group code')
     added_local_group_row = self.wait_until_visible(type=By.XPATH, element=popups.
                                                     get_local_group_row_by_code(code_255_len_stripped))
-    added_local_group_row.click()
+    self.click(added_local_group_row)
 
     '''Click on "Details" button'''
     self.wait_until_visible(type=By.ID, element=GROUP_DETAILS_BTN_ID).click()

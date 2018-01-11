@@ -969,7 +969,7 @@ def test_edited_central_service_inputs():
             self.log('Click on added central service row')
             cs_code_row = self.wait_until_visible(type=By.XPATH,
                                                   element=central_services.get_central_service_text('CS_CODE'))
-            cs_code_row.click()
+            self.click(cs_code_row)
 
             '''SSERVICE_42/1 CS administrator selects to edit the implementing service of a central service.'''
             self.log('Click on "EDIT" button')
@@ -1088,7 +1088,7 @@ def test_edited_central_service_inputs():
         self.log('Click on added central service row')
         cs_row = self.wait_until_visible(type=By.XPATH, element=central_services.
                                          get_central_service_text(central_services.CENTRAL_SERVICE[0].strip()))
-        cs_row.click()
+        self.click(cs_row)
         self.wait_jquery()
         self.log('Click on "DELETE" button')
         self.wait_until_visible(type=By.ID, element=central_services.SERVICE_DELETE_BUTTON_ID).click()

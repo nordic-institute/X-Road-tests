@@ -99,7 +99,7 @@ def test_delete_tls(case, client, provider):
                                                                           service_name=testservice_name)
 
         # Click on the service row to select it
-        service_row.click()
+        self.click(service_row)
 
         # Open service parameters by finding the "Edit" button and clicking it.
         edit_service_button = self.by_id(popups.CLIENT_DETAILS_POPUP_EDIT_WSDL_BTN_ID)
@@ -595,7 +595,7 @@ def test_tls(case, client, provider):
                                                                           service_name=testservice_name)
 
         # Click on the service row to select it
-        service_row.click()
+        self.click(service_row)
 
         # Open service parameters by finding the "Edit" button and clicking it.
         edit_service_button = self.by_id(popups.CLIENT_DETAILS_POPUP_EDIT_WSDL_BTN_ID)

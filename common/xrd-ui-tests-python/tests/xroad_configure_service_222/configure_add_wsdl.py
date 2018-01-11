@@ -437,7 +437,7 @@ def test_configure_service(case, client=None, client_name=None, client_id=None, 
                       msg='SERVICE_08 8. Added WSDL row does not have class "disabled": {0}'.format(wsdl_correct_url))
 
         # Select the WSDL by clicking on the row
-        wsdl_row.click()
+        self.click(wsdl_row)
 
         # UC SERVICE_08 8. check if default disable message is correct
         # enable and disable WSDL to get disable message popup
@@ -459,7 +459,7 @@ def test_configure_service(case, client=None, client_name=None, client_id=None, 
                                                                           service_name=service_name)
 
         # Click on the service row to select it
-        service_row.click()
+        self.click(service_row)
         edit_wsdl_button = self.by_id(popups.CLIENT_DETAILS_POPUP_EDIT_WSDL_BTN_ID)
 
         # Click the "Edit" button to open "Edit Service Parameters" popup

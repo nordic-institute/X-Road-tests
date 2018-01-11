@@ -334,7 +334,7 @@ def test_configure_service(case, client=None, client_name=None, client_id=None, 
             # UC SERVICE_09 1. Select to edit the address of a WSDL
             self.log('SERVICE_09 1. Select to edit the address of a WSDL')
 
-            wsdl_row.click()
+            self.click(wsdl_row)
             edit_wsdl_button.click()
 
             current_log_lines = log_checker.get_line_count()

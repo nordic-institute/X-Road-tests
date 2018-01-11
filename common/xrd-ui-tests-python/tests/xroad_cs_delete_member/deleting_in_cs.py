@@ -50,7 +50,7 @@ def remove_member(self, member, group=None, member_has_subsystem_as_client=False
         assert False, 'Deletion member not found'
 
     # Click on the member
-    row.click()
+    self.click(row)
 
     # Open details
     self.log('Click on "DETAILS" button')

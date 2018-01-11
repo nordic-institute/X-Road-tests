@@ -99,15 +99,15 @@ def get_client_id(partial_id):
     return '//table[@id="clients"]//span[contains(text(), "{0}")]'.format(partial_id)
 
 def open_acl_subjects_popup(self, client_name):
-    print('Open clients view')
+    self.log('Open clients view')
     # Wait for the element and click
     self.wait_until_visible(self.by_css(sidebar_vm.CLIENTS_BTN_CSS)).click()
-    print('Open Service clients dialog')
+    self.log('Open Service clients dialog')
     self.wait_jquery()
     self.wait_until_visible(type=By.CSS_SELECTOR, element=CLIENT_ROW_CSS)
     table_rows = self.by_css(CLIENT_ROW_CSS, multiple=True)
     client_row_index = find_row_by_client(table_rows, client_name=client_name)
-    table_rows[client_row_index].find_element_by_css_selector(ACL_SUBJECTS_TAB_CSS).click()
+    self.click(table_rows[client_row_index].find_element_by_css_selector(ACL_SUBJECTS_TAB_CSS))
 
 
 def find_row_by_client(table_rows, client=None, client_name=None, client_id=None):
@@ -185,7 +185,7 @@ def select_subjects_from_table(self, subjects_table, subjects, select_duplicate=
     # Initialize list of selected xroad ids
     selected_ids = []
 
-    print('Looping over subjects list')
+    self.log('Looping over subjects list')
 
     # Loop over the subjects list and try to find them in the table
     for subject in subjects:
@@ -228,7 +228,7 @@ def select_subjects_from_table(self, subjects_table, subjects, select_duplicate=
         selected_ids.append(xroad_id_text)
 
         # Click the element
-        xroad_id.click()
+        self.click(xroad_id)
 
     return selected_ids
 
@@ -265,7 +265,7 @@ def open_client_popup_tab(self, client=None, client_name=None, client_id=None, s
     ''':type: selenium.webdriver.remote.webelement.WebElement'''
 
     # Click the button to open the tab directly under the client.
-    shortcut_button.click()
+    self.click(shortcut_button)
 
     # Wait until everything has been loaded.
     self.wait_jquery()
@@ -330,7 +330,7 @@ def client_services_popup_select_wsdl(self, wsdl_index=None, wsdl_url=None):
     """:type: selenium.webdriver.remote.webelement.WebElement"""
 
     # Click the element to select it.
-    wsdl_row.click()
+    self.click(wsdl_row)
 
     # Return the element, other code might need it
     return wsdl_row
@@ -355,7 +355,7 @@ def client_services_popup_get_services_rows(self, wsdl_index=None, wsdl_url=None
         # If the WSDL element is not expanded, do it now by finding the plus sign and clicking it.
         open_services_element = wsdl_element.find_element_by_css_selector(
             popups.CLIENT_DETAILS_POPUP_WSDL_CLOSED_SERVICE_CSS)
-        open_services_element.click()
+        self.click(open_services_element)
     except Exception:
         # Ignore errors - the element is already expanded.
         pass
@@ -407,7 +407,7 @@ def client_services_popup_find_service(self, wsdl_index=None, wsdl_url=None, ser
         # If the WSDL element is not expanded, do it now by finding the plus sign and clicking it.
         open_services_element = wsdl_element.find_element_by_css_selector(
             popups.CLIENT_DETAILS_POPUP_WSDL_CLOSED_SERVICE_CSS)
-        open_services_element.click()
+        self.click(open_services_element)
     except Exception:
         # Ignore errors - the element is already expanded.
         pass
@@ -463,7 +463,7 @@ def client_services_popup_open_wsdl_acl(self, services_table, service_index=None
     try:
         open_services_element = wsdl_element.find_element_by_css_selector(
             popups.CLIENT_DETAILS_POPUP_WSDL_CLOSED_SERVICE_CSS)
-        open_services_element.click()
+        self.click(open_services_element)
     except NoSuchElementException:
         # We got an exception. Let's assume that the WSDL is already open. If it is not, we'll get another exception
         # when trying to find/click the service row.
@@ -471,11 +471,11 @@ def client_services_popup_open_wsdl_acl(self, services_table, service_index=None
 
     service_row = client_services_popup_find_service(self, wsdl_index=wsdl_index,
                                                      service_name=service_name)
-    service_row.click()
+    self.click(service_row)
 
     # Find the "Access Rights" button and click it to open the ACL popup window.
     access_rights_button = self.by_id(popups.CLIENT_DETAILS_POPUP_ACCESS_RIGHTS_BTN_ID)
-    access_rights_button.click()
+    self.click(access_rights_button)
 
 
 def client_services_popup_get_wsdl(self, wsdl_index):
@@ -527,7 +527,7 @@ def client_servers_popup_delete_tls_certs(self, cancel_deletion=False):
             break
 
         self.log('MEMBER_51 1. TLS certificate is selected')
-        certificate.click()
+        self.click(certificate)
         self.log('MEMBER_51 1. Delete button is pressed')
         delete_button.click()
 

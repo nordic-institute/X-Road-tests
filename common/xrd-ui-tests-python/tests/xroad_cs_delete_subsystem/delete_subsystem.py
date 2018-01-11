@@ -45,7 +45,7 @@ def test_delete_subsystem(self, client, global_group=None, try_cancel=False, log
 
         subsys_row = self.wait_until_visible(type=By.XPATH, element=SUBSYSTEM_TR_BY_CODE_XPATH.format(
             client['subsystem_code']))
-        subsys_row.click()
+        self.click(subsys_row)
 
         # Click "Delete"
         self.log('MEMBER_14 1. Subsystem delete button is clicked')

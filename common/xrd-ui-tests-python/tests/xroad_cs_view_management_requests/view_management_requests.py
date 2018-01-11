@@ -12,7 +12,7 @@ def check_column_data(self, ths, request_type, registration=True):
     request_row = self.by_xpath(get_requests_row_by_td_text(request_type))
     tds = request_row.find_elements_by_tag_name('td')
     self.log('Click on request row')
-    request_row.click()
+    self.click(request_row)
     date_regex = '\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}'
     column_count = 8
     self.log('Check if details button exists')

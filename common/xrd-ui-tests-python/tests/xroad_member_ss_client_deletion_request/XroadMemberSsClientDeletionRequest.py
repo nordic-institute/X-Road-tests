@@ -3,6 +3,7 @@ import unittest
 from main.maincontroller import MainController
 import del_management
 from helpers import xroad
+import random, string
 from tests.xroad_client_registration_in_ss_221.client_registration_in_ss import approve_requests
 from view_models import cs_security_servers
 
@@ -32,22 +33,34 @@ class XroadMemberSsClientDeletionRequest(unittest.TestCase):
         cs_ssh_host = main.config.get('cs.ssh_host')
         cs_ssh_user = main.config.get('cs.ssh_user')
         cs_ssh_pass = main.config.get('cs.ssh_pass')
-        ss1_code = main.config.get('ss1.server_name')
-        client_server_id = xroad.split_xroad_id(main.config.get('ss1.server_id'))
+        ss1_code = main.config.get('ss1.client_name')
+        ss1_code2 = main.config.get('ss1.server_name')
+        client_server_id = xroad.split_xroad_id(main.config.get('ss1.client_id'))
         client_subsystem = client_server_id['subsystem']
         client_instance = client_server_id['instance']
+        client_management = xroad.split_xroad_id(main.config.get('ss1.management_id'))
+        mangagement_code = client_management['code']
+        management_name = main.config.get('ss1.management_name')
+
+
+
         client_code = client_server_id['code']
         client_class = client_server_id['class']
+
         ss_host = main.config.get('ss1.host')
         ss_user = main.config.get('ss1.user')
         ss_pass = main.config.get('ss1.pass')
-        random_code = cs_security_servers.randomword(6)
+
+        rand_str = lambda n: ''.join([random.choice(string.lowercase) for i in xrange(n)])
+        random_code = rand_str(6)
+
 
         member_add_subsystem = del_management.test_add_subsystem_to_member(case=main, ss1_code=ss1_code,
                                                                            subsystem_text=random_code)
 
-        server_client_add_subsystem = del_management.test_add_subsystem_to_server_client(case=main, ss1_code=ss1_code,
-                                                                                         random_code=random_code)
+        server_client_add_subsystem = del_management.test_add_subsystem_to_server_client(case=main, ss1_code=ss1_code, ss1_code2=ss1_code2,
+                                                                                         random_code=random_code, client_code=client_code, client_class=client_class)
+
 
         add_client_to_ss = del_management.test_add_client_to_ss_by_hand(case=main, client_class=client_class,
                                                                         client_code=client_code,
@@ -55,11 +68,12 @@ class XroadMemberSsClientDeletionRequest(unittest.TestCase):
 
         delete_client = del_management.test_ss_client_deletion(case=main, cs_ssh_host=cs_ssh_host,
                                                                cs_ssh_user=cs_ssh_user,
-                                                               cs_ssh_pass=cs_ssh_pass, ss1_code=ss1_code,
+                                                               cs_ssh_pass=cs_ssh_pass, ss1_code=ss1_code, ss1_code2=ss1_code2,
                                                                client_subsystem=client_subsystem,
                                                                client_instance=client_instance, client_code=client_code,
                                                                client_class=client_class,
-                                                               random_code=random_code)
+                                                               random_code=random_code, mangagement_code=mangagement_code, management_name=management_name)
+
 
         try:
             '''Open webdriver'''
@@ -94,9 +108,8 @@ class XroadMemberSsClientDeletionRequest(unittest.TestCase):
             del_management.delete_member(main, ss1_code=ss1_code, random_code=random_code)
 
             main.reload_webdriver(url=ss_host, username=ss_user, password=ss_pass)
-            del_management.ss_delete_client(main, client_instance=client_instance,
+            del_management.ss_delete_client(main,
                                             client_code=client_code,
-                                            client_class=client_class,
                                             random_code=random_code)
 
             '''Test teardown'''

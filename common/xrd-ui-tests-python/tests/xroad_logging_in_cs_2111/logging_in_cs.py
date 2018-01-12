@@ -255,6 +255,8 @@ def add_member_to_cs(self, ssh_client, user, member, existing_client=None, with_
     self.click(self.wait_until_visible(type=By.XPATH, element=members_table.ADD_MEMBER_POPUP_OK_BTN_XPATH))
     self.wait_jquery()
 
+    # Wait for logs
+    time.sleep(2)
     expected_log_msg = ADD_MEMBER
     bool_value, data, date_time = check_logs_for(ssh_client, expected_log_msg, user[USERNAME])
     self.is_true((bool_value & (str(data['data']['memberCode']) == member['code'])), test_name,

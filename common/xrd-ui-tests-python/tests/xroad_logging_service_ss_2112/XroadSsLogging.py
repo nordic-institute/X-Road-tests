@@ -81,6 +81,9 @@ class XroadLoggingInSecurityServer(unittest.TestCase):
                                                  sec_host=main.config.get('ss1.host'),
                                                  sec_username=main.config.get('ss1.user'),
                                                  sec_password=main.config.get('ss1.pass'),
+                                                 ca_ssh_host=main.config.get('ca.ssh_host'),
+                                                 ca_ssh_username=main.config.get('ca.ssh_user'),
+                                                 ca_ssh_password=main.config.get('ca.ssh_pass'),
                                                  users=users, client_id=client_id, client_name=client_name,
                                                  wsdl_url=wsdl_url)
         test_func(main)

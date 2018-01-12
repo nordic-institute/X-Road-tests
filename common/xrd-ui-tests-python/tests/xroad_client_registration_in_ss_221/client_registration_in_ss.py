@@ -1352,8 +1352,8 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
         self.wait_until_visible(type=By.XPATH,
                                 element=keyscertificates_constants.get_generated_key_row_xpath(ss_1_client['code'],
                                                                                                ss_1_client['class']))
-        certs_to_revoke = get_certificates_to_revoke(self, ss_1_client)
-        if ssh_client is not None:
+        certs_to_revoke = ssh_server_actions.get_valid_certificates(self, ss_1_client)
+        if ca_ssh_client is not None:
             self.log('Revoking certificates in CA')
             client_certification.revoke_certs(ca_ssh_client, certs_to_revoke)
     except:
@@ -1717,43 +1717,6 @@ def remove_certificate(self, client):
         pass
 
 
-def get_certificates_to_revoke(self, client):
-    """
-    Gets a list of the client's certificates that need to be revoked.
-    :param self: MainController object
-    :param client: dict - client data
-    :return: [str] - list of certificate filenames to revoke
-    """
-    # Initialize the list of certificates to revoke. Because we are deleting the key, we need to revoke all certificates
-    # under it.
-    certs_to_revoke = []
-
-    # Try to get the certificates under the generated keys
-    key_num = 1
-    newcerts_base = './newcerts'
-    while True:
-        try:
-            key_friendly_name_xpath = keyscertificates_constants.get_generated_key_row_active_cert_friendly_name_xpath(
-                client['code'], client['class'], key_num)
-            key_name_element = self.by_xpath(key_friendly_name_xpath)
-            element_text = key_name_element.text.strip()
-            # Split the element by space and get the last part of it as this is the key id as a decimal
-            cert_id = int(element_text.rsplit(' ', 1)[-1])
-            cert_hex = '{0:02x}'.format(cert_id).upper()
-            # Key filenames are of even length (zero-padded) so we'll generate one like that
-            if len(cert_hex) % 2 == 1:
-                cert_filename = '{0}/0{1}.pem'.format(newcerts_base, cert_hex)
-            else:
-                cert_filename = '{0}/{1}.pem'.format(newcerts_base, cert_hex)
-            certs_to_revoke.append(cert_filename)
-        except:
-            # Exit loop if element not found (= no certificates listed)
-            break
-        key_num += 1
-
-    return certs_to_revoke
-
-
 def remove_key_and_revoke_certificates(self, client, ssh_client=None):
     """
     Removes a certificate from a client and revokes the associated certificate in the CA.
@@ -1774,7 +1737,7 @@ def remove_key_and_revoke_certificates(self, client, ssh_client=None):
                                                 element=keyscertificates_constants.get_generated_key_row_xpath(
                                                     client['code'],
                                                     client['class']))
-    certs_to_revoke = get_certificates_to_revoke(self, client)
+    certs_to_revoke = ssh_server_actions.get_valid_certificates(self, client)
 
     self.log('Certs to revoke: {0}'.format(certs_to_revoke))
 

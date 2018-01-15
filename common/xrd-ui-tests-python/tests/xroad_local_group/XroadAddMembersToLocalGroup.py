@@ -6,7 +6,7 @@ from main.maincontroller import MainController
 from tests.xroad_local_group import xroad_local_group
 
 
-class XroadAddMemberToLocalGroup(unittest.TestCase):
+class XroadAddMembersToLocalGroup(unittest.TestCase):
     """
     UC SERVICE_26 Add Members to a Local Group
     RIA URL: https://jira.ria.ee/browse/XT-283, https://jira.ria.ee/browse/XTKB-153

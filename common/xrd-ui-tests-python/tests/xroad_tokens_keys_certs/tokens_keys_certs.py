@@ -1,5 +1,6 @@
 import re
 
+import time
 from selenium.webdriver.common.by import By
 
 from helpers import auditchecker
@@ -418,9 +419,16 @@ def test_change_key_name(ssh_host, ssh_user, ssh_pass):
                 '''SS_23 4. System logs the event 'Set friendly name to key' to the audit log.'''
                 self.log('''SS_23 4. System logs the event 'Set friendly name to key' to the audit log.''')
                 if ssh_host is not None:
-                    logs_found = log_checker.check_log(log_constants.CHANGE_FRIENDLY_NAME,
+                    try:
+                        logs_found = log_checker.check_log(log_constants.CHANGE_FRIENDLY_NAME,
                                                        from_line=current_log_lines + 1)
-                    self.is_true(logs_found, msg='Set friendly name to key')
+                        self.is_true(logs_found, msg='Set friendly name to key not found in log')
+                    except:
+                        self.log('Couldn\'t find log first time, trying again in 5 seconds')
+                        time.sleep(5)
+                        logs_found = log_checker.check_log(log_constants.CHANGE_FRIENDLY_NAME,
+                                                           from_line=current_log_lines + 1)
+                        self.is_true(logs_found, msg='Set friendly name to key not found in log')
 
                 '''SS_23 3. System saves the changes to the system configuration.'''
                 self.log('''SS_23 3. System saves the changes to the system configuration.''')

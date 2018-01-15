@@ -33,7 +33,7 @@ class XroadDeclineRegistrationRequest(unittest.TestCase):
         cs_ssh_pass = main.config.get('cs.ssh_pass')
         member = xroad.split_xroad_id(main.config.get('ss1.server_id'))
         member['subsystem_code'] = member['subsystem'] = 'declinesub'
-        member['name'] = main.config.get('ss1.server_name')
+        member['name'] = main.config.get('ss1.management_name')
         log_checker = auditchecker.AuditChecker(cs_ssh_host, cs_ssh_user, cs_ssh_pass)
 
         try:
@@ -52,6 +52,9 @@ class XroadDeclineRegistrationRequest(unittest.TestCase):
             main.reload_webdriver(cs_host, cs_user, cs_pass)
             add_sub_as_client_to_member(main, server_name, member, wait_input=2,
                                         step='Adding subsystem')
+        except:
+            main.save_exception_data()
+            raise
         finally:
             main.log('MEMBER_38 Decline a Registration Request')
             decline_request(main, log_checker=log_checker)()

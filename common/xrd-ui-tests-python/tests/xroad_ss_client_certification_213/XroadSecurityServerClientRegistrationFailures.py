@@ -24,7 +24,7 @@ class XroadSecurityServerClientRegistrationFailures(unittest.TestCase):
         main.password = main.config.get('ss2.pass')
         client_name = main.config.get('ss2.client2_name')
         client_id = main.config.get('ss2.client2_id')
-        ca_name = main.config.get('ca.host')
+        ca_name = main.config.get('ca.name')
         client = xroad.split_xroad_id(client_id)
         member_code = client['code']
         member_class = client['class']
@@ -38,6 +38,9 @@ class XroadSecurityServerClientRegistrationFailures(unittest.TestCase):
                                                             member_instance, ca_name=ca_name,
                                                             ss2_ssh_host=ss2_ssh_host, ss2_ssh_user=ss2_ssh_user,
                                                             ss2_ssh_pass=ss2_ssh_pass)
-
-        fail_test_func(main)
-        main.tearDown()
+        try:
+            fail_test_func(main)
+        except:
+            raise
+        finally:
+            main.tearDown()

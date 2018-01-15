@@ -10,6 +10,7 @@ from tests.xroad_configure_service_222 import configure_service
 from tests.xroad_parse_users_inputs import xroad_parse_user_inputs
 from tests.xroad_ss_client.ss_client_management import edit_client
 from view_models import clients_table_vm
+from view_models.messages import get_error_message
 
 
 class XroadAddToAclFromClient(unittest.TestCase):
@@ -70,6 +71,7 @@ class XroadAddToAclFromClient(unittest.TestCase):
             row = clients_table_vm.get_client_row_element(self=main, client_name=client_name)
             edit_client(main, row)
             xroad_parse_user_inputs.add_wsdl_url(main, wsdl_three_services)
+            main.is_none(get_error_message(main))
 
             main.log('SERVICE_03 Add a service client to a security server client(1 service)')
             main.reload_webdriver(ss_host, ss_user, ss_pass)
@@ -95,7 +97,8 @@ class XroadAddToAclFromClient(unittest.TestCase):
             main.reload_webdriver(ss_host, ss_user, ss_pass)
             test_add_all_service_to_existing(main)
         except:
-            assert False
+            main.save_exception_data()
+            raise
         finally:
             main.reload_webdriver(ss_host, ss_user, ss_pass)
             delete_added_wsdl()

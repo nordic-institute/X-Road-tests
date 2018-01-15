@@ -4,6 +4,9 @@ import os
 import time
 import traceback
 
+import sys
+
+import re
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
 
@@ -256,7 +259,11 @@ def register_cert(self, ssh_host, ssh_user, ssh_pass, cs_host, client, ca_ssh_ho
         file_name = 'auth_csr_' + now_date.strftime('%Y%m%d') + '_securityserver_{0}_{1}_{2}_{3}.der'. \
             format(client['instance'], client['class'], client['code'], '*')
         '''Downloaded csr file path'''
-        file_path = glob.glob(self.get_download_path('_'.join(['*']) + file_name))[0]
+        try:
+            file_path = glob.glob(self.get_download_path('_'.join(['*']) + file_name))[0]
+        except:
+            time.sleep(5)
+            file_path = glob.glob(self.get_download_path('_'.join(['*']) + file_name))[0]
         '''SSH client instance for ca'''
         sshclient = ssh_server_actions.get_client(ca_ssh_host, ca_ssh_user, ca_ssh_pass)
         '''Remote csr path'''
@@ -410,8 +417,12 @@ def test_add_cert_to_ss(self, cs_host, cs_username, cs_password, client, cert_pa
     file_abs_path = os.path.abspath(local_cert_path)
     if file_format_errors:
         self.log('MEMBER_23 4a. The uploaded file is not in PEM or DER format')
-        not_existing_file_with_wrong_extension = 'C:\\file.asd'
-        xroad.fill_upload_input(self, upload, not_existing_file_with_wrong_extension)
+        if sys.platform == 'windows':
+            wrong_local_cert_path = self.get_download_path('test')
+            wrong_file_abs_path = os.path.abspath(wrong_local_cert_path)
+        else:
+            wrong_file_abs_path = '/dev/null'
+        xroad.fill_upload_input(self, upload, wrong_file_abs_path)
         expected_msg = AUTH_CERT_IMPORT_FILE_FORMAT_ERROR
         self.log('MEMBER 23 4a.1 System displays the error message {0}'.format(expected_msg))
         error_msg = self.wait_until_visible(type=By.CSS_SELECTOR, element=ERROR_MESSAGE_CSS).text
@@ -421,6 +432,7 @@ def test_add_cert_to_ss(self, cs_host, cs_username, cs_password, client, cert_pa
     if add_existing_error:
         self.log('MEMBER 23 5a. The auth certificate is already registered or '
                  'submitted for registration with authenticaion registration request')
+        self.wait_jquery()
         self.wait_until_visible(type=By.ID, element=ADD_AUTH_CERT_SUBMIT_BTN_ID).click()
         self.wait_jquery()
         expected_msg = CERT_ALREADY_SUBMITTED_ERROR_BEGINNING
@@ -580,7 +592,7 @@ def failing_tests(file_client_name, file_client_class, file_client_code, file_cl
                   ss2_ssh_user, ss2_ssh_pass):
     def fail_test_case(self):
         self.log('Adding testing client')
-        client = {'name': 'failure', 'class': 'COM', 'code': 'failure', 'subsystem_code': 'failure'}
+        client = {'name': 'failure', 'class': 'GOV', 'code': 'failure', 'subsystem_code': 'failure'}
         error = False
         try:
             '''Add a temporary client for testing the failure scenarios'''
@@ -634,7 +646,7 @@ def failing_tests(file_client_name, file_client_class, file_client_code, file_cl
 
         except:
             '''Exception occured, print traceback'''
-            traceback.print_exc()
+            self.save_exception_data()
             error = True
 
         finally:
@@ -1266,8 +1278,7 @@ def failing_tests(file_client_name, file_client_class, file_client_code, file_cl
 
         now_date = datetime.datetime.now()
         file_name = 'auth_csr_' + now_date.strftime('%Y%m%d') + '_securityserver_{0}_{1}_{2}_{3}.der'. \
-            format(file_client_instance, file_client_class, file_client_code, file_client_name)
-        print(file_name)
+            format(file_client_instance, file_client_class, file_client_code, '*')
         # Set local path for certificate
         local_cert_path = self.get_download_path(cert_path)
 
@@ -1286,7 +1297,7 @@ def failing_tests(file_client_name, file_client_class, file_client_code, file_cl
         self.wait_jquery()
 
         # Generate a authentication certificate
-        generate_auth_csr(self, ca_name=ca_name)
+        generate_auth_csr(self, ca_name=ca_name, organization='test', dns='test',)
 
         file_path = \
             glob.glob(self.get_download_path('_'.join(['*']) + file_name))[0]
@@ -1308,7 +1319,10 @@ def failing_tests(file_client_name, file_client_class, file_client_code, file_cl
 
         error_msg = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
         self.log('SS_30 9b.1. System displays the error message {0}'.format(messages.SIGN_CERT_INSTEAD_AUTH_CERT))
-        self.is_equal(messages.SIGN_CERT_INSTEAD_AUTH_CERT, error_msg)
+        if self.config.get_bool('config.harmonized_environment', False):
+            self.is_true(error_msg.startswith(messages.UNKNOWN_ORGANIZATION_ERROR))
+        else:
+            self.is_equal(messages.SIGN_CERT_INSTEAD_AUTH_CERT, error_msg)
 
         self.log('SS_30 9b. Certificate not accepted, test succeeded')
 
@@ -2015,10 +2029,13 @@ def test_generate_csr_timed_out(self, ss_host, ss_username, ss_pass, ss2_ssh_hos
         self.log('Click "OK"')
         self.by_xpath(keys_and_certificates_table.GENERATE_CSR_SIGNING_REQUEST_POPUP_OK_BTN_XPATH).click()
 
+        if self.config.get_bool('config.harmonized_environment', False):
+            organization_input = self.wait_until_visible(type=By.XPATH,
+                                                         element=SUBJECT_DISTINGUISHED_NAME_POPUP_O_XPATH)
+            self.input(organization_input, 'test')
         self.log('Stop xroad signer service')
         self.ssh_client.exec_command(command='service xroad-signer stop', sudo=True)
         self.ssh_client.close()
-
         self.log('Wait until service has stopped')
         wait_until_server_up(ss_host)
 
@@ -2108,7 +2125,9 @@ def unregister_cert(self, ss2_host, ss2_username, ss2_password, ss2_ssh_host, ss
             self.is_equal(expected_warning_msg, warning_msg)
             self.log('SS_38 6a.1 System displays the error message: {0}'.format(expected_error_msg))
             error_msg = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
-            self.is_true(error_msg.startswith(expected_error_msg))
+            asd = 'Failed to unregister certificate: Client \'.+\' is not registered at security server .+'
+            self.is_true(re.match(asd, error_msg))
+            # self.is_true(error_msg.startswith(expected_error_msg))
             expected_log_msg = log_constants.UNREGISTER_AUTH_CERT_FAILED
             self.log('SS_38 6a.2 System logs the event {0}'.format(expected_log_msg))
             logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
@@ -2311,7 +2330,7 @@ def delete_cert_from_ss(self, client, cs_ssh_host, cs_ssh_user, cs_ssh_pass):
         self.is_equal(owner_code, client['code'])
         server_code = self.wait_until_visible(type=By.ID,
                                               element=cs_security_servers.DELETION_REQUEST_SERVER_CODE_ID).text
-        self.is_equal(server_code, client['name'])
+        self.is_equal(server_code, client['server_name'])
         self.log('MEMBER_24 3.a Deletion request creation is canceled')
         self.wait_until_visible(type=By.XPATH, element=cs_security_servers.DELETION_REQUEST_CANCEL_BTN_XPATH).click()
         self.log('MEMBER_24 1. Auth certificate deletion button is clicked')

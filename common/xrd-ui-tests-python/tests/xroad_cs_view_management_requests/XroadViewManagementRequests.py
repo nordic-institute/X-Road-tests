@@ -4,7 +4,7 @@ from main.maincontroller import MainController
 from tests.xroad_cs_view_management_requests.view_management_requests import test_view_management_request
 
 
-class XroadViewManagementRequest(unittest.TestCase):
+class XroadViewManagementRequests(unittest.TestCase):
     """
     MEMBER_34 View Management Requests
     RIA URL: https://jira.ria.ee/browse/XT-386, https://jira.ria.ee/browse/XTKB-161

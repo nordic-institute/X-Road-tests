@@ -11,6 +11,7 @@ from view_models import sidebar as sidebar_constants, clients_table_vm, members_
 from view_models.clients_table_vm import DETAILS_TAB_CSS
 from view_models.log_constants import ADD_MEMBER_FAILED, EDIT_MEMBER_NAME_FAILED, GENERATE_KEY_FAILED, ADD_WSDL_FAILED, \
     EDIT_MEMBER_NAME
+from view_models.messages import get_error_message
 
 
 def test_key_label_inputs():
@@ -1594,6 +1595,8 @@ def add_wsdl_url(self, wsdl_url):
     self.input(wsdl_url_element, wsdl_url)
     self.log('Click on "OK" button')
     self.wait_until_visible(type=By.XPATH, element=popups.ADD_WSDL_POPUP_OK_BTN_XPATH).click()
+    self.wait_jquery()
+
 
 
 def get_provider_parameters(self):

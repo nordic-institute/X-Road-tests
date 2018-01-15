@@ -39,15 +39,16 @@ class XroadSecurityServerCertImportGlobalConfExpired(unittest.TestCase):
 
         start_xroad_conf_client = client_certification.start_xroad_conf_client(main, sshclient)
         try:
+            main.reload_webdriver(ss_host, ss_username, ss_pass)
             expire_global_conf()
             main.log('SS_30 3a certificate import fails when global config has expired')
             test_import_cert_global_conf_expired()
         except:
-            assert False
+            main.save_exception_data()
+            raise
         finally:
             start_xroad_conf_client()
-            delete_added_key(main, client_code=ss2_client['code'], client_class=ss2_client['class'],
-                             cancel_deletion=False)
+            delete_added_key(main, ss2_client, cancel_deletion=False)
             main.tearDown()
             main.log('Wait 1 minute so the configuration is up to date before running other tests')
             time.sleep(60)

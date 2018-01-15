@@ -1,3 +1,4 @@
+import re
 import time
 
 import requests
@@ -7,8 +8,8 @@ from helpers.ssh_server_actions import get_key_conf_keys_count, get_keyconf_upda
 from view_models import popups
 from view_models.keys_and_certificates_table import DELETE_BTN_ID, KEY_TABLE_ROW_BY_LABEL_XPATH
 from view_models.log_constants import DELETE_KEY, DELETE_KEY_FAIL
-from view_models.messages import ERROR_MESSAGE_CSS, KEY_DELETE_FAILED_SERVICE_DISABLED_ERROR_MSG, \
-    KEY_DELETE_FAILED_CONNECTION_REFUSED
+from view_models.messages import ERROR_MESSAGE_CSS, KEY_DELETE_FAILED_CONNECTION_REFUSED, \
+    KEY_DELETE_FAILED_SERVICE_DISABLED_ERROR_MSG_REGEX
 from view_models.popups import CONFIRM_POPUP_TEXT_AREA_ID, CONFIRM_POPUP_CANCEL_BTN_XPATH
 
 
@@ -20,6 +21,7 @@ def delete_key_from_configuration(self, key_label, sshclient, try_cancel=False, 
     if log_checker:
         current_log_lines = log_checker.get_line_count()
     self.log('Clicking on "{}" key'.format(key_label))
+    self.wait_jquery()
     self.wait_until_visible(type=By.XPATH, element=KEY_TABLE_ROW_BY_LABEL_XPATH.format(key_label)).click()
     self.wait_jquery()
     self.log('SS_35 1. Clicking on "Delete" button')
@@ -66,11 +68,11 @@ def delete_key_from_configuration(self, key_label, sshclient, try_cancel=False, 
                 self.is_true(logs_found)
         elif unregister_request_fail:
             self.log('SS_42 3a. Unregistering response was an error message')
-            expected_error_msg = KEY_DELETE_FAILED_SERVICE_DISABLED_ERROR_MSG
+            expected_error_msg = KEY_DELETE_FAILED_SERVICE_DISABLED_ERROR_MSG_REGEX
             self.log('SS_35 4a. The process of unregistering certificates terminated with an error message:\n{}'.format(
                 expected_error_msg))
             error_msg = self.wait_until_visible(type=By.CSS_SELECTOR, element=ERROR_MESSAGE_CSS).text
-            self.is_equal(expected_error_msg, error_msg)
+            self.is_true(re.match(expected_error_msg, error_msg))
             if current_log_lines:
                 expected_log_msg = DELETE_KEY_FAIL
                 self.log('SS_35 4a.2 System logs the event "{}"'.format(expected_log_msg))
@@ -103,6 +105,6 @@ def wait_until_proxy_up(address):
         try:
             requests.get(address, verify=False)
         except Exception as e:
-            if 'SSLError' in e.message.message:
+            if e.message.message and 'SSL' in e.message.message.strerror:
                 return
             pass

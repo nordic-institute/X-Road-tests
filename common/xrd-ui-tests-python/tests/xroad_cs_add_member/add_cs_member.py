@@ -63,7 +63,13 @@ def add_member_to_cs(self, member, log_checker=None, exists=False):
 
         expected_log_msg = ADD_MEMBER
         if current_log_lines:
-            logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
-            self.is_true(logs_found,
+            try:
+                logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
+                self.is_true(logs_found,
                          msg='{0} not found in audit log'.format(expected_log_msg),
                          log_message='MEMBER_10 7. System logs the event "{0}"'.format(expected_log_msg))
+            except:
+                logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
+                self.is_true(logs_found,
+                             msg='{0} not found in audit log'.format(expected_log_msg),
+                             log_message='MEMBER_10 7. System logs the event "{0}"'.format(expected_log_msg))

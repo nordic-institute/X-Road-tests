@@ -11,7 +11,7 @@ def delete_auth_cert(self, auth_key_label):
     self.log('Opening keys and certificates view')
     self.wait_until_visible(type=By.CSS_SELECTOR, element=KEYSANDCERTIFICATES_BTN_CSS).click()
     self.wait_jquery()
-    self.log('Clicking on authentication certificate')
+    self.log('Clicking on authentication certificate {0}'.format(auth_key_label))
     self.wait_until_visible(type=By.XPATH, element=CERT_BY_KEY_LABEL.format(auth_key_label)).click()
     self.log('Waiting until "Delete" button is clickable')
     delete_btn = self.by_id(DELETE_BTN_ID)

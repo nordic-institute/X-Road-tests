@@ -810,7 +810,6 @@ def remove_certificate(self, client):
     self.click(self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.KEYSANDCERTIFICATES_BTN_CSS))
     self.wait_jquery()
 
-    self.save_screenshot('temp.png')
     certs_to_revoke = ssh_server_actions.get_valid_certificates(self, client)
 
     self.log('Click on generated key row')

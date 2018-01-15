@@ -42,6 +42,7 @@ class XroadDeleteKeyFromConfiguration(unittest.TestCase):
         ca_ssh_host = main.config.get('ca.ssh_host')
         ca_ssh_user = main.config.get('ca.ssh_user')
         ca_ssh_pass = main.config.get('ca.ssh_pass')
+        ca_name = main.config.get('ca.name')
         cert_path = 'temp.pem'
         client_id = main.config.get('ss1.server_id')
         client_name = main.config.get('ss1.server_name')
@@ -54,7 +55,7 @@ class XroadDeleteKeyFromConfiguration(unittest.TestCase):
                                            cs_host=None,
                                            ca_ssh_host=ca_ssh_host, ca_ssh_user=ca_ssh_user,
                                            ca_ssh_pass=ca_ssh_pass,
-                                           cert_path=cert_path)
+                                           cert_path=cert_path, ca_name=ca_name, dns='test', organization='test')
         try:
             main.reload_webdriver(ss_host, ss_user, ss_pass)
             main.wait_until_visible(type=By.CSS_SELECTOR, element=KEYSANDCERTIFICATES_BTN_CSS).click()
@@ -121,17 +122,19 @@ class XroadDeleteKeyFromConfiguration(unittest.TestCase):
         ss_ssh_pass = main.config.get('ss1.ssh_pass')
 
         sshclient = ssh_client.SSHClient(ss_ssh_host, ss_ssh_user, ss_ssh_pass)
+        auth_key_name = main.config.get('certs.ss_auth_key_label')
 
         try:
             main.reload_webdriver(ss_host, ss_user, ss_pass)
             main.wait_until_visible(type=By.CSS_SELECTOR, element=KEYSANDCERTIFICATES_BTN_CSS).click()
             main.wait_jquery()
             sshclient.exec_command('service xroad-proxy stop', sudo=True)
-            delete_key_from_configuration(main, 'authkey', sshclient, request_sending_fail=True)
+            delete_key_from_configuration(main, auth_key_name, sshclient, request_sending_fail=True)
             sshclient.exec_command('service xroad-proxy start', sudo=True)
-            wait_until_proxy_up('https://ss.asa:5500')
+            wait_until_proxy_up('https://{}:5500'.format(ss_ssh_host))
         except:
             main.save_exception_data()
+            raise
         finally:
             main.tearDown()
 

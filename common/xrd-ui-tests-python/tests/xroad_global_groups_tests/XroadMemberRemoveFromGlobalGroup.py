@@ -36,5 +36,8 @@ class XroadMemberRemoveFromGlobalGroup(unittest.TestCase):
         try:
             main.reload_webdriver(cs_host, cs_user, cs_pass)
             test_member_remove_from_global_group()
+        except:
+            main.save_exception_data()
+            raise
         finally:
             main.tearDown()

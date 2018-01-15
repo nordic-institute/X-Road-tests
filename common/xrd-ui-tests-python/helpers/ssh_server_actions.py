@@ -8,7 +8,6 @@ import datetime
 import ssh_client
 from view_models import keys_and_certificates_table
 
-
 def exec_commands(self, sshclient, commands, timeout=1):
     channel = sshclient.invoke_shell()
     time.sleep(1)
@@ -20,16 +19,14 @@ def exec_commands(self, sshclient, commands, timeout=1):
         while not channel.recv_ready():  # Wait for the server to read and respond
             time.sleep(0.1)
         time.sleep(timeout)
-        output = channel.recv(9999)  # read in
+        output = channel.recv(9999) # read in
         time.sleep(0.1)
     channel.close()
     return output
 
-
 def exec_as_xroad(sshclient, command):
     stdout, stderr = sshclient.exec_command('sudo -Hu {0} {1}'.format('xroad', command), sudo=True)
     return stdout, stderr
-
 
 def refresh_ocsp(sshclient):
     sshclient.exec_command(command='rm /var/cache/xroad/*ocsp', sudo=True)
@@ -110,9 +107,8 @@ def get_key_conf_token_count(sshclient):
     :return:
     """
     return \
-        sshclient.exec_command(
-            command='grep "<device>" {0} | wc -l'.format(keys_and_certificates_table.KEY_CONFIG_FILE),
-            sudo=True)[0][0]
+        sshclient.exec_command(command='grep "<device>" {0} | wc -l'.format(keys_and_certificates_table.KEY_CONFIG_FILE),
+                               sudo=True)[0][0]
 
 
 def get_key_conf_csr_count(sshclient):
@@ -124,8 +120,6 @@ def get_key_conf_csr_count(sshclient):
     return sshclient.exec_command(
         command='grep "<certRequest.*>" {0} | wc -l'.format(keys_and_certificates_table.KEY_CONFIG_FILE), sudo=True)[0][
         0]
-
-
 def get_server_name(self):
     return self.by_id('server-info').get_attribute('data-instance')
 
@@ -143,14 +137,11 @@ def mv(ssh_client_instance, src, destination, sudo=False):
     mv_command = 'mv {0} {1}'.format(src, destination)
     return ssh_client_instance.exec_command(mv_command, sudo)
 
-
 def get_keyconf_update_timeout(sshclient):
     server_time = int(sshclient.exec_command('date +"%s"')[0][0])
-    file_modified = int(
-        sshclient.exec_command('date +"%s" -r {}'.format('/etc/xroad/signer/keyconf.xml'), sudo=True)[0][0])
+    file_modified = int(sshclient.exec_command('date +"%s" -r {}'.format('/etc/xroad/signer/keyconf.xml'), sudo=True)[0][0])
     ago = server_time - file_modified
     return 65 - ago
-
 
 def get_valid_certificates(self, client):
     """
@@ -187,3 +178,5 @@ def get_valid_certificates(self, client):
         key_num += 1
 
     return certs_to_revoke
+
+

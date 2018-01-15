@@ -108,6 +108,6 @@ class XroadGlobalGroups(unittest.TestCase):
                                 identifier)
         except:
             main.save_exception_data()
-            assert False
+            raise
         finally:
             main.tearDown()

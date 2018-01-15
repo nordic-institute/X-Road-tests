@@ -1,5 +1,6 @@
 # coding=utf-8
 import unittest
+import sys
 
 from helpers import xroad, auditchecker
 from main.maincontroller import MainController
@@ -43,6 +44,15 @@ class XroadDeleteService(unittest.TestCase):
         wsdl_test_service_url = main.config.get('wsdl.remote_path').format(wsdl_test_service)
         test_delete_service1 = configure_service.test_delete_service(case=main, client=client,
                                                                      wsdl_url=wsdl_test_service_url)
+
+        try:
+            main.log('Trying to check for and remove leftover service (2): {0}'.format(wsdl_test_service_url))
+            main.reload_webdriver(url=ss_host, username=ss_user, password=ss_pass)
+            test_delete_service1()
+        except Exception:
+            main.log('XroadDeleteService: Service (2) not found, no need to delete.')
+            sys.exc_clear()
+
         try:
             # Delete service
             main.reload_webdriver(url=ss_host, username=ss_user, password=ss_pass)
@@ -51,12 +61,5 @@ class XroadDeleteService(unittest.TestCase):
             main.log('XroadDeleteService: Failed to delete service')
             assert False
         finally:
-            try:
-                main.reload_webdriver(url=ss_host, username=ss_user, password=ss_pass)
-                test_delete_service1()
-            except:
-                main.log('XroadDeleteService: Failed to delete service (2).')
-                main.save_exception_data()
             # Test teardown
             main.tearDown()
-

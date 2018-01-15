@@ -401,7 +401,6 @@ def client_services_popup_find_service(self, wsdl_index=None, wsdl_url=None, ser
 
     # We take the Nth element from the WSDL list, N=wsdl_index
     wsdl_element = client_services_popup_get_wsdl(self, wsdl_index)
-    """:type: selenium.webdriver.remote.webelement.WebElement"""
 
     try:
         # If the WSDL element is not expanded, do it now by finding the plus sign and clicking it.

@@ -50,7 +50,7 @@ GLOBAL_ERROR_CERTIFICATE_ROW_XPATH = '//td[text()="global error"]'
 SAVED_CERTIFICATE_ROW_XPATH = '//td[text()="saved"]'
 REG_IN_PROGRESS_CERTIFICATE_ROW_XPATH = '//td[text()="registration in progress"]'
 DEL_IN_PROGRESS_CERTIFICATE_ROW_XPATH = '//td[text()="deletion in progress"]'
-DEL_IN_PROGRESS_CERTIFICATE_ROW_XPATH = '//td[text()="Token: utimaco-UTIMACO CS000000-CryptoServer PKCS11 Token-0"]'
+DEL_IN_PROGRESS_CERTIFICATE_ROW_XPATH_HW = '//td[text()="Token: utimaco-UTIMACO CS000000-CryptoServer PKCS11 Token-0"]'
 
 REGISTER_DIALOG_ADDRESS_INPUT_ID = 'address'
 

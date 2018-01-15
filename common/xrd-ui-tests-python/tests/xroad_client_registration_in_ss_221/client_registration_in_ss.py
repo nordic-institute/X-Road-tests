@@ -502,7 +502,8 @@ def add_client_to_ss(self, client, retry_interval=0, retry_timeout=0, wait_input
             member_row = members_table.get_row_by_columns(table, [client['name'], client['class'], client['code']])
 
             self.wait_jquery()
-            self.click(member_row)
+            self.js("arguments[0].scrollIntoView();", member_row)
+            member_row.click()
             # If we got here, client was found
             self.log(step + 'Found client row')
             break
@@ -1218,10 +1219,9 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
                 cs_member, ss_1_client, ss_1_client_2, ss_2_client, ss_2_client_2,
                 ca_ssh_host=None, ca_ssh_username=None, ca_ssh_password=None,
                 cs_ssh_host=None, cs_ssh_username=None, cs_ssh_password=None,
-                global_group=None, check_logs=True):
+                global_group=None, check_logs=True, fail_on_missing_group=False):
     """
     Removes the data that was created during tests.
-    :param global_group: str - global group name
     :param cs_ssh_password: str - central server ssh password
     :param cs_ssh_username: str - central server ssh username
     :param cs_ssh_host: str -central server ssh host
@@ -1249,6 +1249,9 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
     :param ca_ssh_host: str|None - CA ssh host, used for revoking certificates in CA
     :param ca_ssh_username: str|None - CA ssh username, used for revoking certificates in CA
     :param ca_ssh_password: str|None - CA ssh password, used for revoking certificates in CA
+    :param global_group: str - global group name
+    :param check_logs: bool - check log entries after actions
+    :param fail_on_missing_group: bool - fail the test if global group is missing
     :return: None
     """
     self.log('*** MEMBER_53 / MEMBER_52 / MEMBER_14')
@@ -1273,16 +1276,19 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
         self.is_true(logs_found)
 
     # Delete subsystem with global group from member
+    group_member_count = 0
     try:
         self.reload_webdriver(cs_host, cs_username, cs_password)
-        group = global_group
         self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.GLOBAL_GROUPS_CSS).click()
         group_member_count = self.wait_until_visible(type=By.XPATH,
                                                      element=groups_table.GLOBAL_GROUP_TR_BY_TD_TEXT_XPATH.format(
-                                                         group)).find_elements_by_tag_name('td')[2].text
+                                                         global_group)).find_elements_by_tag_name('td')[2].text
     except:
-        traceback.print_exc()
-        test_success = False
+        if fail_on_missing_group:
+            traceback.print_exc()
+        else:
+            self.log('Global group not found')
+        test_success = test_success and fail_on_missing_group
 
     if check_logs:
         log_checker = auditchecker.AuditChecker(host=cs_ssh_host,
@@ -1307,11 +1313,14 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
     try:
         group_member_count_after = self.wait_until_visible(type=By.XPATH,
                                                            element=groups_table.GLOBAL_GROUP_TR_BY_TD_TEXT_XPATH.format(
-                                                               group)).find_elements_by_tag_name('td')[2].text
+                                                               global_group)).find_elements_by_tag_name('td')[2].text
         self.is_true(group_member_count > group_member_count_after)
     except:
-        traceback.print_exc()
-        test_success = False
+        if fail_on_missing_group:
+            traceback.print_exc()
+        else:
+            self.log('Global group not found')
+        test_success = test_success and fail_on_missing_group
 
     # UC MEMBER_26 Delete an X-Road Member
     self.log('MEMBER_26 Removing members from central server')

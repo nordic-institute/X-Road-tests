@@ -55,6 +55,7 @@ TSL_CERTIFICATE_INCORRECT_FILE_FORMAT = "Incorrect file format. Only PEM and DER
 CERTIFICATE_IMPORT_SUCCESSFUL = 'Certificate imported successfully'
 CA_ADD_SUCCESSFUL = 'Certification service added successfully'
 
+UNKNOWN_ORGANIZATION_ERROR = 'Failed to import certificate: Certificate issued to an unknown member'
 IMPORT_CERT_KEY_NOT_FOUND_ERROR = 'Failed to import certificate: key not found'
 AUTHCERT_DELETION_DISABLED = 'Services/authCertDeletion is disabled: Out of order'
 CERTIFICATE_NOT_VALID = 'Failed to import certificate: Certificate is not valid'
@@ -147,7 +148,7 @@ HARDTOKEN_KEY_DELETE_FAILED = "Failed to delete key: Failed to delete private ke
 
 KEY_DELETE_FAILED_CONNECTION_REFUSED = 'Failed to delete key: ConnectException: Connection refused (Connection refused)'
 
-KEY_DELETE_FAILED_SERVICE_DISABLED_ERROR_MSG = 'Failed to delete key: Service SERVICE:KS1/GOV/TS1OWNER/Management Services/authCertDeletion is disabled: Out of order'
+KEY_DELETE_FAILED_SERVICE_DISABLED_ERROR_MSG_REGEX = 'Failed to delete key: Service .+authCertDeletion is disabled: Out of order'
 KEY_DELETE_SENDING_FAILED = 'Failed to delete key: Could not connect to any target host ([https://ss.asa:5500/])'
 MANAGEMENT_SERVICE_REGISTERED = 'Management service provider \'.*\' registered as security server \'.*\' client'
 MANAGEMENT_SERVICE_ADDED_COMMENT = 'Management service provider registration'
@@ -278,9 +279,9 @@ def get_console_output(self):
 
 def get_auth_cert_del_req_added_message(client):
     return DELETE_AUTH_CERT_REQ_ADDED.format(
-        'SERVER:{0}/{1}/{2}/{3}'.format(client['instance'], client['class'], client['code'], client['name']))
+        'SERVER:{0}/{1}/{2}/{3}'.format(client['instance'], client['class'], client['code'], client['server_name']))
 
 
 def get_cert_adding_existing_server_req_added_notice(client):
     return CERTIFICATE_ADDING_EXISTING_SERVER_REQUEST_ADDED_NOTICE.format(
-        '{0}/{1}/{2}/{3}'.format(client['instance'], client['class'], client['code'], client['name']))
+        '{0}/{1}/{2}/{3}'.format(client['instance'], client['class'], client['code'], client['server_name']))

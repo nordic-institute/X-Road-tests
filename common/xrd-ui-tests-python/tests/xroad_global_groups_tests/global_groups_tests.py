@@ -54,6 +54,7 @@ def add_member_to_group(self, client, group, ss2_host, ss2_user, ss2_pass,
     '''Open group details'''
     self.wait_until_visible(type=By.XPATH,
                             element=groups_table.GLOBAL_GROUP_ROW_BY_TD_TEXT_XPATH.format(group)).click()
+    self.wait_jquery()
     self.wait_until_visible(type=By.ID, element=groups_table.GROUP_DETAILS_BTN_ID).click()
     self.wait_jquery()
     self.log('SERVICE_33 1. Add members to global group button is pressed')
@@ -640,9 +641,14 @@ def test_member_add_to_global_group(self, member_name, client_code, global_group
         self.is_equal(expected_notice_msg, notice_msg)
         if current_log_lines is not None:
             expected_log_msg = ADD_MEMBER_TO_GLOBAL_GROUP
+
             self.log('SERVICE_37 4. System logs the event "{}"'.format(expected_log_msg))
-            logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
-            self.is_true(logs_found)
+            try:
+                logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
+                self.is_true(logs_found)
+            except:
+                logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
+                self.is_true(logs_found)
 
     return member_add_to_global_group
 

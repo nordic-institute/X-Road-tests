@@ -3,6 +3,7 @@ import tarfile
 import time
 import re
 
+import sys
 from requests.exceptions import SSLError
 from selenium.webdriver.common.by import By
 
@@ -427,7 +428,10 @@ def test_tls(case, client, provider):
 
         upload_button = self.by_id(popups.FILE_UPLOAD_BROWSE_BUTTON_ID)
         '''File with wrong extension'''
-        not_existing_file_with_wrong_extension = 'C:\\file.asd'
+        if sys.platform == 'windows':
+            not_existing_file_with_wrong_extension = 'C:\\file.asd'
+        else:
+            not_existing_file_with_wrong_extension = '/dev/null'
         self.log('MEMBER_50 3a The uploaded file is not in PEM or DER format')
         xroad.fill_upload_input(self, upload_button, not_existing_file_with_wrong_extension)
 

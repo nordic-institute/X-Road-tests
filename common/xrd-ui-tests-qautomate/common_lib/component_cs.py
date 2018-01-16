@@ -32,7 +32,7 @@ class Component_cs(CommonUtils):
 
         :param section:  Test data section name
         :param initial_conf:  If true server is in configurations state
-
+        
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.open_application.Open_application.open_application_url`, *TESTDATA[section]*
                 * **Step 2:** :func:`~pagemodel.cs_login.Cs_login.login_dev_cs`, *TESTDATA[section]*
@@ -51,13 +51,15 @@ class Component_cs(CommonUtils):
         *Updated: 11.07.2017*
 
         :param section:  Test data section name
-
+        
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.open_application.Open_application.open_application_url`, *TESTDATA[section]*
         """
         self.open_application.open_application_url(TESTDATA[section])
 
     def verify_configuratio_file(self, content):
+        """
+        """
         print content
         for x in content.split("\n"):
             if x.strip().startswith("Content-Type:") or x.strip().startswith("Content-type:") or x.strip().startswith("Verification-certificate-hash:"):

@@ -35,6 +35,7 @@ class Common_lib_ssh(CommonUtils):
         """
         Verify if server contains the file
 
+        :param section:  Test data section name
         """
         server = TESTDATA[section][u'server_address']
         if strings.server_environment_type() == strings.lxd_type_environment:
@@ -48,6 +49,9 @@ class Common_lib_ssh(CommonUtils):
         return self.run_bash_command(command, False).strip()[:-1]
 
     def get_time(self, section="cs_url", date_format='%Y%m%d%H%M'):
+        """
+        :param section:  Test data section name
+        """
         server = TESTDATA[section][u'server_address']
         if strings.server_environment_type() == strings.lxd_type_environment:
             server = server.split(".lxd")[0]
@@ -63,6 +67,7 @@ class Common_lib_ssh(CommonUtils):
         """
         Verify if server contains the file
 
+        :param section:  Test data section name
         """
         server = TESTDATA[section][u'server_address']
         if strings.server_environment_type() == strings.lxd_type_environment:
@@ -80,6 +85,7 @@ class Common_lib_ssh(CommonUtils):
         """
         Verify if server contains the file
 
+        :param section:  Test data section name
         """
         server = TESTDATA[section][u'server_address']
         if strings.server_environment_type() == strings.lxd_type_environment:
@@ -330,7 +336,7 @@ class Common_lib_ssh(CommonUtils):
         Verify audit log file in server.
 
         :param section:  Test data section name
-
+        
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.fail(errors.Fail(errors.audit_log_is_empty)`, *errors.audit_log_is_empty*
                 * **Step 2:** :func:`~pagemodel.fail(errors.Fail(errors.string_is_not_dict + "\n" + self`, *errors.string_is_not_dict + "\n" + self.parse_log_file_tail(log_output*
@@ -362,6 +368,12 @@ class Common_lib_ssh(CommonUtils):
             self.fail(errors.log_user_fail(user) + "\n" + self.parse_log_file_tail(log_output))
 
     def verify_jetty_log(self, section=u'ss1_url', event="Log in user"):
+        """
+        :param section:  Test data section name
+        
+        **Test steps:**
+                * **Step 1:** :func:`~pagemodel.fail("Event: {} not found from jetty log".Fail("event: {} not found from jetty log".format`, *"Event: {} not found from jetty log".format(event*
+        """
         server_log_address = TESTDATA[section][u'server_address']
         log_output = self.read_server_file(server_log_address, strings.jetty_log, 200)
         if event not in log_output:

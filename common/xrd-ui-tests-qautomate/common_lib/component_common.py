@@ -45,7 +45,7 @@ class Component_common(CommonUtils):
         Input text to change langueage dialog
 
         :param text:  String value for text
-
+        
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.dlg_change_language.Dlg_change_language.change_language`, *text*
         """
@@ -56,7 +56,7 @@ class Component_common(CommonUtils):
         Verify notice message
 
         :param message:  String value for message
-
+        
         **Test steps:**
                 * **Step 2:** :func:`~common_lib.common_elements.Common_elements.verify_message_contains`, *message*
         """
@@ -68,7 +68,7 @@ class Component_common(CommonUtils):
         Verify notice message
 
         :param message:  String value for message
-
+        
         **Test steps:**
                 * **Step 2:** :func:`~common_lib.common_elements.Common_elements.verify_error_contains`, *message*
         """
@@ -80,9 +80,9 @@ class Component_common(CommonUtils):
         Verify notice message
 
         :param message:  String value for message
-
+        
         **Test steps:**
-                * **Step 2:** :func:`~common_lib.common_elements.Common_elements.verify_message_contains`, *message*
+                * **Step 2:** :func:`~common_lib.common_elements.Common_elements.verify_alert_message`, *message*
         """
         self.wait_until_jquery_ajax_loaded()
         self.common_elements.verify_alert_message(message)

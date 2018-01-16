@@ -581,6 +581,31 @@ class Xroad_global_configuration(SetupTest):
             * `GCONF 2.2.18`_: Generate Configuration (not done)
                 * Extension 1c. The generation of the configuration part files failed for any other reason than the ones stated in extensions 1a and 1b. (not done)
 
+        **Test steps:**
+            * **Step 1: verify if v2 folder exists in server**
+                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_if_server_contains_directory`, *u'cs_url'*, *v2_path*
+            * **Step 2: verify external and internal conf files from server**
+                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_if_server_contains_file`, *u'cs_url'*, *internal_conf_path*
+                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_if_server_contains_file`, *u'cs_url'*, *external_conf_path*
+            * **Step 3: verify configuration directory time**
+                * :func:`~pagemodel.fail(errors.Fail(errors.newest_configuration_file_too_old)`, *errors.newest_configuration_file_too_old*
+            * **Step 4: verify newest configuration directory content**
+                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_if_server_contains_file`, *u'cs_url'*, *private_xml_file*
+                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_if_server_contains_file`, *u'cs_url'*, *shared_xml_file*
+            * **Step 5: verify internal and external conf file content**
+            * **Step 6: login to central server and open configuration view**
+                * :func:`~common_lib.component_cs.Component_cs.login`, *section=u'cs_url'*
+                * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_global_configuration_view`
+            * **Step 7: log out software token**
+                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.logout_software_token`
+            * **Step 8: verify global configuration failing**
+                * :func:`~webframework.extension.util.common_utils.CommonUtils.reload_page`
+                * :func:`~common_lib.component_common.Component_common.verify_alert_message`, *strings.configuration_generation_fail*
+                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_jetty_log`, *u'cs_url'*, *u'Processing internal configuration failed:'*
+            * **Step 9: log in software token**
+                * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.log_in_to_software_token`, *section=u'cs_url'*
+            * **Step 10: log out**
+                * :func:`~common_lib.common_lib.Common_lib.log_out`
         """
         v2_path = os.path.join(strings.generated_confs_directory, "V2")
         internal_conf_path = os.path.join(v2_path, "internalconf")

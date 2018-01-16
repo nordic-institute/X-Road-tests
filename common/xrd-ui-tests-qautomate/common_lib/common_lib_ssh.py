@@ -19,6 +19,7 @@ class Common_lib_ssh(CommonUtils):
     * 11.07.2017
         | Documentation updated
     """
+
     def __init__(self):
         """
         Initilization method for moving test data to class
@@ -29,6 +30,68 @@ class Common_lib_ssh(CommonUtils):
         CommonUtils.__init__(self)
         self.log_file_output = ""
         self.run_folder = ""
+
+    def get_newest_directory(self, section="cs_url", path=""):
+        """
+        Verify if server contains the file
+
+        """
+        server = TESTDATA[section][u'server_address']
+        if strings.server_environment_type() == strings.lxd_type_environment:
+            server = server.split(".lxd")[0]
+            command = 'lxc exec {} -- sh -c "cd {} && ls -td -- */ | head -n 1"'.format(server, path)
+        elif strings.server_environment_type() == strings.ssh_type_environment:
+            command = 'ssh {} "cd {} && ls -td -- */ | head -n 1"'.format(server, path)
+        else:
+            raise Exception(errors.enviroment_type_not_valid)
+
+        return self.run_bash_command(command, False).strip()[:-1]
+
+    def get_time(self, section="cs_url", date_format='%Y%m%d%H%M'):
+        server = TESTDATA[section][u'server_address']
+        if strings.server_environment_type() == strings.lxd_type_environment:
+            server = server.split(".lxd")[0]
+            command = 'lxc exec {} -- date "+{}"'.format(server, date_format)
+        elif strings.server_environment_type() == strings.ssh_type_environment:
+            command = 'ssh {} date "+{}"'.format(server, date_format)
+        else:
+            raise Exception(errors.enviroment_type_not_valid)
+
+        return self.run_bash_command(command, False)
+
+    def verify_if_server_contains_file(self, section="cs_url", path=""):
+        """
+        Verify if server contains the file
+
+        """
+        server = TESTDATA[section][u'server_address']
+        if strings.server_environment_type() == strings.lxd_type_environment:
+            server = server.split(".lxd")[0]
+            command = 'lxc exec {} -- [ -f {} ] && echo "Found" || echo "Not found"'.format(server, path)
+        elif strings.server_environment_type() == strings.ssh_type_environment:
+            command = 'ssh {} [ -f {} ] && echo "Found" || echo "Not found"'.format(server, path)
+        else:
+            raise Exception(errors.enviroment_type_not_valid)
+
+        if self.run_bash_command(command, False).strip() != "Found":
+            self.fail("File not found!")
+
+    def verify_if_server_contains_directory(self, section="cs_url", path=""):
+        """
+        Verify if server contains the file
+
+        """
+        server = TESTDATA[section][u'server_address']
+        if strings.server_environment_type() == strings.lxd_type_environment:
+            server = server.split(".lxd")[0]
+            command = 'lxc exec {} -- [ -d {} ] && echo "Found" || echo "Not found"'.format(server, path)
+        elif strings.server_environment_type() == strings.ssh_type_environment:
+            command = 'ssh {} [ -d {} ] && echo "Found" || echo "Not found"'.format(server, path)
+        else:
+            raise Exception(errors.enviroment_type_not_valid)
+
+        if self.run_bash_command(command, False).strip() != "Found":
+            self.fail("Directory not found!")
 
     def find_exception_from_logs_and_save(self, start_time, stop_time, name_prefix="", copy_location=""):
         """
@@ -178,8 +241,6 @@ class Common_lib_ssh(CommonUtils):
         else:
             raise Exception(errors.enviroment_type_not_valid)
 
-
-
     def delete_signing_key_from_signer_console(self, section="cs_url", key=""):
         """
         :param section:  Test data section name
@@ -240,7 +301,7 @@ class Common_lib_ssh(CommonUtils):
             self.fail(com_errors)
         return output
 
-    def read_server_file(self, server="xroad-lxd-cs", log_file_name="/var/log/xroad/audit.log"):
+    def read_server_file(self, server="xroad-lxd-cs", log_file_name="/var/log/xroad/audit.log", count=30):
         """
         Read file from given path in server
 
@@ -249,9 +310,9 @@ class Common_lib_ssh(CommonUtils):
         """
         if strings.server_environment_type() == strings.lxd_type_environment:
             server = server.split(".lxd")[0]
-            command ="lxc exec {} -- tail -n 30 {}". format(server, log_file_name)
+            command ="lxc exec {} -- tail -n {} {}". format(server, str(count), log_file_name)
         elif strings.server_environment_type() == strings.ssh_type_environment:
-            command = "ssh {} exec -- sudo tail -n 30 {}".format(server, log_file_name)
+            command = "ssh {} exec -- sudo tail -n {} {}".format(server, str(count), log_file_name)
         else:
             raise Exception(errors.enviroment_type_not_valid)
         self.log_file_output = self.run_bash_command(command)
@@ -269,14 +330,13 @@ class Common_lib_ssh(CommonUtils):
         Verify audit log file in server.
 
         :param section:  Test data section name
-        
+
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.fail(errors.Fail(errors.audit_log_is_empty)`, *errors.audit_log_is_empty*
                 * **Step 2:** :func:`~pagemodel.fail(errors.Fail(errors.string_is_not_dict + "\n" + self`, *errors.string_is_not_dict + "\n" + self.parse_log_file_tail(log_output*
                 * **Step 3:** :func:`~pagemodel.fail(errors.Fail(errors.log_event_fail`, *errors.log_event_fail(event*
                 * **Step 4:** :func:`~pagemodel.fail(errors.Fail(errors.log_user_fail`, *errors.log_user_fail(user*
         """
-
         # Sleep waiting log
         sleep(1)
 
@@ -300,6 +360,13 @@ class Common_lib_ssh(CommonUtils):
             self.fail(errors.log_event_fail(event) + "\n" + self.parse_log_file_tail(log_output))
         if not user == newest_log["user"]:
             self.fail(errors.log_user_fail(user) + "\n" + self.parse_log_file_tail(log_output))
+
+    def verify_jetty_log(self, section=u'ss1_url', event="Log in user"):
+        server_log_address = TESTDATA[section][u'server_address']
+        log_output = self.read_server_file(server_log_address, strings.jetty_log, 200)
+        if event not in log_output:
+            print(log_output)
+            self.fail("Event: {} not found from jetty log".format(event))
 
     def get_all_logs_from_server(self, section):
         """

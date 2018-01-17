@@ -655,7 +655,7 @@ class Xroad_global_configuration(SetupTest):
         self.login_to_token = True
 
         # Step Verify global configuration failing
-        sleep(3)
+        sleep(203)
         self.common_utils.reload_page()
         self.component_common.verify_alert_message(strings.configuration_generation_fail)
 

@@ -629,6 +629,8 @@ class Xroad_global_configuration(SetupTest):
 
         v2_newest_dir_time = int(v2_newest_dir[:time_length-1])
         server_time = int(server_time)
+        print server_time
+        print v2_newest_dir_time
 
         if (server_time - v2_newest_dir_time) > 2:
             self.fail(errors.newest_configuration_file_too_old)

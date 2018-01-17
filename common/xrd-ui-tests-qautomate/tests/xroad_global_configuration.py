@@ -607,6 +607,10 @@ class Xroad_global_configuration(SetupTest):
             * **Step 10: log out**
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
         """
+        # Step Login to central server and open configuration view
+        self.component_cs.login(section=u'cs_url')
+        self.component_cs_sidebar.open_global_configuration_view()
+
         v2_path = os.path.join(strings.generated_confs_directory, "V2")
         internal_conf_path = os.path.join(v2_path, "internalconf")
         external_conf_path = os.path.join(v2_path, "externalconf")
@@ -644,10 +648,6 @@ class Xroad_global_configuration(SetupTest):
         #self.component_cs.verify_configuratio_file(internal_content)
         #self.component_cs.verify_configuratio_file(external_content)
 
-        # Step Login to central server and open configuration view
-        self.component_cs.login(section=u'cs_url')
-        self.component_cs_sidebar.open_global_configuration_view()
-
         # Step Log out software token
         self.component_cs_conf_mgm.logout_software_token()
         self.login_to_token = True
@@ -677,9 +677,8 @@ class Xroad_global_configuration(SetupTest):
             * **Step 1: test internalconf url download**
         """
         # Step Test internalconf url download
-        print TESTDATA
         internal_conf_url = TESTDATA.get_parameter(section_name=u'cs_url', parameter_name=u'internal_conf_url')
-        print internal_conf_url
+        print("testing: ", internal_conf_url)
         response = urllib2.urlopen(internal_conf_url)
         content = response.read()
-        print content
+        print(content)

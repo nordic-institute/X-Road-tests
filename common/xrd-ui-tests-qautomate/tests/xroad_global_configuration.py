@@ -626,9 +626,10 @@ class Xroad_global_configuration(SetupTest):
         v2_newest_dir_time = int(v2_newest_dir[:time_length-1])
         server_time = int(server_time)
         time_since_last_generation = (server_time - v2_newest_dir_time)
+        configuration_timeout = int(TESTDATA.get_parameter(u'cs_url', u'configuration_timeout'))
 
         print("time since last dir generation", time_since_last_generation)
-        if time_since_last_generation >= 201:
+        if time_since_last_generation >= configuration_timeout:
             self.fail(errors.newest_configuration_file_too_old)
 
         # Step Verify newest configuration directory content
@@ -655,7 +656,7 @@ class Xroad_global_configuration(SetupTest):
         self.login_to_token = True
 
         # Step Verify global configuration failing
-        sleep(203)
+        sleep(configuration_timeout)
         self.common_utils.reload_page()
         self.component_common.verify_alert_message(strings.configuration_generation_fail)
 

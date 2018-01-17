@@ -632,7 +632,7 @@ class Xroad_global_configuration(SetupTest):
         print server_time
         print v2_newest_dir_time
 
-        if (server_time - v2_newest_dir_time) > 2:
+        if (server_time - v2_newest_dir_time) > 201:
             self.fail(errors.newest_configuration_file_too_old)
 
         # Step Verify newest configuration directory content
@@ -681,6 +681,7 @@ class Xroad_global_configuration(SetupTest):
         # Step Test internalconf url download
         internal_conf_url = TESTDATA.get_parameter(section_name=u'cs_url', parameter_name=u'internal_conf_url')
         print("testing: ", internal_conf_url)
-        response = urllib2.urlopen(internal_conf_url)
-        content = response.read()
+        content = self.common_lib_ssh.run_bash_command("curl --silent '{}'".format(internal_conf_url), True)
+        if "404 Not Found" in content:
+            self.common_utils.fail(u"Configuration file not found")
         print(content)

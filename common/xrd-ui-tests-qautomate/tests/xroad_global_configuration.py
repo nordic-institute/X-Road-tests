@@ -607,10 +607,6 @@ class Xroad_global_configuration(SetupTest):
             * **Step 10: log out**
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
         """
-        # Step Login to central server and open configuration view
-        self.component_cs.login(section=u'cs_url')
-        self.component_cs_sidebar.open_global_configuration_view()
-
         v2_path = os.path.join(strings.generated_confs_directory, "V2")
         internal_conf_path = os.path.join(v2_path, "internalconf")
         external_conf_path = os.path.join(v2_path, "externalconf")
@@ -629,10 +625,10 @@ class Xroad_global_configuration(SetupTest):
 
         v2_newest_dir_time = int(v2_newest_dir[:time_length-1])
         server_time = int(server_time)
-        print server_time
-        print v2_newest_dir_time
+        time_since_last_generation = (server_time - v2_newest_dir_time)
 
-        if (server_time - v2_newest_dir_time) > 201:
+        print("time since last dir generation", time_since_last_generation)
+        if time_since_last_generation >= 201:
             self.fail(errors.newest_configuration_file_too_old)
 
         # Step Verify newest configuration directory content
@@ -649,6 +645,10 @@ class Xroad_global_configuration(SetupTest):
         #external_content = self.common_lib_ssh.read_server_file(server, external_conf_path)
         #self.component_cs.verify_configuratio_file(internal_content)
         #self.component_cs.verify_configuratio_file(external_content)
+
+        # Step Login to central server and open configuration view
+        self.component_cs.login(section=u'cs_url')
+        self.component_cs_sidebar.open_global_configuration_view()
 
         # Step Log out software token
         self.component_cs_conf_mgm.logout_software_token()
@@ -680,8 +680,7 @@ class Xroad_global_configuration(SetupTest):
         """
         # Step Test internalconf url download
         internal_conf_url = TESTDATA.get_parameter(section_name=u'cs_url', parameter_name=u'internal_conf_url')
-        print("testing: ", internal_conf_url)
-        content = self.common_lib_ssh.run_bash_command("curl --silent '{}'".format(internal_conf_url), True)
-        if "404 Not Found" in content:
-            self.common_utils.fail(u"Configuration file not found")
-        print(content)
+        print ("testing", internal_conf_url)
+        response = urllib2.urlopen(internal_conf_url)
+        content = response.read()
+        print content

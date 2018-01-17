@@ -32,6 +32,9 @@ class Common_lib_ssh(CommonUtils):
         self.run_folder = ""
 
     def curl_url(self, section="cs_url", url=""):
+        """
+        :param section:  Test data section name
+        """
         server = TESTDATA[section][u'server_address']
         if strings.server_environment_type() == strings.lxd_type_environment:
             server = server.split(".lxd")[0]
@@ -382,6 +385,7 @@ class Common_lib_ssh(CommonUtils):
 
     def verify_jetty_log(self, section=u'ss1_url', event="Log in user"):
         """
+        
         :param section:  Test data section name
         
         **Test steps:**

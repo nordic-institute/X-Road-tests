@@ -601,7 +601,7 @@ class Xroad_global_configuration(SetupTest):
             * **Step 8: verify global configuration failing**
                 * :func:`~webframework.extension.util.common_utils.CommonUtils.reload_page`
                 * :func:`~common_lib.component_common.Component_common.verify_alert_message`, *strings.configuration_generation_fail*
-                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_jetty_log`, *u'cs_url'*, *u'Processing internal configuration failed:'*
+                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_jetty_log`, *u'cs_url'*, *strings.failed_to_generate_global_config*
             * **Step 9: log in software token**
                 * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.log_in_to_software_token`, *section=u'cs_url'*
             * **Step 10: log out**
@@ -659,8 +659,7 @@ class Xroad_global_configuration(SetupTest):
         sleep(configuration_timeout)
         self.common_utils.reload_page()
         self.component_common.verify_alert_message(strings.configuration_generation_fail)
-
-        self.common_lib_ssh.verify_jetty_log(u'cs_url', u'Processing internal configuration failed:')
+        self.common_lib_ssh.verify_jetty_log(u'cs_url', strings.failed_to_generate_global_config)
 
         # Step Log in software token
         self.component_cs_conf_mgm.log_in_to_software_token(section=u'cs_url')
@@ -678,6 +677,7 @@ class Xroad_global_configuration(SetupTest):
 
         **Test steps:**
             * **Step 1: test internalconf url download**
+                * :func:`~webframework.extension.util.common_utils.CommonUtils.fail`, *"Internal conf not found"*
         """
         # Step Test internalconf url download
         internal_conf_url = TESTDATA.get_parameter(section_name=u'cs_url', parameter_name=u'internal_conf_url')

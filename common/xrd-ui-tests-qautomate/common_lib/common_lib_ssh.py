@@ -31,6 +31,19 @@ class Common_lib_ssh(CommonUtils):
         self.log_file_output = ""
         self.run_folder = ""
 
+    def curl_url(self, section="cs_url", url=""):
+        server = TESTDATA[section][u'server_address']
+        if strings.server_environment_type() == strings.lxd_type_environment:
+            server = server.split(".lxd")[0]
+            command = 'lxc exec {} curl "{}"'.format(server, url)
+        elif strings.server_environment_type() == strings.ssh_type_environment:
+            command = 'ssh {} curl "{}"'.format(server, url)
+        else:
+            raise Exception(errors.enviroment_type_not_valid)
+
+        return self.run_bash_command(command, True, True)
+
+
     def get_newest_directory(self, section="cs_url", path=""):
         """
         Verify if server contains the file
@@ -292,7 +305,7 @@ class Common_lib_ssh(CommonUtils):
 
         self.run_bash_command(command, True)
 
-    def run_bash_command(self, command, to_print=True):
+    def run_bash_command(self, command, to_print=True, ignore_warning=True):
         """
         Runs bash command
 
@@ -303,7 +316,7 @@ class Common_lib_ssh(CommonUtils):
             print(command)
         p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         output, com_errors = p.communicate()
-        if com_errors:
+        if com_errors and not ignore_warning:
             self.fail(com_errors)
         return output
 

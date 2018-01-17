@@ -677,6 +677,7 @@ class Xroad_global_configuration(SetupTest):
             * **Step 1: test internalconf url download**
         """
         # Step Test internalconf url download
+        print TESTDATA
         internal_conf_url = TESTDATA.get_parameter(section_name=u'cs_url', parameter_name=u'internal_conf_url')
         print internal_conf_url
         response = urllib2.urlopen(internal_conf_url)

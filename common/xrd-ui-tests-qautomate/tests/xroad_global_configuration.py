@@ -80,8 +80,8 @@ class Xroad_global_configuration(SetupTest):
                 * Extension 2a. One or more mandatory fields are not filled.
                 * Extension 3a. The user input exceeds 255 symbols.
         * `Generate configuration`_
-            * `GCONF 2.2.18`_: Generate Configuration (not done)
-                * Extension 1c. The generation of the configuration part files failed for any other reason than the ones stated in extensions 1a and 1b. (not done)
+            * `GCONF 2.2.18`_: Generate Configuration
+                * Extension 1c. The generation of the configuration part files failed for any other reason than the ones stated in extensions 1a and 1b.
         * `Handle configuration download request`_
             * `GCONF 2.2.19`_: Handle a Configuration Download Request
         * Postponed
@@ -578,8 +578,8 @@ class Xroad_global_configuration(SetupTest):
         Tests configuration generation that is automaticaly launched
 
         **Use cases:**
-            * `GCONF 2.2.18`_: Generate Configuration (not done)
-                * Extension 1c. The generation of the configuration part files failed for any other reason than the ones stated in extensions 1a and 1b. (not done)
+            * `GCONF 2.2.18`_: Generate Configuration
+                * Extension 1c. The generation of the configuration part files failed for any other reason than the ones stated in extensions 1a and 1b.
 
         **Test steps:**
             * **Step 1: verify if v2 folder exists in server**
@@ -592,19 +592,18 @@ class Xroad_global_configuration(SetupTest):
             * **Step 4: verify newest configuration directory content**
                 * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_if_server_contains_file`, *u'cs_url'*, *private_xml_file*
                 * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_if_server_contains_file`, *u'cs_url'*, *shared_xml_file*
-            * **Step 5: verify internal and external conf file content**
-            * **Step 6: login to central server and open configuration view**
+            * **Step 5: login to central server and open configuration view**
                 * :func:`~common_lib.component_cs.Component_cs.login`, *section=u'cs_url'*
                 * :func:`~common_lib.component_cs_sidebar.Component_cs_sidebar.open_global_configuration_view`
-            * **Step 7: log out software token**
+            * **Step 6: log out software token**
                 * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.logout_software_token`
-            * **Step 8: verify global configuration failing**
+            * **Step 7: verify global configuration failing**
                 * :func:`~webframework.extension.util.common_utils.CommonUtils.reload_page`
                 * :func:`~common_lib.component_common.Component_common.verify_alert_message`, *strings.configuration_generation_fail*
                 * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_jetty_log`, *u'cs_url'*, *strings.failed_to_generate_global_config*
-            * **Step 9: log in software token**
+            * **Step 8: log in software token**
                 * :func:`~common_lib.component_cs_conf_mgm.Component_cs_conf_mgm.log_in_to_software_token`, *section=u'cs_url'*
-            * **Step 10: log out**
+            * **Step 9: log out**
                 * :func:`~common_lib.common_lib.Common_lib.log_out`
         """
         v2_path = os.path.join(strings.generated_confs_directory, "V2")
@@ -639,13 +638,6 @@ class Xroad_global_configuration(SetupTest):
 
         self.common_lib_ssh.verify_if_server_contains_file(u'cs_url', private_xml_file)
         self.common_lib_ssh.verify_if_server_contains_file(u'cs_url', shared_xml_file)
-
-        # Step Verify internal and external conf file content
-        #server = TESTDATA[u'cs_url'][u'server_address']
-        #internal_content = self.common_lib_ssh.read_server_file(server, internal_conf_path)
-        #external_content = self.common_lib_ssh.read_server_file(server, external_conf_path)
-        #self.component_cs.verify_configuratio_file(internal_content)
-        #self.component_cs.verify_configuratio_file(external_content)
 
         # Step Login to central server and open configuration view
         self.component_cs.login(section=u'cs_url')

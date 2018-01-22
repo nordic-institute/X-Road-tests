@@ -392,7 +392,7 @@ class Common_lib_ssh(CommonUtils):
                 * **Step 1:** :func:`~pagemodel.fail("Event: {} not found from jetty log".Fail("event: {} not found from jetty log".format`, *"Event: {} not found from jetty log".format(event*
         """
         server_log_address = TESTDATA[section][u'server_address']
-        log_output = self.read_server_file(server_log_address, strings.jetty_log, 200)
+        log_output = self.read_server_file(server_log_address, strings.jetty_log, 300)
         if event not in log_output:
             print(log_output)
             self.fail("Event: {} not found from jetty log".format(event))

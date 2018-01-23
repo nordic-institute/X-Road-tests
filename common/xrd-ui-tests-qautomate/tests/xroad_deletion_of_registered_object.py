@@ -419,11 +419,11 @@ class Xroad_deletion_of_registered_object(BaseTest):
         self.component_ss_sidebar.open_backup_restore_view()
         self.component_ss_backup.generate_backup()
         self.restore_ss = True
-        sleep(2)
 
         # Step Delete client of security server in security server
         self.component_ss_sidebar.open_security_servers_client_view()
         self.ss_clients.find_and_open_by_text_dlg_by_subsystem_code(TESTDATA[u'member1_configuration'])
+        sleep(200)
         self.component_ss_clients.unregister_and_delete_subsystem_in_subsystem_details_dlg()
 
         # Step Open central server url

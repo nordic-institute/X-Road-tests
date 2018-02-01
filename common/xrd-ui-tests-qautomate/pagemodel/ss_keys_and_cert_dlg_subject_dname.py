@@ -92,7 +92,7 @@ class Ss_keys_and_cert_dlg_subject_dname(CommonUtils):
         rword = ''.join(random.choice(string.lowercase) for i in range(4))
         self.input_text(self.NAME_O_GOFORE_TEXT, parameters['member_name'] + rword)
         # AutoGen methods form: keys
-        sever_address = parameters['server_address']
-        if strings.server_environment_type() == strings.ssh_type_environment:
-            sever_address = sever_address.replace("user@", "")
-        self.input_text(self.NAME_CN_1234_TEXT, sever_address)
+        server_address = parameters['server_address']
+        if strings.server_environment_type() == strings.lxd_type_environment:
+            server_address = server_address.replace("user@", "")
+        self.input_text(self.NAME_CN_1234_TEXT, server_address)

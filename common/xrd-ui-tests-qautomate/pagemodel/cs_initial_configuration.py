@@ -66,10 +66,10 @@ class Cs_initial_configuration(CommonUtils):
         """
         # AutoGen methods form: init
         self.input_text(self.ID_INSTANCE_IDENTIFIER, parameters['instance_identifier'])
-        sever_address = parameters['server_address']
-        if strings.server_environment_type() == strings.ssh_type_environment:
-            sever_address = sever_address.replace("user@", "")
-        self.input_text(self.ID_CENTRAL_SERVER_ADDRESS, sever_address)
+        server_address = parameters['server_address']
+        if strings.server_environment_type() == strings.lxd_type_environment:
+            server_address = server_address.replace("user@", "")
+        self.input_text(self.ID_CENTRAL_SERVER_ADDRESS, server_address)
         self.input_text(self.ID_PIN, parameters['pin'])
         self.input_text(self.ID_PIN_REPEAT, parameters['pin'])
 

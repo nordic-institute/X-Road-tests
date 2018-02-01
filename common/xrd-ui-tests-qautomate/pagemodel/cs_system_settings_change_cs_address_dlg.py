@@ -59,10 +59,10 @@ class Cs_system_settings_change_cs_address_dlg(CommonUtils):
         **Test steps:**
             * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.input_text`, *self.ID_CENTRAL_SERVER_ADDRESS_NEW*, *parameters[u'server_address']*
         """
-        sever_address = parameters['server_address']
-        if strings.server_environment_type() == strings.ssh_type_environment:
-            sever_address = sever_address.replace("user@", "")
-        self.input_text(self.ID_CENTRAL_SERVER_ADDRESS_NEW, sever_address)
+        server_address = parameters['server_address']
+        if strings.server_environment_type() == strings.lxd_type_environment:
+            server_address = server_address.replace("user@", "")
+        self.input_text(self.ID_CENTRAL_SERVER_ADDRESS_NEW, server_address)
 
     def click_confim(self):
         """

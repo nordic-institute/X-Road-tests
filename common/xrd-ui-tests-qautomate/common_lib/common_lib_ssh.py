@@ -245,7 +245,7 @@ class Common_lib_ssh(CommonUtils):
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.log_file_output = self.Log_file_output = self.run_bash_command`, *command*
         """
-        command = "ssh {} exec -- sudo tail -n {} {}".format(server, str(count), log_file_name)
+        command = "ssh {} sudo tail -n {} {}".format(server, str(count), log_file_name)
         self.log_file_output = self.run_bash_command(command)
         return self.log_file_output
 

@@ -62,7 +62,7 @@ class Ss_keys_and_cert_dlg_registration_req(CommonUtils):
         # AutoGen methods form: keys
         server_address = parameters['server_address']
         if strings.server_environment_type() == strings.lxd_type_environment:
-            sever_address = server_address.replace("user@", "")
+            server_address = server_address.replace("user@", "")
         self.input_text(self.ID_ADDRESS, server_address)
 
     def submit_register_request(self):

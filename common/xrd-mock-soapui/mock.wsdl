@@ -93,7 +93,7 @@
                             </xs:annotation>
                         </xs:element>
                         <xs:element name="mockAttachment" type="ref:swaRef"
-                                 minOccurs="0">
+                                 minOccurs="0" maxOccurs="unbounded">
                             <xs:annotation>
                                 <xs:appinfo>
                                     <xrd:title>Attachment (with swaRef
@@ -122,7 +122,7 @@
                             </xs:annotation>
                         </xs:element>
                         <xs:element name="mockAttachment" type="ref:swaRef"
-                                 minOccurs="0">
+                                 minOccurs="0" maxOccurs="unbounded">
                             <xs:annotation>
                                 <xs:appinfo>
                                     <xrd:title>Attachment (with swaRef

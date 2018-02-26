@@ -36,16 +36,9 @@ class Common_lib_ssh(CommonUtils):
         :param section:  Test data section name
         """
         server = TESTDATA[section][u'server_address']
-        if strings.server_environment_type() == strings.lxd_type_environment:
-            server = server.split(".lxd")[0]
-            command = 'lxc exec {} curl "{}"'.format(server, url)
-        elif strings.server_environment_type() == strings.ssh_type_environment:
-            command = 'ssh {} curl "{}"'.format(server, url)
-        else:
-            raise Exception(errors.enviroment_type_not_valid)
+        command = 'ssh {} curl "{}"'.format(server, url)
 
         return self.run_bash_command(command, True, True)
-
 
     def get_newest_directory(self, section="cs_url", path=""):
         """
@@ -54,30 +47,18 @@ class Common_lib_ssh(CommonUtils):
         :param section:  Test data section name
         """
         server = TESTDATA[section][u'server_address']
-        if strings.server_environment_type() == strings.lxd_type_environment:
-            server = server.split(".lxd")[0]
-            command = 'lxc exec {} -- sh -c "cd {} && ls -td -- */ | head -n 1"'.format(server, path)
-        elif strings.server_environment_type() == strings.ssh_type_environment:
-            command = 'ssh {} "cd {} && ls -td -- */ | head -n 1"'.format(server, path)
-        else:
-            raise Exception(errors.enviroment_type_not_valid)
+        command = 'ssh {} "cd {} && ls -td -- */ | head -n 1"'.format(server, path)
 
-        return self.run_bash_command(command, False).strip()[:-1]
+        return self.run_bash_command(command, True).strip()[:-1]
 
     def get_time(self, section="cs_url", date_format='%Y%m%d%H%M'):
         """
         :param section:  Test data section name
         """
         server = TESTDATA[section][u'server_address']
-        if strings.server_environment_type() == strings.lxd_type_environment:
-            server = server.split(".lxd")[0]
-            command = 'lxc exec {} -- date "+{}"'.format(server, date_format)
-        elif strings.server_environment_type() == strings.ssh_type_environment:
-            command = 'ssh {} date "+{}"'.format(server, date_format)
-        else:
-            raise Exception(errors.enviroment_type_not_valid)
+        command = 'ssh {} date "+{}"'.format(server, date_format)
 
-        return self.run_bash_command(command, False)
+        return self.run_bash_command(command, True)
 
     def verify_if_server_contains_file(self, section="cs_url", path=""):
         """
@@ -86,15 +67,9 @@ class Common_lib_ssh(CommonUtils):
         :param section:  Test data section name
         """
         server = TESTDATA[section][u'server_address']
-        if strings.server_environment_type() == strings.lxd_type_environment:
-            server = server.split(".lxd")[0]
-            command = 'lxc exec {} -- [ -f {} ] && echo "Found" || echo "Not found"'.format(server, path)
-        elif strings.server_environment_type() == strings.ssh_type_environment:
-            command = 'ssh {} [ -f {} ] && echo "Found" || echo "Not found"'.format(server, path)
-        else:
-            raise Exception(errors.enviroment_type_not_valid)
+        command = 'ssh {} [ -f {} ] && echo "Found" || echo "Not found"'.format(server, path)
 
-        if self.run_bash_command(command, False).strip() != "Found":
+        if self.run_bash_command(command, True).strip() != "Found":
             self.fail("File not found!")
 
     def verify_if_server_contains_directory(self, section="cs_url", path=""):
@@ -104,15 +79,9 @@ class Common_lib_ssh(CommonUtils):
         :param section:  Test data section name
         """
         server = TESTDATA[section][u'server_address']
-        if strings.server_environment_type() == strings.lxd_type_environment:
-            server = server.split(".lxd")[0]
-            command = 'lxc exec {} -- [ -d {} ] && echo "Found" || echo "Not found"'.format(server, path)
-        elif strings.server_environment_type() == strings.ssh_type_environment:
-            command = 'ssh {} [ -d {} ] && echo "Found" || echo "Not found"'.format(server, path)
-        else:
-            raise Exception(errors.enviroment_type_not_valid)
+        command = 'ssh {} [ -d {} ] && echo "Found" || echo "Not found"'.format(server, path)
 
-        if self.run_bash_command(command, False).strip() != "Found":
+        if self.run_bash_command(command, True).strip() != "Found":
             self.fail("Directory not found!")
 
     def find_exception_from_logs_and_save(self, start_time, stop_time, name_prefix="", copy_location=""):
@@ -169,30 +138,21 @@ class Common_lib_ssh(CommonUtils):
                 * **Step 2:** :func:`~pagemodel.run_bash_command(formated_command.Run_bash_command(formated_command.format`, *formated_command.format(server*, *'service rsyslog rotate'*, *""*
         """
         shell_command = 'sudo truncate -c -s 0'
-        if strings.server_environment_type() == strings.lxd_type_environment:
-            server = server.split(".lxd")[0]
-            formated_command ="lxc exec {} -- bash -c '{} {} || true'"
-        elif strings.server_environment_type() == strings.ssh_type_environment:
-            formated_command = "ssh {} {} {} || true"
-        else:
-            raise Exception(errors.enviroment_type_not_valid)
+        formated_command = "ssh {} {} {} || true"
+
         for log_file in strings.ss_all_logs:
             command = formated_command.format(server, shell_command, log_file)
             self.run_bash_command(command, False)
+
         self.run_bash_command(formated_command.format(server, 'service rsyslog rotate', ""), False)
 
     def collect_server_log_files(self, server="xroad-lxd-cs"):
         """
         """
         self.run_folder = get_config_value("reporting_folder_run")
-        if strings.server_environment_type() == strings.lxd_type_environment:
-            server = server.split(".lxd")[0]
-            formated_command = "lxc file pull {}{} " + self.run_folder + "/{} || true"
-        elif strings.server_environment_type() == strings.ssh_type_environment:
-            print(self.run_folder)
-            formated_command = "ssh {} sudo cat {} > " + self.run_folder + "/{} || true"
-        else:
-            raise Exception(errors.enviroment_type_not_valid)
+        print(self.run_folder)
+        formated_command = "ssh {} sudo cat {} > " + self.run_folder + "/{} || true"
+
         for log_file in strings.ss_all_logs:
             command = formated_command.format(server, log_file, log_file.split("/")[-1])
             self.run_bash_command(command, False)
@@ -202,13 +162,7 @@ class Common_lib_ssh(CommonUtils):
         :param section:  Test data section name
         """
         server = TESTDATA[section][u'server_address']
-        if strings.server_environment_type() == strings.lxd_type_environment:
-            server = server.split(".lxd")[0]
-            command = "lxc exec {} -- sudo rm -rf {}".format(server, path)
-        elif strings.server_environment_type() == strings.ssh_type_environment:
-            command = "ssh {} sudo rm -rf {}".format(server, path)
-        else:
-            raise Exception(errors.enviroment_type_not_valid)
+        command = "ssh {} sudo rm -rf {}".format(server, path)
 
         self.run_bash_command(command, True)
 
@@ -217,13 +171,7 @@ class Common_lib_ssh(CommonUtils):
         :param section:  Test data section name
         """
         server = TESTDATA[section][u'server_address']
-        if strings.server_environment_type() == strings.lxd_type_environment:
-            server = server.split(".lxd")[0]
-            command = "lxc exec {} -- sudo rm {}".format(server, path)
-        elif strings.server_environment_type() == strings.ssh_type_environment:
-            command = "ssh {} sudo rm {}".format(server, path)
-        else:
-            raise Exception(errors.enviroment_type_not_valid)
+        command = "ssh {} sudo rm {}".format(server, path)
 
         self.run_bash_command(command, True)
 
@@ -232,13 +180,7 @@ class Common_lib_ssh(CommonUtils):
         :param section:  Test data section name
         """
         server = TESTDATA[section][u'server_address']
-        if strings.server_environment_type() == strings.lxd_type_environment:
-            server = server.split(".lxd")[0]
-            command = "lxc exec {} -- sudo touch {}".format(server, path)
-        elif strings.server_environment_type() == strings.ssh_type_environment:
-            command = "ssh {} sudo touch {}".format(server, path)
-        else:
-            raise Exception(errors.enviroment_type_not_valid)
+        command = "ssh {} sudo touch {}".format(server, path)
 
         self.run_bash_command(command, True)
 
@@ -248,33 +190,18 @@ class Common_lib_ssh(CommonUtils):
         :param text:  String value for text
         """
         server = TESTDATA[section][u'server_address']
-        if strings.server_environment_type() == strings.lxd_type_environment:
-            file_name = os.path.basename(path)
-            directory = os.path.dirname(path)
-            server = server.split(".lxd")[0]
-            command = 'lxc exec {} -- su xroad sh -c "cd {} && echo -e \'{}\' > {}"'.format(server, directory,
-                                                                                            text, file_name)
+
+        lines = text.split("\n")
+        for line in lines:
+            command = 'echo "{}" | ssh {} sudo -u xroad tee -a {} >/dev/null'.format(line, server, path)
             self.run_bash_command(command, True)
-        elif strings.server_environment_type() == strings.ssh_type_environment:
-            lines = text.split("\n")
-            for line in lines:
-                command = 'echo "{}" | ssh {} sudo -u xroad tee -a {} >/dev/null'.format(line, server, path)
-                self.run_bash_command(command, True)
-        else:
-            raise Exception(errors.enviroment_type_not_valid)
 
     def delete_signing_key_from_signer_console(self, section="cs_url", key=""):
         """
         :param section:  Test data section name
         """
         server = TESTDATA[section][u'server_address']
-        if strings.server_environment_type() == strings.lxd_type_environment:
-            server = server.split(".lxd")[0]
-            command = 'lxc exec {} -- su xroad sh -c "signer-console dk {}"'.format(server, key)
-        elif strings.server_environment_type() == strings.ssh_type_environment:
-            command = 'ssh {} sudo -u xroad signer-console dk {}'.format(server, key)
-        else:
-            raise Exception(errors.enviroment_type_not_valid)
+        command = 'ssh {} sudo -u xroad signer-console dk {}'.format(server, key)
 
         self.run_bash_command(command, True)
 
@@ -283,13 +210,7 @@ class Common_lib_ssh(CommonUtils):
         :param section:  Test data section name
         """
         server = TESTDATA[section][u'server_address']
-        if strings.server_environment_type() == strings.lxd_type_environment:
-            server = server.split(".lxd")[0]
-            command = "lxc exec {} -- sudo chmod {} {}".format(server, permission, path)
-        elif strings.server_environment_type() == strings.ssh_type_environment:
-            command = "ssh {} sudo chmod {} {}".format(server, permission, path)
-        else:
-            raise Exception(errors.enviroment_type_not_valid)
+        command = "ssh {} sudo chmod {} {}".format(server, permission, path)
 
         self.run_bash_command(command, True)
 
@@ -298,13 +219,7 @@ class Common_lib_ssh(CommonUtils):
         :param section:  Test data section name
         """
         server = TESTDATA[section][u'server_address']
-        if strings.server_environment_type() == strings.lxd_type_environment:
-            server = server.split(".lxd")[0]
-            command = "lxc exec {} -- sudo mv {} {}".format(server, move_from, move_to)
-        elif strings.server_environment_type() == strings.ssh_type_environment:
-            command = "ssh {} sudo touch {} {}".format(server, move_from, move_to)
-        else:
-            raise Exception(errors.enviroment_type_not_valid)
+        command = "ssh {} sudo touch {} {}".format(server, move_from, move_to)
 
         self.run_bash_command(command, True)
 
@@ -330,13 +245,7 @@ class Common_lib_ssh(CommonUtils):
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.log_file_output = self.Log_file_output = self.run_bash_command`, *command*
         """
-        if strings.server_environment_type() == strings.lxd_type_environment:
-            server = server.split(".lxd")[0]
-            command ="lxc exec {} -- tail -n {} {}". format(server, str(count), log_file_name)
-        elif strings.server_environment_type() == strings.ssh_type_environment:
-            command = "ssh {} exec -- sudo tail -n {} {}".format(server, str(count), log_file_name)
-        else:
-            raise Exception(errors.enviroment_type_not_valid)
+        command = "ssh {} sudo tail -n {} {}".format(server, str(count), log_file_name)
         self.log_file_output = self.run_bash_command(command)
         return self.log_file_output
 
@@ -352,7 +261,7 @@ class Common_lib_ssh(CommonUtils):
         Verify audit log file in server.
 
         :param section:  Test data section name
-        
+
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.fail(errors.Fail(errors.audit_log_is_empty)`, *errors.audit_log_is_empty*
                 * **Step 2:** :func:`~pagemodel.fail(errors.Fail(errors.string_is_not_dict + "\n" + self`, *errors.string_is_not_dict + "\n" + self.parse_log_file_tail(log_output*
@@ -385,9 +294,9 @@ class Common_lib_ssh(CommonUtils):
 
     def verify_jetty_log(self, section=u'ss1_url', event="Log in user"):
         """
-        
+
         :param section:  Test data section name
-        
+
         **Test steps:**
                 * **Step 1:** :func:`~pagemodel.fail("Event: {} not found from jetty log".Fail("event: {} not found from jetty log".format`, *"Event: {} not found from jetty log".format(event*
         """

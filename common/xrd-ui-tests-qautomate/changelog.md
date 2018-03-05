@@ -1,4 +1,6 @@
 ## Changelog
+- 27.2.2017
+    * Central server global configuration cases done
 - 2.1.2017
     * 2.2.4, 2.2.5, 2.2.6, 2.2.7, 2.2.11, 2.2.13 Global configuration cases done
 - 6.11.2017

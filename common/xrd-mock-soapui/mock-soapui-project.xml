@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:soapui-project id="7b5f3068-8663-41c0-8cc2-5fcc285326fd" activeEnvironment="Default" name="xrd-mock" resourceRoot="${projectDir}" soapui-version="5.3.0" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings><con:setting id="ProjectSettings@hermesConfig">${#System#user.home}\.hermes</con:setting></con:settings><con:interface xsi:type="con:WsdlInterface" id="27b1f8cd-449c-4d7a-82f5-d90af1064374" wsaVersion="NONE" name="mockPortSoap11" type="wsdl" bindingName="{http://producer.x-road.eu}mockPortSoap11" soapVersion="1_1" anonymous="optional" definition="mock.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="file:/C:/_data/GIT/xm/testing/common/xrd-mock-soapui/mock.wsdl"><con:part><con:url>file:/C:/_data/GIT/xm/testing/common/xrd-mock-soapui/mock.wsdl</con:url><con:content><![CDATA[<wsdl:definitions targetNamespace="http://producer.x-road.eu" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://producer.x-road.eu" xmlns:xrd="http://x-road.eu/xsd/xroad.xsd" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:ref="http://ws-i.org/profiles/basic/1.1/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+<con:soapui-project id="7b5f3068-8663-41c0-8cc2-5fcc285326fd" activeEnvironment="Default" name="xrd-mock" resourceRoot="${projectDir}" soapui-version="5.4.0" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings><con:setting id="ProjectSettings@hermesConfig">${#System#user.home}\.hermes</con:setting></con:settings><con:interface xsi:type="con:WsdlInterface" id="27b1f8cd-449c-4d7a-82f5-d90af1064374" wsaVersion="NONE" name="mockPortSoap11" type="wsdl" bindingName="{http://producer.x-road.eu}mockPortSoap11" soapVersion="1_1" anonymous="optional" definition="mock.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="file:/D:/_data/GIT/VitaliStupin/X-Road-tests/common/xrd-mock-soapui/mock.wsdl"><con:part><con:url>file:/D:/_data/GIT/VitaliStupin/X-Road-tests/common/xrd-mock-soapui/mock.wsdl</con:url><con:content><![CDATA[<wsdl:definitions targetNamespace="http://producer.x-road.eu" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://producer.x-road.eu" xmlns:xrd="http://x-road.eu/xsd/xroad.xsd" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:ref="http://ws-i.org/profiles/basic/1.1/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
   <wsdl:types>
     <xs:schema targetNamespace="http://producer.x-road.eu">
       <xs:import namespace="http://x-road.eu/xsd/xroad.xsd" schemaLocation="http://x-road.eu/xsd/xroad.xsd"/>
@@ -78,7 +78,7 @@
                 </xs:appinfo>
               </xs:annotation>
             </xs:element>
-            <xs:element name="mockAttachment" type="ref:swaRef" minOccurs="0">
+            <xs:element name="mockAttachment" type="ref:swaRef" minOccurs="0" maxOccurs="unbounded">
               <xs:annotation>
                 <xs:appinfo>
                   <xrd:title>Attachment (with swaRef
@@ -106,7 +106,7 @@
                 </xs:appinfo>
               </xs:annotation>
             </xs:element>
-            <xs:element name="mockAttachment" type="ref:swaRef" minOccurs="0">
+            <xs:element name="mockAttachment" type="ref:swaRef" minOccurs="0" maxOccurs="unbounded">
               <xs:annotation>
                 <xs:appinfo>
                   <xrd:title>Attachment (with swaRef
@@ -319,7 +319,7 @@
   </wsdl:binding>
   <wsdl:service name="mockService">
     <wsdl:port name="mockPortSoap11" binding="tns:mockPortSoap11">
-      <soap:address location="http://xtee2.ci.kit:8086/xrd-mock/"/>
+      <soap:address location="http://xtee2.ci.kit:8086/xrd-mock"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part><con:part><con:url>http://x-road.eu/xsd/xroad.xsd</con:url><con:content><![CDATA[<xs:schema elementFormDefault="qualified" targetNamespace="http://x-road.eu/xsd/xroad.xsd" xmlns="http://x-road.eu/xsd/xroad.xsd" xmlns:id="http://x-road.eu/xsd/identifiers" xmlns:xs="http://www.w3.org/2001/XMLSchema">
@@ -1357,6 +1357,118 @@ requestContext.bodyXML = new File(bodyXMLFile).text
         </SOAP-ENV:Fault>
     </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>
+]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mockResponse"/></con:response><con:response name="representation" id="44d625ad-8479-4bc4-a7e7-170b98b27a0a" httpResponseStatus="200" encoding="UTF-8"><con:settings/><con:script>def holder = new com.eviware.soapui.support.XmlHolder( mockRequest.getContentElement() )
+holder.namespaces["SOAP-ENV"] = "http://schemas.xmlsoap.org/soap/envelope/"
+holder.namespaces["xrd"] = "http://x-road.eu/xsd/xroad.xsd"
+holder.namespaces["id"] = "http://x-road.eu/xsd/identifiers"
+holder.namespaces["repr"] = "http://x-road.eu/xsd/representation.xsd"
+
+requestContext.c_xRoadInstance = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:client/id:xRoadInstance"])
+requestContext.c_memberClass = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:client/id:memberClass"])
+requestContext.c_memberCode = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:client/id:memberCode"])
+requestContext.c_subsystemCode = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:client/id:subsystemCode"])
+requestContext.s_xRoadInstance = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:service/id:xRoadInstance"])
+requestContext.s_memberClass = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:service/id:memberClass"])
+requestContext.s_memberCode = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:service/id:memberCode"])
+requestContext.s_subsystemCode = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:service/id:subsystemCode"])
+requestContext.repr_class = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/repr:representedParty/repr:partyClass"])
+requestContext.repr_code = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/repr:representedParty/repr:partyCode"])
+requestContext.id = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:id"])
+requestContext.userId = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:userId"])
+requestContext.issue = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:issue"])
+requestContext.protocolVersion = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:protocolVersion"])
+</con:script><con:responseContent><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<SOAP-ENV:Envelope 
+    xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:ns1="http://producer.x-road.eu"
+    xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
+    xmlns:id="http://x-road.eu/xsd/identifiers"
+    xmlns:repr="http://x-road.eu/xsd/representation.xsd">
+  <SOAP-ENV:Header>
+    <xrd:client id:objectType="SUBSYSTEM">
+      <id:xRoadInstance>${c_xRoadInstance}</id:xRoadInstance>
+      <id:memberClass>${c_memberClass}</id:memberClass>
+      <id:memberCode>${c_memberCode}</id:memberCode>
+      <id:subsystemCode>${c_subsystemCode}</id:subsystemCode>
+    </xrd:client>
+    <xrd:service id:objectType="SERVICE">
+      <id:xRoadInstance>${s_xRoadInstance}</id:xRoadInstance>
+      <id:memberClass>${s_memberClass}</id:memberClass>
+      <id:memberCode>${s_memberCode}</id:memberCode>
+      <id:subsystemCode>${s_subsystemCode}</id:subsystemCode>
+      <id:serviceCode>mock</id:serviceCode>
+      <id:serviceVersion>v1</id:serviceVersion>
+    </xrd:service>
+    <repr:representedParty>
+      <repr:partyClass>${repr_class}</repr:partyClass>
+      <repr:partyCode>${repr_code}</repr:partyCode>
+    </repr:representedParty>
+    <xrd:id>${id}</xrd:id>
+    <xrd:userId>${userId}</xrd:userId>
+    <xrd:issue>${issue}</xrd:issue>
+    <xrd:protocolVersion>${protocolVersion}</xrd:protocolVersion>
+  </SOAP-ENV:Header>
+  <SOAP-ENV:Body>
+    <ns1:mockResponse/>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mockResponse"/></con:response><con:response name="withServer" id="44d625ad-8479-4bc4-a7e7-170b98b27a0a" httpResponseStatus="200" encoding="UTF-8"><con:settings/><con:script>def holder = new com.eviware.soapui.support.XmlHolder( mockRequest.getContentElement() )
+holder.namespaces["SOAP-ENV"] = "http://schemas.xmlsoap.org/soap/envelope/"
+holder.namespaces["xrd"] = "http://x-road.eu/xsd/xroad.xsd"
+holder.namespaces["id"] = "http://x-road.eu/xsd/identifiers"
+
+requestContext.c_xRoadInstance = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:client/id:xRoadInstance"])
+requestContext.c_memberClass = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:client/id:memberClass"])
+requestContext.c_memberCode = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:client/id:memberCode"])
+requestContext.c_subsystemCode = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:client/id:subsystemCode"])
+requestContext.s_xRoadInstance = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:service/id:xRoadInstance"])
+requestContext.s_memberClass = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:service/id:memberClass"])
+requestContext.s_memberCode = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:service/id:memberCode"])
+requestContext.s_subsystemCode = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:service/id:subsystemCode"])
+requestContext.serv_xRoadInstance = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:securityServer/id:xRoadInstance"])
+requestContext.serv_memberClass = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:securityServer/id:memberClass"])
+requestContext.serv_memberCode = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:securityServer/id:memberCode"])
+requestContext.serv_serverCode = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:securityServer/id:serverCode"])
+requestContext.id = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:id"])
+requestContext.userId = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:userId"])
+requestContext.issue = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:issue"])
+requestContext.protocolVersion = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:protocolVersion"])
+</con:script><con:responseContent><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<SOAP-ENV:Envelope 
+    xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:ns1="http://producer.x-road.eu"
+    xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
+    xmlns:id="http://x-road.eu/xsd/identifiers">
+  <SOAP-ENV:Header>
+    <xrd:client id:objectType="SUBSYSTEM">
+      <id:xRoadInstance>${c_xRoadInstance}</id:xRoadInstance>
+      <id:memberClass>${c_memberClass}</id:memberClass>
+      <id:memberCode>${c_memberCode}</id:memberCode>
+      <id:subsystemCode>${c_subsystemCode}</id:subsystemCode>
+    </xrd:client>
+    <xrd:service id:objectType="SERVICE">
+      <id:xRoadInstance>${s_xRoadInstance}</id:xRoadInstance>
+      <id:memberClass>${s_memberClass}</id:memberClass>
+      <id:memberCode>${s_memberCode}</id:memberCode>
+      <id:subsystemCode>${s_subsystemCode}</id:subsystemCode>
+      <id:serviceCode>mock</id:serviceCode>
+      <id:serviceVersion>v1</id:serviceVersion>
+    </xrd:service>
+   <xrd:securityServer id:objectType="SERVER">
+      <id:xRoadInstance>${serv_xRoadInstance}</id:xRoadInstance>
+      <id:memberClass>${serv_memberClass}</id:memberClass>
+      <id:memberCode>${serv_memberCode}</id:memberCode>
+      <id:serverCode>${serv_serverCode}</id:serverCode>
+   </xrd:securityServer>
+    <xrd:id>${id}</xrd:id>
+    <xrd:userId>${userId}</xrd:userId>
+    <xrd:issue>${issue}</xrd:issue>
+    <xrd:protocolVersion>${protocolVersion}</xrd:protocolVersion>
+  </SOAP-ENV:Header>
+  <SOAP-ENV:Body>
+    <ns1:mockResponse/>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
 ]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mockResponse"/></con:response><con:dispatchConfig/></con:mockOperation><con:mockOperation name="mockMtom" id="49616526-76ac-477a-9037-99ea9c64ef5b" interface="mockPortSoap11" operation="mockMtom"><con:settings/><con:defaultResponse>fault</con:defaultResponse><con:dispatchStyle>SCRIPT</con:dispatchStyle><con:dispatchPath>def holder = new com.eviware.soapui.support.XmlHolder( mockRequest.requestContent )
 def desiredResponse = holder["//desiredResponse"]
 
@@ -2056,4 +2168,60 @@ requestContext.protocolVersion = org.apache.commons.lang.StringEscapeUtils.escap
         </SOAP-ENV:Fault>
     </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>
-]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mockSwaRefResponse"/></con:response><con:dispatchConfig/></con:mockOperation></con:mockService><con:properties/><con:wssContainer/><con:oAuth2ProfileContainer/><con:oAuth1ProfileContainer/><con:sensitiveInformation/></con:soapui-project>
+]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mockSwaRefResponse"/></con:response><con:response name="swa_3_small" id="99add5dd-3b6e-4236-8c55-85098cd5695a" httpResponseStatus="200" encoding="UTF-8"><con:settings/><con:script>// NB! Attaching file will overwrite response definition.
+//def dataFile = requestContext.getProperty( "dataFile" )
+//def file = new File(requestContext.getProperty( "projectDir" ) + "/data/10KB.txt" )
+//def attachment = mockResponse.attachFile( file, true )
+
+def holder = new com.eviware.soapui.support.XmlHolder( mockRequest.getContentElement() )
+holder.namespaces["SOAP-ENV"] = "http://schemas.xmlsoap.org/soap/envelope/"
+holder.namespaces["xrd"] = "http://x-road.eu/xsd/xroad.xsd"
+holder.namespaces["id"] = "http://x-road.eu/xsd/identifiers"
+
+requestContext.c_xRoadInstance = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:client/id:xRoadInstance"])
+requestContext.c_memberClass = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:client/id:memberClass"])
+requestContext.c_memberCode = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:client/id:memberCode"])
+requestContext.c_subsystemCode = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:client/id:subsystemCode"])
+requestContext.s_xRoadInstance = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:service/id:xRoadInstance"])
+requestContext.s_memberClass = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:service/id:memberClass"])
+requestContext.s_memberCode = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:service/id:memberCode"])
+requestContext.s_subsystemCode = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:service/id:subsystemCode"])
+requestContext.id = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:id"])
+requestContext.userId = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:userId"])
+requestContext.issue = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:issue"])
+requestContext.protocolVersion = org.apache.commons.lang.StringEscapeUtils.escapeXml(holder["/SOAP-ENV:Envelope/SOAP-ENV:Header/xrd:protocolVersion"])
+</con:script><con:responseContent><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<SOAP-ENV:Envelope 
+    xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:ns1="http://producer.x-road.eu"
+    xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
+    xmlns:id="http://x-road.eu/xsd/identifiers">
+  <SOAP-ENV:Header>
+    <xrd:client id:objectType="SUBSYSTEM">
+      <id:xRoadInstance>${c_xRoadInstance}</id:xRoadInstance>
+      <id:memberClass>${c_memberClass}</id:memberClass>
+      <id:memberCode>${c_memberCode}</id:memberCode>
+      <id:subsystemCode>${c_subsystemCode}</id:subsystemCode>
+    </xrd:client>
+    <xrd:service id:objectType="SERVICE">
+      <id:xRoadInstance>${s_xRoadInstance}</id:xRoadInstance>
+      <id:memberClass>${s_memberClass}</id:memberClass>
+      <id:memberCode>${s_memberCode}</id:memberCode>
+      <id:subsystemCode>${s_subsystemCode}</id:subsystemCode>
+      <id:serviceCode>mockSwaRef</id:serviceCode>
+      <id:serviceVersion>v1</id:serviceVersion>
+    </xrd:service>
+    <xrd:id>${id}</xrd:id>
+    <xrd:userId>${userId}</xrd:userId>
+    <xrd:issue>${issue}</xrd:issue>
+    <xrd:protocolVersion>${protocolVersion}</xrd:protocolVersion>
+  </SOAP-ENV:Header>
+  <SOAP-ENV:Body>
+    <ns1:mockSwaRefResponse>
+       <mockAttachment>cid:small1.txt</mockAttachment>
+       <mockAttachment>cid:small2.txt</mockAttachment>
+       <mockAttachment>cid:small3.txt</mockAttachment>
+    </ns1:mockSwaRefResponse>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+]]></con:responseContent><con:attachment><con:name>small.txt</con:name><con:contentType>text/plain</con:contentType><con:contentId>small1.txt</con:contentId><con:part>small1.txt</con:part><con:url>data/small.txt</con:url><con:id>c9a2603f-62c6-442f-8712-3bb26aebce8c</con:id></con:attachment><con:attachment><con:name>small.txt</con:name><con:contentType>text/plain</con:contentType><con:contentId>small2.txt</con:contentId><con:part>small2.txt</con:part><con:url>data/small.txt</con:url><con:id>7eca470a-edad-4ace-9f87-0f7add249f30</con:id></con:attachment><con:attachment><con:name>small.txt</con:name><con:contentType>text/plain</con:contentType><con:contentId>small3.txt</con:contentId><con:part>small3.txt</con:part><con:url>data/small.txt</con:url><con:id>d0785c7e-3775-4818-9106-08bd61e1141c</con:id></con:attachment><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://producer.x-road.eu/mockPort/mockSwaRefResponse"/></con:response><con:dispatchConfig/></con:mockOperation></con:mockService><con:properties/><con:wssContainer/><con:oAuth2ProfileContainer/><con:oAuth1ProfileContainer/><con:sensitiveInformation/></con:soapui-project>

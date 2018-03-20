@@ -323,12 +323,12 @@ def run(request_template_dir, query_parameters):
     else:
         common.parse_and_check_soap_response(raw_response)
 
-    common.wait_for_operational_data()
-
     # Send a health data request to the client.
 
     client_pre_health_data_timestamp = common.get_remote_timestamp(
         client_security_server_address, ssh_user)
+
+    common.wait_for_operational_data()
 
     message_id = common.generate_message_id()
     print("Generated message ID {} for health data request".format(message_id))

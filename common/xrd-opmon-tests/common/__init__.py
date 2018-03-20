@@ -52,7 +52,9 @@ from email.mime.text import MIMEText
 # the internal components should not add more than a second. If
 # an external operational monitoring daemon is used, we expect
 # the clocks to be in sync with the security server.
-WAIT_FOR_OPERATIONAL_DATA_SECONDS = 2
+# Additionally under heavy load store query may be delayed for up to
+# 5 seconds (by default op-monitor-buffer.sending-interval-seconds = 5).
+WAIT_FOR_OPERATIONAL_DATA_SECONDS = 6
 
 # Size of the output limit for requests and responses that could be
 # too big to be readable in the console output.

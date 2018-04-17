@@ -11,7 +11,7 @@ from tests.xroad_ss_client_certification_213.client_certification import test_ad
 from view_models import popups
 
 
-class XroadDisablingCert(unittest.TestCase):
+class XroadSecurityServerAuthCert(unittest.TestCase):
     """
     SS_33 Disable a certificate
     RIA URL: https://jira.ria.ee/browse/XT-346, https://jira.ria.ee/browse/XTKB-109
@@ -20,7 +20,7 @@ class XroadDisablingCert(unittest.TestCase):
     X-Road version: 6.16.0
     """
 
-    def test_xroad_disable_auth_cert(self):
+    def test_a_xroad_disable_auth_cert(self):
         main = MainController(self)
 
         main.url = main.config.get('cs.host')
@@ -42,28 +42,25 @@ class XroadDisablingCert(unittest.TestCase):
         try:
             main.reload_webdriver(ss2_host, ss2_username, ss2_password)
             test_disable_cert()
-        except Exception as error:
-            main.log(error)
-            assert False
+        except Exception:
+            main.save_exception_data()
+            raise
         finally:
             test_activate_cert()
             main.log('Wait until server up again')
             wait_until_server_up(ss2_host)
             main.tearDown()
 
-
-class XroadUnregisterAuthCert(unittest.TestCase):
-    """
-    SS_38 Unregister an Authentication Certificate
-    MEMBER_23 3a-5a Create an Authentication Certificate Registration Request
-    RIA URL: https://jira.ria.ee/browse/XTKB-116
-    RIA URL: https://jira.ria.ee/browse/XTKB-129
-    Depends on finishing other test(s):
-    Requires helper scenarios:
-    X-Road version: 6.16.0
-    """
-
-    def test_xroad_unregister_auth_cert(self):
+    def test_b_xroad_unregister_auth_cert(self):
+        """
+        SS_38 Unregister an Authentication Certificate
+        MEMBER_23 3a-5a Create an Authentication Certificate Registration Request
+        RIA URL: https://jira.ria.ee/browse/XTKB-116
+        RIA URL: https://jira.ria.ee/browse/XTKB-129
+        Depends on finishing other test(s):
+        Requires helper scenarios:
+        X-Road version: 6.16.0
+        """
         main = MainController(self)
 
         main.url = main.config.get('cs.host')
@@ -90,12 +87,16 @@ class XroadUnregisterAuthCert(unittest.TestCase):
         client_name = main.config.get('ss2.client2_name')
         client = xroad.split_xroad_subsystem(client_id)
         client['name'] = client_name
+        client['server_name'] = main.config.get('ss2.server_name')
 
         ca_ssh_host = main.config.get('ca.ssh_host')
         ca_ssh_user = main.config.get('ca.ssh_user')
         ca_ssh_pass = main.config.get('ca.ssh_pass')
 
         cert_path = 'temp.pem'
+        ca_name = main.config.get('ca.name')
+        organization = main.config.get('ss2.organization')
+        dns = ss2_ssh_host
 
         test_unregister_cert = unregister_cert(main, ss2_host, ss2_username, ss2_password,
                                                ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass)
@@ -110,40 +111,45 @@ class XroadUnregisterAuthCert(unittest.TestCase):
         test_register_cert = register_cert(main, ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass,
                                            cs_host=cs_ssh_host, client=client, cert_path=cert_path,
                                            check_inputs=False, ca_ssh_host=ca_ssh_host,
-                                           ca_ssh_user=ca_ssh_user, ca_ssh_pass=ca_ssh_pass)
+                                           ca_ssh_user=ca_ssh_user, ca_ssh_pass=ca_ssh_pass, ca_name=ca_name, dns=dns, organization=organization)
         try:
             main.reload_webdriver(ss2_host, ss2_username, ss2_password)
             test_unregister_cert()
+        except:
+            main.save_exception_data()
+            raise
         finally:
-            delete_unregistered_cert()
-            test_register_cert()
-            test_activate_cert()
-            test_add_cert_to_ss(main, cs_host, cs_username, cs_password, client, cert_path,
-                                cs_ssh_host, cs_ssh_user, cs_ssh_pass,
-                                cancel_cert_registration=True, file_format_errors=True)
-            test_add_cert_to_ss(main, cs_host, cs_username, cs_password, client, cert_path,
-                                cs_ssh_host, cs_ssh_user, cs_ssh_pass,
-                                add_existing_error=True)
-            client_registration_in_ss.approve_requests(main)
-            main.log('Wait until servers synced')
-            time.sleep(120)
-            main.tearDown()
+            try:
+                delete_unregistered_cert()
+                test_register_cert()
+                test_activate_cert()
+                test_add_cert_to_ss(main, cs_host, cs_username, cs_password, client, cert_path,
+                                    cs_ssh_host, cs_ssh_user, cs_ssh_pass,
+                                    cancel_cert_registration=True, file_format_errors=True)
+                test_add_cert_to_ss(main, cs_host, cs_username, cs_password, client, cert_path,
+                                    cs_ssh_host, cs_ssh_user, cs_ssh_pass,
+                                    add_existing_error=True)
+                client_registration_in_ss.approve_requests(main)
+                main.log('Wait until servers synced')
+                time.sleep(120)
+            except:
+                main.save_exception_data()
+                raise
+            finally:
+                main.tearDown()
 
-
-class XroadUnregisterAuthCertFailsWhenRequestCantBeSent(unittest.TestCase):
-    """
-    SS_38 6.a Unregister a certificate when request cant be sent
-    MEMBER_23 1-8 Create an Authentication Certificate Registration Request
-    MEMBER_24 Create an Authentication Certificate Deletion Request
-    RIA URL: https://jira.ria.ee/browse/XTKB-119
-    RIA URL: https://jira.ria.ee/browse/XTKB-118
-    RIA URL: https://jira.ria.ee/browse/XTKB-116
-    Depends on finishing other test(s):
-    Requires helper scenarios:
-    X-Road version: 6.16.0
-    """
-
-    def test_xroad_unregister_auth_cert(self):
+    def test_c_xroad_unregister_auth_cert_request_sending_fail(self):
+        """
+        SS_38 6.a Unregister a certificate when request cant be sent
+        MEMBER_23 1-8 Create an Authentication Certificate Registration Request
+        MEMBER_24 Create an Authentication Certificate Deletion Request
+        RIA URL: https://jira.ria.ee/browse/XTKB-119
+        RIA URL: https://jira.ria.ee/browse/XTKB-118
+        RIA URL: https://jira.ria.ee/browse/XTKB-116
+        Depends on finishing other test(s):
+        Requires helper scenarios:
+        X-Road version: 6.16.0
+        """
         main = MainController(self)
 
         main.url = main.config.get('cs.host')
@@ -166,6 +172,7 @@ class XroadUnregisterAuthCertFailsWhenRequestCantBeSent(unittest.TestCase):
         client_name = main.config.get('ss2.client2_name')
         client = xroad.split_xroad_subsystem(client_id)
         client['name'] = client_name
+        client['server_name'] = main.config.get('ss2.server_name')
 
         ca_ssh_host = main.config.get('ca.ssh_host')
         ca_ssh_user = main.config.get('ca.ssh_user')
@@ -176,6 +183,9 @@ class XroadUnregisterAuthCertFailsWhenRequestCantBeSent(unittest.TestCase):
         cs_ssh_pass = main.config.get('cs.ssh_pass')
 
         cert_path = 'temp.pem'
+        ca_name = main.config.get('ca.name')
+        organization = main.config.get('ss2.organization')
+        dns = ss2_ssh_host
 
         test_unregister_cert = client_certification.unregister_cert(main, ss2_host, ss2_username, ss2_password,
                                                                     ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass,
@@ -191,15 +201,16 @@ class XroadUnregisterAuthCertFailsWhenRequestCantBeSent(unittest.TestCase):
         try:
             main.log('Replace {0} with {1} in hosts file'.format(ss_host, hosts_replacement))
             sshclient.exec_command(
-                'sed -i -e "s/{0}/{1}/g" {2}'.format(ss_host, hosts_replacement, '/etc/hosts'),
+                'sed -i -e "$ a\\0.0.0.0 {}" {}'.format(ss_host, '/etc/hosts'),
                 sudo=True)
             main.reload_webdriver(ss2_host, ss2_username, ss2_password)
             test_unregister_cert()
+        except Exception:
+            main.save_exception_data()
+            raise
         finally:
             main.log('Replace {0} with {1} in hosts file'.format(hosts_replacement, ss_host))
-            sshclient.exec_command(
-                'sed -i -e "s/{0}/{1}/g" {2}'.format(hosts_replacement, ss_host, '/etc/hosts'),
-                sudo=True)
+            sshclient.exec_command('sed -i "$ d" {}'.format('/etc/hosts'), sudo=True)
             delete_unregistered_cert()
             main.reload_webdriver(cs_host, cs_username, cs_password)
             delete_cert_from_ss()
@@ -207,7 +218,7 @@ class XroadUnregisterAuthCertFailsWhenRequestCantBeSent(unittest.TestCase):
             client_certification.register_cert(main, ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass,
                                                cs_host=cs_ssh_host, client=client, cert_path=cert_path,
                                                check_inputs=False, ca_ssh_host=ca_ssh_host,
-                                               ca_ssh_user=ca_ssh_user, ca_ssh_pass=ca_ssh_pass)()
+                                               ca_ssh_user=ca_ssh_user, ca_ssh_pass=ca_ssh_pass, ca_name=ca_name, organization=organization, dns=dns)()
             test_activate_cert()
             client_certification.test_add_cert_to_ss(main, cs_host, cs_username, cs_password, client, cert_path,
                                                      cs_ssh_host, cs_ssh_user, cs_ssh_pass)
@@ -216,11 +227,8 @@ class XroadUnregisterAuthCertFailsWhenRequestCantBeSent(unittest.TestCase):
             time.sleep(120)
             main.tearDown()
 
-
-class XroadUnregisterAuthCertFailsWhenNoValidAuthCert(unittest.TestCase):
-    """SS_38 4.a Unregister a certificate when no valid auth cert present"""
-
-    def test_xroad_unregister_auth_cert(self):
+    def test_d_xroad_unregister_auth_cert_no_valid_auth_cert(self):
+        """SS_38 4.a Unregister a certificate when no valid auth cert present"""
         main = MainController(self)
 
         main.url = main.config.get('cs.host')
@@ -249,9 +257,9 @@ class XroadUnregisterAuthCertFailsWhenNoValidAuthCert(unittest.TestCase):
             main.reload_webdriver(ss2_host, ss2_username, ss2_password)
             log_out_token()
             test_unregister_cert()
-        except Exception as error:
-            main.log(error)
-            assert False
+        except Exception:
+            main.save_exception_data()
+            raise
         finally:
             popups.close_all_open_dialogs(main)
             log_in_token()

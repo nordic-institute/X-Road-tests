@@ -99,6 +99,9 @@ class XroadRemoveFromGlobalGroup(unittest.TestCase):
             main.log('Restore service ACL')
             main.reload_webdriver(ss_host, ss_user, ss_pass)
             restore_acl(current_subjects)
+        except:
+            main.save_exception_data()
+            raise
         finally:
             main.tearDown()
 
@@ -186,5 +189,8 @@ class XroadRemoveFromGlobalGroup(unittest.TestCase):
             main.log('Restore service ACL')
             main.reload_webdriver(ss_host, ss_user, ss_pass)
             restore_acl(current_subjects)
+        except:
+            main.save_exception_data()
+            raise
         finally:
             main.tearDown()

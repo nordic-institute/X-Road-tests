@@ -12,6 +12,7 @@ from view_models import popups as popups, members_table, clients_table_vm as cli
     keys_and_certificates_table, messages, groups_table
 from view_models.log_constants import *
 from view_models.messages import MISSING_PARAMETER, INPUT_EXCEEDS_255_CHARS
+from helpers import ssh_client
 
 USERNAME = 'username'
 PASSWORD = 'password'
@@ -22,6 +23,7 @@ test_name = 'LOGGING IN SECURITY SERVER'
 def test_test(ssh_host, ssh_username, ssh_password,
               cs_host, cs_username, cs_password,
               sec_host, sec_username, sec_password,
+              ca_ssh_host, ca_ssh_username, ca_ssh_password,
               users, client_id, client_name, wsdl_url):
     '''
     MainController test function. Tests maintenance actions and logging in central server.
@@ -34,6 +36,9 @@ def test_test(ssh_host, ssh_username, ssh_password,
     :param sec_host: str - security server hostname
     :param sec_username: str - security server UI username
     :param sec_password: str - security server UI password
+    :param ca_ssh_host: str - CA SSH server hostname
+    :param ca_ssh_username: str - CA SSH username
+    :param ca_ssh_password: str - CA SSH password
     :param users: dict - dictionary of users to be added
     :param client_id: str - client XRoad ID
     :param client_name: str - client name
@@ -98,11 +103,11 @@ def test_test(ssh_host, ssh_username, ssh_password,
         except:
             traceback.print_exc()
             error = True
-
         finally:
             # Remove added data
             remove_data(self=self, ssh_host=ssh_host, ssh_username=ssh_username, ssh_password=ssh_password,
                         cs_host=cs_host, cs_username=cs_username, cs_password=cs_password, sec_host=sec_host,
+                        ca_ssh_host=ca_ssh_host, ca_ssh_username=ca_ssh_username, ca_ssh_password=ca_ssh_password,
                         sec_username=sec_username, sec_password=sec_password, users=users, client=client)
             if error:
                 assert False, 'MEMBER_10 / MEMBER_47 / SERVICE_25 / SERVICE_08 failed'
@@ -111,7 +116,7 @@ def test_test(ssh_host, ssh_username, ssh_password,
 
 
 def remove_data(self, ssh_host, ssh_username, ssh_password, cs_host, cs_username, cs_password, sec_host, sec_username,
-                sec_password, users, client):
+                sec_password, ca_ssh_host, ca_ssh_username, ca_ssh_password, users, client):
     '''
     Removes data (both full or partial) created during testing.
     :param self: MainController object
@@ -124,6 +129,9 @@ def remove_data(self, ssh_host, ssh_username, ssh_password, cs_host, cs_username
     :param sec_host: str - security server hostname
     :param sec_username: str - security server UI username
     :param sec_password: str - security server UI password
+    :param ca_ssh_host: str - CA SSH server hostname
+    :param ca_ssh_username: str - CA SSH username
+    :param ca_ssh_password: str - CA SSH password
     :param users: dict - dictionary of users to be added
     :param client: dict - client data
     :return: None
@@ -142,7 +150,22 @@ def remove_data(self, ssh_host, ssh_username, ssh_password, cs_host, cs_username
     try:
         self.log('Removing certificate')
         self.reset_webdriver(sec_host, sec_username, sec_password)
-        remove_certificate(self, client)
+        certs_to_revoke = remove_certificate(self, client)
+
+        # Revoke the certificates
+        try:
+            # Connect to CA over SSH
+            try:
+                ca_ssh_client = ssh_client.SSHClient(host=ca_ssh_host, username=ca_ssh_username,
+                                                     password=ca_ssh_password)
+            except:
+                ca_ssh_client = None
+
+            if ca_ssh_client is not None:
+                self.log('Revoking certificate in CA')
+                client_certification.revoke_certs(ca_ssh_client, certs_to_revoke)
+        except:
+            self.log('Could not revoke certificates in CA')
     except:
         self.log('ERROR {0}'.format(traceback.format_exc()))
         self.log('Removing certicate failed')
@@ -192,7 +215,7 @@ def add_client_to_ss(self, sec_host, sec_username, sec_password,
 
     # MEMBER_47 1. Select to add a security server client
     self.log('MEMBER_47 1. Select to add a security server client')
-    self.wait_until_visible(type=By.ID, element=clients_table.ADD_CLIENT_BTN_ID).click()
+    self.click(self.wait_until_visible(type=By.ID, element=clients_table.ADD_CLIENT_BTN_ID))
     self.log('Wait until ADD CLIENT dialog is open')
     self.wait_until_visible(type=By.XPATH, element=popups.ADD_CLIENT_POPUP_XPATH)
 
@@ -212,7 +235,7 @@ def add_client_to_ss(self, sec_host, sec_username, sec_password,
 
     # Save data
     self.log('Click "OK" to add client')
-    self.wait_until_visible(type=By.XPATH, element=popups.ADD_CLIENT_POPUP_OK_BTN_XPATH).click()
+    self.click(self.wait_until_visible(type=By.XPATH, element=popups.ADD_CLIENT_POPUP_OK_BTN_XPATH))
     self.wait_jquery()
 
     # MEMBER_47 4-6. System verifies new client and saves it
@@ -257,13 +280,13 @@ def add_group_to_client(self, sec_host, sec_username, sec_password, ssh_host, ss
     self.wait_jquery()
     time.sleep(5)
     self.log('Open client local groups tab')
-    added_client_row(self, client).find_element_by_css_selector(clients_table.LOCAL_GROUPS_TAB_CSS).click()
+    self.click(added_client_row(self, client).find_element_by_css_selector(clients_table.LOCAL_GROUPS_TAB_CSS))
     self.log('Check if local groups table is empty and contains expected message')
     self.is_not_none(self.by_xpath(groups_table.LOCAL_GROUP_ROW_BY_TD_TEXT_XPATH.format('No (matching) records')))
     self.log('SERVICE_25 1. Click on group add button')
-    self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_GROUP_ADD_BTN_ID).click()
+    self.click(self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_GROUP_ADD_BTN_ID))
     self.log('Confirm group adding popup')
-    self.wait_until_visible(type=By.XPATH, element=popups.GROUP_ADD_POPUP_OK_BTN_XPATH).click()
+    self.click(self.wait_until_visible(type=By.XPATH, element=popups.GROUP_ADD_POPUP_OK_BTN_XPATH))
     self.wait_jquery()
     expected_error_msg = MISSING_PARAMETER.format('add_group_code')
     self.log('SERVICE_25 3a.1 System displays the error message "{0}"'.format(expected_error_msg))
@@ -282,7 +305,7 @@ def add_group_to_client(self, sec_host, sec_username, sec_password, ssh_host, ss
     self.log('SERVICE_25 2. Filling group adding popup with "{0}"'.format(code_256_len))
     self.input(element=group_add_code_input, text=code_256_len)
     self.log('Confirm group adding popup')
-    self.wait_until_visible(type=By.XPATH, element=popups.GROUP_ADD_POPUP_OK_BTN_XPATH).click()
+    self.click(self.wait_until_visible(type=By.XPATH, element=popups.GROUP_ADD_POPUP_OK_BTN_XPATH))
     self.wait_jquery()
     expected_error_msg = MISSING_PARAMETER.format('add_group_description')
     self.log('SERVICE_25 3a.1 System displays the error message "{0}"'.format(expected_error_msg))
@@ -299,7 +322,7 @@ def add_group_to_client(self, sec_host, sec_username, sec_password, ssh_host, ss
     group_add_description_input = self.by_id(popups.GROUP_ADD_POPUP_CODE_DESCRIPTION_ID)
     self.input(element=group_add_description_input, text='asd')
     self.log('Confirm group adding popup')
-    self.wait_until_visible(type=By.XPATH, element=popups.GROUP_ADD_POPUP_OK_BTN_XPATH).click()
+    self.click(self.wait_until_visible(type=By.XPATH, element=popups.GROUP_ADD_POPUP_OK_BTN_XPATH))
     self.wait_jquery()
     expected_error_msg = INPUT_EXCEEDS_255_CHARS.format('add_group_code')
     self.log('SERVICE_25 3a.1 System displays the error message "{0}"'.format(expected_error_msg))
@@ -316,7 +339,7 @@ def add_group_to_client(self, sec_host, sec_username, sec_password, ssh_host, ss
     self.input(element=group_add_code_input, text='asd')
     self.input(element=group_add_description_input, text=code_256_len)
     self.log('Confirm group adding popup')
-    self.wait_until_visible(type=By.XPATH, element=popups.GROUP_ADD_POPUP_OK_BTN_XPATH).click()
+    self.click(self.wait_until_visible(type=By.XPATH, element=popups.GROUP_ADD_POPUP_OK_BTN_XPATH))
     self.wait_jquery()
     expected_error_msg = INPUT_EXCEEDS_255_CHARS.format('add_group_description')
     self.log('SERVICE_25 3a.1 System displays the error message "{0}"'.format(expected_error_msg))
@@ -337,7 +360,7 @@ def add_group_to_client(self, sec_host, sec_username, sec_password, ssh_host, ss
     self.input(element=group_add_code_input, text=group_name)
     self.input(element=group_add_description_input, text=group_name)
     self.log('Confirm group adding popup')
-    self.wait_until_visible(type=By.XPATH, element=popups.GROUP_ADD_POPUP_OK_BTN_XPATH).click()
+    self.click(self.wait_until_visible(type=By.XPATH, element=popups.GROUP_ADD_POPUP_OK_BTN_XPATH))
     self.wait_jquery()
     self.log('SERVICE_25 5. System saves the information about the local group to the system configuration')
     try:
@@ -353,14 +376,14 @@ def add_group_to_client(self, sec_host, sec_username, sec_password, ssh_host, ss
 
     self.log('SERVICE_25 4a. Adding group with already existing group info')
     current_log_lines = log_checker.get_line_count()
-    self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_GROUP_ADD_BTN_ID).click()
+    self.click(self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_GROUP_ADD_BTN_ID))
     self.log('Filling group adding popup with already existing group info')
     group_add_code_input = self.by_id(popups.GROUP_ADD_POPUP_CODE_AREA_ID)
     self.input(element=group_add_code_input, text=group_name)
     group_add_description_input = self.by_id(popups.GROUP_ADD_POPUP_CODE_DESCRIPTION_ID)
     self.input(element=group_add_description_input, text=group_name)
     self.log('Confirm popup')
-    self.wait_until_visible(type=By.XPATH, element=popups.GROUP_ADD_POPUP_OK_BTN_XPATH).click()
+    self.click(self.wait_until_visible(type=By.XPATH, element=popups.GROUP_ADD_POPUP_OK_BTN_XPATH))
     self.wait_jquery()
     expected_error_msg = messages.GROUP_ALREADY_EXISTS_ERROR.format(group_name)
     error_message = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
@@ -379,7 +402,7 @@ def add_group_to_client(self, sec_host, sec_username, sec_password, ssh_host, ss
     group_add_description_input = self.by_id(popups.GROUP_ADD_POPUP_CODE_DESCRIPTION_ID)
     self.input(element=group_add_description_input, text=group_name)
     self.log('Confirm popup')
-    self.wait_until_visible(type=By.XPATH, element=popups.GROUP_ADD_POPUP_OK_BTN_XPATH).click()
+    self.click(self.wait_until_visible(type=By.XPATH, element=popups.GROUP_ADD_POPUP_OK_BTN_XPATH))
     self.wait_jquery()
     self.log('Check if local groups table contains new added group')
     self.is_not_none(self.by_xpath(groups_table.LOCAL_GROUP_ROW_BY_TD_TEXT_XPATH.format(group_name)))
@@ -457,7 +480,7 @@ def add_member_to_cs(self, member):
     :return: None
     '''
     self.log('MEMBER_10 1. Select to add an X-Road member')
-    self.wait_until_visible(type=By.ID, element=members_table.ADD_MEMBER_BTN_ID).click()
+    self.click(self.wait_until_visible(type=By.ID, element=members_table.ADD_MEMBER_BTN_ID))
     self.log('Wait for the popup to be visible')
     self.wait_until_visible(type=By.XPATH, element=members_table.ADD_MEMBER_POPUP_XPATH)
     self.log('MEMBER_10 2. Insert member information.')
@@ -471,7 +494,7 @@ def add_member_to_cs(self, member):
     self.log('Enter {0} to "member code" area'.format(member['code']))
     input_code = self.wait_until_visible(type=By.ID, element=members_table.ADD_MEMBER_POPUP_MEMBER_CODE_AREA_ID)
     self.input(input_code, member['code'])
-    self.wait_until_visible(type=By.XPATH, element=members_table.ADD_MEMBER_POPUP_OK_BTN_XPATH).click()
+    self.click(self.wait_until_visible(type=By.XPATH, element=members_table.ADD_MEMBER_POPUP_OK_BTN_XPATH))
     self.log('MEMBER_10 4, 5. System verifies the new member and saves it.')
 
 
@@ -496,11 +519,11 @@ def add_services_to_client(self, ssh_host, ssh_username, ssh_password, sec_host,
     # SERVICE_08 Add a WSDL to a Security Server Client (5a - invalid WSDL)
     self.log('SERVICE_08 Add a WSDL to a Security Server Client (5a - invalid WSDL)')
     self.wait_jquery()
-    added_client_row(self=self, client=client).find_element_by_css_selector(clients_table.SERVICES_TAB_CSS).click()
+    self.click(added_client_row(self=self, client=client).find_element_by_css_selector(clients_table.SERVICES_TAB_CSS))
 
     # SERVICE_08 1. Select to add WSDL
     self.log('SERVICE_08 1. Select to add WSDL')
-    self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_ADD_WSDL_BTN_ID).click()
+    self.click(self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_ADD_WSDL_BTN_ID))
     wsdl_area = self.wait_until_visible(type=By.ID, element=popups.ADD_WSDL_POPUP_URL_ID)
 
     # SERVICE_08 2. Insert WSDL URL
@@ -509,9 +532,10 @@ def add_services_to_client(self, ssh_host, ssh_username, ssh_password, sec_host,
     self.input(wsdl_area, self.config.get('wsdl.remote_path').format(''))  # URL that does not return a WSDL file
 
     # SERVICE_08 4, 5, 5a. Verify unique URL, download WSDL and try to read information; download and parse WSDL fails
-    self.log('SERVICE_08 4, 5, 5a. Verify unique URL, download WSDL and try to read information; download and parse WSDL ')
+    self.log(
+        'SERVICE_08 4, 5, 5a. Verify unique URL, download WSDL and try to read information; download and parse WSDL ')
 
-    self.wait_until_visible(type=By.XPATH, element=popups.ADD_WSDL_POPUP_OK_BTN_XPATH).click()
+    self.click(self.wait_until_visible(type=By.XPATH, element=popups.ADD_WSDL_POPUP_OK_BTN_XPATH))
     self.wait_jquery()
 
     # SERVICE_08 5a.2. Log check for trying to add invalid WSDL
@@ -524,7 +548,7 @@ def add_services_to_client(self, ssh_host, ssh_username, ssh_password, sec_host,
     self.log('SERVICE_08 5a.3. Select to reinsert correct WSDL URL')
     wsdl_area.clear()
     self.input(wsdl_area, wsdl_url)
-    self.wait_until_visible(type=By.XPATH, element=popups.ADD_WSDL_POPUP_OK_BTN_XPATH).click()
+    self.click(self.wait_until_visible(type=By.XPATH, element=popups.ADD_WSDL_POPUP_OK_BTN_XPATH))
 
     # SERVICE_08 4, 5, 6, 7 Verify unique WSDL, download, read information, validate, save services
     self.log('SERVICE_08 4, 5, 6, 7 Verify unique WSDL, download, read information, validate, save services')
@@ -543,9 +567,9 @@ def add_services_to_client(self, ssh_host, ssh_username, ssh_password, sec_host,
     # SERVICE_21 1. Select to edit the timeout of a service.
     self.log('SERVICE_21 1. Select to edit the timeout of a service.')
     services_list = clients_table.client_services_popup_get_services_rows(self=self, wsdl_url=wsdl_url)
-    services_list[0].click()
+    self.click(services_list[0])
     self.log('Open edit WSDL service popup')
-    self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_EDIT_WSDL_BTN_ID).click()
+    self.click(self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_EDIT_WSDL_BTN_ID))
     self.log('Editing service parameters')
     timeout_area = self.wait_until_visible(type=By.ID, element=popups.EDIT_SERVICE_POPUP_TIMEOUT_ID)
 
@@ -555,7 +579,7 @@ def add_services_to_client(self, ssh_host, ssh_username, ssh_password, sec_host,
 
     # SERVICE_21 4, 5. Verify timeout and save the information.
     self.log('SERVICE_21 4, 5. Verify timeout and save the information.')
-    self.wait_until_visible(type=By.XPATH, element=popups.EDIT_SERVICE_POPUP_OK_BTN_XPATH).click()
+    self.click(self.wait_until_visible(type=By.XPATH, element=popups.EDIT_SERVICE_POPUP_OK_BTN_XPATH))
     # SERVICE_21 6. Log check for editing service parameters
     bool_value, log_data, date_time = check_logs_for(self, ssh_host, ssh_username, ssh_password, EDIT_SERVICE_PARAMS,
                                                      sec_username)
@@ -567,7 +591,7 @@ def add_services_to_client(self, ssh_host, ssh_username, ssh_password, sec_host,
     self.log('SERVICE_19 1. Select to change URL and TLS verification option of a service')
 
     self.wait_jquery()
-    self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_EDIT_WSDL_BTN_ID).click()
+    self.click(self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_EDIT_WSDL_BTN_ID))
     self.log('Editing service parameters')
     service_url_input = self.wait_until_visible(type=By.ID, element=popups.EDIT_SERVICE_POPUP_URL_ID)
 
@@ -577,17 +601,17 @@ def add_services_to_client(self, ssh_host, ssh_username, ssh_password, sec_host,
 
     # SERVICE_19 4-6 verify URL, verify protocol, save the address
     self.log('SERVICE_19 4-6 verify URL, verify protocol, save the address')
-    self.wait_until_visible(type=By.XPATH, element=popups.EDIT_SERVICE_POPUP_OK_BTN_XPATH).click()
+    self.click(self.wait_until_visible(type=By.XPATH, element=popups.EDIT_SERVICE_POPUP_OK_BTN_XPATH))
     self.wait_jquery()
 
     # SERVICE_20 1. Select to change TLS option of a service
     self.log('SERVICE_20 1. Select to change TLS option of a service')
-    self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_EDIT_WSDL_BTN_ID).click()
-    self.wait_until_visible(type=By.ID, element=popups.EDIT_SERVICE_POPUP_TLS_ID).click()
+    self.click(self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_EDIT_WSDL_BTN_ID))
+    self.click(self.wait_until_visible(type=By.ID, element=popups.EDIT_SERVICE_POPUP_TLS_ID))
 
     # SERVICE_20 2. System saves TLS info
     self.log('SERVICE_20 2. System saves TLS info')
-    self.wait_until_visible(type=By.XPATH, element=popups.EDIT_SERVICE_POPUP_OK_BTN_XPATH).click()
+    self.click(self.wait_until_visible(type=By.XPATH, element=popups.EDIT_SERVICE_POPUP_OK_BTN_XPATH))
     expected_log_msg = EDIT_SERVICE_PARAMS
     self.log('SERVICE_20 3. System logs "{0}" when TLS option changed'.format(expected_log_msg))
     bool_value, log_data, date_time = check_logs_for(self, ssh_host, ssh_username, ssh_password, expected_log_msg,
@@ -619,12 +643,14 @@ def enable_service(self, client, wsdl_url):
     '''
     # Find the client and open services
     self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.CLIENTS_BTN_CSS)
-    added_client_row(self, client).find_element_by_css_selector(clients_table.SERVICES_TAB_CSS).click()
-    services_list = clients_table. \
-        client_services_popup_get_services_rows(self=self, wsdl_url=wsdl_url)
+    self.click(added_client_row(self, client).find_element_by_css_selector(clients_table.SERVICES_TAB_CSS))
+    self.wait_jquery()
+
+    clients_table.client_services_popup_select_wsdl(self, wsdl_url=wsdl_url)
     # SERVICE_13 1. Select to enable the first service
     self.log('SERVICE_13 1. Select to enable the first service')
-    services_list[0].click()
+    self.wait_jquery()
+
     self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_ENABLE_WSDL_BTN_ID).click()
     # SERVICE_13 2. System activates the WSDL
     self.log('SERVICE_13 2. System activates the WSDL')
@@ -713,17 +739,17 @@ def remove_member(self, cent_host, cent_username, cent_password, member):
     row = members_table.get_row_by_columns(table, [member['name'], member['class'], member['code']])
     if row is None:
         self.log('Did not find member row')
-        raise
+        raise AssertionError
 
     # MEMBER_26 1. Select to delete a member
     self.log('MEMBER_26 1. Select to delete a member')
 
     # Click on the row, open details and delete member
-    row.click()
+    self.click(row)
     self.log('Click on "DETAILS" button')
-    self.wait_until_visible(type=By.ID, element=members_table.MEMBERS_DETATILS_BTN_ID).click()
+    self.click(self.wait_until_visible(type=By.ID, element=members_table.MEMBERS_DETATILS_BTN_ID))
     self.log('Click on "DELETE" button')
-    self.wait_until_visible(type=By.XPATH, element=members_table.MEMBER_EDIT_DELETE_BTN_XPATH).click()
+    self.click(self.wait_until_visible(type=By.XPATH, element=members_table.MEMBER_EDIT_DELETE_BTN_XPATH))
 
     # MEMBER_26 2. System prompts for confirmation
     self.log('MEMBER_26 2. System prompts for confirmation')
@@ -745,14 +771,14 @@ def remove_client(self, client):
 
     # Open client details and unregister client
     self.log('Opening client details')
-    added_client_row(self, client).find_element_by_css_selector(clients_table.DETAILS_TAB_CSS).click()
+    self.click(added_client_row(self, client).find_element_by_css_selector(clients_table.DETAILS_TAB_CSS))
     self.wait_jquery()
     time.sleep(1)
     self.log('MEMBER_52 1-6. Unregister Client')
     is_delete_needed = False
     try:
         # Try to unregister
-        self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_UNREGISTER_BUTTON_ID).click()
+        self.click(self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_UNREGISTER_BUTTON_ID))
         popups.confirm_dialog_click(self)
     except:
         # Unregister failed
@@ -764,7 +790,7 @@ def remove_client(self, client):
         # Try to delete
         self.log('MEMBER_53 1-7 Deleting client')
         if is_delete_needed:
-            self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_DELETE_BUTTON_ID).click()
+            self.click(self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_DELETE_BUTTON_ID))
         self.wait_jquery()
         popups.confirm_dialog_click(self)
     except:
@@ -781,15 +807,21 @@ def remove_certificate(self, client):
     :return: None
     '''
     self.log('Open "Keys and Certificates tab"')
-    self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.KEYSANDCERTIFICATES_BTN_CSS).click()
+    self.click(self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.KEYSANDCERTIFICATES_BTN_CSS))
+    self.wait_jquery()
+
+    certs_to_revoke = ssh_server_actions.get_valid_certificates(self, client)
+
     self.log('Click on generated key row')
-    self.wait_until_visible(type=By.XPATH,
-                            element=keys_and_certificates_table.get_generated_key_row_xpath(client['code'],
-                                                                                            client[
-                                                                                                'class'])).click()
-    self.wait_until_visible(type=By.ID, element=keys_and_certificates_table.DELETE_BTN_ID).click()
+    self.click(self.wait_until_visible(type=By.XPATH,
+                                       element=keys_and_certificates_table.get_generated_key_row_xpath(client['code'],
+                                                                                                       client[
+                                                                                                           'class'])))
+    self.click(self.wait_until_visible(type=By.ID, element=keys_and_certificates_table.DELETE_BTN_ID))
     popups.confirm_dialog_click(self)
     self.wait_jquery()
+
+    return certs_to_revoke
 
 
 def check_logs_for(self, ssh_host, ssh_username, ssh_password, event, user):

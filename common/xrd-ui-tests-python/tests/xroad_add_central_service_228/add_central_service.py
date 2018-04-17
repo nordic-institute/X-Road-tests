@@ -13,7 +13,7 @@ faults_unsuccessful = ['Server.ServerProxy.ServiceDisabled', 'Client.InternalErr
 # These faults are checked when we need the result to be successful. Otherwise the checking function returns False.
 faults_successful = ['Server.ServerProxy.AccessDenied', 'Server.ServerProxy.UnknownService',
                      'Server.ServerProxy.ServiceDisabled', 'Server.ClientProxy.*', 'Client.*',
-                     'Server.ServerProxy.ServiceFailed.InvalidContentType']
+                     'Server.ServerProxy.ServiceFailed.InvalidContentType', 'Server.ServerProxy.ServiceFailed.NetworkError']
 
 
 def set_central_service_provider_fields(self, provider):
@@ -318,7 +318,7 @@ def test_edit_central_service(case, provider, requester, central_service_name, s
         self.is_not_none(service_row, msg='SERVICE_42 1. Central service not found: {0}'.format(central_service_name))
         #
         # Click the row to select it
-        service_row.click()
+        self.click(service_row)
 
         # Find and click the "Edit" button to edit the service
         edit_button = self.by_id(central_services.SERVICE_EDIT_BUTTON_ID)
@@ -480,7 +480,7 @@ def test_delete_central_service(case, cs_ssh_host, cs_ssh_user, cs_ssh_pass, cen
         self.is_not_none(service_row, msg='SERVICE_43 1. Central service not found: {0}'.format(central_service_name))
 
         # Click the row to select it
-        service_row.click()
+        self.click(service_row)
 
         current_log_lines = log_checker.get_line_count()
 

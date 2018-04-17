@@ -9,7 +9,7 @@ from view_models.certification_services import INTERMEDIATE_CA_TAB_XPATH, INTERM
     SUBMIT_CA_CERT_BTN_ID, IMPORT_CA_CERT_BTN_ID, INTERMEDIATE_CA_OCSP_TAB_XPATH, INTERMEDIATE_CA_OCSP_ADD_BTN_ID, \
     IMPORT_OCSP_CERT_BTN_ID, OCSP_RESPONDER_URL_AREA_ID, SUBMIT_OCSP_CERT_AND_URL_BTN_ID, INTERMEDIATE_CA_BY_NAME_XPATH, \
     INTERMEDIATE_CA_DELETE_BTN_ID, INTERMEDIATE_CA_TR_BY_NAME_XPATH, DATE_REGEX, INTERMEDIATE_CA_EDIT_BTN_ID, \
-    INTERMEDIATE_CA_SUBJECT_DN_ID, CA_DISTINGUISHED_NAME, INTERMEDIATE_CA_ISSUER_DN_ID, INTERMEDIATE_CA_VALID_FROM_ID, \
+    INTERMEDIATE_CA_SUBJECT_DN_ID, INTERMEDIATE_CA_ISSUER_DN_ID, INTERMEDIATE_CA_VALID_FROM_ID, \
     INTERMEDIATE_CA_VALID_TO_ID
 from view_models.log_constants import ADD_INTERMEDIATE_CA, ADD_INTERMEDIATE_CA_OCSP, DELETE_INTERMEDIATE_CA, \
     ADD_INTERMEDIATE_CA_FAILED
@@ -145,7 +145,7 @@ def test_view_intermediate_ca(self, ca_name):
     return view_intermediate_ca
 
 
-def test_view_intermediate_ca_details(self, ca_name):
+def test_view_intermediate_ca_details(self, ca_name, distinguished_name=None):
     def view_intermediate_ca_details():
         self.log('Open certification services view')
         self.wait_until_visible(type=By.CSS_SELECTOR, element=CERTIFICATION_SERVICES_CSS).click()
@@ -161,11 +161,11 @@ def test_view_intermediate_ca_details(self, ca_name):
         self.log('SERVICE_07 1. Open intermediate CA details')
         self.wait_until_visible(type=By.ID, element=INTERMEDIATE_CA_EDIT_BTN_ID).click()
         self.wait_jquery()
-        self.log('SERVICE_07 2. System displays the subject distinguished name {}'.format(CA_DISTINGUISHED_NAME))
-        self.is_equal(CA_DISTINGUISHED_NAME,
+        self.log('SERVICE_07 2. System displays the subject distinguished name {}'.format(distinguished_name))
+        self.is_equal(distinguished_name,
                       self.wait_until_visible(type=By.ID, element=INTERMEDIATE_CA_SUBJECT_DN_ID).text)
-        self.log('SERVICE_07 2. System displays the issuer distinguished name {}'.format(CA_DISTINGUISHED_NAME))
-        self.is_equal(CA_DISTINGUISHED_NAME, self.by_id(INTERMEDIATE_CA_ISSUER_DN_ID).text)
+        self.log('SERVICE_07 2. System displays the issuer distinguished name {}'.format(distinguished_name))
+        self.is_equal(distinguished_name, self.by_id(INTERMEDIATE_CA_ISSUER_DN_ID).text)
         self.log('SERVICE_07 2. System displays the valid from time in format YYYY-MM-DD HH:MM:SS')
         self.is_true(re.match(DATE_REGEX, self.by_id(INTERMEDIATE_CA_VALID_FROM_ID).text))
         self.log('SERVICE_07 2. System displays the valid to time in format YYYY-MM-DD HH:MM:SS')

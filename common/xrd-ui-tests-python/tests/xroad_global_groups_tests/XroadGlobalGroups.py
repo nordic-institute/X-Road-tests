@@ -14,6 +14,9 @@ from view_models.sidebar import GLOBAL_GROUPS_CSS
 class XroadGlobalGroups(unittest.TestCase):
     """
     SERVICE_33 3,4 - Add Members to a Global Group
+    RIA URL: https://jira.ria.ee/browse/XT-289
+    RIA URL: https://jira.ria.ee/browse/XT-290
+    RIA URL: https://jira.ria.ee/browse/XT-296
     RIA URL: https://jira.ria.ee/browse/XTKB-70
     Depends on finishing other test(s): client_registration, configure_service
     Requires helper scenarios: add_acl, restore_acl
@@ -103,5 +106,8 @@ class XroadGlobalGroups(unittest.TestCase):
             main.wait_until_visible(type=By.CSS_SELECTOR, element=GLOBAL_GROUPS_CSS).click()
             add_member_to_group(main, client, group_1, ss2_host, ss2_user, ss2_pass, wsdl_url, service_name,
                                 identifier)
+        except:
+            main.save_exception_data()
+            raise
         finally:
             main.tearDown()

@@ -54,6 +54,7 @@ def add_member_to_group(self, client, group, ss2_host, ss2_user, ss2_pass,
     '''Open group details'''
     self.wait_until_visible(type=By.XPATH,
                             element=groups_table.GLOBAL_GROUP_ROW_BY_TD_TEXT_XPATH.format(group)).click()
+    self.wait_jquery()
     self.wait_until_visible(type=By.ID, element=groups_table.GROUP_DETAILS_BTN_ID).click()
     self.wait_jquery()
     self.log('SERVICE_33 1. Add members to global group button is pressed')
@@ -368,7 +369,7 @@ def open_member_details(self, member):
         pass
     '''Click the row. Raises an exception if member was not found. This can be caught outside of this function if 
     necessary.'''
-    row.click()
+    self.click(row)
     self.wait_jquery()
     self.log('Open Member Details')
     self.wait_until_visible(type=By.ID, element=members_table.MEMBERS_DETATILS_BTN_ID).click()
@@ -623,7 +624,9 @@ def test_member_add_to_global_group(self, member_name, client_code, global_group
         self.log('Find member "{}" row'.format(member_name))
         member_row = self.wait_until_visible(type=By.XPATH, element=MEMBER_TABLE_CLICK_MEMBER.format(member_name))
         self.log('Open member details')
-        self.double_click(member_row)
+        self.click(member_row)
+        self.wait_until_visible(type=By.ID, element=members_table.MEMBERS_DETATILS_BTN_ID).click()
+        self.wait_jquery()
         self.log('Open global groups tab')
         self.wait_until_visible(type=By.XPATH, element=GLOBAL_GROUP_TAB).click()
         self.log('SERVICE_37 1. Clicking "Add global group" button')
@@ -638,9 +641,14 @@ def test_member_add_to_global_group(self, member_name, client_code, global_group
         self.is_equal(expected_notice_msg, notice_msg)
         if current_log_lines is not None:
             expected_log_msg = ADD_MEMBER_TO_GLOBAL_GROUP
+
             self.log('SERVICE_37 4. System logs the event "{}"'.format(expected_log_msg))
-            logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
-            self.is_true(logs_found)
+            try:
+                logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
+                self.is_true(logs_found)
+            except:
+                logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
+                self.is_true(logs_found)
 
     return member_add_to_global_group
 
@@ -653,7 +661,9 @@ def test_member_remove_from_global_group(self, member_name, client_code, group_n
         self.log('Find member "{}" row'.format(member_name))
         member = self.wait_until_visible(type=By.XPATH, element=MEMBER_TABLE_CLICK_MEMBER.format(member_name))
         self.log('Open member details')
-        self.double_click(member)
+        member.click()
+        self.wait_until_visible(type=By.ID, element=members_table.MEMBERS_DETATILS_BTN_ID).click()
+        self.wait_jquery()
         self.log('Open global groups tab')
         self.wait_until_visible(type=By.XPATH, element=GLOBAL_GROUP_TAB).click()
         self.wait_jquery()

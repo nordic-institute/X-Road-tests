@@ -1,6 +1,6 @@
 # coding=utf-8
 from selenium.webdriver.common.by import By
-from view_models import sidebar, popups, ss_system_parameters, messages, log_constants
+from view_models import sidebar, popups, ss_system_parameters, messages, log_constants, keys_and_certificates_table
 from helpers import auditchecker, ssh_client, xroad
 import time
 import os
@@ -315,6 +315,8 @@ def test_ss_upload_backup(case, ssh_host=None, ssh_username=None, ssh_password=N
         # os.rename(local_path, invalid_extension_dst)
         copyfile(local_path, invalid_extension_dst)
 
+        open(self.download_dir + '/' "test.tar", "w+")
+
         '''Path of invalid .tar file'''
         invalid_format = self.get_download_path(ss_system_parameters.EMPTY_TAR_FILE)
 
@@ -443,16 +445,29 @@ def check_inputs(self, invalid_char_dst, invalid_extension_dst, invalid_format):
 
 def successful_reupload(self, local_path, backup_conf_file_name):
 
-    file_upload_btn = self.wait_until_visible(self.by_id(popups.FILE_UPLOAD_BROWSE_BUTTON_ID))
+    '''Click cancel button on popup'''
+    self.by_xpath(keys_and_certificates_table.IMPORT_CERTIFICATE_POPUP_XPATH_CANCEL).click()
+
+    '''Click on "Upload backup file" button'''
+    self.wait_until_visible(self.by_id(ss_system_parameters.BACKUP_UPLOAD_BUTTON_ID)).click()
     self.wait_jquery()
 
+
+
+    file_upload_btn = self.wait_until_visible(self.by_id(popups.FILE_UPLOAD_BROWSE_BUTTON_ID))
+    self.wait_jquery()
     '''Create upload file'''
+
     xroad.fill_upload_input(self, file_upload_btn, local_path)
+
     self.log('UC SS_18 6a. A backup file with the same file name is saved in the system configuration.')
 
     '''Click "OK" button'''
     self.by_id(popups.FILE_UPLOAD_SUBMIT_BUTTON_ID).click()
     self.wait_jquery()
+
+
+
     '''Wait for message to be visible'''
     existing_message = self.wait_until_visible(ss_system_parameters.SS_UPDATE_CONFRIM, By.XPATH).text
 

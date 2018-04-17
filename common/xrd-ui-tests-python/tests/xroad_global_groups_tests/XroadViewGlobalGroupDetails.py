@@ -25,5 +25,8 @@ class XroadViewGlobalGroupDetails(unittest.TestCase):
         try:
             main.reload_webdriver(cs_host, cs_user, cs_pass)
             test_view_global_group_details()
+        except:
+            main.save_exception_data()
+            raise
         finally:
             main.tearDown()

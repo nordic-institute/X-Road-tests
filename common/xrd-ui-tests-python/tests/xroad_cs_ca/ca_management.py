@@ -229,14 +229,13 @@ def configure_ca(self, certificate_classpath=None,
             'TRUST_08 5b, 7 / TRUST_09 2b, 4 - add correct profile class')
 
         # Fill the profile class field
-        input_field = self.by_css(certification_services.CERTIFICATE_PROFILE_INFO_AREA_CSS)
+        input_field = filter(lambda x: x.size['height'] > 0, self.by_css(element=certification_services.CERTIFICATE_PROFILE_INFO_AREA_CSS, multiple=True))[0]
         self.input(input_field, certificate_classpath)
-
         # Save settings
         self.by_id(certification_services.SUBMIT_CA_SETTINGS_BTN_ID).click()
 
         # Save expected success log message for checking the logs later
-        self.logdata.append('Add timestamping service')
+        self.logdata.append(log_constants.ADD_CA)
 
 
 def test_add_ca(case, ca_certificate, invalid_ca_certificate=None, certificate_classpath=None, cs_ssh_host=None,

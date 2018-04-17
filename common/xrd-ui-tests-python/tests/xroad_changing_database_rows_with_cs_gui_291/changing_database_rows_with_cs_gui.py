@@ -191,7 +191,7 @@ def user_2_actions(self, client):
     self.log('MEMBER_11 1. Select to edit the name of the member')
     member_row = added_member_row(self, client)
     if member_row:
-        member_row.click()
+        self.click(member_row)
     else:
         self.log('Could not find row')
     self.log('Opening client details')
@@ -234,7 +234,7 @@ def user_3_actions(self, client):
     self.log('MEMBER_26 1. Select to delete an X-Road member')
     member_row = added_member_row(self, client)
     if member_row:
-        member_row.click()
+        self.click(member_row)
     else:
         self.log('Could not find row')
         pass

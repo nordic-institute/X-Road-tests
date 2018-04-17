@@ -29,10 +29,11 @@ class XroadLogoutToken(unittest.TestCase):
         main.url = main.config.get('ss2.host')
         main.username = main.config.get('ss2.user')
         main.password = main.config.get('ss2.pass')
+        token_pin = str(main.config.get('cp.token_pin'))
 
         '''Configure the service'''
         test_logout = st_management.test_edit_conf(case=main, ssh_host=ssh_host, ssh_username=ssh_username,
-                                                   ssh_password=ssh_password)
+                                                   ssh_password=ssh_password, token_pin=token_pin)
 
         try:
             '''Open webdriver'''

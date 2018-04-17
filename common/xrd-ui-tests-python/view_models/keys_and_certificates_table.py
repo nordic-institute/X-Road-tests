@@ -45,12 +45,12 @@ DECLINED_STATE = 'DECLINED'
 CERT_INACTIVE_ROW_BY_DATA_ID = '//tr[@data-id="{0}"]//following::tr[contains(@class, "cert-inactive")]'
 CERT_INACTIVE_ROW_BY_DATA_ID_IMPORT_BTN = '{0}//button'.format(CERT_INACTIVE_ROW_BY_DATA_ID)
 KEYS_AND_CERTIFICATES_TABLE_ID = 'keys'
-KEYS_AND_CERTIFICATES_TABLE_ROWS_CSS = '.keys tbody tr'
+KEYS_AND_CERTIFICATES_TABLE_ROWS_CSS = '#keys tbody tr'
 GLOBAL_ERROR_CERTIFICATE_ROW_XPATH = '//td[text()="global error"]'
 SAVED_CERTIFICATE_ROW_XPATH = '//td[text()="saved"]'
 REG_IN_PROGRESS_CERTIFICATE_ROW_XPATH = '//td[text()="registration in progress"]'
 DEL_IN_PROGRESS_CERTIFICATE_ROW_XPATH = '//td[text()="deletion in progress"]'
-DEL_IN_PROGRESS_CERTIFICATE_ROW_XPATH = '//td[text()="Token: utimaco-UTIMACO CS000000-CryptoServer PKCS11 Token-0"]'
+DEL_IN_PROGRESS_CERTIFICATE_ROW_XPATH_HW = '//td[text()="Token: utimaco-UTIMACO CS000000-CryptoServer PKCS11 Token-0"]'
 
 REGISTER_DIALOG_ADDRESS_INPUT_ID = 'address'
 
@@ -94,9 +94,9 @@ HARDTOKEN_KEY = '{0}//following::tr[contains(@class, "token-active") and not(con
 
 
 
-
-
 IMPORT_CERTIFICATE_POPUP_XPATH = '//div[@aria-describedby="file_upload_dialog"]'
+IMPORT_CERTIFICATE_POPUP_XPATH_CANCEL = IMPORT_CERTIFICATE_POPUP_XPATH + '//div[@class="ui-dialog-buttonset"]//button[span="Cancel"]'
+
 
 GENERATE_CSR_SIGNING_REQUEST_POPUP_XPATH = '//div[@data-name="generate_csr_dialog"]'
 GENERATE_CSR_SIGNING_REQUEST_CSR_FORMAT_DROPDOWN_ID = 'csr_format'

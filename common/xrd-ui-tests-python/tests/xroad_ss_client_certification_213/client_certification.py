@@ -4,6 +4,9 @@ import os
 import time
 import traceback
 
+import sys
+
+import re
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
 
@@ -11,10 +14,14 @@ import tests.xroad_parse_users_inputs.xroad_parse_user_inputs as user_input_chec
 from helpers import ssh_client, ssh_server_actions, xroad, login, auditchecker
 from helpers.ssh_server_actions import get_key_conf_keys_count, get_key_conf_token_count, get_key_conf_csr_count
 from tests.xroad_configure_service_222.wsdl_validator_errors import wait_until_server_up
+from tests.xroad_cs_ca.ca_management import configure_ca, edit_ca_settings
 from tests.xroad_global_groups_tests import global_groups_tests
 from view_models import sidebar as sidebar_constants, keys_and_certificates_table as keyscertificates_constants, \
     popups as popups, certification_services, clients_table_vm, messages, keys_and_certificates_table, \
     ss_system_parameters, log_constants, cs_security_servers
+from view_models.certification_services import CA_SETTINGS_TAB_XPATH
+from view_models.keys_and_certificates_table import SUBJECT_DISTINGUISHED_NAME_POPUP_O_XPATH, \
+    SUBJECT_DISTINGUISHED_NAME_POPUP_OK_BTN_XPATH, SUBJECT_DISTINGUISHED_NAME_POPUP_CN_XPATH
 from view_models.log_constants import ADD_AUTH_CERTIFICATE_FOR_SECURITY_SERVER_FAILED, GENERATE_KEY_FAILED, \
     GENERATE_CSR_FAILED, GENERATE_KEY, GENERATE_CSR, DELETE_KEY, DELETE_CSR, IMPORT_CERTIFICATE_FROM_FILE, \
     IMPORT_CERTIFICATE_FROM_FILE_FAILED, ENABLE_CERTIFICATE
@@ -22,7 +29,9 @@ from view_models.members_table import SS_DETAILS_AUTH_CERT_TAB_XPATH, MEMBER_FIR
     SS_DETAILS_ADD_AUTH_CERT_BTN_ID, ADD_AUTH_CERT_UPLOAD_BTN_ID, ADD_AUTH_CERT_SUBMIT_BTN_ID, \
     ADD_AUTH_CERT_CANCEL_BTN_XPATH
 from view_models.messages import ERROR_MESSAGE_CSS, AUTH_CERT_IMPORT_FILE_FORMAT_ERROR, \
-    CERT_ALREADY_SUBMITTED_ERROR_BEGINNING
+    CERT_ALREADY_SUBMITTED_ERROR_BEGINNING, MISSING_PARAMETER, INPUT_EXCEEDS_255_CHARS
+from view_models.popups import close_all_open_dialogs
+from view_models.sidebar import CERTIFICATION_SERVICES_CSS
 
 
 def test_generate_csr_and_import_cert(client_code, client_class, usage_auth=False, key_label=None, check_inputs=False,
@@ -181,7 +190,7 @@ def delete_csr(self, sshclient, log_checker=None, client_code=None, client_class
         csr_row = self.wait_until_visible(type=By.CSS_SELECTOR,
                                           element=keys_and_certificates_table.CERT_REQUESTS_TABLE_ROW_CSS)
     '''Click on the csr row'''
-    csr_row.click()
+    self.click(csr_row)
     self.log('SS_39 Delete Certificate Signing Request Notice from System Configuration')
     self.log('SS_39 1. Click on the delete button to delete CSR')
     self.by_id(keys_and_certificates_table.DELETE_BTN_ID).click()
@@ -216,8 +225,8 @@ def delete_csr(self, sshclient, log_checker=None, client_code=None, client_class
         self.is_true(csr_count_after < csr_count)
 
 
-def register_cert(self, ssh_host, ssh_user, ssh_pass, cs_host, client, ca_ssh_host, ca_ssh_user, ca_ssh_pass, cert_path,
-                  check_inputs=False):
+def register_cert(self, ssh_host, ssh_user, ssh_pass, cs_host, client, ca_ssh_host, ca_ssh_user, ca_ssh_pass, ca_name,
+                  cert_path, dns=None, organization=None, check_inputs=False):
     """
     SS_34 Register an Authentication Certificate
     :param cert_path:
@@ -243,14 +252,18 @@ def register_cert(self, ssh_host, ssh_user, ssh_pass, cs_host, client, ca_ssh_ho
         self.log('Click on the key, which certificate was just deleted')
         self.wait_until_visible(type=By.CSS_SELECTOR, element=keys_and_certificates_table.UNSAVED_KEY_CSS).click()
         self.log('Generate new auth certificate for the key')
-        generate_auth_csr(self, ca_name=ca_ssh_host, change_usage=True)
+        generate_auth_csr(self, dns=dns, organization=organization, ca_name=ca_name, change_usage=True)
         '''Current time'''
         now_date = datetime.datetime.now()
         '''Downloaded csr file name'''
         file_name = 'auth_csr_' + now_date.strftime('%Y%m%d') + '_securityserver_{0}_{1}_{2}_{3}.der'. \
-            format(client['instance'], client['class'], client['code'], client['name'])
+            format(client['instance'], client['class'], client['code'], '*')
         '''Downloaded csr file path'''
-        file_path = glob.glob(self.get_download_path('_'.join(['*']) + file_name))[0]
+        try:
+            file_path = glob.glob(self.get_download_path('_'.join(['*']) + file_name))[0]
+        except:
+            time.sleep(5)
+            file_path = glob.glob(self.get_download_path('_'.join(['*']) + file_name))[0]
         '''SSH client instance for ca'''
         sshclient = ssh_server_actions.get_client(ca_ssh_host, ca_ssh_user, ca_ssh_pass)
         '''Remote csr path'''
@@ -314,11 +327,10 @@ def register_cert(self, ssh_host, ssh_user, ssh_pass, cs_host, client, ca_ssh_ho
             self.log('SS_34 4. Trying to register with max length address(255 chars)')
             self.log('SS_34 6a. Creating or sending the error message failed')
             self.input(element=address_input, text=input_255_char)
-            hosts_replacement = 'cs.asd'
             self.log('Replacing central server in hosts file, so the request wont make it to the central server')
             self.ssh_client = ssh_client.SSHClient(ssh_host, ssh_user, ssh_pass)
             self.ssh_client.exec_command(
-                'sed -i -e "s/{0}/{1}/g" {2}'.format(cs_host, hosts_replacement, '/etc/hosts'),
+                'sed -i -e "$ a\\0.0.0.0 {}" {}'.format(cs_host, '/etc/hosts'),
                 sudo=True)
             try:
                 self.log('Clicking submit button')
@@ -326,7 +338,7 @@ def register_cert(self, ssh_host, ssh_user, ssh_pass, cs_host, client, ca_ssh_ho
                 self.wait_jquery()
                 self.log('SS_34 6a.1 System displays the error message')
                 error_msg = messages.get_error_message(self)
-                self.is_equal(messages.FAILED_TO_REGISTER_HOST_NOT_KNOWN_ERROR.format(cs_host), error_msg)
+                self.is_equal(messages.FAILED_TO_REGISTER_CONNECTION_REFUSED_ERROR.format(cs_host), error_msg)
                 messages.close_error_messages(self)
                 self.log('SS_34 6a.2 System logs the event {0}'.format(expected_log_event))
                 logs_found = log_checker.check_log(expected_log_event, from_line=current_log_lines + 1)
@@ -338,15 +350,19 @@ def register_cert(self, ssh_host, ssh_user, ssh_pass, cs_host, client, ca_ssh_ho
                 assert False
             finally:
                 self.log('Restore hosts file')
-                self.ssh_client.exec_command(
-                    'sed -i -e "s/{0}/{1}/g" {2}'.format(hosts_replacement, cs_host, '/etc/hosts'),
-                    sudo=True)
-        time.sleep(10)
+                self.ssh_client.exec_command('sed -i "$ d" {}'.format('/etc/hosts'), sudo=True)
+                time.sleep(15)
         self.log('SS_34 3. The DNS name of the server is inserted')
         self.input(element=address_input, text=ssh_host)
         self.log('Click ok')
         self.by_xpath(popups.REGISTRATION_DIALOG_OK_BUTTON_XPATH).click()
         self.wait_jquery()
+        if messages.get_error_message(self):
+            messages.close_error_messages(self)
+            time.sleep(15)
+            self.log('Click ok')
+            self.by_xpath(popups.REGISTRATION_DIALOG_OK_BUTTON_XPATH).click()
+            self.wait_jquery()
         self.log('SS_34 8. System displays the message {0}'.format(messages.REQUEST_SENT_NOTICE))
         notice_msg = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.NOTICE_MESSAGE_CSS).text
         self.is_equal(messages.REQUEST_SENT_NOTICE, notice_msg)
@@ -401,8 +417,12 @@ def test_add_cert_to_ss(self, cs_host, cs_username, cs_password, client, cert_pa
     file_abs_path = os.path.abspath(local_cert_path)
     if file_format_errors:
         self.log('MEMBER_23 4a. The uploaded file is not in PEM or DER format')
-        not_existing_file_with_wrong_extension = 'C:\\file.asd'
-        xroad.fill_upload_input(self, upload, not_existing_file_with_wrong_extension)
+        if sys.platform == 'windows':
+            wrong_local_cert_path = self.get_download_path('test')
+            wrong_file_abs_path = os.path.abspath(wrong_local_cert_path)
+        else:
+            wrong_file_abs_path = '/dev/null'
+        xroad.fill_upload_input(self, upload, wrong_file_abs_path)
         expected_msg = AUTH_CERT_IMPORT_FILE_FORMAT_ERROR
         self.log('MEMBER 23 4a.1 System displays the error message {0}'.format(expected_msg))
         error_msg = self.wait_until_visible(type=By.CSS_SELECTOR, element=ERROR_MESSAGE_CSS).text
@@ -412,6 +432,7 @@ def test_add_cert_to_ss(self, cs_host, cs_username, cs_password, client, cert_pa
     if add_existing_error:
         self.log('MEMBER 23 5a. The auth certificate is already registered or '
                  'submitted for registration with authenticaion registration request')
+        self.wait_jquery()
         self.wait_until_visible(type=By.ID, element=ADD_AUTH_CERT_SUBMIT_BTN_ID).click()
         self.wait_jquery()
         expected_msg = CERT_ALREADY_SUBMITTED_ERROR_BEGINNING
@@ -470,7 +491,7 @@ def activate_cert(self, ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass, registered=Fal
         '''Get the cert key label'''
         key_label = registration_in_progress_row.find_element_by_xpath('../preceding::tr[2]//td').text.split(' ')[1]
         '''Click on the certificate'''
-        registration_in_progress_row.click()
+        self.click(registration_in_progress_row)
         self.log('SS_32 1. "Activate a certificate" button is clicked')
         self.wait_until_visible(type=By.ID, element=keys_and_certificates_table.ACTIVATE_BTN_ID).click()
         self.log('Waiting until keyconf is updated')
@@ -571,7 +592,7 @@ def failing_tests(file_client_name, file_client_class, file_client_code, file_cl
                   ss2_ssh_user, ss2_ssh_pass):
     def fail_test_case(self):
         self.log('Adding testing client')
-        client = {'name': 'failure', 'class': 'COM', 'code': 'failure', 'subsystem_code': 'failure'}
+        client = {'name': 'failure', 'class': 'GOV', 'code': 'failure', 'subsystem_code': 'failure'}
         error = False
         try:
             '''Add a temporary client for testing the failure scenarios'''
@@ -625,7 +646,7 @@ def failing_tests(file_client_name, file_client_class, file_client_code, file_cl
 
         except:
             '''Exception occured, print traceback'''
-            traceback.print_exc()
+            self.save_exception_data()
             error = True
 
         finally:
@@ -848,7 +869,7 @@ def failing_tests(file_client_name, file_client_class, file_client_code, file_cl
             # Find our CA and remove it
             for row in rows:
                 if self.config.get('ca.name') in row.text:
-                    row.click()
+                    self.click(row)
                     self.wait_until_visible(type=By.ID, element=certification_services.DELETE_BTN_ID).click()
                     popups.confirm_dialog_click(self)
 
@@ -1257,8 +1278,7 @@ def failing_tests(file_client_name, file_client_class, file_client_code, file_cl
 
         now_date = datetime.datetime.now()
         file_name = 'auth_csr_' + now_date.strftime('%Y%m%d') + '_securityserver_{0}_{1}_{2}_{3}.der'. \
-            format(file_client_instance, file_client_class, file_client_code, file_client_name)
-        print(file_name)
+            format(file_client_instance, file_client_class, file_client_code, '*')
         # Set local path for certificate
         local_cert_path = self.get_download_path(cert_path)
 
@@ -1277,7 +1297,7 @@ def failing_tests(file_client_name, file_client_class, file_client_code, file_cl
         self.wait_jquery()
 
         # Generate a authentication certificate
-        generate_auth_csr(self, ca_name=ca_name)
+        generate_auth_csr(self, ca_name=ca_name, organization='test', dns='test',)
 
         file_path = \
             glob.glob(self.get_download_path('_'.join(['*']) + file_name))[0]
@@ -1299,7 +1319,10 @@ def failing_tests(file_client_name, file_client_class, file_client_code, file_cl
 
         error_msg = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
         self.log('SS_30 9b.1. System displays the error message {0}'.format(messages.SIGN_CERT_INSTEAD_AUTH_CERT))
-        self.is_equal(messages.SIGN_CERT_INSTEAD_AUTH_CERT, error_msg)
+        if self.config.get_bool('config.harmonized_environment', False):
+            self.is_true(error_msg.startswith(messages.UNKNOWN_ORGANIZATION_ERROR))
+        else:
+            self.is_equal(messages.SIGN_CERT_INSTEAD_AUTH_CERT, error_msg)
 
         self.log('SS_30 9b. Certificate not accepted, test succeeded')
 
@@ -1333,7 +1356,8 @@ def put_file_in_ss(client, local_path, remote_path):
     sftp.close()
 
 
-def get_cert(client, service, file_path, local_path, remote_cert_path, remote_csr_path, convert_der=False, close_client=True):
+def get_cert(client, service, file_path, local_path, remote_cert_path, remote_csr_path, convert_der=False,
+             close_client=True):
     '''
     Gets the certificate (sign or auth) from the CA.
 
@@ -1652,7 +1676,7 @@ def generate_csr(self, client_code, client_class, server_name, client_ss_name=No
         self.is_equal(number_of_cert_requests_after_confirming, keys_after_another_csr_generation)
 
 
-def delete_added_key(self, client_code, client_class, cancel_deletion=False, log_checker=None):
+def delete_added_key(self, client, cancel_deletion=False, log_checker=None):
     '''
     Delete the CSR from the list.
     :param self: MainController object
@@ -1688,8 +1712,8 @@ def delete_added_key(self, client_code, client_class, cancel_deletion=False, log
     self.log('Delete added CSR')
     self.wait_jquery()
     self.wait_until_visible(type=By.XPATH,
-                            element=keyscertificates_constants.get_generated_key_row_xpath(client_code,
-                                                                                           client_class)).click()
+                            element=keyscertificates_constants.get_generated_key_row_xpath(client['code'],
+                                                                                           client['class'])).click()
     '''Deleting generated key'''
     self.wait_until_visible(type=By.ID, element=keyscertificates_constants.DELETE_BTN_ID).click()
 
@@ -1808,7 +1832,7 @@ def added_client_row(self, client):
     return table_rows[client_row_index]
 
 
-def generate_auth_csr(self, ca_name, change_usage=True):
+def generate_auth_csr(self, ca_name, dns=None, organization=None, change_usage=True):
     """
     Generates the CSR (certificate request) for a client.
     :param change_usage: bool - when True changes usage to auth
@@ -1847,6 +1871,12 @@ def generate_auth_csr(self, ca_name, change_usage=True):
                             element=keyscertificates_constants.GENERATE_CSR_SIGNING_REQUEST_POPUP_OK_BTN_XPATH).click()
 
     self.wait_jquery()
+    if organization:
+        organization_input = self.wait_until_visible(type=By.XPATH, element=SUBJECT_DISTINGUISHED_NAME_POPUP_O_XPATH)
+        self.input(organization_input, organization)
+    if dns:
+        dns_input = self.wait_until_visible(type=By.XPATH, element=SUBJECT_DISTINGUISHED_NAME_POPUP_CN_XPATH)
+        self.input(dns_input, dns)
     self.log('Click on "OK" button')
     self.wait_until_visible(type=By.XPATH,
                             element=keyscertificates_constants.SUBJECT_DISTINGUISHED_NAME_POPUP_OK_BTN_XPATH).click()
@@ -1999,10 +2029,13 @@ def test_generate_csr_timed_out(self, ss_host, ss_username, ss_pass, ss2_ssh_hos
         self.log('Click "OK"')
         self.by_xpath(keys_and_certificates_table.GENERATE_CSR_SIGNING_REQUEST_POPUP_OK_BTN_XPATH).click()
 
+        if self.config.get_bool('config.harmonized_environment', False):
+            organization_input = self.wait_until_visible(type=By.XPATH,
+                                                         element=SUBJECT_DISTINGUISHED_NAME_POPUP_O_XPATH)
+            self.input(organization_input, 'test')
         self.log('Stop xroad signer service')
         self.ssh_client.exec_command(command='service xroad-signer stop', sudo=True)
         self.ssh_client.close()
-
         self.log('Wait until service has stopped')
         wait_until_server_up(ss_host)
 
@@ -2092,7 +2125,9 @@ def unregister_cert(self, ss2_host, ss2_username, ss2_password, ss2_ssh_host, ss
             self.is_equal(expected_warning_msg, warning_msg)
             self.log('SS_38 6a.1 System displays the error message: {0}'.format(expected_error_msg))
             error_msg = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.ERROR_MESSAGE_CSS).text
-            self.is_true(error_msg.startswith(expected_error_msg))
+            asd = 'Failed to unregister certificate: Client \'.+\' is not registered at security server .+'
+            self.is_true(re.match(asd, error_msg))
+            # self.is_true(error_msg.startswith(expected_error_msg))
             expected_log_msg = log_constants.UNREGISTER_AUTH_CERT_FAILED
             self.log('SS_38 6a.2 System logs the event {0}'.format(expected_log_msg))
             logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
@@ -2139,7 +2174,9 @@ def log_in_token(self):
         self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar_constants.KEYSANDCERTIFICATES_BTN_CSS).click()
         self.wait_until_visible(type=By.CLASS_NAME, element='activate_token').click()
         PIN_input = self.wait_until_visible(type=By.ID, element='activate_token_pin')
-        self.input(PIN_input, '1234')
+        token_pin = str(self.config.get('cp.token_pin'))
+
+        self.input(PIN_input, token_pin)
         self.by_xpath('//div[@aria-describedby="activate_token_dialog"]//span[contains(text(), "OK")]').click()
 
     return log_in
@@ -2293,7 +2330,7 @@ def delete_cert_from_ss(self, client, cs_ssh_host, cs_ssh_user, cs_ssh_pass):
         self.is_equal(owner_code, client['code'])
         server_code = self.wait_until_visible(type=By.ID,
                                               element=cs_security_servers.DELETION_REQUEST_SERVER_CODE_ID).text
-        self.is_equal(server_code, client['name'])
+        self.is_equal(server_code, client['server_name'])
         self.log('MEMBER_24 3.a Deletion request creation is canceled')
         self.wait_until_visible(type=By.XPATH, element=cs_security_servers.DELETION_REQUEST_CANCEL_BTN_XPATH).click()
         self.log('MEMBER_24 1. Auth certificate deletion button is clicked')
@@ -2310,3 +2347,89 @@ def delete_cert_from_ss(self, client, cs_ssh_host, cs_ssh_user, cs_ssh_pass):
         self.is_true(logs_found)
 
     return del_cert_from_ss
+
+
+def generate_csr_input_parsing(self, log_checker=None):
+    def generate_csr_input():
+        current_log_lines = None
+        self.log('Open keys and certificates tab')
+        self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar_constants.KEYSANDCERTIFICATES_BTN_CSS).click()
+        self.wait_jquery()
+        self.log('Click on softtoken row')
+        self.wait_until_visible(type=By.XPATH, element=keyscertificates_constants.SOFTTOKEN_TABLE_ROW_XPATH).click()
+        self.log('Click on "Generate key" button')
+        self.wait_until_visible(type=By.ID, element=keyscertificates_constants.GENERATEKEY_BTN_ID).click()
+        key_label = 'test_csr_input_parsing'
+        self.log('SS_28 3. Insert {0} to "LABEL" area'.format(key_label))
+        key_label_input = self.wait_until_visible(type=By.ID, element=popups.GENERATE_KEY_POPUP_KEY_LABEL_AREA_ID)
+        self.input(key_label_input, key_label)
+        self.log('Click on "OK" button')
+        self.wait_until_visible(type=By.XPATH, element=popups.GENERATE_KEY_POPUP_OK_BTN_XPATH).click()
+        self.wait_jquery()
+
+        self.log('Click on generated key row')
+        self.wait_until_visible(type=By.XPATH,
+                                element=keyscertificates_constants.KEY_TABLE_ROW_BY_LABEL_XPATH.format(
+                                    key_label)).click()
+
+        # UC SS_29 1. Select to generate a CSR for the key
+        self.log('SS_29 1. Select to generate a CSR for the key')
+
+        # Generate the CSR from the key.
+        self.log('Click on "GENERATE CSR" button')
+        self.wait_until_visible(type=By.ID, element=keyscertificates_constants.GENERATECSR_BTN_ID).click()
+
+        # UC SS_29 4b CSR generation is cancelled
+        self.log('UC SS_29 4b CSR generation is cancelled')
+        self.log('Select "certification service"')
+        select = Select(self.wait_until_visible(type=By.ID,
+                                                element=keyscertificates_constants.GENERATE_CSR_SIGNING_REQUEST_APPROVED_CA_DROPDOWN_ID))
+        self.wait_jquery()
+        select.select_by_index(1)
+
+        self.log('Click on "OK" button')
+        self.wait_until_visible(type=By.XPATH,
+                                element=keyscertificates_constants.GENERATE_CSR_SIGNING_REQUEST_POPUP_OK_BTN_XPATH).click()
+        self.wait_jquery()
+        editable_field = self.wait_until_visible(type=By.XPATH, element=SUBJECT_DISTINGUISHED_NAME_POPUP_O_XPATH)
+        code_256_chars = 'A' * 256
+        code_255_chars = ' {} '.format('A' * 255)
+        inputs = [
+            ['', MISSING_PARAMETER.format('O'), GENERATE_CSR_FAILED, 'Missing parameter'],
+            [code_256_chars, INPUT_EXCEEDS_255_CHARS.format('O'), GENERATE_CSR_FAILED, 'Too long value(256 chars)'],
+            [code_255_chars, None, GENERATE_CSR, 'Max length field with whitespaces']
+        ]
+        for input in inputs:
+            if log_checker:
+                current_log_lines = log_checker.get_line_count()
+            text = input[0]
+            error = input[1]
+            log_event = input[2]
+            log_msg = input[3]
+            self.log('SS_29 5a. Testing user input parsing in CSR, testing "{}"'.format(log_msg))
+            self.input(editable_field, text)
+            self.by_xpath(SUBJECT_DISTINGUISHED_NAME_POPUP_OK_BTN_XPATH).click()
+            self.wait_jquery()
+            error_msg = messages.get_error_message(self)
+            self.is_equal(error_msg, error, msg='Error message different from expected "{}"'.format(error_msg))
+            if current_log_lines:
+                logs_found = log_checker.check_log(log_event, from_line=current_log_lines + 1)
+                self.is_true(logs_found, msg='Log event "{}" not found'.format(log_event))
+
+    return generate_csr_input
+
+
+def changeCAToFi(self, cs_host, cs_user, cs_pass, ca_name, sshclient):
+    self.log('Setting ca profile to FiVRK')
+    self.reload_webdriver(cs_host, cs_user, cs_pass)
+    self.wait_until_visible(type=By.CSS_SELECTOR, element=CERTIFICATION_SERVICES_CSS).click()
+    self.wait_jquery()
+    edit_ca_settings(self, ca_name)
+    self.by_xpath(CA_SETTINGS_TAB_XPATH).click()
+    self.wait_jquery()
+    configure_ca(self, auth_only_certs=None,
+                 certificate_classpath='ee.ria.xroad.common.certificateprofile.impl.FiVRKCertificateProfileInfoProvider')
+    sshclient.exec_command('service xroad-confclient restart', sudo=True)
+    self.log('Waiting until new profile is loaded in security server')
+    time.sleep(120)
+    return self.driver

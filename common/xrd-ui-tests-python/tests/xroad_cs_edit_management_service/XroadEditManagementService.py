@@ -1,49 +1,40 @@
-import time
+import unittest
 
-from selenium.webdriver.common.by import By
-
-from view_models import members_table
-from view_models.cs_security_servers import SECURITY_SERVER_MANAGEMENT_PROVIDER_EDIT_BTN_ID, MEMBERS_TABLE_ID, \
-    SELECT_MEMBER_BTN_XPATH, SECURITY_SERVER_MANAGEMENT_PROVIDER_ID
-from view_models.log_constants import EDIT_MANAGEMENT_SERVICE_PROVIDER
-from view_models.sidebar import SYSTEM_SETTINGS_BTN_CSS
+from helpers import auditchecker, xroad
+from main.maincontroller import MainController
+from tests.xroad_cs_edit_management_service.edit_management_service import edit_management_service
 
 
-def edit_management_service(self, new_provider, log_checker=None):
-    def management_service_edit():
-        current_log_lines = None
-        if log_checker is not None:
-            current_log_lines = log_checker.get_line_count()
-        self.log('Open system settings tab')
-        self.wait_until_visible(type=By.CSS_SELECTOR, element=SYSTEM_SETTINGS_BTN_CSS).click()
-        self.wait_jquery()
-        self.log('Get current provider field data')
-        old_provider = self.wait_until_visible(type=By.ID,
-                                               element=SECURITY_SERVER_MANAGEMENT_PROVIDER_ID).get_attribute('value')
-        self.log('MEMBER_33 1. Edit management service provider button is clicked')
-        self.wait_until_visible(type=By.ID, element=SECURITY_SERVER_MANAGEMENT_PROVIDER_EDIT_BTN_ID).click()
-        self.log('MEMBER_33 2. Selecting member from the list of X-Road members subsystems')
-        table = self.wait_until_visible(type=By.ID, element=MEMBERS_TABLE_ID)
-        self.wait_jquery()
-        members_table.get_row_by_columns(table,
-                                         [new_provider['name'],
-                                          new_provider['code'],
-                                          new_provider['class'],
-                                          new_provider['subsystem'],
-                                          new_provider['instance'],
-                                          new_provider['type']]).click()
+class XroadEditManagementService(unittest.TestCase):
+    """
+    MEMBER_33 Change the Management Services' Provider
+    RIA URL: https://jira.ria.ee/browse/XT-385, https://jira.ria.ee/browse/XTKB-135
+    Depends on finishing other test(s): MEMBER_57
+    Requires helper scenarios:
+    X-Road version: 6.16.0
+    """
+    def test_edit_management_service(self):
+        main = MainController(self)
+        cs_host = main.config.get('cs.host')
+        cs_user = main.config.get('cs.user')
+        cs_pass = main.config.get('cs.pass')
 
-        self.log('MEMBER_33 3. Select button is pressed')
-        self.wait_until_visible(type=By.XPATH, element=SELECT_MEMBER_BTN_XPATH).click()
-        if current_log_lines is not None:
-            expected_log_msg = EDIT_MANAGEMENT_SERVICE_PROVIDER
-            self.log('MEMBER_33 4. System logs the event {0}'.format(expected_log_msg))
-            time.sleep(1.5)
-            logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
-            self.is_true(logs_found)
-        self.log('Checking if provider field changed after editing')
-        provider_after_edit = self.wait_until_visible(type=By.ID,
-                                                      element=SECURITY_SERVER_MANAGEMENT_PROVIDER_ID).get_attribute('value')
-        self.not_equal(old_provider, provider_after_edit)
+        cs_ssh_host = main.config.get('cs.ssh_host')
+        cs_ssh_user = main.config.get('cs.ssh_user')
+        cs_ssh_pass = main.config.get('cs.ssh_pass')
 
-    return management_service_edit
+        new_provider = xroad.split_xroad_subsystem(main.config.get('ss1.client_id'))
+        new_provider['name'] = main.config.get('ss1.client_name')
+        old_provider = xroad.split_xroad_subsystem(main.config.get('ss1.management_id'))
+        old_provider['name'] = main.config.get('ss1.management_name')
+
+        log_checker = auditchecker.AuditChecker(cs_ssh_host, cs_ssh_user, cs_ssh_pass)
+
+        try:
+            main.reload_webdriver(cs_host, cs_user, cs_pass)
+            edit_management_service(main, new_provider, log_checker=log_checker)()
+        finally:
+            main.log('Restore old management service')
+            main.reload_webdriver(cs_host, cs_user, cs_pass)
+            edit_management_service(main, old_provider, log_checker=log_checker)()
+            main.tearDown()

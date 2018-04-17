@@ -24,7 +24,7 @@ class XroadAddIntermediateCA(unittest.TestCase):
         cs_ssh_host = main.config.get('cs.ssh_host')
         cs_ssh_user = main.config.get('cs.ssh_user')
         cs_ssh_pass = main.config.get('cs.ssh_pass')
-        ca_name = main.config.get('ca.ssh_host')
+        ca_name = main.config.get('ca.name')
 
         ca_ssh_host = main.config.get('ca.ssh_host')
         ca_ssh_user = main.config.get('ca.ssh_user')
@@ -63,10 +63,11 @@ class XroadAddIntermediateCA(unittest.TestCase):
         cs_ssh_host = main.config.get('cs.ssh_host')
         cs_ssh_user = main.config.get('cs.ssh_user')
         cs_ssh_pass = main.config.get('cs.ssh_pass')
-        ca_name = main.config.get('ca.ssh_host')
+        ca_name = main.config.get('ca.name')
 
         log_checker = auditchecker.AuditChecker(cs_ssh_host, cs_ssh_user, cs_ssh_pass)
-        error_cert_path = 'C:\\file.asd'
+        error_cert_path = main.get_temp_path('INFO')
+
 
         add_intermediate_ca = cs_intermediate_ca.test_add_intermediate_ca(main,
                                                                           check_error=True,

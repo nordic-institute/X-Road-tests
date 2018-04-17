@@ -8,8 +8,10 @@ from tests.xroad_parse_users_inputs import xroad_parse_user_inputs
 
 class XroadEditCsMemberInputs(unittest.TestCase):
     """
+    MEMBER_11 Edit the Name of an X-Road Member
     UC MEMBER_54 (UC MEMBER 11/3) Parse User Input (Edit the Name of an X-Road Member)
     RIA URL: https://jira.ria.ee/browse/XT-363, https://jira.ria.ee/browse/XTKB-52
+    RIA URL: https://jira.ria.ee/browse/XT-363, https://jira.ria.ee/browse/XTKB-39
     Depends on finishing other test(s): None
     Requires helper scenarios: None
     X-Road version: 6.16.0

@@ -2,10 +2,15 @@ from selenium.webdriver.common.by import By
 
 from helpers import auditchecker, xroad, soaptestclient
 from view_models import sidebar as sidebar_constants, clients_table_vm, popups, members_table, messages, log_constants
-import time
+
+from view_models import groups_table
+from view_models.groups_table import GROUP_DETAILS_BTN_ID
+from view_models.log_constants import ADD_GROUP_FAILED, ADD_GROUP
+from view_models.messages import MISSING_PARAMETER, INPUT_EXCEEDS_255_CHARS, GROUP_ALREADY_EXISTS_ERROR, \
+    get_error_message
 
 
-def test_add_member_to_local_group():
+def test_add_member_to_local_group(client_name=None, subsystem=None):
     def test_case(self):
 
         members_name_and_subs = {}
@@ -18,15 +23,23 @@ def test_add_member_to_local_group():
 
         self.log('''Get member names and their subsystems from the central server''')
         self.wait_jquery()
-        members = self.wait_until_visible(type=By.CLASS_NAME, element=' sorting_1', multiple=True)
+
+        members = self.wait_until_visible(type=By.CSS_SELECTOR, element='#members tbody tr', multiple=True)
         for member in members:
             members_subsystems = []
 
             self.log('''Double click on member "{0}" row'''.format(member.text))
-            member_row = self.wait_until_visible(type=By.XPATH, element=members_table.
-                                                 get_member_data_from_table(1, member.text))
+            # member_row = self.wait_until_visible(type=By.XPATH, element=members_table.
+            #                                      get_member_data_from_table(1, member.text))
+            # self.double_click(member_row)
 
-            self.double_click(member_row)
+            member.click()
+
+            # Open the client details and subsystem tab
+            self.wait_until_visible(type=By.ID, element=members_table.MEMBERS_DETATILS_BTN_ID).click()
+            self.wait_jquery()
+
+
 
             self.log('Click on "Subsystem" tab')
             self.wait_jquery()
@@ -44,34 +57,35 @@ def test_add_member_to_local_group():
 
             '''Add member and member subsystem codes list to the dictionary'''
             if len(members_subsystems) > 0:
-                members_name_and_subs[member.text.encode('utf-8')] = members_subsystems
+                members_name_and_subs[member.find_element_by_tag_name('td').text] = members_subsystems
 
             self.log('''Click on "CLOSE" button''')
-            self.wait_until_visible(type=By.XPATH, element=members_table.MEMBER_DETAILS_NAME_POPUP_CLOSE_BTN_XPATH)\
+            self.wait_until_visible(type=By.XPATH, element=members_table.MEMBER_DETAILS_NAME_POPUP_CLOSE_BTN_XPATH) \
                 .click()
 
         self.log('''Dictionary with central server members and subsystem codes:
         {0}'''.format(members_name_and_subs))
-#######################################################################################################################
+        #######################################################################################################################
         self.log('Open security server')
         url = self.config.get('ss2.host')
         username = self.config.get('ss2.user')
         password = self.config.get('ss2.pass')
         self.reload_webdriver(url, username, password)
-        test_service_2_url =self.config.get('services.test_service_2_url')
+        test_service_2_url = self.config.get('services.test_service_2_url')
 
         ss_client_id = self.config.get('ss2.client_id')
 
         '''Add a local group'''
-        add_local_group(self, added_local_group_code, added_local_group_description, ss_client_id)
+        add_local_group(self, added_local_group_code, added_local_group_description, ss_client_id, client_name=client_name, subsystem=subsystem)
 
         self.log('Click on "CLOSE" button')
         self.wait_jquery()
         self.wait_until_visible(type=By.XPATH, element=popups.CLIENT_DETAILS_POPUP_CLOSE_BTN_XPATH).click()
 
         '''Add a local group to service'''
+
         add_local_group_to_service_url(self, ss_client_id, test_service_2_url, added_local_group_description)
-#######################################################################################################################
+        #######################################################################################################################
         '''Add members to local group'''
         self.log('Click on "Local groups" tab')
         self.wait_until_visible(type=By.XPATH, element=popups.CLIENT_DETAILS_POPUP_LOCAL_GROUPS_TAB_XPATH).click()
@@ -79,8 +93,10 @@ def test_add_member_to_local_group():
         self.log('Click on a added local group code - {0}'.format(added_local_group_code))
         added_local_group_row = self.wait_until_visible(type=By.XPATH, element=popups.
                                                         get_local_group_row_by_code(added_local_group_code))
-        self.double_click(added_local_group_row)
 
+        self.click(added_local_group_row)
+        self.wait_until_visible(type=By.ID,
+                                element=groups_table.GROUP_DETAILS_BTN_ID).click()
         self.log('Click on "ADD MEMBERS" button')
         self.wait_jquery()
         self.wait_until_visible(type=By.ID, element=popups.LOCAL_GROUP_DETAILS_BUTTON_ADD_MEMBERS_ID).click()
@@ -90,7 +106,7 @@ def test_add_member_to_local_group():
         self.wait_until_visible(type=By.XPATH, element=popups.LOCAL_GROUP_DETAILS_BUTTON_SEARCH_XPATH).click()
 
         self.wait_jquery()
-#######################################################################################################################
+        #######################################################################################################################
         ss_host = self.config.get('ss2.ssh_host')
         ss_host_user = self.config.get('ss2.ssh_user')
         ss_host_psw = self.config.get('ss2.ssh_pass')
@@ -120,7 +136,6 @@ def test_add_member_to_local_group():
 
         self.log('''Dictionary with founded members and subsystem codes: 
         {0}'''.format(founded_members_and_subsystems))
-
         '''SERVICE_26/2 ...It is possible to add only X-Road members' subsystems to the group...'''
         self.log('''Compare central server members and subsystems with these, what can add to the local group''')
         compared_members_subsystems = False
@@ -129,7 +144,7 @@ def test_add_member_to_local_group():
             if sorted(founded_members_and_subsystems[member_name]) == sorted(members_name_and_subs[member_name]):
                 compared_members_subsystems = True
         assert compared_members_subsystems is True
-#######################################################################################################################
+        #######################################################################################################################
         for member_id in founded_ids:
             requesting_id = member_id.find(':')
             requesting_id = member_id[requesting_id + 2:]
@@ -169,7 +184,7 @@ def test_add_member_to_local_group():
         verify_empty_search_table(self)
 
         verify_added_members(self, founded_ids, members_name_and_subs)
-########################################################################################################################
+        ########################################################################################################################
         self.log('Click on "REMOVE ALL MEMBERS" button')
         self.wait_until_visible(type=By.ID, element=popups.LOCAL_GROUP_REMOVE_ALL_MEMBERS_BTN_ID).click()
 
@@ -193,7 +208,7 @@ def test_add_member_to_local_group():
         verify_empty_search_table(self)
 
         verify_added_members(self, founded_ids, members_name_and_subs)
-########################################################################################################################
+        ########################################################################################################################
         '''Delete local group'''
         delete_local_group(self)
 
@@ -216,8 +231,13 @@ def test_edit_local_group_description():
                         [255 * 't', None, None, None, None]
                         ]
         ss_client_id = self.config.get('ss2.client_id')
+
+        client_name = self.config.get('ss2.client_name')
+        subsystem_row = xroad.split_xroad_subsystem(self.config.get('ss2.client_id'))
+        subsystem = subsystem_row['subsystem']
+
         '''Add a local group'''
-        add_local_group(self, added_local_group_code, added_local_group_description, ss_client_id)
+        add_local_group(self, added_local_group_code, added_local_group_description, ss_client_id, client_name, subsystem)
 
         ss_host = self.config.get('ss2.ssh_host')
         ss_host_user = self.config.get('ss2.ssh_user')
@@ -237,7 +257,12 @@ def test_edit_local_group_description():
             self.log('Double click on a added local group code - {0}'.format(added_local_group_code))
             added_local_group_row = self.wait_until_visible(type=By.XPATH, element=popups.
                                                             get_local_group_row_by_code(added_local_group_code))
-            self.double_click(added_local_group_row)
+
+
+            '''Click on local group row'''
+            self.click(added_local_group_row)
+            '''Click on "Details" button'''
+            self.wait_until_visible(type=By.ID, element=GROUP_DETAILS_BTN_ID).click()
 
             self.log('TEST - {0}'.format(counter))
             self.log('SERVICE_28/1 SS administrator selects to edit the description of a local group, '
@@ -317,8 +342,8 @@ def test_edit_local_group_description():
         self.log('Double click on a added local group code - {0}'.format(added_local_group_code))
         added_local_group_row = self.wait_until_visible(type=By.XPATH, element=popups.
                                                         get_local_group_row_by_code(added_local_group_code))
-        self.double_click(added_local_group_row)
-
+        self.click(added_local_group_row)
+        self.wait_until_visible(type=By.ID, element=GROUP_DETAILS_BTN_ID).click()
         '''Delete local group'''
         delete_local_group(self)
 
@@ -343,9 +368,13 @@ def test_remove_member_from_local_group():
 
         log_checker = auditchecker.AuditChecker(host=ss_host, username=ss_host_user, password=ss_host_psw)
         current_log_lines = log_checker.get_line_count()
+        client_name = self.config.get('ss2.client_name')
+        subsystem_row = xroad.split_xroad_subsystem(self.config.get('ss2.client_id'))
+        subsystem = subsystem_row['subsystem']
+
 
         '''Add a local group'''
-        add_local_group(self, added_local_group_code, added_local_group_description, ss_client_id)
+        add_local_group(self, added_local_group_code, added_local_group_description, ss_client_id, client_name, subsystem)
 
         self.log('Click on "CLOSE" button')
         self.wait_jquery()
@@ -361,7 +390,10 @@ def test_remove_member_from_local_group():
         self.log('Click on a added local group code - {0}'.format(added_local_group_code))
         added_local_group_row = self.wait_until_visible(type=By.XPATH, element=popups.
                                                         get_local_group_row_by_code(added_local_group_code))
-        self.double_click(added_local_group_row)
+        '''Click on local group row'''
+        self.click(added_local_group_row)
+        '''Click on "Details" button'''
+        self.wait_until_visible(type=By.ID, element=GROUP_DETAILS_BTN_ID).click()
 
         self.log('Click on "ADD MEMBERS" button')
         self.wait_jquery()
@@ -402,7 +434,7 @@ def test_remove_member_from_local_group():
         self.log('SERVICE_27 2 SS administrator selects group members... by clicking on added member id - "{0}"'
                  .format(requesting_id))
         self.wait_jquery()
-        self.wait_until_visible(type=By.XPATH, element=popups.LOCAL_GROUP_TABLE_SUB_IN_ID_XPATH.format(requesting_id))\
+        self.wait_until_visible(type=By.XPATH, element=popups.LOCAL_GROUP_TABLE_SUB_IN_ID_XPATH.format(requesting_id)) \
             .click()
 
         self.log('SERVICE_27 2 ...and removes them from the local group, by clicking on button '
@@ -451,7 +483,7 @@ def test_remove_member_from_local_group():
     return test_case
 
 
-def test_delete_local_group():
+def test_delete_local_group(client_name=None, subsystem=None):
     def test_case(self):
         added_local_group_code = 'test_local_group_code'
         added_local_group_description = 'test_local_group_description'
@@ -467,7 +499,7 @@ def test_delete_local_group():
         current_log_lines = log_checker.get_line_count()
 
         '''Add a local group'''
-        add_local_group(self, added_local_group_code, added_local_group_description, ss_client_id)
+        add_local_group(self, added_local_group_code, added_local_group_description, ss_client_id, client_name=client_name, subsystem=subsystem)
 
         self.log('Click on "CLOSE" button')
         self.wait_jquery()
@@ -484,7 +516,11 @@ def test_delete_local_group():
         self.wait_jquery()
         added_local_group_row = self.wait_until_visible(type=By.XPATH, element=popups.
                                                         get_local_group_row_by_code(added_local_group_code))
-        self.double_click(added_local_group_row)
+
+        self.click(added_local_group_row)
+        self.wait_until_visible(type=By.ID, element=GROUP_DETAILS_BTN_ID).click()
+
+
 
         self.log('Click on "ADD MEMBERS" button')
         self.wait_jquery()
@@ -516,7 +552,7 @@ def test_delete_local_group():
         self.log('SERVICE_29/2 System prompts for confirmation to delete the local group.')
         self.wait_jquery()
         confirm_pop_up_displayed = self.wait_until_visible(type=By.XPATH,
-                                                           element=popups.LOCAL_GROUP_DELETE_CONFIRM_POP_UP_XPATH)\
+                                                           element=popups.LOCAL_GROUP_DELETE_CONFIRM_POP_UP_XPATH) \
             .is_displayed()
         assert confirm_pop_up_displayed is True
 
@@ -549,11 +585,10 @@ def test_delete_local_group():
         self.wait_jquery()
         self.wait_until_visible(type=By.XPATH, element=popups.CLIENT_DETAILS_POPUP_CLOSE_BTN_XPATH).click()
 
-
     return test_case
 
 
-def add_local_group(self, local_group_code, local_group_description, ss_client_id):
+def add_local_group(self, local_group_code, local_group_description, ss_client_id, client_name, subsystem):
     """
     Add local group
     :param self: MainController object
@@ -564,20 +599,32 @@ def add_local_group(self, local_group_code, local_group_description, ss_client_i
     """
     self.log('Open clients details, by double clicking on client id')
 
-    ss_client_id_row = self.wait_until_visible(type=By.XPATH, element=clients_table_vm.get_client_id(ss_client_id))
-    self.double_click(ss_client_id_row)
+
+
+
+    client_row = self.wait_until_visible(type=By.XPATH, element=clients_table_vm.
+                                             get_client_id_by_member_code_subsystem_code(client_name,subsystem))
+
+
+    client_row.find_element_by_css_selector(clients_table_vm.DETAILS_TAB_CSS).click()
 
     self.log('Click on "Local groups" tab')
     self.wait_until_visible(type=By.XPATH, element=popups.CLIENT_DETAILS_POPUP_LOCAL_GROUPS_TAB_XPATH).click()
 
-    self.log('Click on "ADD GROUP" button')
+    self.log('SERVICE_25 1. Click on "ADD GROUP" button')
     self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_GROUP_ADD_BTN_ID).click()
 
-    self.log('Insert "Code" for the new local group - "{0}"'.format(local_group_code))
+    if len(local_group_code) > 15:
+        self.log('SERVICE_25 2. Insert {} length code for the new local group'.format(len(local_group_code.strip())))
+    else:
+        self.log('SERVICE_25 2. Insert "Code" for the new local group - "{0}"'.format(local_group_code))
     new_group_code = self.wait_until_visible(type=By.ID, element=popups.GROUP_ADD_POPUP_CODE_AREA_ID)
     self.input(new_group_code, local_group_code)
 
-    self.log('Insert "Description" for the new local group - "{0}"'.format(local_group_description))
+    if len(local_group_description) > 15:
+        self.log('SERVICE_25 2. Insert {} length description for the new local group'.format(len(local_group_description.strip())))
+    else:
+        self.log('SERVICE_25 2. Insert "Description" for the new local group - "{0}"'.format(local_group_description))
     new_group_description = self.wait_until_visible(type=By.ID, element=popups.GROUP_ADD_POPUP_CODE_DESCRIPTION_ID)
     self.input(new_group_description, local_group_description)
 
@@ -766,7 +813,18 @@ def add_local_group_to_service_url(self, ss_client_id, test_service_2_url, added
     '''Add a local group to service'''
     self.log('Open clients details, by double clicking on client id')
     ss_client_id_row = self.wait_until_visible(type=By.XPATH, element=clients_table_vm.get_client_id(ss_client_id))
-    self.double_click(ss_client_id_row)
+
+    client_name = self.config.get('ss2.client_name')
+    subsystem_row = xroad.split_xroad_subsystem(self.config.get('ss2.client_id'))
+    subsystem = subsystem_row['subsystem']
+
+
+    client_row = self.wait_until_visible(type=By.XPATH, element=clients_table_vm.
+                                             get_client_id_by_member_code_subsystem_code(client_name,subsystem))
+
+
+    client_row.find_element_by_css_selector(clients_table_vm.DETAILS_TAB_CSS).click()
+
 
     self.log('Click on "Services" tab')
     self.wait_until_visible(type=By.XPATH, element=popups.CLIENT_DETAILS_POPUP_SERVICES_TAB_XPATH).click()
@@ -798,3 +856,80 @@ def add_local_group_to_service_url(self, ss_client_id, test_service_2_url, added
     self.log('Click on "CLOSE" button')
     self.wait_jquery()
     self.wait_until_visible(type=By.XPATH, element=popups.ACL_FOR_SERVICE_CLOSE_BTN_XPATH).click()
+
+
+def add_group_to_client(self, client_id, log_checker=None, subsystem=None, client_name=None):
+    '''
+    Adds local group to client and checks logs for this action.
+    :param self: MainController object
+    :param sec_host: str - security server hostname
+    :param sec_username: str - security server UI username
+    :param sec_password: str - security server UI password
+    :param ssh_host: str - SSH server hostname
+    :param ssh_username: str - SSH server username
+    :param ssh_password: str - SSH server password
+    :param client: dict - client data
+    :return: None
+    '''
+    current_log_lines = None
+    if log_checker:
+        current_log_lines = log_checker.get_line_count()
+    code_255_len = ' {0} '.format('A' * 255)
+    code_255_len_stripped = code_255_len.strip()
+    code_256_len = 'A' * 256
+    local_group_test_data = [
+        ['', 'asd', MISSING_PARAMETER.format('add_group_code'), ADD_GROUP_FAILED, 'Missing code'],
+        ['asd', '', MISSING_PARAMETER.format('add_group_description'), ADD_GROUP_FAILED, 'Missing description'],
+        [code_256_len, 'asd', INPUT_EXCEEDS_255_CHARS.format('add_group_code'), ADD_GROUP_FAILED, 'Too long code'],
+        ['asd', code_256_len, INPUT_EXCEEDS_255_CHARS.format('add_group_description'), ADD_GROUP_FAILED,
+         'Too long description'],
+        [code_255_len, code_255_len, None, ADD_GROUP, 'Max length code and description'],
+        [code_255_len_stripped, code_255_len_stripped, GROUP_ALREADY_EXISTS_ERROR, ADD_GROUP_FAILED, 'Group exists.']
+    ]
+    for local_group_data in local_group_test_data:
+        local_group_code = local_group_data[0]
+        local_group_description = local_group_data[1]
+        error = local_group_data[2]
+        log = local_group_data[3]
+        log_msg = local_group_data[4]
+        use_case = 'SERVICE_25 3a'
+        if error is GROUP_ALREADY_EXISTS_ERROR:
+            use_case = 'SERVICE_25 4a'
+            error = error.format(code_255_len_stripped)
+        self.log('{} user input parsing: "{}"'.format(use_case, log_msg))
+        add_local_group(self, local_group_code, local_group_description, client_id, subsystem=subsystem, client_name=client_name)
+        self.wait_jquery()
+        self.log('Checking error message')
+        error_msg = get_error_message(self)
+        self.is_equal(error, error_msg)
+        popups.close_all_open_dialogs(self)
+        if current_log_lines:
+            self.log('{}.2 Checking log for event "{}"'.format(use_case, log))
+            logs_found = log_checker.check_log(log, from_line=current_log_lines + 1)
+            self.is_true(logs_found)
+
+    '''Get client row'''
+    client_row = self.wait_until_visible(type=By.XPATH, element=clients_table_vm.
+                                         get_client_id_by_member_code_subsystem_code(client_name, subsystem))
+
+    '''Click on "Details" button'''
+
+    client_row.find_element_by_css_selector(clients_table_vm.DETAILS_TAB_CSS).click()
+
+
+    self.log('Click on "Local groups" tab')
+    self.wait_until_visible(type=By.XPATH, element=popups.CLIENT_DETAILS_POPUP_LOCAL_GROUPS_TAB_XPATH).click()
+
+    self.wait_jquery()
+    self.log('Double click on a added max length local group code')
+    added_local_group_row = self.wait_until_visible(type=By.XPATH, element=popups.
+                                                    get_local_group_row_by_code(code_255_len_stripped))
+    self.click(added_local_group_row)
+
+    '''Click on "Details" button'''
+    self.wait_until_visible(type=By.ID, element=GROUP_DETAILS_BTN_ID).click()
+    self.wait_jquery()
+
+    '''Delete local group'''
+    delete_local_group(self)
+    self.wait_jquery()

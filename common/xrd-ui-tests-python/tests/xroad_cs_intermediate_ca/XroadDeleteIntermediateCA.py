@@ -23,7 +23,7 @@ class XroadDeleteIntermediateCA(unittest.TestCase):
         cs_ssh_host = main.config.get('cs.ssh_host')
         cs_ssh_user = main.config.get('cs.ssh_user')
         cs_ssh_pass = main.config.get('cs.ssh_pass')
-        ca_name = main.config.get('ca.ssh_host')
+        ca_name = main.config.get('ca.name')
 
         log_checker = auditchecker.AuditChecker(cs_ssh_host, cs_ssh_user, cs_ssh_pass)
 

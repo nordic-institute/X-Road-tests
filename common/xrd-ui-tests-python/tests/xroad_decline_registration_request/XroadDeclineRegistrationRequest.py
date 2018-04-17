@@ -1,48 +1,61 @@
-from selenium.webdriver.common.by import By
+import time
+import unittest
 
-from view_models.keys_and_certificates_table import SUBMITTED_FOR_APPROVAL_STATE, DECLINED_STATE
-from view_models.log_constants import DECLINE_REGISTRATION_REQUEST
-from view_models.members_table import get_requests_row_by_td_text, MANAGEMENT_REQUEST_DETAILS_BTN_ID, \
-    DECLINE_REQUEST_BTN_XPATH
-from view_models.messages import NOTICE_MESSAGE_CSS, DECLINED_REQUEST_NOTICE
-from view_models.popups import confirm_dialog_click, CONFIRM_POPUP_CANCEL_BTN_XPATH
-from view_models.sidebar import MANAGEMENT_REQUESTS_CSS
+from helpers import xroad, auditchecker
+from main.maincontroller import MainController
+from tests.xroad_client_registration_in_ss_221.client_registration_in_ss import add_client_to_ss, \
+    add_sub_as_client_to_member
+from tests.xroad_decline_registration_request.decline_registration_request import decline_request
+from tests.xroad_logging_in_cs_2111.logging_in_cs import add_subsystem_to_member
+from tests.xroad_logging_service_ss_2112.logging_service_ss import certify_client_in_ss
 
 
-def decline_request(self, try_cancel=False, log_checker=None):
-    def decline():
-        current_log_lines = None
-        if log_checker is not None:
-            current_log_lines = log_checker.get_line_count()
-        self.wait_until_visible(type=By.CSS_SELECTOR, element=MANAGEMENT_REQUESTS_CSS).click()
-        self.wait_jquery()
-        td = self.by_xpath(get_requests_row_by_td_text(SUBMITTED_FOR_APPROVAL_STATE))
-        request_id = td.find_elements_by_tag_name('td')[0].text
-        td.click()
-        self.wait_until_visible(type=By.ID, element=MANAGEMENT_REQUEST_DETAILS_BTN_ID).click()
-        self.log('MEMBER_38 1. Registration request decline button is pressed')
-        self.wait_until_visible(type=By.XPATH, element=DECLINE_REQUEST_BTN_XPATH).click()
-        self.log('MEMBER_38 2. System prompts for confirmation')
-        if try_cancel:
-            self.log('MEMBER_38 3a. Registration request decline is canceled')
-            self.wait_until_visible(type=By.XPATH, element=CONFIRM_POPUP_CANCEL_BTN_XPATH).click()
-            self.log('Press decline button again')
-            self.wait_until_visible(type=By.XPATH, element=DECLINE_REQUEST_BTN_XPATH).click()
-        self.log('MEMBER_38 3. Registration request decline is confirmed')
-        confirm_dialog_click(self)
-        self.log('MEMBER_38 4. System sets the state of the request to declined')
-        first_declined_request_id = self.by_xpath(get_requests_row_by_td_text(
-            DECLINED_STATE)).find_element_by_tag_name('td').text
-        self.is_equal(request_id, first_declined_request_id)
-        expected_msg = DECLINED_REQUEST_NOTICE.format(request_id)
-        self.log('MEMBER_38 5. System displays the message {0}'.format(expected_msg))
-        notice_msg = self.wait_until_visible(type=By.CSS_SELECTOR, element=NOTICE_MESSAGE_CSS).text
-        self.is_equal(expected_msg, notice_msg)
+class XroadDeclineRegistrationRequest(unittest.TestCase):
+    """
+    MEMBER_38 Decline a Registration Request
+    RIA URL: https://jira.ria.ee/browse/XT-390, https://jira.ria.ee/browse/XTKB-137
+    Depends on finishing other test(s):
+    Requires helper scenarios:
+    X-Road version: 6.16.0
+    """
+    def test_decline_registration_request(self):
+        main = MainController(self)
+        ss_host = main.config.get('ss1.host')
+        ss_user = main.config.get('ss1.user')
+        ss_pass = main.config.get('ss1.pass')
+        server_name = main.config.get('ss1.server_name')
 
-        if current_log_lines is not None:
-            expected_log_msg = DECLINE_REGISTRATION_REQUEST
-            self.log('MEMBER_38 6. System logs the event {0}'.format(expected_log_msg))
-            check_log = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
-            self.is_true(check_log)
+        cs_host = main.config.get('cs.host')
+        cs_user = main.config.get('cs.user')
+        cs_pass = main.config.get('cs.pass')
+        cs_ssh_host = main.config.get('cs.ssh_host')
+        cs_ssh_user = main.config.get('cs.ssh_user')
+        cs_ssh_pass = main.config.get('cs.ssh_pass')
+        member = xroad.split_xroad_id(main.config.get('ss1.server_id'))
+        member['subsystem_code'] = member['subsystem'] = 'declinesub'
+        member['name'] = main.config.get('ss1.management_name')
+        log_checker = auditchecker.AuditChecker(cs_ssh_host, cs_ssh_user, cs_ssh_pass)
 
-    return decline
+        try:
+            main.log('Creating client registration request which will be declined')
+            main.reload_webdriver(cs_host, cs_user, cs_pass)
+
+            # MEMBER_56 Adding new subsystem to the member
+            main.log('MEMBER_56 Adding new subsystem to the member')
+            add_subsystem_to_member(main, member=member)
+
+            time.sleep(120)
+            main.reload_webdriver(ss_host, ss_user, ss_pass)
+            add_client_to_ss(main, member)
+            certify_client_in_ss(main, ss_host, ss_user, ss_pass, member)
+
+            main.reload_webdriver(cs_host, cs_user, cs_pass)
+            add_sub_as_client_to_member(main, server_name, member, wait_input=2,
+                                        step='Adding subsystem')
+        except:
+            main.save_exception_data()
+            raise
+        finally:
+            main.log('MEMBER_38 Decline a Registration Request')
+            decline_request(main, log_checker=log_checker)()
+            main.tearDown()

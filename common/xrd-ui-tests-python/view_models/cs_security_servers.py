@@ -1,6 +1,7 @@
 SECURITY_SERVER_TABLE_ID = 'securityservers'
 SECURITY_SERVER_CLIENT_DETAILS_BTN_ID = 'securityserver_edit'
 SECURITY_SERVER_DELETE_BTN_ID = 'securityserver_delete'
+SECURITY_SERVER_CLIENT_DELETE_BTN_ID = 'securityserver_client_delete'
 SECURITY_SERVER_MANAGEMENT_PROVIDER_NAME_ID = 'service_provider_name'
 SECURITY_SERVER_MANAGEMENT_PROVIDER_EDIT_BTN_ID= 'service_provider_edit'
 SECURITY_SERVER_MANAGEMENT_PROVIDER_ID = 'service_provider_id'
@@ -74,3 +75,4 @@ DELETION_REQUEST_OWNER_CODE_ID = 'delete_auth_cert_owner_code'
 DELETION_REQUEST_SERVER_CODE_ID = 'delete_auth_cert_servercode'
 DELETION_REQUEST_SUBMIT_BTN_XPATH = '//div[@aria-describedby="auth_cert_delete_dialog"]//span[text()="Submit"]'
 DELETION_REQUEST_CANCEL_BTN_XPATH = '//div[@aria-describedby="auth_cert_delete_dialog"]//span[text()="Cancel"]'
+

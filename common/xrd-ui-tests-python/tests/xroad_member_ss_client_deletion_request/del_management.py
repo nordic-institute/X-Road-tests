@@ -48,7 +48,7 @@ def test_add_subsystem_to_member(case, ss1_code=None, subsystem_text=None):
         self.wait_jquery()
     return add_subsystem_to_member
 
-def test_add_subsystem_to_server_client(case, ss1_code=None, wait_input=3, random_code=None):
+def test_add_subsystem_to_server_client(case, ss1_code=None, ss1_code2=None, wait_input=3, random_code=None, client_code=None, client_class=None):
     self = case
     def add_subsystem_to_server_client():
         """
@@ -61,13 +61,13 @@ def test_add_subsystem_to_server_client(case, ss1_code=None, wait_input=3, rando
         """
 
         # Open clients list for server
-        open_servers_clients(self, ss1_code)
+        open_servers_clients(self, ss1_code2)
 
         # UC MEMBER_56 1. Select to add a subsystem to an X-Road member
         self.log('MEMBER_56 1. Select to add a subsystem to an X-Road member')
         self.wait_until_visible(type=By.ID, element=cs_security_servers.ADD_CLIENT_TO_SECURITYSERVER_BTN_ID).click()
         self.wait_jquery()
-
+        time.sleep(5)
         # Search for the member
         self.log('Search for the member')
         self.wait_until_visible(type=By.ID, element=cs_security_servers.SEARCH_BTN_ID).click()
@@ -81,16 +81,17 @@ def test_add_subsystem_to_server_client(case, ss1_code=None, wait_input=3, rando
         for row in rows:
             tds = row.find_elements_by_tag_name('td')
             if tds[0].text is not u'':
-                if (tds[0].text == 'TS1') & (tds[1].text == 'TS1OWNER') & (tds[2].text == 'GOV') & (
+                if (tds[0].text == ss1_code) & (tds[1].text == client_code) & (tds[2].text == client_class) & (
                             tds[3].text == random_code):
-                    row.click()
+                    '''Scroll untill member row'''
+                    self.js("arguments[0].scrollIntoView();", row)
+                    self.click(row)
                     break
 
         self.wait_until_visible(type=By.XPATH, element=cs_security_servers.SELECT_MEMBER_BTN_XPATH).click()
 
 
         self.wait_jquery()
-        # time.sleep(wait_input)
 
         # Enter data
         subsystem_input = self.wait_until_visible(type=By.ID, element=cs_security_servers.SUBSYSTEM_CODE_AREA_ID)
@@ -104,7 +105,6 @@ def test_add_subsystem_to_server_client(case, ss1_code=None, wait_input=3, rando
         self.wait_until_visible(type=By.ID,
                                 element=cs_security_servers.SECURITYSERVER_CLIENT_REGISTER_SUBMIT_BTN_ID).click()
         self.wait_jquery()
-        time.sleep(5)
     return add_subsystem_to_server_client
 
 def open_servers_clients(self, ss1_code=None):
@@ -124,13 +124,14 @@ def open_servers_clients(self, ss1_code=None):
     table = self.wait_until_visible(type=By.ID, element=cs_security_servers.SECURITY_SERVER_TABLE_ID)
     self.wait_jquery()
 
+
     # Find the client and click on it
     self.log('Click on client row')
     rows = table.find_elements_by_tag_name('tr')
     for row in rows:
         if row.text is not u'':
             if row.find_element_by_tag_name('td').text == ss1_code:
-                row.click()
+                self.click(row)
 
     # Open details
     self.log('Click on Details button')
@@ -182,9 +183,9 @@ def test_add_client_to_ss_by_hand(case, client_class=None, client_code=None, cli
 
     return add_client_to_ss_by_hand
 
-def test_ss_client_deletion(case, cs_ssh_host=None, cs_ssh_user=None, cs_ssh_pass=None, ss1_code=None,
+def test_ss_client_deletion(case, cs_ssh_host=None, cs_ssh_user=None, cs_ssh_pass=None,ss1_code=None, ss1_code2=None,
                                     client_instance=None, client_class=None, client_code=None,
-                                    client_subsystem=None, random_code=None):
+                                    client_subsystem=None, random_code=None, mangagement_code=None, management_name=None):
     '''
     :param self: MainController object
     :param cs_ssh_host: Central Server SSH host
@@ -219,9 +220,13 @@ def test_ss_client_deletion(case, cs_ssh_host=None, cs_ssh_user=None, cs_ssh_pas
         rows = table.find_elements_by_tag_name('tr')
         for row in rows:
             if row.text is not u'':
-                if row.find_element_by_tag_name('td').text == ss1_code:
-                    '''Double click on row'''
-                    self.double_click(row)
+                if row.find_element_by_tag_name('td').text == ss1_code2:
+
+                    '''Click on row'''
+                    self.click(row)
+                    '''Click on "Details" button'''
+                    self.wait_until_visible(type=By.ID, element=cs_security_servers.SECURITY_SERVER_CLIENT_DETAILS_BTN_ID).click()
+
                     self.wait_jquery()
 
         self.log('Click on clients tab')
@@ -232,22 +237,23 @@ def test_ss_client_deletion(case, cs_ssh_host=None, cs_ssh_user=None, cs_ssh_pas
         clients_table = self.wait_until_visible(type=By.ID,
                                                 element=cs_security_servers.SECURITY_SERVER_CLIENTS_TABLE_ID)
 
+
         '''Click on member what to delete'''
         member_to_delete = members_table.get_row_by_columns(clients_table,
-                                                            [client_subsystem, client_class, client_code, random_code])
-        member_to_delete.click()
-
+                                                            [ss1_code, client_class, client_code, random_code])
+        self.click(member_to_delete)
         self.log(
             'MEMBER_16 1. CS administrator selects to create a security server client deletion request for a subsystem of an X-Road member.')
 
-        self.wait_until_visible(type=By.ID, element=cs_security_servers.SECURITY_SERVER_CLIENTS_DELETE_BTN_ID).click()
+        self.wait_until_visible(type=By.ID, element=cs_security_servers.SECURITY_SERVER_CLIENT_DELETE_BTN_ID).click()
         self.wait_jquery()
         self.log('MEMBER_16 2. System displays a prefilled security server client deletion request.')
 
         '''Verify client name'''
         popup_client_name = self.wait_until_visible(type=By.ID,
                                                     element=popups.CS_SECURITY_SERVER_CLIENT_DELETION_REQUEST_NAME).text
-        self.is_equal(popup_client_name, client_subsystem,
+
+        self.is_equal(popup_client_name, ss1_code,
                       msg='Client information: client name is wrong')
 
         '''Verify class name'''
@@ -275,7 +281,7 @@ def test_ss_client_deletion(case, cs_ssh_host=None, cs_ssh_user=None, cs_ssh_pas
         popup_owner_name = self.wait_until_visible(type=By.ID,
                                                    element=popups.CS_SECURITY_SERVER_CLIENT_DELETION_REQUEST_OWNER_NAME).text
 
-        self.is_equal(popup_owner_name, client_subsystem,
+        self.is_equal(popup_owner_name, management_name,
                       msg='Client information: owner name is wrong')
 
         '''Verify owner class'''
@@ -289,43 +295,42 @@ def test_ss_client_deletion(case, cs_ssh_host=None, cs_ssh_user=None, cs_ssh_pas
         popup_owner_code = self.wait_until_visible(type=By.ID,
                                                    element=popups.CS_SECURITY_SERVER_CLIENT_DELETION_REQUEST_OWNER_CODE).text
 
-        self.is_equal(popup_owner_code, client_code,
+        self.is_equal(popup_owner_code, mangagement_code,
                       msg='Client information: owner code is wrong')
 
         '''Verify server code'''
         popup_server_code = self.wait_until_visible(type=By.ID,
                                                     element=popups.CS_SECURITY_SERVER_CLIENT_DELETION_REQUEST_SERVER_CODE).text
 
-        self.is_equal(popup_server_code, client_subsystem,
+        self.is_equal(popup_server_code, ss1_code2,
                       msg='Client information: server code is wrong')
 
         self.log('MEMBER_16 3a. CS administrator selects to terminate the use case.')
-
         self.wait_until_visible(type=By.XPATH,
-                                element=popups.CS_SECURITY_SERVER_CLIENT_DELETION_CANCEL).click()
+                                element=popups.CS_SECURITY_SERVER_CLIENT_DELETION_DIALOG_CANCEL).click()
 
         log_checker = auditchecker.AuditChecker(cs_ssh_host, cs_ssh_user, cs_ssh_pass)
         current_log_lines = log_checker.get_line_count()
+        self.wait_until_visible(type=By.ID, element=cs_security_servers.SECURITY_SERVER_CLIENT_DELETE_BTN_ID).click()
 
-        self.wait_until_visible(type=By.ID, element=cs_security_servers.SECURITY_SERVER_CLIENTS_DELETE_BTN_ID).click()
         self.wait_jquery()
         self.log('MEMBER_16 3. CS administrator submits the request.')
         self.wait_until_visible(type=By.XPATH,
-                                element=popups.CS_SECURITY_SERVER_CLIENT_DELETION_SUBMIT).click()
+                                element=popups.CS_SECURITY_SERVER_CLIENT_DELETION_DIALOG_SUBMIT).click()
 
-        '''Server part of log message'''
-        server = clients_table_vm.server_cs(client_instance, client_class, client_code, client_subsystem)
-        '''Subsystem part of log message'''
-        subsystem = clients_table_vm.subsystem_cs(client_instance, client_class, client_code, random_code)
+
         '''Get the message after deletion'''
         message = self.wait_until_visible(type=By.CSS_SELECTOR, element=messages.NOTICE_MESSAGE_CSS).text
         '''Verify message'''
-        success_message = messages.SECURITY_SERVER_CLIENT_DELETION_REQUEST.format(subsystem, server)
+
+
+        success_message = messages.SECURITY_SERVER_CLIENT_DELETION_REQUEST.format(client_instance, client_class, client_code, random_code,client_instance, client_class, mangagement_code, ss1_code2)
         self.log('MEMBER_16 5. System displays the message:{}'.format(success_message))
+
         self.is_equal(success_message, message)
 
-        self.log('MEMBER_16 6. System logs the event {0} to audit log'.format(log_constants.SS_CLIENT_DELETION_REQUEST))
-        logs_found = log_checker.check_log(log_constants.SS_CLIENT_DELETION_REQUEST, from_line=current_log_lines + 1)
+        self.log('MEMBER_16 6. System logs the event {0} to audit log'.format(log_constants.DELETE_SS_CLIENT))
+        logs_found = log_checker.check_log(log_constants.DELETE_SS_CLIENT, from_line=current_log_lines + 1)
         self.is_true(logs_found)
     return ss_client_deletion
 
@@ -343,7 +348,7 @@ def delete_member(self, ss1_code=None, random_code=None):
 
 
     subsys_row = self.wait_until_visible(type=By.XPATH, element=members_table.SUBSYSTEM_TR_BY_CODE_XPATH.format(random_code))
-    subsys_row.click()
+    self.click(subsys_row)
 
     # Click "Delete"
     self.log('MEMBER_14 1. Subsystem delete button is clicked')
@@ -354,13 +359,17 @@ def delete_member(self, ss1_code=None, random_code=None):
     popups.confirm_dialog_click(self)
 
 
-def ss_delete_client(self, client_instance=None, client_class=None, client_code=None, random_code=None):
-    '''Get id text'''
-    subsystem = clients_table_vm.subsystem_ss(client_instance, client_class, client_code, random_code)
-    '''Find id row'''
-    client_row = clients_table_vm.get_client_row_element(self, client_id=subsystem)
-    '''Double click on row'''
-    self.double_click(client_row)
+def ss_delete_client(self, client_code=None, random_code=None):
+
+    '''Find client row'''
+    client_row = self.wait_until_visible(type=By.XPATH, element=clients_table_vm.
+                                             get_client_id_by_member_code_subsystem_code(client_code,random_code))
+
+
+    '''Click on "Details" button'''
+    client_row.find_element_by_css_selector(clients_table_vm.DETAILS_TAB_CSS).click()
+
+
 
     self.log('MEMBER_52 1. Unregister Client')
     self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_UNREGISTER_BUTTON_ID).click()
@@ -372,4 +381,7 @@ def ss_delete_client(self, client_instance=None, client_class=None, client_code=
     self.wait_until_visible(type=By.ID, element=popups.CLIENT_DETAILS_POPUP_UNREGISTER_BUTTON_ID).click()
     self.wait_jquery()
     self.log('MEMBER_52 3. Confirmation dialog is confirmed')
+
+    popups.confirm_dialog_click(self)
+
     popups.confirm_dialog_click(self)

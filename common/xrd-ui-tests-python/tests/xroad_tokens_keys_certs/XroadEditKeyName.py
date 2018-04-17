@@ -25,6 +25,10 @@ class XroadEditKeyName(unittest.TestCase):
         main.reset_webdriver(main.url, main.username, main.password)
 
         test_func = tokens_keys_certs.test_change_key_name(ssh_host, ssh_user, ssh_pass)
-        test_func(main)
-
-        main.tearDown()
+        try:
+            test_func(main)
+        except:
+            main.save_exception_data()
+            raise
+        finally:
+            main.tearDown()

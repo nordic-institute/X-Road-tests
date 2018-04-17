@@ -136,3 +136,47 @@ def cp(ssh_client_instance, src, destination, sudo=False):
 def mv(ssh_client_instance, src, destination, sudo=False):
     mv_command = 'mv {0} {1}'.format(src, destination)
     return ssh_client_instance.exec_command(mv_command, sudo)
+
+def get_keyconf_update_timeout(sshclient):
+    server_time = int(sshclient.exec_command('date +"%s"')[0][0])
+    file_modified = int(sshclient.exec_command('date +"%s" -r {}'.format('/etc/xroad/signer/keyconf.xml'), sudo=True)[0][0])
+    ago = server_time - file_modified
+    return 65 - ago
+
+def get_valid_certificates(self, client):
+    """
+    Gets a list of the client's certificates that may be revoked.
+    :param self: MainController object
+    :param client: dict - client data
+    :return: [str] - list of certificate filenames to revoke
+    """
+    # Initialize the list of certificates to revoke. Because we are deleting the key, we need to revoke all certificates
+    # under it.
+    certs_to_revoke = []
+
+    # Try to get the certificates under the generated keys
+    key_num = 1
+    newcerts_base = './newcerts'
+    while True:
+        try:
+            key_friendly_name_xpath = keys_and_certificates_table.get_generated_key_row_active_cert_friendly_name_xpath(
+                client['code'], client['class'], key_num)
+            key_name_element = self.by_xpath(key_friendly_name_xpath)
+            element_text = key_name_element.text.strip()
+            # Split the element by space and get the last part of it as this is the key id as a decimal
+            cert_id = int(element_text.rsplit(' ', 1)[-1])
+            cert_hex = '{0:02x}'.format(cert_id).upper()
+            # Key filenames are of even length (zero-padded) so we'll generate one like that
+            if len(cert_hex) % 2 == 1:
+                cert_filename = '{0}/0{1}.pem'.format(newcerts_base, cert_hex)
+            else:
+                cert_filename = '{0}/{1}.pem'.format(newcerts_base, cert_hex)
+            certs_to_revoke.append(cert_filename)
+        except:
+            # Exit loop if element not found (= no certificates listed)
+            break
+        key_num += 1
+
+    return certs_to_revoke
+
+

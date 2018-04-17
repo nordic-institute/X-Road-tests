@@ -1,14 +1,19 @@
-from selenium.webdriver.common.by import By
 import re
+
+import time
+from selenium.webdriver.common.by import By
+
 from helpers import auditchecker
 from view_models import sidebar as sidebar_constants, keys_and_certificates_table as keyscertificates_constants, \
     popups, log_constants, messages
+from view_models.keys_and_certificates_table import DETAILS_BTN_ID
 
 
 def test_view_list_of_tokens_keys_certs(host_cert_name):
     """
      UC SS_19: View the List of Tokens, Keys and Certificates
     """
+
     def test_case(self):
         def verify_cert_data_display(cert_data, key_type=None):
             if key_type == '(auth)':
@@ -107,27 +112,22 @@ def test_view_list_of_tokens_keys_certs(host_cert_name):
         '''UC SS_19 step 2. System displays the list of tokens, keys and certificates'''
         self.log('''UC SS_19 step 2. System displays the list of tokens, keys and certificates''')
 
-        keys_and_certificates_table = self.wait_until_visible(type=By.ID,
-                                                              element=keyscertificates_constants.
-                                                              KEYS_AND_CERTIFICATES_TABLE_ID,
-                                                              multiple=True)
-
-        keys_and_certificates_table_rows = keys_and_certificates_table[0].text.encode('utf-8').split('\n')
+        keys_and_certificates_table_rows = self.wait_until_visible(type=By.CSS_SELECTOR,
+                                                                   element=keyscertificates_constants.
+                                                                   KEYS_AND_CERTIFICATES_TABLE_ROWS_CSS,
+                                                                   multiple=True)
 
         for row in range(len(keys_and_certificates_table_rows)):
-            splited_row = keys_and_certificates_table_rows[row].split()
-
-            if splited_row[0] == 'LOGOUT':
+            splited_row = list(
+                map(lambda x: x.text, keys_and_certificates_table_rows[row].find_elements_by_tag_name('td')))
+            if len(splited_row) == 0:
                 pass
 
             elif splited_row[0] == 'Token:':
                 '''Verify that friendly name is displayed for token'''
                 self.log('''Verify that friendly name is displayed for token.''')
                 displayed_token_name = splited_row[1]
-                token_name_displayed = False
-                if len(displayed_token_name) > 0:
-                    token_name_displayed = True
-                assert token_name_displayed is True
+                self.is_true(len(displayed_token_name) > 0)
                 self.log('Token name - {0} - is displayed'.format(displayed_token_name))
 
             elif splited_row[0] == 'Key:':
@@ -147,7 +147,8 @@ def test_view_list_of_tokens_keys_certs(host_cert_name):
                                                                                               key_data[-1]))
             else:
                 cert_data = splited_row
-                certificate_key_type = keys_and_certificates_table_rows[row - 1].split()
+                certificate_key_type = list(
+                    map(lambda x: x.text, keys_and_certificates_table_rows[row - 1].find_elements_by_tag_name('td')))
                 certificate_key_type = certificate_key_type[-1]
 
                 auth_request = False
@@ -208,6 +209,7 @@ def test_view_token_details():
     """
     UC SS_20: View the Details of a Token
     """
+
     def test_case(self):
         '''SS administrator selects to view the list of tokens'''
         self.log('SS administrator selects to view the list of tokens, keys and certificates, '
@@ -224,7 +226,8 @@ def test_view_token_details():
             '''SS_20 step 1. SS administrator selects to view the details of a token.'''
 
             self.log('''SS_20 step 1. SS administrator selects to view the details of a token.''')
-            self.double_click(token)
+            token.click()
+            self.wait_until_visible(type=By.ID, element=DETAILS_BTN_ID).click()
             self.wait_jquery()
 
             '''SS_20 step 2. System displays the details of the token'''
@@ -265,6 +268,7 @@ def test_view_key_details():
     """
     UC SS_21: View the Details of a Key
     """
+
     def test_case(self):
         '''SS administrator selects to view the list of keys'''
         self.log('SS administrator selects to view the list of keys, '
@@ -280,7 +284,8 @@ def test_view_key_details():
         for key in keys:
             '''SS_21 step 1. SS administrator selects to view the details of a key.'''
             self.log('''SS_21 step 1. SS administrator selects to view the details of a key.''')
-            self.double_click(key)
+            key.click()
+            self.wait_until_visible(type=By.ID, element=DETAILS_BTN_ID).click()
             self.wait_jquery()
 
             '''SS_21 step 2. System displays the details of the key'''
@@ -337,6 +342,7 @@ def test_change_key_name(ssh_host, ssh_user, ssh_pass):
     :param ssh_pass: str - ssh password
     :return: None
     """
+
     def test_case(self):
         key_name = "test_certificate_keys"
 
@@ -368,7 +374,6 @@ def test_change_key_name(ssh_host, ssh_user, ssh_pass):
         '''SS_23 2a.3. SS administrator selects to reinsert the friendly name. Use case continues form step 2.'''
         self.log('SS_23 2a.3. SS administrator selects to reinsert the friendly name. Use case continues form step 2.')
 
-
         for key_name in key_name_and_results:
 
             input_text = key_name[0]
@@ -384,7 +389,6 @@ def test_change_key_name(ssh_host, ssh_user, ssh_pass):
             '''SS_23 1. SS administrator selects to change the friendly name of a key and changes the name'''
             self.log('SS_23 1. SS administrator selects to change the friendly name of a key and changes the name')
             key_name_field = self.wait_until_visible(type=By.XPATH, element=popups.KEY_DETAILS_POPUP_FRIENDLY_NAME)
-            key_name_field.click()
             self.input(key_name_field, input_text)
             self.log('SS administrator changes the friendly name to (string length is - {1})- {0}'.
                      format(input_text, len(input_text)))
@@ -415,9 +419,16 @@ def test_change_key_name(ssh_host, ssh_user, ssh_pass):
                 '''SS_23 4. System logs the event 'Set friendly name to key' to the audit log.'''
                 self.log('''SS_23 4. System logs the event 'Set friendly name to key' to the audit log.''')
                 if ssh_host is not None:
-                    logs_found = log_checker.check_log(log_constants.CHANGE_FRIENDLY_NAME,
+                    try:
+                        logs_found = log_checker.check_log(log_constants.CHANGE_FRIENDLY_NAME,
                                                        from_line=current_log_lines + 1)
-                    self.is_true(logs_found, msg='Set friendly name to key')
+                        self.is_true(logs_found, msg='Set friendly name to key not found in log')
+                    except:
+                        self.log('Couldn\'t find log first time, trying again in 5 seconds')
+                        time.sleep(5)
+                        logs_found = log_checker.check_log(log_constants.CHANGE_FRIENDLY_NAME,
+                                                           from_line=current_log_lines + 1)
+                        self.is_true(logs_found, msg='Set friendly name to key not found in log')
 
                 '''SS_23 3. System saves the changes to the system configuration.'''
                 self.log('''SS_23 3. System saves the changes to the system configuration.''')
@@ -491,6 +502,10 @@ def add_csr_to_key(self):
     self.log('Click on "OK" button')
     self.wait_until_visible(type=By.XPATH,
                             element=keyscertificates_constants.GENERATE_CSR_SIGNING_REQUEST_POPUP_OK_BTN_XPATH).click()
+    if self.config.get_bool('config.harmonized_environment', False):
+        o_input = self.wait_until_visible(type=By.XPATH,
+                                          element=keyscertificates_constants.SUBJECT_DISTINGUISHED_NAME_POPUP_O_XPATH)
+        self.input(o_input, 'test')
     self.log('Click on "OK" button')
     self.wait_until_visible(type=By.XPATH,
                             element=keyscertificates_constants.SUBJECT_DISTINGUISHED_NAME_POPUP_OK_BTN_XPATH).click()

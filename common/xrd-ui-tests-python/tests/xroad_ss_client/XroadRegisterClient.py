@@ -1,7 +1,7 @@
 import unittest
 from main.maincontroller import MainController
 import ss_client_management
-from helpers import xroad
+from helpers import xroad, auditchecker
 
 
 class XroadRegisterClient(unittest.TestCase):
@@ -32,13 +32,12 @@ class XroadRegisterClient(unittest.TestCase):
         ss_ssh_host = main.config.get('ss2.ssh_host')
         ss_ssh_user = main.config.get('ss2.ssh_user')
         ss_ssh_pass = main.config.get('ss2.ssh_pass')
+        log_checker = auditchecker.AuditChecker(ss_ssh_host, ss_ssh_user, ss_ssh_pass)
 
         # Configure the service
         test_add_client = ss_client_management.test_register_client(case=main,
-                                                               client_id=client_id,
-                                                               ssh_host=ss_ssh_host,
-                                                               ssh_user=ss_ssh_user, ssh_pass=ss_ssh_pass,
-                                                               check_errors=True)
+                                                                    client_id=client_id,
+                                                                    log_checker=log_checker)
 
         try:
             # Open webdriver
@@ -49,7 +48,7 @@ class XroadRegisterClient(unittest.TestCase):
         except:
             main.log('XroadRegisterClient: Failed to register client')
             main.save_exception_data()
-            assert False
+            raise
         finally:
             # Test teardown
             main.tearDown()

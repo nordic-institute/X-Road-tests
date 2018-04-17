@@ -473,7 +473,7 @@ def test_configure_service(case, client=None, client_name=None, client_id=None, 
                       msg='SERVICE_08 8. Added WSDL row does not have class "disabled": {0}'.format(wsdl_correct_url))
 
         # Select the WSDL by clicking on the row
-        wsdl_row.click()
+        self.click(wsdl_row)
 
         # UC SERVICE_08 8. check if default disable message is correct
         # enable and disable WSDL to get disable message popup
@@ -589,7 +589,7 @@ def test_configure_service(case, client=None, client_name=None, client_id=None, 
             # UC SERVICE_09 1. Select to edit the address of a WSDL
             self.log('SERVICE_09 1. Select to edit the address of a WSDL')
 
-            wsdl_row.click()
+            self.click(wsdl_row)
             edit_wsdl_button.click()
 
             current_log_lines = log_checker.get_line_count()
@@ -628,7 +628,7 @@ def test_configure_service(case, client=None, client_name=None, client_id=None, 
         check_wsdl_service_parameters(self, service_row, service_name, service_url)
 
         # Click on the service row to select it
-        service_row.click()
+        self.click(service_row)
 
         # Click the "Edit" button to open "Edit Service Parameters" popup
         edit_wsdl_button.click()
@@ -675,7 +675,6 @@ def test_configure_service(case, client=None, client_name=None, client_id=None, 
                 modified_service_url += '?'
 
             modified_service_url += urllib.urlencode({service_url_additional_parameter: client['code']})
-
             current_log_lines = log_checker.get_line_count()
             self.log('SERVICE_19 4a. Invalid URL is inserted')
             warning, error = edit_service(self, service_invalid_url, service_timeout)
@@ -715,7 +714,7 @@ def test_configure_service(case, client=None, client_name=None, client_id=None, 
             warning, error = edit_service(self, modified_service_url, service_infinite_timeout)
             self.is_none(error, msg='Set infinite service timeout: got error for timeout {0}'.format(
                 service_infinite_timeout))
-            expected_warning_message = SERVICE_EDIT_INFINITE_TIMEOUT_WARNING.format(service_infinite_timeout)
+            expected_warning_message = messages.SERVICE_EDIT_INFINITE_TIMEOUT_WARNING.format(service_infinite_timeout)
             self.log('SERVICE_21 4a.1 System displays a warning message "{0}"'.format(expected_warning_message))
             self.is_equal(expected_warning_message, warning)
             self.log('Close error messages if present')

@@ -56,7 +56,7 @@ class XroadAddCentralService(unittest.TestCase):
         requester_id = xroad.get_xroad_subsystem(requester)
 
         # Configure the service
-        add_central_service = add_central_service.test_add_central_service(main, provider=provider,
+        add_central_service_test = add_central_service.test_add_central_service(main, provider=provider,
                                                                            requester=requester,
                                                                            central_service_name=central_service_name,
                                                                            sync_max_seconds=sync_max_seconds,
@@ -68,7 +68,7 @@ class XroadAddCentralService(unittest.TestCase):
                                                                            cs_ssh_pass=cs_ssh_pass)
 
         # Configure a new service
-        configure_service = configure_service.test_configure_service(main, client=provider_2,
+        configure_service_test = configure_service.test_configure_service(main, client=provider_2,
                                                                      service_name=service_name,
                                                                      check_add_errors=False,
                                                                      check_edit_errors=False,
@@ -114,13 +114,13 @@ class XroadAddCentralService(unittest.TestCase):
             main.log('XroadAddCentralService: Add central service')
             # Set Central Server UI
             main.reload_webdriver(url=cs_host, username=cs_user, password=cs_pass)
-            add_central_service()
+            add_central_service_test()
 
             # Configure new provider for central service
             main.log('XroadAddCentralService: Configure service parameters (using xroad_configure_service_222)')
             # Set Security Server 2 and configure service parameters
             main.reload_webdriver(url=ss2_host, username=ss2_user, password=ss2_pass)
-            configure_service()
+            configure_service_test()
 
             # Configure new provider for central service (set access using ACL)
             main.log('XroadAddCentralService: Configure service ACL (using xroad_add_to_acl_218)')
@@ -162,10 +162,10 @@ class XroadAddCentralService(unittest.TestCase):
                     except:
                         main.log('XroadAddCentralService: Error deleting security server service')
                         main.save_exception_data()
-                        assert False
+                        raise
             except:
-                assert False
-            assert False
+                raise
+            raise
         finally:
             # Test teardown
-            main.tearDown(save_exception=False)
+            main.tearDown()

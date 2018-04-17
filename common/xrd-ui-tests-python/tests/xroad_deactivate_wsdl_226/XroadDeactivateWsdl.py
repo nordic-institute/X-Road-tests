@@ -54,7 +54,7 @@ class XroadDeactivateWsdl(unittest.TestCase):
         except:
             main.log('XroadDeactivateWsdl: Failed to deactivate WSDL')
             main.save_exception_data()
-            assert False
+            raise
         finally:
             try:
                 main.reload_webdriver(url=ss_host, username=ss_user, password=ss_pass)

@@ -4,6 +4,7 @@ import unittest
 
 from main.maincontroller import MainController
 from tests.xroad_parse_users_inputs import xroad_parse_user_inputs
+from helpers import xroad
 
 
 class XroadEditAddressServiceInputs(unittest.TestCase):
@@ -25,6 +26,7 @@ class XroadEditAddressServiceInputs(unittest.TestCase):
         main.url = main.config.get('ss2.host')
         main.username = main.config.get('ss2.user')
         main.password = main.config.get('ss2.pass')
+        client = xroad.split_xroad_id(main.config.get('ss2.client_id'))
         try:
             '''Open webdriver'''
             main.reset_webdriver(main.url, main.username, main.password)

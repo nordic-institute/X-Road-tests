@@ -121,7 +121,6 @@ class AuditChecker:
                                    when first one does not match; None to be strict only with reverse_match=True
         :return: bool - True if all entries were found; False otherwise
         '''
-
         # We only check lists, so if the data is not a list, make it be one.
         if not isinstance(check, list):
             check = [check]

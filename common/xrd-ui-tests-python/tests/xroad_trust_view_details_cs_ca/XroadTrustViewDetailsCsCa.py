@@ -25,8 +25,12 @@ class XroadTrustViewDetailsCsCa(unittest.TestCase):
         cs_host = main.config.get('cs.host')
         cs_user = main.config.get('cs.user')
         cs_pass = main.config.get('cs.pass')
+        distinguished_name = str(main.config.get('ca.distinguished_name'))
+
+
+
         '''Configure the service'''
-        test_view_details_cs_ca = view_management.test_view_details_cert_services(case=main)
+        test_view_details_cs_ca = view_management.test_view_details_cert_services(case=main, distinguished_name=distinguished_name)
 
         try:
             '''Open webdriver'''

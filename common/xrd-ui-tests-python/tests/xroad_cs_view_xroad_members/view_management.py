@@ -32,7 +32,7 @@ def test_select_members(case, ss1_server_name=None, ss1_class=None, ss1_code=Non
         self.log('UC MEMBER_04: 2. System displays the number of X-Road members and the following information for each member: the name of the X-Road member;the member class of the X-Road member;the member code of the X-Road member.')
         client_row = members_table.get_row_by_columns(table, [ss1_server_name, ss1_class, ss1_code])
 
-        client_row.click()
+        self.click(client_row)
 
         self.log('UC MEMBER_04: 2. The following user action options are displayed:add an X-Road member: add an X-Road member')
 
@@ -228,7 +228,7 @@ def test_view_member_subystems(case, ss1_server_name=None, ss1_subsystem=None, s
         '''Find test row'''
         subsys_row = self.wait_until_visible(type=By.XPATH, element=members_table.SUBSYSTEM_TR_BY_CODE_XPATH.format('test'))
         '''Click on test row'''
-        subsys_row.click()
+        self.click(subsys_row)
 
         self.log('UC MEMBER_07: 2. The following user action options are displayed:delete a subsystem that is not registered as a client to any security servers.')
 

@@ -4,7 +4,7 @@ from view_models import certification_services, sidebar
 import re
 
 
-def test_view_details_cert_services(case):
+def test_view_details_cert_services(case, distinguished_name=None):
     '''
 
     :param case: MainController object
@@ -18,12 +18,12 @@ def test_view_details_cert_services(case):
         self.wait_until_visible(self.by_css(sidebar.CERTIFICATION_SERVICES_CSS)).click()
         self.wait_jquery()
 
-        view_cert_services_details(self)
+        view_cert_services_details(self, distinguished_name=distinguished_name)
 
     return view_details
 
 
-def view_cert_services_details(self):
+def view_cert_services_details(self, distinguished_name=None):
     self.log('UC TRUST_02: 1.CS administrator selects to view the details of an approved certification service.')
 
     '''Get approved CA row'''
@@ -31,29 +31,28 @@ def view_cert_services_details(self):
 
     '''Double click on approved CA row'''
     self.double_click(service_row)
-
+    '''Click on "Edit" button'''
+    self.by_id(certification_services.DETAILS_BTN_ID).click()
     '''Get distinguished issuer name'''
     distinguished_issuer = self.by_id(certification_services.CA_DETAILS_ISSUER_DISTINGUISHED).text
 
     '''Get distinguished subject name'''
     distinguished_subject = self.by_id(certification_services.CA_DETAILS_SUBJECT_DISTINGUISHED).text
-
     '''Get CA valid from time'''
     ca_valid_from = self.by_id(certification_services.CA_DETAILS_VALID_FROM).text
-
     '''Get CA valid to time'''
     ca_valid_to = self.by_id(certification_services.CA_DETAILS_VALID_TO).text
-
     self.log(
         ' UC TRUST_02: 2.System displays the following information: the distinguished name (DN) of the subject of the certification service CA certificate.')
 
-    self.is_equal(distinguished_issuer, certification_services.CA_DISTINGUISHED_NAME,
+
+    self.is_equal(distinguished_issuer, distinguished_name,
                   msg='The value of the subject common name (CN) element from the certification service is wrong')
 
     self.log(
         ' UC TRUST_02: 2.System displays the following information: the distinguished name (DN) of the issuer of the certification service CA certificate.')
 
-    self.is_equal(distinguished_subject, certification_services.CA_DISTINGUISHED_NAME,
+    self.is_equal(distinguished_subject, distinguished_name,
                   msg='The value of the subject common name (CN) element from the certification service is wrong')
 
     self.log(

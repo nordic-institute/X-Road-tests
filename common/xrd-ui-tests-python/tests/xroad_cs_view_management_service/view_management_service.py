@@ -1,37 +1,41 @@
-import unittest
+from selenium.webdriver.common.by import By
 
-from helpers import xroad
-from main.maincontroller import MainController
-from tests.xroad_cs_view_management_service.XroadViewManagementService import view_management_service
+from view_models.cs_security_servers import SECURITY_SERVER_MANAGEMENT_PROVIDER_ID, \
+    SECURITY_SERVER_MANAGEMENT_PROVIDER_NAME_ID, MANAGEMENT_SERVICE_SECURITY_SERVER_ID, MANAGEMENT_SERVICE_WSDL_ID, \
+    MANAGEMENT_SERVICE_ADDRESS_ID, MANAGEMENT_SERVICE_OWNERS_GROUP_CODE_XPATH
+from view_models.sidebar import SYSTEM_SETTINGS_BTN_CSS
 
 
-class xroad_view_management_service(unittest.TestCase):
-    """
-    MEMBER_32 View the Configuration for Management Services
-    RIA URL: https://jira.ria.ee/browse/XT-384, https://jira.ria.ee/browse/XTKB-136
-    Depends on finishing other test(s): MEMBER_57
-    Requires helper scenarios:
-    X-Road version: 6.16.0
-    """
-    def test_view_management_service(self):
-        main = MainController(self)
-        cs_host = main.config.get('cs.host')
-        cs_user = main.config.get('cs.user')
-        cs_pass = main.config.get('cs.pass')
+def view_management_service(self, service_provider, server_name, server_id, wsdl_url, service_address_uri,
+                            owners_group_code):
+    def view_management_service_conf():
+        self.log('MEMBER_32 1. Opening management service configuration')
+        self.wait_until_visible(type=By.CSS_SELECTOR, element=SYSTEM_SETTINGS_BTN_CSS).click()
+        self.wait_jquery()
+        self.log('MEMBER_32 2. System displays:')
+        self.log('the X-Road identifier of the management services provider')
+        service_provider_value = self.wait_until_visible(type=By.ID,
+                                                         element=SECURITY_SERVER_MANAGEMENT_PROVIDER_ID).get_attribute('value')
+        self.log('the name of the management services provider')
+        server_name_value = self.wait_until_visible(type=By.ID,
+                                                    element=SECURITY_SERVER_MANAGEMENT_PROVIDER_NAME_ID).text
+        self.log('the X-Road identifiers of the security servers where the management service provider is '
+                 'registered as a security server client')
+        server_id_value = self.wait_until_visible(type=By.ID, element=MANAGEMENT_SERVICE_SECURITY_SERVER_ID).text
+        self.log('the URL of the WSDL file describing the management services')
+        wsdl_url_value = self.wait_until_visible(type=By.ID, element=MANAGEMENT_SERVICE_WSDL_ID).text
+        self.log('the address of the management services')
+        service_address_url_value = self.wait_until_visible(type=By.ID, element=MANAGEMENT_SERVICE_ADDRESS_ID).text
+        self.log('the code of the global group that needs to have access rights to management services')
+        owners_group_code_value = self.wait_until_visible(type=By.XPATH,
+                                                          element=MANAGEMENT_SERVICE_OWNERS_GROUP_CODE_XPATH).text
 
-        client = xroad.split_xroad_id(main.config.get('ss1.management_id'))
-        server = xroad.split_xroad_id(main.config.get('ss1.server_id'))
-        service_provider = xroad.get_xroad_path(client, client_type='SUBSYSTEM')
-        server_name = main.config.get('ss1.server_name')
-        management_server_name = xroad.get_xroad_path(server, client_type='SERVER')
-        wsdl_url = main.config.get('wsdl.management_service_wsdl_url')
-        service_address_uri = main.config.get('cs.service_url')
-        owners_group = main.config.get('cs.owners_group')
-        test_view_management_service = view_management_service(main, service_provider, server_name,
-                                                               management_server_name, wsdl_url, service_address_uri,
-                                                               owners_group)
-        try:
-            main.reload_webdriver(cs_host, cs_user, cs_pass)
-            test_view_management_service()
-        finally:
-            main.tearDown()
+        self.log('Checking service provider values')
+        self.is_equal(service_provider, service_provider_value)
+        self.is_equal(server_name, server_name_value)
+        self.is_equal(server_id, server_id_value)
+        self.is_equal(wsdl_url, wsdl_url_value)
+        self.is_true(service_address_url_value.startswith(service_address_uri))
+        self.is_equal(owners_group_code, owners_group_code_value)
+
+    return view_management_service_conf

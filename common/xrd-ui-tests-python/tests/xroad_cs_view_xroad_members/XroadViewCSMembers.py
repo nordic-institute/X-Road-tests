@@ -32,6 +32,7 @@ class XroadViewCSMembers(unittest.TestCase):
         cs_pass = main.config.get('cs.pass')
 
         ss1_server_name = main.config.get('ss1.server_name')
+        ss1_member_name = main.config.get('ss1.management_name')
         ss1_management_id = xroad.split_xroad_id(main.config.get('ss1.management_id'))
         ss1_class = ss1_management_id['class']
         ss1_subsystem = ss1_management_id['subsystem']
@@ -39,7 +40,7 @@ class XroadViewCSMembers(unittest.TestCase):
 
 
         # Configure the service
-        test_select_members = view_management.test_select_members(case=main, ss1_server_name=ss1_server_name, ss1_class=ss1_class, ss1_code=ss1_code)
+        test_select_members = view_management.test_select_members(case=main, ss1_server_name=ss1_member_name, ss1_class=ss1_class, ss1_code=ss1_code)
         test_member_details = view_management.test_members_details(case=main)
         test_list_security_servers = view_management.test_list_security_servers(case=main, ss1_server_name=ss1_server_name)
         test_view_member_subystems = view_management.test_view_member_subystems(case=main, ss1_server_name=ss1_server_name, ss1_subsystem=ss1_subsystem, ss1_class=ss1_class, ss1_code=ss1_code)

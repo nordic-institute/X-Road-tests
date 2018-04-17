@@ -35,6 +35,9 @@ class XroadEditGlobalGroupDescription(unittest.TestCase):
         try:
             main.reload_webdriver(cs_host, cs_user, cs_pass)
             test_edit_global_group_details(new_group_description, check_inputs=True)
+        except:
+            main.save_exception_data()
+            raise
         finally:
             main.log('Restoring global group description')
             main.reload_webdriver(cs_host, cs_user, cs_pass)

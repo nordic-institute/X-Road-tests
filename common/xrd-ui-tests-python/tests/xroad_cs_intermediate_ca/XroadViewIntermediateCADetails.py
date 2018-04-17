@@ -20,9 +20,10 @@ class XroadViewIntermediateCADetails(unittest.TestCase):
         cs_user = main.config.get('cs.user')
         cs_pass = main.config.get('cs.pass')
 
-        ca_name = main.config.get('ca.ssh_host')
+        ca_name = main.config.get('ca.name')
+        distinguished_name = str(main.config.get('ca.distinguished_name'))
 
-        test_view_intermediate_ca_details = cs_intermediate_ca.test_view_intermediate_ca_details(main, ca_name=ca_name)
+        test_view_intermediate_ca_details = cs_intermediate_ca.test_view_intermediate_ca_details(main, ca_name=ca_name, distinguished_name=distinguished_name)
         try:
             main.reload_webdriver(cs_host, cs_user, cs_pass)
             test_view_intermediate_ca_details()

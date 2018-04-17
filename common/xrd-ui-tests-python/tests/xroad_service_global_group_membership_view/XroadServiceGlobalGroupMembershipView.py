@@ -7,8 +7,8 @@ from helpers import xroad
 """
  SERVICE_36: View the Global Group Membership of an X-Road Member
  RIA URL: https://jira.ria.ee/browse/XTKB-179
- Depends on finishing other test(s):
- Requires helper scenarios:
+ Depends on finishing other test(s): XroadGlobalGroups
+ Requires helper scenarios: 
  X-Road version: 6.16.0
  """
 
@@ -27,11 +27,9 @@ class XroadServiceGlobalGroupMembershipView(unittest.TestCase):
         cs_host = main.config.get('cs.host')
         cs_user = main.config.get('cs.user')
         cs_pass = main.config.get('cs.pass')
-        test_group_name = 'testGroup'
+        test_group_name = 'GLOB1'
         provider = xroad.split_xroad_id(main.config.get('services.central_service_provider_id'))
         subsystem = provider['subsystem']
-
-
 
         '''Configure the service'''
         test_logout = view_management.test_verify_local_group_client(case=main, ss_client_name=ss_client_name, test_group_name=test_group_name, subsystem=subsystem)

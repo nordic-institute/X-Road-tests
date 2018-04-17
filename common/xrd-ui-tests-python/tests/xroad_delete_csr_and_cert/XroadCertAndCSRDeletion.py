@@ -1,100 +1,99 @@
+import time
+import unittest
+
 from selenium.webdriver.common.by import By
 
-from helpers import ssh_server_actions, ssh_client
-from tests.xroad_ss_client_certification_213.client_certification import generate_csr, delete_csr, \
-    test_generate_csr_and_import_cert, delete_cert_from_key, delete_all_but_one_sign_keys, delete_all_auth_keys
-from view_models import keys_and_certificates_table, sidebar
+from helpers import ssh_client, auditchecker, xroad
+from main.maincontroller import MainController
+from tests.xroad_client_registration_in_ss_221.client_registration_in_ss import approve_requests
+from tests.xroad_delete_csr_and_cert.cert_and_csr_deletion import test_delete_csr_key_has_more_items, \
+    test_delete_cert_key_has_more_items, test_delete_only_cert_from_only_key, test_delete_only_csr_from_only_key
+from tests.xroad_parse_users_inputs.xroad_parse_user_inputs import add_key_label
+from tests.xroad_ss_client_certification_213.client_certification import register_cert, activate_cert, \
+    test_generate_csr_and_import_cert, test_add_cert_to_ss
+from view_models import sidebar
+from view_models.keys_and_certificates_table import SIGNING_KEY_LABEL
 
 
-def test_delete_csr_key_has_more_items(self, sshclient, log_checker, client_code, client_class):
+class XroadCertAndCSRDeletion(unittest.TestCase):
     """
-    SS_39 4. Delete CSR from System Configuration deletes only csr when key has other items
-    :param self: obj - mainController instance
-    :param sshclient: obj- sshclient instance
-    :param log_checker: obj - logchecker instance
-    :param client_code: str - client code
-    :param client_class: str - client class
-    :return:
-    """
-
-    def delete_csr_key_has_more_items():
-        self.log('Generate CSR which will be deleted')
-        generate_csr(self, client_code=client_code,
-                     client_class=client_class, server_name=ssh_server_actions.get_server_name(self),
-                     key_label=keys_and_certificates_table.SIGNING_KEY_LABEL, generate_key=False)
-        delete_csr(self, sshclient, log_checker, key_has_other_cert_or_csr=True)
-
-    return delete_csr_key_has_more_items
-
-
-def test_delete_only_cert_from_only_key(self, ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass):
-    """
-    SS_39 4b. Delete Cert also deletes key and token from configuration when cert is keys only item and token has no other keys
-    :param self: mainController instance
-    :param ss2_ssh_host:  security server ssh host
-    :param ss2_ssh_user:  security server ssh user
-    :param ss2_ssh_pass:  security server ssh pass
-    :return:
+    SS_39 1-5, 3a, 4a, 4b Delete Certificate or a Certificate Signing Request Notice from System Configuration
+    RIA URL: https://jira.ria.ee/browse/XTKB-100
+    RIA URL: https://jira.ria.ee/browse/XTKB-126
+    Depends on finishing other test(s):
+    Requires helper scenarios: SS_29, SS_30
+    X-Road version: 6.16.0
     """
 
-    def delete_cert_key_has_more_items():
-        self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.KEYSANDCERTIFICATES_BTN_CSS).click()
-        self.wait_jquery()
-        self.wait_until_visible(type=By.ID, element=keys_and_certificates_table.KEYS_AND_CERTIFICATES_TABLE_ID)
-        self.log('Delete all auth keys present')
-        delete_all_auth_keys(self)()
-        self.log('Delete all sign keys, but one')
-        delete_all_but_one_sign_keys(self)()
-        self.log('SS_39 4b Delete only certificate from only key in token')
-        delete_cert_from_key(self, ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass, one_cert=True)()
+    def test_cert_and_csr_deletion(self):
+        main = MainController(self)
+        ca_ssh_host = main.config.get('ca.ssh_host')
+        ca_ssh_user = main.config.get('ca.ssh_user')
+        ca_ssh_pass = main.config.get('ca.ssh_pass')
+        cs_ssh_host = main.config.get('cs.ssh_host')
+        cs_ssh_user = main.config.get('cs.ssh_user')
+        cs_ssh_pass = main.config.get('cs.ssh_pass')
+        cert_path = 'temp.pem'
 
-    return delete_cert_key_has_more_items
+        ss_ssh_host = main.config.get('ss1.ssh_host')
+        ss_ssh_user = main.config.get('ss1.ssh_user')
+        ss_ssh_pass = main.config.get('ss1.ssh_pass')
 
+        ss_host = main.config.get('ss1.host')
+        ss_user = main.config.get('ss1.user')
+        ss_pass = main.config.get('ss1.pass')
+        cs_host = main.config.get('cs.host')
+        cs_user = main.config.get('cs.user')
+        cs_pass = main.config.get('cs.pass')
+        sshclient = ssh_client.SSHClient(ss_ssh_host, ss_ssh_user, ss_ssh_pass)
+        client_id = main.config.get('ss1.server_id')
+        client_name = main.config.get('ss1.server_name')
+        client = xroad.split_xroad_subsystem(client_id)
+        client_code = client['code']
+        client_class = client['class']
+        client['name'] = client_name
+        auth_key_label = main.config.get('certs.ss_auth_key_label')
 
-def test_delete_cert_key_has_more_items(self, client_code, client_class, ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass):
-    """
-    SS_39 4. Delete Cert deletes only cert when key has other items
-    :param self: obj - mainController instance
-    :param client_code: client code
-    :param client_class:  client class
-    :param ss2_ssh_host:  security server ssh host
-    :param ss2_ssh_user:  security server ssh user
-    :param ss2_ssh_pass:  security server ssh pass
-    :return:
-    """
+        log_checker = auditchecker.AuditChecker(ss_ssh_host, ss_ssh_user, ss_ssh_pass)
+        delete_csr_key_has_more = test_delete_csr_key_has_more_items(main, sshclient, log_checker, client_code,
+                                                                     client_class)
+        delete_cert_key_has_more = test_delete_cert_key_has_more_items(main, client_code, client_class, ss_ssh_host,
+                                                                       ss_ssh_user, ss_ssh_pass)
+        delete_only_cert_from_only_key = test_delete_only_cert_from_only_key(main, ss_ssh_host, ss_ssh_user,
+                                                                             ss_ssh_pass)
+        delete_only_csr_from_only_key = test_delete_only_csr_from_only_key(main, client_code, client_class,
+                                                                           ss_ssh_host,
+                                                                           ss_ssh_user, ss_ssh_pass)
+        test_register_cert = register_cert(main, ss_ssh_host, ss_ssh_user, ss_ssh_pass,
+                                           cs_host=cs_ssh_host, client=client,
+                                           ca_ssh_host=ca_ssh_host, ca_ssh_user=ca_ssh_user,
+                                           ca_ssh_pass=ca_ssh_pass,
+                                           cert_path=cert_path)
 
-    def delete_cert_key_has_more_items():
-        test_generate_csr_and_import_cert(client_code=client_code, client_class=client_class, ss2_ssh_host=ss2_ssh_host,
-                                          ss2_ssh_user=ss2_ssh_user,
-                                          ss2_ssh_pass=ss2_ssh_pass,
-                                          key_label=keys_and_certificates_table.SIGNING_KEY_LABEL, generate_key=False,
-                                          cancel_key_generation=False,
-                                          cancel_csr_generation=False, generate_same_csr_twice=False)(self)
-        self.wait_until_visible(type=By.XPATH,
-                                element=keys_and_certificates_table.KEY_TABLE_CERT_ROW_BY_LABEL_XPATH.format(
-                                    'sign')).click()
-        delete_cert_from_key(self, ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass)()
-
-    return delete_cert_key_has_more_items
-
-
-def test_delete_only_csr_from_only_key(self, client_code, client_class, ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass):
-    """
-    SS_39 4b. Delete CSR also deletes key and token from configuration when CSR is keys only item and token has no other keys
-    :param self: obj - mainController instance
-    :param client_code:  str - client code
-    :param client_class: str - client class
-    :param ss2_ssh_host:  str - security server ssh host
-    :param ss2_ssh_user:  str - security server ssh user
-    :param ss2_ssh_pass:  str - security server ssh pass
-    :return:
-    """
-
-    def delete_csr_only_key():
-        generate_csr(self, client_code=client_code,
-                     client_class=client_class, server_name=ssh_server_actions.get_server_name(self),
-                     key_label=keys_and_certificates_table.SIGNING_KEY_LABEL, generate_key=False)
-        sshclient = ssh_client.SSHClient(ss2_ssh_host, ss2_ssh_user, ss2_ssh_pass)
-        delete_csr(self, sshclient, only_item_and_key=True)
-
-    return delete_csr_only_key
+        test_activate_cert = activate_cert(main, ss_ssh_host, ss_ssh_user, ss_ssh_pass,
+                                           registered=True)
+        try:
+            main.reload_webdriver(ss_host, ss_user, ss_pass)
+            delete_csr_key_has_more()
+            delete_cert_key_has_more()
+            delete_only_cert_from_only_key()
+            delete_only_csr_from_only_key()
+        finally:
+            main.reload_webdriver(ss_host, ss_user, ss_pass)
+            test_generate_csr_and_import_cert(client_code, client_class, key_label=SIGNING_KEY_LABEL,
+                                              ss2_ssh_host=ss_ssh_host,
+                                              ss2_ssh_user=ss_ssh_user, ss2_ssh_pass=ss_ssh_pass, generate_key=False,
+                                              cancel_key_generation=False,
+                                              cancel_csr_generation=False, generate_same_csr_twice=False)(main)
+            main.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.KEYSANDCERTIFICATES_BTN_CSS).click()
+            main.wait_jquery()
+            add_key_label(main, auth_key_label)
+            test_register_cert()
+            test_activate_cert()
+            test_add_cert_to_ss(main, cs_host, cs_user, cs_pass, client, cert_path,
+                                cs_ssh_host, cs_ssh_user, cs_ssh_pass)
+            main.reload_webdriver(cs_host, cs_user, cs_pass)
+            approve_requests(main)
+            main.log('Wait until servers have synced')
+            time.sleep(120)
+            main.tearDown()

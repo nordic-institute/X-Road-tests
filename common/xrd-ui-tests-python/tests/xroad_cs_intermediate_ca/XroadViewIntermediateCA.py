@@ -20,7 +20,7 @@ class XroadViewIntermediateCA(unittest.TestCase):
         cs_user = main.config.get('cs.user')
         cs_pass = main.config.get('cs.pass')
 
-        ca_name = main.config.get('ca.ssh_host')
+        ca_name = main.config.get('ca.name')
 
         test_view_intermediate_ca = cs_intermediate_ca.test_view_intermediate_ca(main, ca_name=ca_name)
         try:

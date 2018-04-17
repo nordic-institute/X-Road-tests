@@ -325,7 +325,7 @@ def import_auth_cert_from_token(self, ss_ssh_host, ss_ssh_user, ss_ssh_pass, ss_
     self.log('SS_31 14. System logs the event {0}'.format(expected_log_msg))
     logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
     self.is_true(logs_found)
-    imported_cert_row.click()
+    self.click(imported_cert_row)
 
 
 def reset_hard_token(self, token_name):
@@ -334,7 +334,7 @@ def reset_hard_token(self, token_name):
                                            element=HARDTOKEN_NEXT_NOT_EMPTY_TR.format(token_name))
 
         while 'Token' not in next_row.text:
-            next_row.click()
+            self.click(next_row)
             self.wait_until_visible(type=By.ID, element=DELETE_BTN_ID).click()
             confirm_dialog_click(self)
             next_row = self.wait_until_visible(type=By.XPATH,

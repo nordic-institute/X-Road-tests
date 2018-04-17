@@ -1,4 +1,5 @@
 # coding=utf-8
+import time
 from selenium.webdriver.common.by import By
 from helpers import xroad
 
@@ -79,7 +80,8 @@ def remove_subjects_from_acl(self, service_subjects, select_duplicate=False):
     if service_subjects:
         self.log('If subject list is not empty, select the subjects in it (click on them)')
         select_existing_acl_subjects(self, service_subjects, select_duplicate=select_duplicate)
-
+        time.sleep(1)
+        self.wait_jquery()
         self.log('Click on the "Remove selected" button')
         remove_selected_button = self.by_id(popups.CLIENT_DETAILS_POPUP_ACL_SUBJECTS_REMOVE_SELECTED_BTN_ID)
         remove_selected_button.click()

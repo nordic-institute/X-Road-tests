@@ -42,17 +42,14 @@ class XroadSecurityServerKeyGenerationSignerTimedOut(unittest.TestCase):
             start_xroad_signer_service()
             main.tearDown()
 
-
-class SecurityServerCSRGeneration(unittest.TestCase):
-    """
-    SS_29 6a Generate a csr(fails)
-    RIA URL: https://jira.ria.ee/browse/XT-342, https://jira.ria.ee/browse/XTKB-51
-    Depends on finishing other test(s):
-    Requires helper scenarios:
-    X-Road version: 6.16.0
-    """
-
     def test_securityServerCSRGenerationSignerTimedOut(self):
+        """
+            SS_29 6a Generate a csr(fails)
+            RIA URL: https://jira.ria.ee/browse/XT-342, https://jira.ria.ee/browse/XTKB-51
+            Depends on finishing other test(s):
+            Requires helper scenarios:
+            X-Road version: 6.16.0
+            """
         main = MainController(self)
         ss_host = main.config.get('ss2.host')
         ss_username = main.config.get('ss2.user')
@@ -76,7 +73,8 @@ class SecurityServerCSRGeneration(unittest.TestCase):
         try:
             generate_csr_timed_out()
         except:
-            assert False
+            main.save_exception_data()
+            raise
         finally:
             start_xroad_signer_service()
             client_certification.delete_added_key_after_service_up(main, ss_host)

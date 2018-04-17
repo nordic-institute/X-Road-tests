@@ -2,6 +2,7 @@ from selenium.common.exceptions import NoSuchElementException
 
 from view_models import popups
 
+CLIENT_ALREADY_EXISTS_ERROR = 'Client already exists'
 DELETE_AUTH_CERT_REQ_ADDED = 'Request of deleting authentication certificate from security server \'{0}\' added successfully'
 ERROR_MESSAGE_CSS = '.messages .error'
 ERROR_MESSAGE_CLOSE_CSS = '.messages .error i'
@@ -20,6 +21,8 @@ WSDL_ERROR_VALIDATION_FAILED = 'Failed to add WSDL: WSDL ({0}) validation failed
 WSDL_EDIT_ERROR_VALIDATION_FAILED = 'Failed to edit WSDL: WSDL ({0}) validation failed'
 WSDL_EDIT_ERROR_FILE_DOES_NOT_EXIST = 'Failed to edit WSDL: Downloading WSDL failed. WSDL URL must point to a WSDL file.'
 WSDL_EDIT_ERROR_WSDL_EXISTS = 'Failed to edit WSDL: WSDL address already exists.'
+WSDL_EDIT_INCORRECT_STRUCTURE = 'Failed to edit WSDL: Incorrect file structure. WSDL URL must point to a WSDL file.'
+
 
 WSDL_ADD_ERROR_VALIDATOR_COMMAND_NOT_FOUND = 'Failed to add WSDL: Running WSDL validator failed. Command not found.'
 WSDL_REFRESH_ERROR_VALIDATOR_COMMAND_NOT_FOUND = 'Failed to refresh WSDL(s): Running WSDL validator failed. Command not found.'
@@ -52,6 +55,7 @@ TSL_CERTIFICATE_INCORRECT_FILE_FORMAT = "Incorrect file format. Only PEM and DER
 CERTIFICATE_IMPORT_SUCCESSFUL = 'Certificate imported successfully'
 CA_ADD_SUCCESSFUL = 'Certification service added successfully'
 
+UNKNOWN_ORGANIZATION_ERROR = 'Failed to import certificate: Certificate issued to an unknown member'
 IMPORT_CERT_KEY_NOT_FOUND_ERROR = 'Failed to import certificate: key not found'
 AUTHCERT_DELETION_DISABLED = 'Services/authCertDeletion is disabled: Out of order'
 CERTIFICATE_NOT_VALID = 'Failed to import certificate: Certificate is not valid'
@@ -108,11 +112,26 @@ SS_CONFIGURATION_BACKUP_ERROR = "Failed to back up configuration: Error making c
 SS_SUCCESSFUL_DELETE = 'Selected backup deleted successfully'
 INPUT_EXCEEDS_255_CHARS = 'Parameter \'{0}\' input exceeds 255 characters'
 INVALID_HOST_ADDRESS = 'Invalid host address'
-FAILED_TO_REGISTER_HOST_NOT_KNOWN_ERROR = 'Failed to register certificate: UnknownHostException: {0}: Name or service not known'
+FAILED_TO_REGISTER_CONNECTION_REFUSED_ERROR = 'Failed to register certificate: ConnectException: Connection refused (Connection refused)'
 
 UPLOAD_CONTAIN_INVALID_CHARACTERS = 'Failed to upload new backup file: Filename \'{0}\' contains invalid characters. Valid characters include: (A-Z), (a-z), (0-9), (_), (.), (-).'
 UPLOAD_WRONG_EXTENSION = 'Failed to upload new backup file: Uploaded file name \'{0}\' has an invalid extension, the only valid one is \'tar\''
 
+DELETE_ANCHOR_SUCCESS_MSG = 'Configuration anchor of instance \'{}\' deleted successfully.'
+UPLOAD_ANCHOR_SIGNATURE_ERROR = 'Failed to save uploaded trusted anchor: ' \
+                                 'Signature of configuration cannot be verified'
+UPLOAD_ANCHOR_EXPIRED_ERROR = 'Failed to save uploaded trusted anchor: ' \
+                                 'Configuration from source is out of date'
+UPLOAD_ANCHOR_URL_UNREACHABLE_ERROR = 'Failed to save uploaded trusted anchor: ' \
+                                 'Configuration source cannot be reached, check source URL in uploaded anchor file'
+UPLOAD_ANCHOR_INVALID_FILE_ERROR = 'Failed to upload trusted anchor: ' \
+                                 'Incorrect file structure.'
+UPLOAD_ANCHOR_UNKNOWN_ERROR = 'Failed to save uploaded trusted anchor: ' \
+                                 'Configuration from source failed verification'
+UPLOAD_ANCHOR_INTERNAL_CONF_ERROR = 'Failed to save uploaded trusted anchor: ' \
+                                 'Anchor points to an internal configuration source. ' \
+                                 'Only external configuration source anchors are supported as trusted anchors'
+UPLOAD_ANCHOR_SAME_INSTANCE_ERROR = 'Failed to upload trusted anchor: Anchors originating from this instance are not supported as trusted anchors.'
 CERT_ALREADY_SUBMITTED_ERROR_BEGINNING = 'Failed to add authentication certificate adding request: Certificate is already submitted for registration with request'
 UPLOAD_WRONG_FORMAT = 'Failed to upload new backup file: Content of uploaded file must be in tar format'
 UPLOAD_EXISTS = 'Backup file with name \'{0}\' already exists, do you want to overwrite it?'
@@ -127,7 +146,10 @@ HARDTOKEN_LOGIN_FAILED = 'Login failed: CKR_USER_PIN_NOT_INITIALIZED'
 HARDTOKEN_LOGOUT_FAILED = 'CKR_DEVICE_ERROR'
 HARDTOKEN_KEY_DELETE_FAILED = "Failed to delete key: Failed to delete private key \'{0}\' on token 'utimaco-UTIMACO CS000000-CryptoServer PKCS11 Token': iaik.pkcs.pkcs11.wrapper.PKCS11Exception: CKR_DEVICE_ERROR"
 
+KEY_DELETE_FAILED_CONNECTION_REFUSED = 'Failed to delete key: ConnectException: Connection refused (Connection refused)'
 
+KEY_DELETE_FAILED_SERVICE_DISABLED_ERROR_MSG_REGEX = 'Failed to delete key: Service .+authCertDeletion is disabled: Out of order'
+KEY_DELETE_SENDING_FAILED = 'Failed to delete key: Could not connect to any target host ([https://ss.asa:5500/])'
 MANAGEMENT_SERVICE_REGISTERED = 'Management service provider \'.*\' registered as security server \'.*\' client'
 MANAGEMENT_SERVICE_ADDED_COMMENT = 'Management service provider registration'
 DECLINED_REQUEST_NOTICE = 'Successfully declined request with id \'{0}\''
@@ -143,6 +165,9 @@ CP_CONF_DOWNLOAD_REQUEST_ERROR_3 = 'HttpError: {0}'
 CP_DOWNLOAD_UPDATE_CONFIGURATION_ERROR = 'ERROR e.r.x.c.c.g.ConfigurationClient - Failed to download configuration from any configuration location:'
 CP_DOWNLOAD_UPDATE_CONFIGURATION_LOCATION_ERROR = 'location: http://{0}/internalconf?version=2; error: HttpError: {0}'
 CP_DOWNLOAD_SUCCESSFULL = 'Downloading configuration from http://{0}/internalconf?version=2'
+SECURITY_SERVER_CLIENT_DELETION_REQUEST = 'Request of deleting client \'SUBSYSTEM:{0}/{1}/{2}/{3}\' from security server \'SERVER:{4}/{5}/{6}/{7}\' added successfully'
+
+
 def get_error_message(self):
     '''
     Returns the first visible error message string (an element with class 'error' inside an element with class
@@ -254,9 +279,9 @@ def get_console_output(self):
 
 def get_auth_cert_del_req_added_message(client):
     return DELETE_AUTH_CERT_REQ_ADDED.format(
-        'SERVER:{0}/{1}/{2}/{3}'.format(client['instance'], client['class'], client['code'], client['name']))
+        'SERVER:{0}/{1}/{2}/{3}'.format(client['instance'], client['class'], client['code'], client['server_name']))
 
 
 def get_cert_adding_existing_server_req_added_notice(client):
     return CERTIFICATE_ADDING_EXISTING_SERVER_REQUEST_ADDED_NOTICE.format(
-        '{0}/{1}/{2}/{3}'.format(client['instance'], client['class'], client['code'], client['name']))
+        '{0}/{1}/{2}/{3}'.format(client['instance'], client['class'], client['code'], client['server_name']))

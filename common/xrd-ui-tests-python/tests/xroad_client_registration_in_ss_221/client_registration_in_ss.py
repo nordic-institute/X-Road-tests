@@ -13,7 +13,7 @@ from view_models import members_table, clients_table_vm, sidebar, popups, \
     groups_table
 from view_models.keys_and_certificates_table import APPROVED
 from view_models.log_constants import DELETE_SUBSYSTEM, REVOKE_AUTH_REGISTRATION_REQUEST, DELETE_CLIENT, \
-    UNREGISTER_CLIENT, REVOKE_CLIENT_REGISTRATION_REQUEST, UNREGISTER_CLIENT_FAILED
+    UNREGISTER_CLIENT, REVOKE_CLIENT_REGISTRATION_REQUEST, UNREGISTER_CLIENT_FAILED, APPROVE_CLIENT_REGISTRATION_REQUST
 from view_models.members_table import MANAGEMENT_REQUEST_TABLE_ID
 from view_models.messages import ERROR_MESSAGE_CSS, UNREGISTER_CLIENT_SEND_REQUEST_FAIL, \
     REGISTRATION_REQUEST_SENDING_FAILED
@@ -502,6 +502,7 @@ def add_client_to_ss(self, client, retry_interval=0, retry_timeout=0, wait_input
             member_row = members_table.get_row_by_columns(table, [client['name'], client['class'], client['code']])
 
             self.wait_jquery()
+            self.js("arguments[0].scrollIntoView();", member_row)
             member_row.click()
             # If we got here, client was found
             self.log(step + 'Found client row')
@@ -750,7 +751,7 @@ def add_sub_as_client_to_member(self, system_code, client, wait_input=2, step=''
         'tr')
     for row in rows:
         if str(row.find_elements_by_tag_name('td')[3].text) == system_code:
-            row.click()
+            self.click(row)
             break
 
     self.wait_until_visible(type=By.ID, element=members_table.SELECT_SECURITY_SERVER_BTN_ID).click()
@@ -814,7 +815,7 @@ def add_subsystem_to_server_client(self, server_code, client, wait_input=3):
         if tds[0].text is not u'':
             if (tds[0].text == client['name']) & (tds[1].text == client['code']) & (tds[2].text == client['class']) & (
                         tds[3].text == u''):
-                row.click()
+                self.click(row)
                 break
 
     self.wait_until_visible(type=By.XPATH, element=cs_security_servers.SELECT_MEMBER_BTN_XPATH).click()
@@ -841,7 +842,7 @@ def add_subsystem_to_server_client(self, server_code, client, wait_input=3):
     self.log('MEMBER_56 4. System verifies that the subsystem is new')
 
 
-def approve_requests(self, use_case='', step='', cancel_confirmation=False):
+def approve_requests(self, use_case='', step='', cancel_confirmation=False, log_checker=None):
     """
     Approve the management requests.
     :param self: MainController object
@@ -849,6 +850,9 @@ def approve_requests(self, use_case='', step='', cancel_confirmation=False):
     :return: None
     """
 
+    current_log_lines = None
+    if log_checker:
+        current_log_lines = log_checker.get_line_count()
     # Open main page
     self.log(step + 'Open central server')
     self.driver.get(self.url)
@@ -894,14 +898,19 @@ def approve_requests(self, use_case='', step='', cancel_confirmation=False):
             # UC MEMBER_37 3. Confirm request approval
             self.log('MEMBER_37 3. Confirm request approval')
             popups.confirm_dialog_click(self)
-            td = self.by_xpath(members_table.get_requests_row_by_td_text(APPROVED))
-            last_approved_request_id = td.find_elements_by_tag_name('td')[0].text
+            status = self.wait_until_visible(type=By.XPATH, element=
+            members_table.get_requests_row_by_td_text(request_id), timeout=60).find_elements_by_tag_name('td')[-1].text
             # UC MEMBER_37 4. System saves the registration relation
             self.log('MEMBER_37 4. System saves the registration relation')
             # UC MEMBER_37 5. System sets the state of the request to "approved"
             self.log('MEMBER_37 5. System sets the state of the request to "{0}"'.format(APPROVED))
-            self.is_equal(request_id, last_approved_request_id)
+            self.is_equal(APPROVED, status)
             # Find the next request waiting to be approved
+            if current_log_lines:
+                expected_log_msg = APPROVE_CLIENT_REGISTRATION_REQUST
+                self.log('MEMBER_37 6. System logs the eventt "{}"'.format(expected_log_msg))
+                logs_found = log_checker.check_log(expected_log_msg, from_line=current_log_lines + 1)
+                self.is_true(logs_found, msg='No approval log found')
             try:
                 td = self.by_xpath(
                     members_table.get_requests_row_by_td_text(keyscertificates_constants.SUBMITTED_FOR_APPROVAL_STATE))
@@ -931,7 +940,7 @@ def check_expected_result_cs(self, ss_1_client, ss_2_client, ss_2_client_2, chec
 
     client_row = members_table.get_row_by_columns(table, [ss_1_client['name'], ss_1_client['class'],
                                                           ss_1_client['code']])
-    client_row.click()
+    self.click(client_row)
 
     # Open the client details and subsystem tab
     self.wait_until_visible(type=By.ID, element=members_table.MEMBERS_DETATILS_BTN_ID).click()
@@ -1019,7 +1028,7 @@ def check_expected_result_cs(self, ss_1_client, ss_2_client, ss_2_client_2, chec
         if row.text is not u'':
             if row.find_elements_by_tag_name('td')[8].text == 'APPROVED':
                 counter += 1
-                row.click()
+                self.click(row)
                 self.wait_until_visible(type=By.ID, element=members_table.MANAGEMENT_REQUEST_DETAILS_BTN_ID).click()
                 self.wait_jquery()
 
@@ -1177,7 +1186,7 @@ def open_servers_clients(self, code):
     for row in rows:
         if row.text is not u'':
             if row.find_element_by_tag_name('td').text == code:
-                row.click()
+                self.click(row)
 
     # Open details
     self.log('Click on Details button')
@@ -1210,10 +1219,9 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
                 cs_member, ss_1_client, ss_1_client_2, ss_2_client, ss_2_client_2,
                 ca_ssh_host=None, ca_ssh_username=None, ca_ssh_password=None,
                 cs_ssh_host=None, cs_ssh_username=None, cs_ssh_password=None,
-                global_group=None, check_logs=True):
+                global_group=None, check_logs=True, fail_on_missing_group=False):
     """
     Removes the data that was created during tests.
-    :param global_group: str - global group name
     :param cs_ssh_password: str - central server ssh password
     :param cs_ssh_username: str - central server ssh username
     :param cs_ssh_host: str -central server ssh host
@@ -1241,6 +1249,9 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
     :param ca_ssh_host: str|None - CA ssh host, used for revoking certificates in CA
     :param ca_ssh_username: str|None - CA ssh username, used for revoking certificates in CA
     :param ca_ssh_password: str|None - CA ssh password, used for revoking certificates in CA
+    :param global_group: str - global group name
+    :param check_logs: bool - check log entries after actions
+    :param fail_on_missing_group: bool - fail the test if global group is missing
     :return: None
     """
     self.log('*** MEMBER_53 / MEMBER_52 / MEMBER_14')
@@ -1265,16 +1276,19 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
         self.is_true(logs_found)
 
     # Delete subsystem with global group from member
+    group_member_count = 0
     try:
         self.reload_webdriver(cs_host, cs_username, cs_password)
-        group = global_group
         self.wait_until_visible(type=By.CSS_SELECTOR, element=sidebar.GLOBAL_GROUPS_CSS).click()
         group_member_count = self.wait_until_visible(type=By.XPATH,
                                                      element=groups_table.GLOBAL_GROUP_TR_BY_TD_TEXT_XPATH.format(
-                                                         group)).find_elements_by_tag_name('td')[2].text
+                                                         global_group)).find_elements_by_tag_name('td')[2].text
     except:
-        traceback.print_exc()
-        test_success = False
+        if fail_on_missing_group:
+            traceback.print_exc()
+        else:
+            self.log('Global group not found')
+        test_success = test_success and fail_on_missing_group
 
     if check_logs:
         log_checker = auditchecker.AuditChecker(host=cs_ssh_host,
@@ -1299,11 +1313,14 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
     try:
         group_member_count_after = self.wait_until_visible(type=By.XPATH,
                                                            element=groups_table.GLOBAL_GROUP_TR_BY_TD_TEXT_XPATH.format(
-                                                               group)).find_elements_by_tag_name('td')[2].text
+                                                               global_group)).find_elements_by_tag_name('td')[2].text
         self.is_true(group_member_count > group_member_count_after)
     except:
-        traceback.print_exc()
-        test_success = False
+        if fail_on_missing_group:
+            traceback.print_exc()
+        else:
+            self.log('Global group not found')
+        test_success = test_success and fail_on_missing_group
 
     # UC MEMBER_26 Delete an X-Road Member
     self.log('MEMBER_26 Removing members from central server')
@@ -1344,8 +1361,8 @@ def remove_data(self, cs_host, cs_username, cs_password, sec_1_host, sec_1_usern
         self.wait_until_visible(type=By.XPATH,
                                 element=keyscertificates_constants.get_generated_key_row_xpath(ss_1_client['code'],
                                                                                                ss_1_client['class']))
-        certs_to_revoke = get_certificates_to_revoke(self, ss_1_client)
-        if ssh_client is not None:
+        certs_to_revoke = ssh_server_actions.get_valid_certificates(self, ss_1_client)
+        if ca_ssh_client is not None:
             self.log('Revoking certificates in CA')
             client_certification.revoke_certs(ca_ssh_client, certs_to_revoke)
     except:
@@ -1462,7 +1479,7 @@ def remove_member(self, member):
         assert False, 'Deletion member not found'
 
     # Click on the member
-    row.click()
+    self.click(row)
 
     # Open details
     self.log('Click on "DETAILS" button')
@@ -1645,7 +1662,7 @@ def remove_client_subsystem(self, client, try_cancel=False):
 
     subsys_row = self.wait_until_visible(type=By.XPATH, element=members_table.SUBSYSTEM_TR_BY_CODE_XPATH.format(
         client['subsystem_code']))
-    subsys_row.click()
+    self.click(subsys_row)
 
     # Click "Delete"
     self.log('MEMBER_14 1. Subsystem delete button is clicked')
@@ -1709,43 +1726,6 @@ def remove_certificate(self, client):
         pass
 
 
-def get_certificates_to_revoke(self, client):
-    """
-    Gets a list of the client's certificates that need to be revoked.
-    :param self: MainController object
-    :param client: dict - client data
-    :return: [str] - list of certificate filenames to revoke
-    """
-    # Initialize the list of certificates to revoke. Because we are deleting the key, we need to revoke all certificates
-    # under it.
-    certs_to_revoke = []
-
-    # Try to get the certificates under the generated keys
-    key_num = 1
-    newcerts_base = './newcerts'
-    while True:
-        try:
-            key_friendly_name_xpath = keyscertificates_constants.get_generated_key_row_active_cert_friendly_name_xpath(
-                client['code'], client['class'], key_num)
-            key_name_element = self.by_xpath(key_friendly_name_xpath)
-            element_text = key_name_element.text.strip()
-            # Split the element by space and get the last part of it as this is the key id as a decimal
-            cert_id = int(element_text.rsplit(' ', 1)[-1])
-            cert_hex = '{0:02x}'.format(cert_id).upper()
-            # Key filenames are of even length (zero-padded) so we'll generate one like that
-            if len(cert_hex) % 2 == 1:
-                cert_filename = '{0}/0{1}.pem'.format(newcerts_base, cert_hex)
-            else:
-                cert_filename = '{0}/{1}.pem'.format(newcerts_base, cert_hex)
-            certs_to_revoke.append(cert_filename)
-        except:
-            # Exit loop if element not found (= no certificates listed)
-            break
-        key_num += 1
-
-    return certs_to_revoke
-
-
 def remove_key_and_revoke_certificates(self, client, ssh_client=None):
     """
     Removes a certificate from a client and revokes the associated certificate in the CA.
@@ -1766,7 +1746,7 @@ def remove_key_and_revoke_certificates(self, client, ssh_client=None):
                                                 element=keyscertificates_constants.get_generated_key_row_xpath(
                                                     client['code'],
                                                     client['class']))
-    certs_to_revoke = get_certificates_to_revoke(self, client)
+    certs_to_revoke = ssh_server_actions.get_valid_certificates(self, client)
 
     self.log('Certs to revoke: {0}'.format(certs_to_revoke))
 
@@ -1775,7 +1755,7 @@ def remove_key_and_revoke_certificates(self, client, ssh_client=None):
 
     # Click the key row
     self.log('Click on generated key row')
-    generated_key_row.click()
+    self.click(generated_key_row)
     self.wait_jquery()
 
     # Click "Delete"

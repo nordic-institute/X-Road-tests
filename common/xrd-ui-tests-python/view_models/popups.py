@@ -69,6 +69,7 @@ CLIENT_DETAILS_POPUP_GROUP_ADD_BTN_ID = 'group_add'
 CLIENT_DETAILS_POPUP_CLOSE_BTN_XPATH = '//div[@class="ui-dialog-buttonset"]//button[span="Close"]'
 CLIENT_DETAILS_POPUP_WSDL_URL_DETAILS_CLASS = 'closed'
 CLIENT_DETAILS_POPUP_WSDL_SERVICES_AUTHCERTDELETION_XPATH = '//table[@id="services"]//td[text()="authCertDeletion (0)"]'
+CLIENT_DETAILS_POPUP_WSDL_SERVICES_AUTHCERTDELETION_XPATH2 = '//table[@id="services"]//td[text()="authCertDeletion (0)"]/../td[5]'
 CLIENT_DETAILS_POPUP_LOCAL_GROUPS_TAB_XPATH = '//li[@aria-controls="local_groups_tab"]'
 CLIENT_DETAILS_POPUP_SERVICES_TAB_XPATH = '//li[@aria-controls="services_tab"]'
 
@@ -236,6 +237,22 @@ LOCAL_GROUP_POPUP = '//div[@aria-describedby="group_details_dialog"]'
 LOCAL_GROUP_DELETE_GROUP_BTN_XPATH = LOCAL_GROUP_POPUP + '//div[@class="ui-dialog-buttonset"]//button[span="Delete Group"]'
 LOCAL_GROUPS_TAB = '//a[@href="#local_groups_tab"]'
 
+CS_SECURITY_SERVER_CLIENT_DELETION_REQUEST_NAME = 'server_client_remove_name'
+CS_SECURITY_SERVER_CLIENT_DELETION_REQUEST_CLASS = 'server_client_remove_class'
+CS_SECURITY_SERVER_CLIENT_DELETION_REQUEST_CODE = 'server_client_remove_code'
+CS_SECURITY_SERVER_CLIENT_DELETION_REQUEST_SUB_CODE = 'server_client_remove_subsystem_code'
+CS_SECURITY_SERVER_CLIENT_DELETION_REQUEST_OWNER_NAME = 'server_client_remove_owner_name'
+CS_SECURITY_SERVER_CLIENT_DELETION_REQUEST_OWNER_CLASS = 'server_client_remove_owner_class'
+CS_SECURITY_SERVER_CLIENT_DELETION_REQUEST_OWNER_CODE = 'server_client_remove_owner_code'
+CS_SECURITY_SERVER_CLIENT_DELETION_REQUEST_SERVER_CODE = 'server_client_remove_server_code'
+
+CS_SECURITY_SERVER_CLIENT_DELETION_DIALOG = '//div[@aria-describedby="securityserver_client_remove_dialog"]'
+
+CS_SECURITY_SERVER_CLIENT_DELETION_DIALOG_CANCEL = CS_SECURITY_SERVER_CLIENT_DELETION_DIALOG + '//div[@class="ui-dialog-buttonset"]//button[span="Cancel"]'
+CS_SECURITY_SERVER_CLIENT_DELETION_DIALOG_SUBMIT = CS_SECURITY_SERVER_CLIENT_DELETION_DIALOG + '//div[@class="ui-dialog-buttonset"]//button[span="Submit"]'
+
+
+
 def confirm_dialog_visible(self):
     # Check if anything with a "Confirm" button is visible
     try:
@@ -265,11 +282,11 @@ def no_dialog_click(self):
 def open_client_search_list_from_acl_subjects_popup(self):
     print('Open add new services to subjects dialog')
     # Wait for the element and click
-    self.wait_until_visible(type=By.ID, element=CLIENT_DETAILS_POPUP_ACL_SUBJECTS_ADD_BTN_ID).click()
+    self.click(self.wait_until_visible(type=By.ID, element=CLIENT_DETAILS_POPUP_ACL_SUBJECTS_ADD_BTN_ID))
     self.wait_jquery()
     print('Click on search')
     # Wait for the element and click
-    self.wait_until_visible(type=By.CSS_SELECTOR, element=ACL_SUBJECTS_SEARCH_POPUP_SEARCH_BTN_CSS).click()
+    self.click(self.wait_until_visible(type=By.CSS_SELECTOR, element=ACL_SUBJECTS_SEARCH_POPUP_SEARCH_BTN_CSS))
     print('Waiting on clients table to load')
     # Waiting for searched list to appear
     self.wait_jquery()

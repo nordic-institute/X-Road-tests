@@ -9,7 +9,7 @@ class SSHClient:
     stdin = None
     stdout = None
     stderr = None
-    debug = False
+    debug = True
     client = None
     server_password = None
     sudo_password = None
@@ -146,9 +146,6 @@ class SSHClient:
         if timeout is None:
             # Get the exit status and save it internally
             self.status = stdout.channel.recv_exit_status()
-
-            if self.debug:
-                print('Return stdout')
 
             for line in stdout:
                 line = line.strip('\n')  # Remove newline character

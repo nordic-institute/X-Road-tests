@@ -70,7 +70,7 @@ class MainController(AssertHelper):
     test_number = ''  # Test number (eg CS_01)
     test_name = ''  # Test name (eg "System test")
 
-    def __init__(self, case):
+    def __init__(self, case, empty_downloads=True):
         '''
         Initialize the class.
 
@@ -109,7 +109,11 @@ class MainController(AssertHelper):
         # Browser log. Relative to main_path or absolute.
         self.browser_log = self.get_path(self.config.get_string('config.browser_log', self.browser_log))
 
-        self.empty_download_directory = self.config.get_bool('config.empty_download_dir', self.empty_download_directory)
+        if empty_downloads:
+            self.empty_download_directory = self.config.get_bool('config.empty_download_dir',
+                                                                 self.empty_download_directory)
+        else:
+            self.empty_download_directory = False
         self.create_directories = self.config.get_bool('config.create_directories', self.create_directories)
 
         self.disable_mock_service = not self.config.get_bool('mockrunner.enabled', True)
@@ -604,22 +608,6 @@ class MainController(AssertHelper):
         """
         return element.get_attribute('class').split(' ')
 
-    def input(self, element, text, click=True, clear=True):
-        '''
-        Helper method to type characters into input and textarea elements. Works better with default settings than
-        using just send_keys on the element.
-        :param element: WebElement - element to be interacted with (input, textarea)
-        :param text: str - text to be written
-        :param click: bool - True to click on the element before typing or clearing (prevents crashes)
-        :param clear: bool - True to clear the element before typing
-        :return: None
-        '''
-        if click:
-            element.click()
-        if clear:
-            element.clear()
-        element.send_keys(text)
-
     def log(self, message):
         '''
         Log function. Prints a message to console.
@@ -635,19 +623,23 @@ class MainController(AssertHelper):
         '''
         self.driver.refresh()
 
-    def double_click(self, element):
+    def scroll_to(self, element):
         '''
-        :return: None
+        Uses JavaScript to scroll an element into viewport.
+        :param element: WebElement - element to scroll to
+        :return: WebElement - element itself
         '''
-        ActionChains(self.driver).double_click(element).perform()
+        self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
 
-    def click(self, element, type=None, wait_until_clickable=True, timeout=60, wait_ajax=False, ajax_timeout=60):
+    def click(self, element, type=None, scroll_to=True, wait_until_clickable=False, timeout=60, wait_ajax=False,
+              ajax_timeout=60):
         '''
-        Clicks on a visible element and allows waiting for element to be enabled first.
+        Clicks on a visible element (scrolls into viewport if specified) and allows waiting for element to be enabled first.
         :param element: WebElement | str - element to be clicked on, or a selector accompanied by "type" parameter
         :param type: int|None - type of the element to be looked for, comes from WebDriver By class
-        :param wait_until_clickable: bool - wait until element is clickable or not
-        :param wait_ajax: bool - wait until JQuery is finished
+        :param scroll_to: bool - scroll to element if necessary
+        :param wait_until_clickable: bool - wait until element is clickable
+        :param wait_ajax: bool - wait until jQuery is finished
         :param ajax_timeout: int - if wait_ajax is set, this is used as the JQuery timeout in seconds
         :return: WebElement - element that was found and clicked
         '''
@@ -658,14 +650,42 @@ class MainController(AssertHelper):
         # If type is set, assume we need to look for the element first
         if type is not None:
             element = self.wait_until_visible(element=element, type=type, timeout=timeout)
+        if scroll_to:
+            self.scroll_to(element=element)
         if wait_until_clickable:
             self.wait(condition=conditions.element_to_be_clickable(element), timeout=timeout)
         element.click()
         return element
 
+    def double_click(self, element):
+        '''
+        Double-clicks on an element.
+        :return: WebElement - the element itself
+        '''
+        ActionChains(self.driver).double_click(element).perform()
+        return element
+
+    def input(self, element, text, click=True, clear=True):
+        '''
+        Helper method to type characters into input and textarea elements. Works better with default settings than
+        using just send_keys on the element.
+        :param element: WebElement - element to be interacted with (input, textarea)
+        :param text: str - text to be written
+        :param click: bool - True to click on the element before typing or clearing (prevents crashes)
+        :param clear: bool - True to clear the element before typing
+        :return: None
+        '''
+        if click:
+            element.click()
+        if clear:
+            element.clear()
+        if self.debug:
+            self.log('Entering text: {0}'.format(text))
+        element.send_keys(text)
+
     def select(self, element, type=None, value=None, text=None, index=None):
         '''
-        Selects a value from a visible <select> element using the value itself or visible text.
+        Selects a value from a visible <select> element using the value itself, visible text, or numeric index.
         :param element: WebElement | str - element to be clicked on, or a selector accompanied by "type" parameter
         :param type: int|None - type of the element to be looked for, comes from WebDriver By class
         :param value: str - value to be selected

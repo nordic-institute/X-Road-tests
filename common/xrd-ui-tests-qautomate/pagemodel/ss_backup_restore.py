@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = self.get_current_driver() e.g driver.current_url
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class Ss_backup_restore(CommonUtils):
@@ -58,8 +57,8 @@ class Ss_backup_restore(CommonUtils):
         :param parameters:  Test data section dictionary
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_BACKUP*
-            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_BACKUP*
+            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         # AutoGen method
         self.click_element(self.ID_BACKUP)
@@ -70,8 +69,8 @@ class Ss_backup_restore(CommonUtils):
         Click restore button on first row in backups table
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.FIRST_ROW_RESTORE*
-            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.FIRST_ROW_RESTORE*
+            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         self.click_element(self.FIRST_ROW_RESTORE)
         self.wait_until_jquery_ajax_loaded()
@@ -81,8 +80,8 @@ class Ss_backup_restore(CommonUtils):
         Click delete button on first row in backups table
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.FIRST_ROW_DELETE*
-            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.FIRST_ROW_DELETE*
+            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         self.click_element(self.FIRST_ROW_DELETE)
         self.wait_until_jquery_ajax_loaded()

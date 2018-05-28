@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = self.get_current_driver() e.g driver.current_url
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class Dlg_change_language(CommonUtils):
@@ -53,7 +52,7 @@ class Dlg_change_language(CommonUtils):
         Click button to ok the dialog
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
         """
         self.click_element(self.BUTTON_OK)
 
@@ -63,8 +62,8 @@ class Dlg_change_language(CommonUtils):
         :param text:  String value for text
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *element*
-            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.fail`, *"Option not found"*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *element*
+            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.fail`, *"Option not found"*
         """
         #TODO improve
         locator = self.ID_LOCALE
@@ -80,6 +79,6 @@ class Dlg_change_language(CommonUtils):
         Click button to cancel the dialog
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_CANCEL*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_CANCEL*
         """
         self.click_element(self.BUTTON_CANCEL)

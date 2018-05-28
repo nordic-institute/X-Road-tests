@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 from variables import strings, errors
-from webframework import TESTDATA
-import subprocess
-import os
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.config import get_config_value
-from webframework.extension.util.file_utils import get_file_content
+from QAutoLibrary.extension import TESTDATA
+from QAutoLibrary.QAutoSelenium import *
+from QAutoLibrary.extension.config import get_config_value
+from QAutoLibrary.FileOperations import get_file_content
 from time import sleep
 
 class Common_lib_ssh(CommonUtils):
@@ -51,14 +49,13 @@ class Common_lib_ssh(CommonUtils):
 
         return self.run_bash_command(command, True).strip()[:-1]
 
-    def get_time(self, section="cs_url", date_format='%Y%m%d%H%M'):
+    def get_newest_directory_age(self, section="cs_url"):
         """
         :param section:  Test data section name
         """
         server = TESTDATA[section][u'server_address']
-        command = 'ssh {} date "+{}"'.format(server, date_format)
-
-        return self.run_bash_command(command, True)
+        command = "ssh {} 'expr $(date +%s) - $(stat -c %Y $(ls -dt /var/lib/xroad/public/V2/*/ | head -1))'".format(server)
+        return self.run_bash_command(command, True).strip()
 
     def verify_if_server_contains_file(self, section="cs_url", path=""):
         """
@@ -288,9 +285,17 @@ class Common_lib_ssh(CommonUtils):
         if not isinstance(newest_log, dict):
             self.fail(errors.string_is_not_dict + "\n" + self.parse_log_file_tail(log_output))
         if not event == newest_log["event"]:
-            self.fail(errors.log_event_fail(event) + "\n" + self.parse_log_file_tail(log_output))
+            log_file_tail = self.parse_log_file_tail(log_output)
+            if event in log_file_tail:
+                self.warning("newest log event is not {}, but found in file\n".format(newest_log["event"]) + log_file_tail)
+            else:
+                self.fail(errors.log_event_fail(event) + "\n" + log_file_tail)
         if not user == newest_log["user"]:
-            self.fail(errors.log_user_fail(user) + "\n" + self.parse_log_file_tail(log_output))
+            log_file_tail = self.parse_log_file_tail(log_output)
+            if event in log_file_tail:
+                self.warning("newest log user is not {}, but found in file\n".format(newest_log["user"]) + log_file_tail)
+            else:
+                self.fail(errors.log_user_fail(user) + "\n" + log_file_tail)
 
     def verify_jetty_log(self, section=u'ss1_url', event="Log in user"):
         """

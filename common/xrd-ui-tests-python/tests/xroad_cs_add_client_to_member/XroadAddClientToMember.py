@@ -15,6 +15,8 @@ class XroadAddClientToMember(unittest.TestCase):
     Requires helper scenarios:
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_add_client_to_member'):
+        unittest.TestCase.__init__(self, methodName)
 
     def test_add_client_to_member(self):
         main = MainController(self)

@@ -15,6 +15,8 @@ class XroadCertifyClient(unittest.TestCase):
     Requires helper scenarios: client_certification
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_certify_client'):
+        unittest.TestCase.__init__(self, methodName)
 
     def test_certify_client(self):
         main = MainController(self)

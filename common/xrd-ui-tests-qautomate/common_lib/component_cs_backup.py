@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 import os
 from variables import strings
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.parsers.parameter_parser import get_all_parameters
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 from common_lib import Common_lib
 from pagemodel.cs_backup_restore_dlg_restore_confirm import Cs_backup_restore_dlg_restore_confirm
@@ -172,11 +171,17 @@ class Component_cs_backup(CommonUtils):
         backup_file_path = os.path.join(download_folder, backup_file)
         self.common_lib.type_file_name_pyautogui(backup_file_path)
         self.cs_backup_restore_dlg_upload_backup.click_dialog_confirm()
+        
+        # TODO make verify message less error prone 
+        sleep(1)
+
+        # TODO make verify message less error prone
+        sleep(1)
 
         # Step Verify message and logs
         self.component_common.verify_notice_message(strings.backup_file_uploaded)
         # TODO Autologin audit log is activated same time sometimes
-        #self.common_lib_ssh.verify_audit_log(u'cs_url', event=strings.upload_backup_audit_log)
+        self.common_lib_ssh.verify_audit_log(u'cs_url', event=strings.upload_backup_audit_log)
 
         self.wait_until_jquery_ajax_loaded()
 

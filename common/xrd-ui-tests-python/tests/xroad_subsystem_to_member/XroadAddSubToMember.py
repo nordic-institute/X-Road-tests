@@ -14,6 +14,9 @@ class XroadAddSubToMember(unittest.TestCase):
     Requires helper scenarios: MEMBER_10
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_add_sub_to_member'):
+        unittest.TestCase.__init__(self, methodName)
+
     def test_add_sub_to_member(self):
         main = MainController(self)
 

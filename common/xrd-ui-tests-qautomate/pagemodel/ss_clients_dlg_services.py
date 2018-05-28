@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = get_driver() e.g driver.current_url
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.util.webtimings import get_measurements
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class Ss_clients_dlg_services(CommonUtils):
@@ -72,7 +70,7 @@ class Ss_clients_dlg_services(CommonUtils):
         Verify that clients services dialog is open
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_element_is_visible`, *self.MENUBAR_MAXIMIZE*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_element_is_visible`, *self.MENUBAR_MAXIMIZE*
         """
         self.wait_until_element_is_visible(self.MENUBAR_MAXIMIZE)
 
@@ -81,7 +79,7 @@ class Ss_clients_dlg_services(CommonUtils):
         Click button to add wsdl
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_WSDL_ADD*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_WSDL_ADD*
         """
         self.click_element(self.ID_WSDL_ADD)
 
@@ -90,7 +88,7 @@ class Ss_clients_dlg_services(CommonUtils):
         Click button to upen wsdl services
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.CLASS_CLOSED*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.CLASS_CLOSED*
         """
         self.click_element(self.CLASS_CLOSED)
 
@@ -101,11 +99,11 @@ class Ss_clients_dlg_services(CommonUtils):
         :param parameters:  Test data section dictionary
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
-            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_page_contains`, *parameters[u'service_name_short']*
-            * **Step 3:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *element_rowtable[0]*
-            * **Step 4:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.SERVICES_FILTER*
-            * **Step 5:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *element_rowtable[1]*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_page_contains`, *parameters[u'service_name_short']*
+            * **Step 3:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *element_rowtable[0]*
+            * **Step 4:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.SERVICES_FILTER*
+            * **Step 5:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *element_rowtable[1]*
         """
         self.wait_until_jquery_ajax_loaded()
         self.wait_until_page_contains(parameters[u'service_name_short'])
@@ -121,7 +119,7 @@ class Ss_clients_dlg_services(CommonUtils):
         Click button to edit service parameters
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_SERVICE_PARAMS*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_SERVICE_PARAMS*
         """
         self.click_element(self.ID_SERVICE_PARAMS)
 
@@ -130,7 +128,7 @@ class Ss_clients_dlg_services(CommonUtils):
         Click button to services access rights
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_SERVICE_ACL*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_SERVICE_ACL*
         """
         self.click_element(self.ID_SERVICE_ACL)
 
@@ -139,8 +137,8 @@ class Ss_clients_dlg_services(CommonUtils):
         Click button to enable wsdl
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.CONTAINSTEXTWSDLDISABLED*
-            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_WSDL_ENABLE*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.CONTAINSTEXTWSDLDISABLED*
+            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_WSDL_ENABLE*
         """
         self.click_element(self.CONTAINSTEXTWSDLDISABLED)
         self.click_element(self.ID_WSDL_ENABLE)
@@ -150,7 +148,7 @@ class Ss_clients_dlg_services(CommonUtils):
         Click button to close the dialog
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_CLOSE*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_CLOSE*
         """
         self.click_element(self.BUTTON_CLOSE)
 
@@ -159,6 +157,6 @@ class Ss_clients_dlg_services(CommonUtils):
         Click tab to open details tab
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.DETAILS_TAB*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.DETAILS_TAB*
         """
         self.click_element(self.DETAILS_TAB)

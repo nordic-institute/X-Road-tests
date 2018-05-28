@@ -14,6 +14,8 @@ class XroadViewCSMembers(unittest.TestCase):
     UC MEMBER_08: View the Security Servers Used by an X-Road Member
     UC MEMBER_09: View the Management Requests Associated with an X-Road Member
     '''
+    def __init__(self, methodName='test_xroad_verify_ts'):
+        unittest.TestCase.__init__(self, methodName)
 
     def test_xroad_verify_ts(self):
         main = MainController(self)

@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = get_driver() e.g driver.current_url
 from variables import strings
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.util.webtimings import get_measurements
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class Ss_keys_and_cert_generate_csr(CommonUtils):
@@ -58,7 +56,7 @@ class Ss_keys_and_cert_generate_csr(CommonUtils):
         Click button to submit csr generation
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
         """
         # AutoGen method
         self.click_element(self.BUTTON_OK)
@@ -70,10 +68,10 @@ class Ss_keys_and_cert_generate_csr(CommonUtils):
         :param parameters:  Test data section dictionary
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.select_from_list_by_label`, *self.ID_KEY_USAGE*, *sign_key*
-            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.select_from_list_by_label`, *self.NAME_MEMBER_ID_FI_COM_1234*, *member_id*
-            * **Step 3:** :func:`~webframework.extension.util.common_utils.CommonUtils.select_from_list_by_label`, *self.ID_APPROVED_CA*, *approved_ca*
-            * **Step 4:** :func:`~webframework.extension.util.common_utils.CommonUtils.select_from_list_by_label`, *self.ID_CSR_FORMAT*, *csr_format*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.select_from_list_by_label`, *self.ID_KEY_USAGE*, *sign_key*
+            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.select_from_list_by_label`, *self.NAME_MEMBER_ID_FI_COM_1234*, *member_id*
+            * **Step 3:** :func:`~extension.extension.util.common_utils.CommonUtils.select_from_list_by_label`, *self.ID_APPROVED_CA*, *approved_ca*
+            * **Step 4:** :func:`~extension.extension.util.common_utils.CommonUtils.select_from_list_by_label`, *self.ID_CSR_FORMAT*, *csr_format*
         """
         # AutoGen methods form: keys
         sign_key = strings.sign_key_usage
@@ -91,10 +89,10 @@ class Ss_keys_and_cert_generate_csr(CommonUtils):
         Input text to csr auth fields
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.select_from_list_by_label`, *self.ID_KEY_USAGE*, *auth_key*
-            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.list_label_should_be`, *self.ID_KEY_USAGE*, *auth_key.upper(*
-            * **Step 3:** :func:`~webframework.extension.util.common_utils.CommonUtils.select_from_list_by_label`, *self.ID_APPROVED_CA*, *approved_ca*
-            * **Step 4:** :func:`~webframework.extension.util.common_utils.CommonUtils.select_from_list_by_label`, *self.ID_CSR_FORMAT*, *csr_format*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.select_from_list_by_label`, *self.ID_KEY_USAGE*, *auth_key*
+            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.list_label_should_be`, *self.ID_KEY_USAGE*, *auth_key.upper(*
+            * **Step 3:** :func:`~extension.extension.util.common_utils.CommonUtils.select_from_list_by_label`, *self.ID_APPROVED_CA*, *approved_ca*
+            * **Step 4:** :func:`~extension.extension.util.common_utils.CommonUtils.select_from_list_by_label`, *self.ID_CSR_FORMAT*, *csr_format*
         """
         # AutoGen methods form: keys
         auth_key = strings.auth_key_usage

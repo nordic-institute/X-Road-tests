@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = get_driver() e.g driver.current_url
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from variables import strings
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.util.webtimings import get_measurements
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class Ss_keys_and_cert_dlg_subject_dname(CommonUtils):
@@ -59,7 +57,7 @@ class Ss_keys_and_cert_dlg_subject_dname(CommonUtils):
         :param parameters:  Test data section dictionary
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.input_text`, *self.NAME_O_GOFORE_TEXT*, *parameters['member_name'] + rword*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.NAME_O_GOFORE_TEXT*, *parameters['member_name'] + rword*
         """
         import random, string
         rword = ''.join(random.choice(string.lowercase) for i in range(4))
@@ -70,8 +68,8 @@ class Ss_keys_and_cert_dlg_subject_dname(CommonUtils):
         Click button to submit dnaname
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
-            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
+            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         # AutoGen method submit form: keys
         self.click_element(self.BUTTON_OK)
@@ -84,8 +82,8 @@ class Ss_keys_and_cert_dlg_subject_dname(CommonUtils):
         :param parameters:  Test data section dictionary
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.input_text`, *self.NAME_O_GOFORE_TEXT*, *parameters['member_name'] + rword*
-            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.input_text`, *self.NAME_CN_1234_TEXT*, *parameters['server_address']*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.NAME_O_GOFORE_TEXT*, *parameters['member_name'] + rword*
+            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.NAME_CN_1234_TEXT*, *parameters['server_address']*
         """
         # AutoGen methods form: keys
         import random, string

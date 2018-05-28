@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = get_driver() e.g driver.current_url
 from variables import errors
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.util.webtimings import get_measurements
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class Cs_backup_restore(CommonUtils):
@@ -61,8 +59,8 @@ class Cs_backup_restore(CommonUtils):
         Click button to generate backup
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_BACKUP*
-            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_BACKUP*
+            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         # AutoGen method
         self.click_element(self.ID_BACKUP)
@@ -74,7 +72,7 @@ class Cs_backup_restore(CommonUtils):
         Click restore button on backups tables first row
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.NEWEST_RESTORE*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.NEWEST_RESTORE*
         """
         self.click_element(self.NEWEST_RESTORE)
 
@@ -83,7 +81,7 @@ class Cs_backup_restore(CommonUtils):
         Click delete button on backups tables first row
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.NEWEST_DELETE*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.NEWEST_DELETE*
         """
         self.click_element(self.NEWEST_DELETE)
 
@@ -93,12 +91,12 @@ class Cs_backup_restore(CommonUtils):
         :param parameters:  Test data section dictionary
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.element_should_be_present`, *self.ID_BACKUP*
-            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.element_should_be_present`, *self.ID_BACKUP_UPLOAD*
-            * **Step 3:** :func:`~webframework.extension.util.common_utils.CommonUtils.fail`, *errors.backup_name_is_empty*
-            * **Step 4:** :func:`~webframework.extension.util.common_utils.CommonUtils.element_should_be_present`, *self.NEWEST_RESTORE*
-            * **Step 5:** :func:`~webframework.extension.util.common_utils.CommonUtils.element_should_be_present`, *self.NEWEST_DELETE*
-            * **Step 6:** :func:`~webframework.extension.util.common_utils.CommonUtils.element_should_be_present`, *self.NEWEST_DOWNLOAD*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.element_should_be_present`, *self.ID_BACKUP*
+            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.element_should_be_present`, *self.ID_BACKUP_UPLOAD*
+            * **Step 3:** :func:`~extension.extension.util.common_utils.CommonUtils.fail`, *errors.backup_name_is_empty*
+            * **Step 4:** :func:`~extension.extension.util.common_utils.CommonUtils.element_should_be_present`, *self.NEWEST_RESTORE*
+            * **Step 5:** :func:`~extension.extension.util.common_utils.CommonUtils.element_should_be_present`, *self.NEWEST_DELETE*
+            * **Step 6:** :func:`~extension.extension.util.common_utils.CommonUtils.element_should_be_present`, *self.NEWEST_DOWNLOAD*
         """
         self.element_should_be_present(self.ID_BACKUP)
         self.element_should_be_present(self.ID_BACKUP_UPLOAD)
@@ -115,7 +113,7 @@ class Cs_backup_restore(CommonUtils):
         :param parameters:  Test data section dictionary
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.NEWEST_DOWNLOAD*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.NEWEST_DOWNLOAD*
         """
         self.click_element(self.NEWEST_DOWNLOAD)
 
@@ -125,6 +123,6 @@ class Cs_backup_restore(CommonUtils):
         :param parameters:  Test data section dictionary
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_BACKUP_UPLOAD*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_BACKUP_UPLOAD*
         """
         self.click_element(self.ID_BACKUP_UPLOAD)

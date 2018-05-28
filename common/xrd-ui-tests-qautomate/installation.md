@@ -16,7 +16,7 @@ Note! If problems installing Python or other modules, run "$ sudo apt-get update
 Check with environmental variables by running ```env```
 
 1. Environmental variable PYTHONPATH:"/home/user/.local/lib/python2.7/site-packages/qautomate" 
-2. Environment variable PATH:"/home/user/.local/lib/python2.7/site-packages/qautomate/webframework/resources"
+2. Environment variable PATH:"/home/user/.local/lib/python2.7/site-packages/qautomate/extension/resources"
 
 Finalize installation with log off computer if needed.
 

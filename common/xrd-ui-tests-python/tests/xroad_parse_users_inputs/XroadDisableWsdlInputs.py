@@ -14,6 +14,9 @@ class XroadDisableWsdlInputs(unittest.TestCase):
     Requires helper scenarios: None
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_parse_user_input_SS_41'):
+        unittest.TestCase.__init__(self, methodName)
+
     def test_parse_user_input_SS_41(self):
         main = MainController(self)
 

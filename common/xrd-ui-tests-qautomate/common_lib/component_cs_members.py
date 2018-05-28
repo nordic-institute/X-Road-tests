@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.parsers.parameter_parser import get_all_parameters
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 import os
 from common_lib import Common_lib
@@ -35,7 +34,6 @@ class Component_cs_members(CommonUtils):
     * 11.07.2017
         | Documentation updated
     """
-    parameters = get_all_parameters()
     common_lib = Common_lib()
     cs_members = Cs_members()
     cs_members_owned_auth_cert_reg_dlg = Cs_members_owned_auth_cert_reg_dlg()

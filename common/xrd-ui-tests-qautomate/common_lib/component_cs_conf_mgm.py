@@ -3,9 +3,9 @@ import glob
 import os
 
 from variables import strings
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 from pagemodel.cs_conf_mgm_external import Cs_conf_mgm_external
 from pagemodel.cs_conf_mgm import Cs_conf_mgm
@@ -382,7 +382,7 @@ class Component_cs_conf_mgm(CommonUtils):
         self.reload_page()
         self.wait_until_jquery_ajax_loaded()
 
-    def delete_conf_part_file(self, part_file):
+    def delete_conf_part_file(self, part_file, try_expect=False):
         """
         Delete configuration part file
 
@@ -390,7 +390,13 @@ class Component_cs_conf_mgm(CommonUtils):
                 * **Step 1:** :func:`~common_lib.common_lib_ssh.Common_lib_ssh.delete_file`, *"cs_url"*, *configuration_part_path*
         """
         configuration_part_path = os.path.join(strings.configuration_parts_directory, part_file)
-        self.common_lib_ssh.delete_file("cs_url", configuration_part_path)
+        try:
+            self.common_lib_ssh.delete_file("cs_url", configuration_part_path)
+        except Exception as e:
+            if try_expect:
+                pass
+            else:
+                raise e
 
     def download_configuration_part_file(self, identifier):
         """

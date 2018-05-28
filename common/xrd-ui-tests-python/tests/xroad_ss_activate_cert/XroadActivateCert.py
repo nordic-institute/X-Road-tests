@@ -14,6 +14,9 @@ class XroadActivateCert(unittest.TestCase):
     Requires helper scenarios:
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_activate_cert'):
+        unittest.TestCase.__init__(self, methodName)
+
     def test_activate_cert(self):
         main = MainController(self)
         ss_host = main.config.get('ss2.host')

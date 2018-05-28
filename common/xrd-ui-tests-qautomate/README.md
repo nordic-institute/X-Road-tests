@@ -36,7 +36,7 @@ Qautomate installation is covered in separate document: [installation.md](instal
 - Checkout project from git
 - Under "Build" -> Execute shell
     `export PYTHONPATH=/home/jenkins/.local/lib/python2.7/site-packages/qautomate/
-    export PATH=$PATH:/home/jenkins/.local/lib/python2.7/site-packages/qautomate/webframework/resources/
+    export PATH=$PATH:/home/jenkins/.local/lib/python2.7/site-packages/qautomate/extension/resources/
     export DISPLAY=:0
     ls -la
     cd $GIT_WORKING_DIR

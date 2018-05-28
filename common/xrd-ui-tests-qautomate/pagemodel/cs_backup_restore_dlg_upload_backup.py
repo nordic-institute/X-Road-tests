@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = self.get_current_driver() e.g driver.current_url
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class Cs_backup_restore_dlg_upload_backup(CommonUtils):
@@ -58,7 +57,7 @@ class Cs_backup_restore_dlg_upload_backup(CommonUtils):
         :param parameters:  Test data section dictionary
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.FILE_UPLOAD_BUTTON*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.FILE_UPLOAD_BUTTON*
         """
         self.click_element(self.FILE_UPLOAD_BUTTON)
 
@@ -68,7 +67,7 @@ class Cs_backup_restore_dlg_upload_backup(CommonUtils):
         :param parameters:  Test data section dictionary
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_FILE_UPLOAD_SUBMIT*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_FILE_UPLOAD_SUBMIT*
         """
         self.click_element(self.ID_FILE_UPLOAD_SUBMIT)
 
@@ -78,6 +77,6 @@ class Cs_backup_restore_dlg_upload_backup(CommonUtils):
         :param parameters:  Test data section dictionary
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.CANCEL_0*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.CANCEL_0*
         """
         self.click_element(self.CANCEL_0)

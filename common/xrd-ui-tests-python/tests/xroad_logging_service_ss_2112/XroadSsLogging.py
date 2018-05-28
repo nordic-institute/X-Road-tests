@@ -40,6 +40,9 @@ class XroadLoggingInSecurityServer(unittest.TestCase):
     X-Road version: 6.16.0
     """
 
+    def __init__(self, methodName='test_logging_in_security_server'):
+        unittest.TestCase.__init__(self, methodName)
+
     def test_logging_in_security_server(self):
         main = MainController(self)
 

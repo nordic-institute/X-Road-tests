@@ -21,6 +21,9 @@ class XroadAddCentralService(unittest.TestCase):
     X-Road version: 6.16.0
     """
 
+    def __init__(self, methodName='test_add_central_service_2_2_8'):
+        unittest.TestCase.__init__(self, methodName)
+
     def test_add_central_service_2_2_8(self):
         main = MainController(self)
 

@@ -13,6 +13,8 @@ class XroadEditSettingsFile(unittest.TestCase):
     Requires helper scenarios:
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_edit_settings_file'):
+        unittest.TestCase.__init__(self, methodName)
 
     def test_edit_settings_file(self):
         main = MainController(self)

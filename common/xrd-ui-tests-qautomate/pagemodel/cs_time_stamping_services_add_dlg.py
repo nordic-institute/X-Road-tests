@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = get_driver() e.g driver.current_url
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.util.webtimings import get_measurements
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class Cs_time_stamping_services_add_dlg(CommonUtils):
@@ -61,7 +59,7 @@ class Cs_time_stamping_services_add_dlg(CommonUtils):
         :param parameters:  Test data section dictionary
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.input_text`, *self.INPUT_TSP_URL*, *parameters['tsp_url']*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.INPUT_TSP_URL*, *parameters['tsp_url']*
         """
         # AutoGen method
         self.input_text(self.INPUT_TSP_URL, parameters['tsp_url'])
@@ -71,7 +69,7 @@ class Cs_time_stamping_services_add_dlg(CommonUtils):
         Click button to ok the dialog
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
         """
         # AutoGen method
         self.click_element(self.BUTTON_OK)
@@ -81,6 +79,6 @@ class Cs_time_stamping_services_add_dlg(CommonUtils):
         Click button to upload timestamping
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_UPLOAD*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_UPLOAD*
         """
         self.click_element(self.BUTTON_UPLOAD)

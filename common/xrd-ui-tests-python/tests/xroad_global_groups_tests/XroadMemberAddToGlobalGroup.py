@@ -13,6 +13,8 @@ class XroadMemberAddToGlobalGroup(unittest.TestCase):
     Requires helper scenarios:
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_member_add_to_global_group'):
+        unittest.TestCase.__init__(self, methodName)
 
     def test_member_add_to_global_group(self):
         main = MainController(self)

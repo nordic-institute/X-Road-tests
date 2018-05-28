@@ -14,6 +14,9 @@ from helpers import xroad
 
 
 class XroadTrustViewApprovedCertService(unittest.TestCase):
+    def __init__(self, methodName='test_xroad_view_approved_cert'):
+        unittest.TestCase.__init__(self, methodName)
+
     def test_xroad_view_approved_cert(self):
         main = MainController(self)
 

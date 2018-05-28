@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = get_driver() e.g driver.current_url
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.util.webtimings import get_measurements
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class Cs_conf_mgm(CommonUtils):
@@ -79,7 +77,7 @@ class Cs_conf_mgm(CommonUtils):
         Click link to internal configurations view
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.INTERNAL_CONFIQURATION*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.INTERNAL_CONFIQURATION*
         """
         self.click_element(self.INTERNAL_CONFIQURATION)
 
@@ -88,7 +86,7 @@ class Cs_conf_mgm(CommonUtils):
         Click link to external configurations view
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.EXTERNAL_CONFIGURATION*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.EXTERNAL_CONFIGURATION*
         """
         self.click_element(self.EXTERNAL_CONFIGURATION)
 
@@ -97,7 +95,7 @@ class Cs_conf_mgm(CommonUtils):
         Click button to generate source anchor
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_GENERATE_SOURCE_ANCHOR*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_GENERATE_SOURCE_ANCHOR*
         """
         # AutoGen method
         self.click_element(self.ID_GENERATE_SOURCE_ANCHOR)
@@ -107,7 +105,7 @@ class Cs_conf_mgm(CommonUtils):
         Click button to download source anchor
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_DOWNLOAD_SOURCE_ANCHOR*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_DOWNLOAD_SOURCE_ANCHOR*
         """
         # AutoGen method
         self.click_element(self.ID_DOWNLOAD_SOURCE_ANCHOR)
@@ -117,8 +115,8 @@ class Cs_conf_mgm(CommonUtils):
         Click button to generate signing key
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_GENERATE_SIGNING_KEY*
-            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_GENERATE_SIGNING_KEY*
+            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         # AutoGen method
         self.click_element(self.ID_GENERATE_SIGNING_KEY)
@@ -129,7 +127,7 @@ class Cs_conf_mgm(CommonUtils):
         Click button to activate signing key
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_ACTIVATE_SIGNING_KEY*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_ACTIVATE_SIGNING_KEY*
         """
         # AutoGen method
         self.click_element(self.ID_ACTIVATE_SIGNING_KEY)
@@ -139,7 +137,7 @@ class Cs_conf_mgm(CommonUtils):
         Click button to delete signing key
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_DELETE_SIGNING_KEY*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_DELETE_SIGNING_KEY*
         """
         # AutoGen method
         self.click_element(self.ID_DELETE_SIGNING_KEY)
@@ -149,7 +147,7 @@ class Cs_conf_mgm(CommonUtils):
         Click button to logout from token
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.LOGOUT*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.LOGOUT*
         """
         # AutoGen method
         self.click_element(self.LOGOUT)
@@ -159,7 +157,7 @@ class Cs_conf_mgm(CommonUtils):
         Click button to login to token
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.LOGIN*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.LOGIN*
         """
         self.click_element(self.LOGIN)
 
@@ -168,7 +166,7 @@ class Cs_conf_mgm(CommonUtils):
         Verify that hash value is visible on the page
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.element_should_be_visible`, *self.BOX_ANCHOR_HASH_07_AA_3E_F2_35_ED_E3*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.element_should_be_visible`, *self.BOX_ANCHOR_HASH_07_AA_3E_F2_35_ED_E3*
         """
         self.element_should_be_visible(self.BOX_ANCHOR_HASH_07_AA_3E_F2_35_ED_E3)
 
@@ -177,7 +175,7 @@ class Cs_conf_mgm(CommonUtils):
         Verify that date time is visible on the page
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.element_should_be_visible`, *self.BOX_ANCHOR_GENERATED_AT_UTC_2016_03_01_12_14*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.element_should_be_visible`, *self.BOX_ANCHOR_GENERATED_AT_UTC_2016_03_01_12_14*
         """
         self.element_should_be_visible(self.BOX_ANCHOR_GENERATED_AT_UTC_2016_03_01_12_14)
 
@@ -188,7 +186,7 @@ class Cs_conf_mgm(CommonUtils):
         :param text:  String value for text
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.element_should_contain`, *self.ID_CONF_URL*, *text*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.element_should_contain`, *self.ID_CONF_URL*, *text*
         """
         self.element_should_contain(self.ID_CONF_URL, text)
 
@@ -225,7 +223,7 @@ class Cs_conf_mgm(CommonUtils):
         Click newest signing key on the signing keys table
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         self.wait_until_jquery_ajax_loaded()
         locator = self.SIGNINGKEYS
@@ -240,7 +238,7 @@ class Cs_conf_mgm(CommonUtils):
         Click oldest signing key on the signing keys table
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         self.wait_until_jquery_ajax_loaded()
         locator = self.SIGNINGKEYS
@@ -269,7 +267,7 @@ class Cs_conf_mgm(CommonUtils):
         :param text:  String value for text
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *element*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *element*
         """
         # Element search
         locator = self.CONFPARTS1
@@ -290,7 +288,7 @@ class Cs_conf_mgm(CommonUtils):
     def click_conf_upload(self):
         """
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_UPLOAD_CONF_PART*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_UPLOAD_CONF_PART*
         """
         self.click_element(self.ID_UPLOAD_CONF_PART)
 
@@ -300,7 +298,7 @@ class Cs_conf_mgm(CommonUtils):
         :param parameters:  Test data section dictionary
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_DOWNLOAD_CONF_PART*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_DOWNLOAD_CONF_PART*
         """
         self.click_element(self.ID_DOWNLOAD_CONF_PART)
 
@@ -310,7 +308,7 @@ class Cs_conf_mgm(CommonUtils):
         :param parameters:  Test data section dictionary
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         self.wait_until_jquery_ajax_loaded()
         locator = self.SIGNINGKEYS

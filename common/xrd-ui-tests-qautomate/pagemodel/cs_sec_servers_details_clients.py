@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = get_driver() e.g driver.current_url
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.util.webtimings import get_measurements
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class Cs_sec_servers_details_clients(CommonUtils):
@@ -62,7 +60,7 @@ class Cs_sec_servers_details_clients(CommonUtils):
         """
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_SECURITYSERVER_CLIENT_ADD*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_SECURITYSERVER_CLIENT_ADD*
         """
         self.click_element(self.ID_SECURITYSERVER_CLIENT_ADD)
 
@@ -72,8 +70,8 @@ class Cs_sec_servers_details_clients(CommonUtils):
         :param parameters:  Test data section dictionary
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
-            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *element*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *element*
         """
         self.wait_until_jquery_ajax_loaded()
 
@@ -96,20 +94,20 @@ class Cs_sec_servers_details_clients(CommonUtils):
     def click_element_id_securityserver_client_delete(self):
         """
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_SECURITYSERVER_CLIENT_DELETE*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_SECURITYSERVER_CLIENT_DELETE*
         """
         self.click_element(self.ID_SECURITYSERVER_CLIENT_DELETE)
 
     def click_element_submit(self):
         """
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.SUBMIT*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.SUBMIT*
         """
         self.click_element(self.SUBMIT)
 
     def click_element_auth_cert(self):
         """
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.AUTH_CERT*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.AUTH_CERT*
         """
         self.click_element(self.AUTH_CERT)

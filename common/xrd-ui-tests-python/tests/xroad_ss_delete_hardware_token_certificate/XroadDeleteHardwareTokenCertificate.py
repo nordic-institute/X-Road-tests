@@ -14,6 +14,9 @@ X-Road version: 6.16.0
 
 
 class XroadDeleteHardwareTokenCertificate(unittest.TestCase):
+    def __init__(self, methodName='test_xroad_delete_hardtoken_cert'):
+        unittest.TestCase.__init__(self, methodName)
+
     def test_xroad_delete_hardtoken_cert(self):
         main = MainController(self)
         '''Set test name and number'''

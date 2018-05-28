@@ -13,6 +13,8 @@ class XroadDeleteTrustedAnchor(unittest.TestCase):
     Requires helper scenarios:
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_a_delete_trusted_anchor_cancel'):
+        unittest.TestCase.__init__(self, methodName)
 
     def test_a_delete_trusted_anchor_cancel(self):
         main = MainController(self)

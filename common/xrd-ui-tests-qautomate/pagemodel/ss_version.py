@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = self.get_current_driver() e.g driver.current_url
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class Ss_version(CommonUtils):
@@ -52,6 +51,6 @@ class Ss_version(CommonUtils):
         :param text:  String value for text
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.element_should_contain`, *self.VERSION_TEXT*, *text*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.element_should_contain`, *self.VERSION_TEXT*, *text*
         """
         self.element_should_contain(self.VERSION_TEXT, text)

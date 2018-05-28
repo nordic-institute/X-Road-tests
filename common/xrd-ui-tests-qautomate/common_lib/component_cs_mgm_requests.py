@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 from pagemodel.cs_mgm_requests_dlg_reg_details import Cs_mgm_requests_dlg_reg_details
 from pagemodel.cs_mgm_requests import Cs_mgm_requests

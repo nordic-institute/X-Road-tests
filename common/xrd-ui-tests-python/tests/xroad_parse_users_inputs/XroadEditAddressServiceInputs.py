@@ -15,6 +15,9 @@ class XroadEditAddressServiceInputs(unittest.TestCase):
     Requires helper scenarios: None
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_parse_edit_address_service'):
+        unittest.TestCase.__init__(self, methodName)
+
     def test_parse_edit_address_service(self):
         main = MainController(self)
 

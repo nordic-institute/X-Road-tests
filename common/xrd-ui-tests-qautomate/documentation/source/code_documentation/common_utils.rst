@@ -1,6 +1,6 @@
 Qautomate keyword library
 =========================
 
-.. automodule:: webframework.extension.util.common_utils
+.. automodule:: QAutoLibrary.QAutoSelenium
     :undoc-members:
     :inherited-members:

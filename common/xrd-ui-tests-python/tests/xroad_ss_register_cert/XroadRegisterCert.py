@@ -16,6 +16,9 @@ class XroadRegisterCert(unittest.TestCase):
     Requires helper scenarios: SS_29, SS_30, SS_39
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_register_cert_cert_errors'):
+        unittest.TestCase.__init__(self, methodName)
+
     def test_register_cert_cert_errors(self):
         main = MainController(self)
         ss_host = main.config.get('ss2.host')

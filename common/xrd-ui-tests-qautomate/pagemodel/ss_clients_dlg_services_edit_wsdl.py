@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = get_driver() e.g driver.current_url
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.util.webtimings import get_measurements
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class Ss_clients_dlg_services_edit_wsdl(CommonUtils):
@@ -55,7 +53,7 @@ class Ss_clients_dlg_services_edit_wsdl(CommonUtils):
     def verify_edit_serv_param_dlg_open(self):
         """
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_element_is_visible`, *self.MENUBAR_MAXIMIZE*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_element_is_visible`, *self.MENUBAR_MAXIMIZE*
         """
         self.wait_until_element_is_visible(self.MENUBAR_MAXIMIZE)
 
@@ -65,10 +63,10 @@ class Ss_clients_dlg_services_edit_wsdl(CommonUtils):
         :param parameters:  Test data section dictionary
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.input_text`, *self.ID_PARAMS_URL*, *changed_http_in_url*
-            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.select_checkbox`, *self.ID_PARAMS_URL_ALL*, *parameters[u'params_url_all']*
-            * **Step 3:** :func:`~webframework.extension.util.common_utils.CommonUtils.input_text`, *self.ID_PARAMS_TIMEOUT*, *parameters[u'params_timeout']*
-            * **Step 4:** :func:`~webframework.extension.util.common_utils.CommonUtils.select_checkbox`, *self.ID_PARAMS_SSLAUTH*, *parameters[u'params_sslauth']*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.ID_PARAMS_URL*, *changed_http_in_url*
+            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.select_checkbox`, *self.ID_PARAMS_URL_ALL*, *parameters[u'params_url_all']*
+            * **Step 3:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.ID_PARAMS_TIMEOUT*, *parameters[u'params_timeout']*
+            * **Step 4:** :func:`~extension.extension.util.common_utils.CommonUtils.select_checkbox`, *self.ID_PARAMS_SSLAUTH*, *parameters[u'params_sslauth']*
         """
         import string
         changed_https_in_url = ""
@@ -90,7 +88,7 @@ class Ss_clients_dlg_services_edit_wsdl(CommonUtils):
     def click_ok_service_parameters(self):
         """
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
         """
         self.click_element(self.BUTTON_OK)
         sleep(1)

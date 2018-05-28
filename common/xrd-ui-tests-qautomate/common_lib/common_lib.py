@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-from webframework import TESTDATA
 import subprocess
 import os
+from QAutoLibrary.extension import TESTDATA
 import glob
 from urlparse import urlparse
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 # Library file allows define common methods, which can be
@@ -285,17 +285,11 @@ class Common_lib(CommonUtils):
             print(subprocess.check_output("ls " + parameters[u'downloads_folder'], shell=True))
             raise Exception("Certificate download failed")
 
-        try:
-            cert_string = subprocess.check_output("openssl req -in " +  newest_der + " -text -noout -inform DER", shell=True)
-            begin_index = str(cert_string).find("Subject:")
-            end_index = str(cert_string).find("Subject Public Key")
-            print(str(cert_string)[begin_index:end_index])
-            #os.system("sudo rm " + newest_p10)
-            return True
-        except Exception as e:
-            print("Certificate file cannot be read")
-            print(e)
-            return False
+        cert_string = subprocess.check_output("openssl req -in " +  newest_der + " -text -noout -inform DER", shell=True)
+        begin_index = str(cert_string).find("Subject:")
+        end_index = str(cert_string).find("Subject Public Key")
+        print(str(cert_string)[begin_index:end_index])
+        return True
 
     def remove_anchor_and_certs_from_downloads(self, parameters):
         """
@@ -337,17 +331,12 @@ class Common_lib(CommonUtils):
     def read_cert_number_request(self, cert_type):
         """
         """
-        try:
-            cert_number = subprocess.check_output("openssl x509 -in " +  "scripts/" + cert_type + "-cert_automation.der" + " -serial -noout", shell=True)
-            print(cert_number)
-            cert_number = cert_number.split('=')
-            number_decimal = int("0x" + str(cert_number[1].lower()), 16)
-            print(number_decimal)
-            return str(number_decimal)
-        except Exception as e:
-            print("Certificate file cannot be read")
-            print(e)
-            return ""
+        cert_number = subprocess.check_output("openssl x509 -in " +  "scripts/" + cert_type + "-cert_automation.der" + " -serial -noout", shell=True)
+        print(cert_number)
+        cert_number = cert_number.split('=')
+        number_decimal = int("0x" + str(cert_number[1].lower()), 16)
+        print(number_decimal)
+        return str(number_decimal)
 
     def copy_and_sign_cert_request(self, parameters):
         """

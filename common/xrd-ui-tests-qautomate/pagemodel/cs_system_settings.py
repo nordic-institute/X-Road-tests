@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = get_driver() e.g driver.current_url
 from variables import errors
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.util.webtimings import get_measurements
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class Cs_system_settings(CommonUtils):
@@ -77,7 +75,7 @@ class Cs_system_settings(CommonUtils):
         Click button to edit server address
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_CENTRAL_SERVER_ADDRESS_EDIT*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_CENTRAL_SERVER_ADDRESS_EDIT*
         """
         # AutoGen method
         self.click_element(self.ID_CENTRAL_SERVER_ADDRESS_EDIT)
@@ -87,7 +85,7 @@ class Cs_system_settings(CommonUtils):
         Click button to edit service provider
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_SERVICE_PROVIDER_EDIT*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_SERVICE_PROVIDER_EDIT*
         """
         # AutoGen method
         self.click_element(self.ID_SERVICE_PROVIDER_EDIT)
@@ -97,7 +95,7 @@ class Cs_system_settings(CommonUtils):
         Click button to add icon
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ADD_ICON*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ADD_ICON*
         """
         # AutoGen method
         self.click_element(self.ADD_ICON)
@@ -109,8 +107,8 @@ class Cs_system_settings(CommonUtils):
         :param parameters:  Test data section dictionary
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.add_dynamic_content_to_parameters`, *parameters*, *u'wsdl_add_url'*, *address*
-            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.add_dynamic_content_to_parameters`, *parameters*, *u'service_mgm_address'*, *service_address*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.add_dynamic_content_to_parameters`, *parameters*, *u'wsdl_add_url'*, *address*
+            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.add_dynamic_content_to_parameters`, *parameters*, *u'service_mgm_address'*, *service_address*
         """
         address = self.get_text(self.ID_WSDL_ADDRESS)
         self.add_dynamic_content_to_parameters(parameters, u'wsdl_add_url', address)
@@ -122,14 +120,14 @@ class Cs_system_settings(CommonUtils):
         Click button to register security server provider
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_SERVICE_PROVIDER_SECURITY_SERVER_REGISTER*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_SERVICE_PROVIDER_SECURITY_SERVER_REGISTER*
         """
         self.click_element(self.ID_SERVICE_PROVIDER_SECURITY_SERVER_REGISTER)
 
     def verify_central_address_does_not_contain_whitespace(self):
         """
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.fail`, *errors.value_starts_with_whitespace*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.fail`, *errors.value_starts_with_whitespace*
         """
         if self.get_value(self.ID_CENTRAL_SERVER_ADDRESS).startswith(" ") or self.get_value(self.ID_CENTRAL_SERVER_ADDRESS).endswith(" "):
             self.fail(errors.value_starts_with_whitespace)

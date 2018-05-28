@@ -22,6 +22,8 @@ class XroadGlobalGroups(unittest.TestCase):
     Requires helper scenarios: add_acl, restore_acl
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_global_groups_tests'):
+        unittest.TestCase.__init__(self, methodName)
 
     def test_global_groups_tests(self):
         main = MainController(self)

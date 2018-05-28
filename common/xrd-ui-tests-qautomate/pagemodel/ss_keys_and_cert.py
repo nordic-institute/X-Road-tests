@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = get_driver() e.g driver.current_url
 from variables import strings
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.util.webtimings import get_measurements
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 from common_lib.common_lib import Common_lib
 
@@ -71,7 +69,7 @@ class Ss_keys_and_cert(CommonUtils):
         Verify view is visble
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_element_is_visible`, *self.ID_HEADING*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_element_is_visible`, *self.ID_HEADING*
         """
         self.wait_until_element_is_visible(self.ID_HEADING)
 
@@ -80,7 +78,7 @@ class Ss_keys_and_cert(CommonUtils):
         Click button to open soft token
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.CLASS_TOKEN_NAME*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.CLASS_TOKEN_NAME*
         """
         self.click_element(self.CLASS_TOKEN_NAME)
 
@@ -89,7 +87,7 @@ class Ss_keys_and_cert(CommonUtils):
         Click button to generate key
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_GENERATE_KEY*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_GENERATE_KEY*
         """
         self.click_element(self.ID_GENERATE_KEY)
 
@@ -100,7 +98,7 @@ class Ss_keys_and_cert(CommonUtils):
         :param text:  String value for text
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         self.wait_until_jquery_ajax_loaded()
         print("finding key")
@@ -119,7 +117,7 @@ class Ss_keys_and_cert(CommonUtils):
         Click button to delete certification
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_DELETE*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_DELETE*
         """
         self.click_element(self.ID_DELETE)
 
@@ -128,7 +126,7 @@ class Ss_keys_and_cert(CommonUtils):
         Click button to generate certificate request
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_GENERATE_CSR*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_GENERATE_CSR*
         """
         self.click_element(self.ID_GENERATE_CSR)
 
@@ -139,7 +137,7 @@ class Ss_keys_and_cert(CommonUtils):
         :param text:  String value for text
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         self.wait_until_jquery_ajax_loaded()
         print("finding request key")
@@ -158,7 +156,7 @@ class Ss_keys_and_cert(CommonUtils):
         Click button to import certificate
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_IMPORT_CERT*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_IMPORT_CERT*
         """
         self.click_element(self.ID_IMPORT_CERT)
 
@@ -169,8 +167,8 @@ class Ss_keys_and_cert(CommonUtils):
         :param parameters:  Test data section dictionary
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_element_is_enabled`, *self.ID_DELETE*
-            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_DELETE*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_element_is_enabled`, *self.ID_DELETE*
+            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_DELETE*
         """
         # AutoGen method search_text_from_table_keys
         elem_table = self.get_table_column_and_row_by_text((By.ID, 'keys'), parameters, row='TBODY/TR', cell='TD')
@@ -186,7 +184,7 @@ class Ss_keys_and_cert(CommonUtils):
         :return cert_key: keys tables found row
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         self.wait_until_jquery_ajax_loaded()
         find_word = strings.server_environment_approved_ca() +  " " + str(cert_number)
@@ -217,7 +215,7 @@ class Ss_keys_and_cert(CommonUtils):
         Wait until certificate reg is active
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_element_is_enabled`, *self.ID_GENERATE_CSR*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_element_is_enabled`, *self.ID_GENERATE_CSR*
         """
         self.wait_until_element_is_enabled(self.ID_GENERATE_CSR)
 
@@ -228,8 +226,8 @@ class Ss_keys_and_cert(CommonUtils):
         :param text:  String value for text
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_element_is_enabled`, *self.ID_REGISTER*
-            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_REGISTER*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_element_is_enabled`, *self.ID_REGISTER*
+            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_REGISTER*
         """
         # AutoGen method search_text_from_table_keys
         elem_table = self.get_table_column_and_row_by_text((By.ID, 'keys'), text, row='TBODY/TR', cell='TD')
@@ -243,7 +241,7 @@ class Ss_keys_and_cert(CommonUtils):
         Find key from keys table with text and return its content text
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         self.wait_until_jquery_ajax_loaded()
         # AutoGen method search_text_from_table_keys
@@ -276,6 +274,6 @@ class Ss_keys_and_cert(CommonUtils):
         Click button to activate certificate
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_ACTIVATE*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_ACTIVATE*
         """
         self.click_element(self.ID_ACTIVATE)

@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = get_driver() e.g driver.current_url
 from variables import errors
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.util.webtimings import get_measurements
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class Ss_clients(CommonUtils):
@@ -51,7 +49,7 @@ class Ss_clients(CommonUtils):
         Click button to add subsystem
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_CLIENT_ADD*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_CLIENT_ADD*
         """
         self.click_element(self.ID_CLIENT_ADD)
 
@@ -62,11 +60,11 @@ class Ss_clients(CommonUtils):
         :param parameters:  Test data section dictionary
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
-            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_page_contains`, *parameters[u'subsystem_code']*
-            * **Step 3:** :func:`~webframework.extension.util.common_utils.CommonUtils.element_attribute_should_contains`, *element_circle*, *u'title'*, *u'registration in progress'*
-            * **Step 4:** :func:`~webframework.extension.util.common_utils.CommonUtils.reload_page`
-            * **Step 5:** :func:`~webframework.extension.util.common_utils.CommonUtils.element_attribute_should_contains`, *element_circle*, *u'title'*, *u'registered'*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_page_contains`, *parameters[u'subsystem_code']*
+            * **Step 3:** :func:`~extension.extension.util.common_utils.CommonUtils.element_attribute_should_contains`, *element_circle*, *u'title'*, *u'registration in progress'*
+            * **Step 4:** :func:`~extension.extension.util.common_utils.CommonUtils.reload_page`
+            * **Step 5:** :func:`~extension.extension.util.common_utils.CommonUtils.element_attribute_should_contains`, *element_circle*, *u'title'*, *u'registered'*
         """
         self.wait_until_jquery_ajax_loaded()
         self.wait_until_page_contains(parameters[u'subsystem_code'])
@@ -90,8 +88,8 @@ class Ss_clients(CommonUtils):
         :param parameters:  Test data section dictionary
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
-            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_page_contains`, *parameters[u'subsystem_code']*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_page_contains`, *parameters[u'subsystem_code']*
         """
         self.wait_until_jquery_ajax_loaded()
         self.wait_until_page_contains(parameters[u'subsystem_code'])
@@ -107,10 +105,10 @@ class Ss_clients(CommonUtils):
         :param parameters:  Test data section dictionary
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
-            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_page_contains`, *parameters[u'subsystem_code']*
-            * **Step 3:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
-            * **Step 4:** :func:`~webframework.extension.util.common_utils.CommonUtils.fail`, *errors.subsystem_status_error*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_page_contains`, *parameters[u'subsystem_code']*
+            * **Step 3:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+            * **Step 4:** :func:`~extension.extension.util.common_utils.CommonUtils.fail`, *errors.subsystem_status_error*
         """
         self.wait_until_jquery_ajax_loaded()
         self.wait_until_page_contains(parameters[u'subsystem_code'])
@@ -138,8 +136,8 @@ class Ss_clients(CommonUtils):
         :param parameters:  Test data section dictionary
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
-            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.fail`, *errors.subsystem_not_found*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.fail`, *errors.subsystem_not_found*
         """
         self.wait_until_jquery_ajax_loaded()
         subsystem_row = "SUBSYSTEM : " + parameters[u'instance_identifier'] + " : " + parameters['member_class'] + " : " + parameters['member_code'] + " : " + parameters[u'subsystem_code']

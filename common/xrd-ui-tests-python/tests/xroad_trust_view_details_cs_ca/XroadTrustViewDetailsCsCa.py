@@ -13,6 +13,9 @@ import view_management
 
 
 class XroadTrustViewDetailsCsCa(unittest.TestCase):
+    def __init__(self, methodName='test_xroad_view_details'):
+        unittest.TestCase.__init__(self, methodName)
+
     def test_xroad_view_details(self):
         main = MainController(self)
 

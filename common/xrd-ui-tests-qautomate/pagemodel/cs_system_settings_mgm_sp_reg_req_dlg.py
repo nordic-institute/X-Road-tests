@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = get_driver() e.g driver.current_url
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.util.webtimings import get_measurements
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class Cs_system_settings_mgm_sp_reg_req_dlg(CommonUtils):
@@ -66,7 +64,7 @@ class Cs_system_settings_mgm_sp_reg_req_dlg(CommonUtils):
     def click_button_id_used_server_server_search(self):
         """
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_USED_SERVER_SERVER_SEARCH*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_USED_SERVER_SERVER_SEARCH*
         """
         # AutoGen method
         self.click_element(self.ID_USED_SERVER_SERVER_SEARCH)
@@ -74,6 +72,6 @@ class Cs_system_settings_mgm_sp_reg_req_dlg(CommonUtils):
     def click_button_submit(self):
         """
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_SUBMIT*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_SUBMIT*
         """
         self.click_element(self.BUTTON_SUBMIT)

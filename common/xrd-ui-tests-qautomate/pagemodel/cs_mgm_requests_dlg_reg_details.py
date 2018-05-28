@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = get_driver() e.g driver.current_url
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.util.webtimings import get_measurements
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class Cs_mgm_requests_dlg_reg_details(CommonUtils):
@@ -77,7 +75,7 @@ class Cs_mgm_requests_dlg_reg_details(CommonUtils):
         Click button to close the dialog
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_CLOSE*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_CLOSE*
         """
         # AutoGen method click_link: None
         self.click_element(self.BUTTON_CLOSE)
@@ -89,6 +87,6 @@ class Cs_mgm_requests_dlg_reg_details(CommonUtils):
         :param text:  String value for text
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.element_text_should_be`, *self.COMMENT*, *text*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.element_text_should_be`, *self.COMMENT*, *text*
         """
         self.element_text_should_be(self.COMMENT, text)

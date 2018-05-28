@@ -15,6 +15,8 @@ class XroadParseKeyLabelInputs(unittest.TestCase):
     Requires helper scenarios: None
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_parse_key_label_inputs'):
+        unittest.TestCase.__init__(self, methodName)
 
     def test_parse_key_label_inputs(self):
         main = MainController(self)

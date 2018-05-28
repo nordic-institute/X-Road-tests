@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = get_driver() e.g driver.current_url
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.util.webtimings import get_measurements
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class Cs_system_settings_mgm_req_servers_dlg(CommonUtils):
@@ -62,9 +60,9 @@ class Cs_system_settings_mgm_req_servers_dlg(CommonUtils):
         :param parameters:  Test data section dictionary
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
-            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_page_contains`, *parameters[u'member_name']*
-            * **Step 3:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *table_element[0]*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_page_contains`, *parameters[u'member_name']*
+            * **Step 3:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *table_element[0]*
         """
         self.wait_until_jquery_ajax_loaded()
         self.wait_until_page_contains(parameters[u'member_name'])
@@ -76,6 +74,6 @@ class Cs_system_settings_mgm_req_servers_dlg(CommonUtils):
         Click button to select used server
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_SELECT*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_SELECT*
         """
         self.click_element(self.BUTTON_SELECT)

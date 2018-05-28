@@ -21,6 +21,8 @@ class XroadWsdlValidatorErrors(unittest.TestCase):
     Requires helper scenarios: add wsdl, refresh wsdl
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_xroad_wsdl_validator_errors'):
+        unittest.TestCase.__init__(self, methodName)
 
     def test_xroad_wsdl_validator_errors(self):
         main = MainController(self)

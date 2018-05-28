@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = get_driver() e.g driver.current_url
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.util.webtimings import get_measurements
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class Cs_sec_servers_details_auth(CommonUtils):
@@ -62,7 +60,7 @@ class Cs_sec_servers_details_auth(CommonUtils):
         Click button to add authentication certificate
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_SECURITYSERVER_AUTHCERT_ADD*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_SECURITYSERVER_AUTHCERT_ADD*
         """
         # AutoGen method
         self.click_element(self.ID_SECURITYSERVER_AUTHCERT_ADD)
@@ -72,7 +70,7 @@ class Cs_sec_servers_details_auth(CommonUtils):
         Click button to delete authentication certificate
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_SECURITYSERVER_AUTHCERT_DELETE*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_SECURITYSERVER_AUTHCERT_DELETE*
         """
         # AutoGen method
         self.click_element(self.ID_SECURITYSERVER_AUTHCERT_DELETE)
@@ -84,8 +82,8 @@ class Cs_sec_servers_details_auth(CommonUtils):
         :param text:  String value for text
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
-            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *element*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *element*
         """
         self.wait_until_jquery_ajax_loaded()
 

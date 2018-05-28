@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = self.get_current_driver() e.g driver.current_url
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class Common_elements(CommonUtils):
@@ -57,7 +56,7 @@ Pagemodel
         :param message:  String value for message
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.element_should_contain`, *self.ERROR_MESSAGE*, *message*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.element_should_contain`, *self.ERROR_MESSAGE*, *message*
         """
         self.element_should_contain(self.ERROR_MESSAGE, message)
 
@@ -68,7 +67,7 @@ Pagemodel
         :param message:  String value for message
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.element_should_contain`, *self.MESSAGE*, *message*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.element_should_contain`, *self.MESSAGE*, *message*
         """
         self.element_should_contain(self.MESSAGE, message)
 
@@ -77,7 +76,7 @@ Pagemodel
         Click user info menu button
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.mouse_over`, *self.USER_INFO*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.mouse_over`, *self.USER_INFO*
         """
         self.mouse_over(self.USER_INFO)
 
@@ -86,7 +85,7 @@ Pagemodel
         Click log out from user info menu
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.LOG_OUT*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.LOG_OUT*
         """
         self.click_element(self.LOG_OUT)
 
@@ -94,7 +93,7 @@ Pagemodel
         """
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.LANGUAGE_CHANGE*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.LANGUAGE_CHANGE*
         """
         self.click_element(self.LANGUAGE_CHANGE)
 
@@ -105,6 +104,6 @@ Pagemodel
         :param message:  String value for message
         
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.element_should_contain`, *self.ALERT_MESSAGE*, *message*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.element_should_contain`, *self.ALERT_MESSAGE*, *message*
         """
         self.element_should_contain(self.ALERT_MESSAGE, message)

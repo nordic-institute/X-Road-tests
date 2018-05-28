@@ -7,6 +7,9 @@ from tests.xroad_tokens_keys_certs import tokens_keys_certs
 
 
 class XroadViewKeyList(unittest.TestCase):
+    def __init__(self, methodName='test_view_list_tokens_keys_certs_SS_19'):
+        unittest.TestCase.__init__(self, methodName)
+
     def test_view_list_tokens_keys_certs_SS_19(self):
         main = MainController(self)
 

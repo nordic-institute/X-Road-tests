@@ -13,6 +13,8 @@ class XroadAddSigningKey(unittest.TestCase):
     Requires helper scenarios:
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_a_cp_add_first_signing_key'):
+        unittest.TestCase.__init__(self, methodName)
 
     def test_a_cp_add_first_signing_key(self):
         main = MainController(self)

@@ -17,6 +17,9 @@ from view_models.sidebar import KEYSANDCERTIFICATES_BTN_CSS
 
 
 class XroadDeleteMemberSS(unittest.TestCase):
+    def __init__(self, methodName='test_delete_member_ss'):
+        unittest.TestCase.__init__(self, methodName)
+
     def test_delete_member_ss(self):
         """
         MEMBER_25 Delete a Security Server

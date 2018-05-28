@@ -18,6 +18,8 @@ class XroadUploadTrustedAnchor(unittest.TestCase):
     Requires helper scenarios: GCONF_02
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_a_upload_trusted_anchor_same_instance_error'):
+        unittest.TestCase.__init__(self, methodName)
 
     def test_a_upload_trusted_anchor_same_instance_error(self):
         main = MainController(self)

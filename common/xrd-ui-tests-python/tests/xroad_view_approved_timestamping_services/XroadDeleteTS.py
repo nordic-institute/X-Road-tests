@@ -12,6 +12,8 @@ class XroadDeleteTS(unittest.TestCase):
     Requires helper scenarios:
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_xroad_delete_ts'):
+        unittest.TestCase.__init__(self, methodName)
 
     def test_xroad_delete_ts(self):
         main = MainController(self)

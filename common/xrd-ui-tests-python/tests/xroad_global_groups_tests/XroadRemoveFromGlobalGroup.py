@@ -14,6 +14,8 @@ class XroadRemoveFromGlobalGroup(unittest.TestCase):
     Requires helper scenarios:
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_a_remove_selected_from_global_group'):
+        unittest.TestCase.__init__(self, methodName)
 
     def test_a_remove_selected_from_global_group(self):
         main = MainController(self)

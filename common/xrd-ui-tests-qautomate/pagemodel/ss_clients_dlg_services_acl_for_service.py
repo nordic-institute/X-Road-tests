@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = get_driver() e.g driver.current_url
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.util.webtimings import get_measurements
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class Ss_clients_dlg_services_acl_for_service(CommonUtils):
@@ -60,7 +58,7 @@ class Ss_clients_dlg_services_acl_for_service(CommonUtils):
         Verify acl dialog is open
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_element_is_visible`, *self.MENUBAR_MAXIMIZE*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_element_is_visible`, *self.MENUBAR_MAXIMIZE*
         """
         self.wait_until_element_is_visible(self.MENUBAR_MAXIMIZE)
 
@@ -69,7 +67,7 @@ class Ss_clients_dlg_services_acl_for_service(CommonUtils):
         Click button to add scl subject
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_SERVICE_ACL_SUBJECTS_ADD*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_SERVICE_ACL_SUBJECTS_ADD*
         """
         self.click_element(self.ID_SERVICE_ACL_SUBJECTS_ADD)
 
@@ -78,6 +76,6 @@ class Ss_clients_dlg_services_acl_for_service(CommonUtils):
         Click button to close the dialog
 
         **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_SERVICE_ACL_UI_BUTTONPANE_BUTTONSET_CLOSE*
+            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_SERVICE_ACL_UI_BUTTONPANE_BUTTONSET_CLOSE*
         """
         self.click_element(self.DATA_NAME_SERVICE_ACL_UI_BUTTONPANE_BUTTONSET_CLOSE)

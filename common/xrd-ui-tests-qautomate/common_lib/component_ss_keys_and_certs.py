@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from variables import errors
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 from common_lib import Common_lib
 from pagemodel.ss_keys_and_cert_dlg_registration_req import Ss_keys_and_cert_dlg_registration_req

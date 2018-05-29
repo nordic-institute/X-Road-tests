@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = get_driver() e.g driver.current_url
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.util.webtimings import get_measurements
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class Ss_keys_and_cert_dlg_import_cert(CommonUtils):
@@ -49,22 +47,18 @@ class Ss_keys_and_cert_dlg_import_cert(CommonUtils):
 
     def verify_title_file_dlg(self):
         """
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_element_is_visible`, *self.BUTTON_OK*
+
         """
         self.wait_until_element_is_visible(self.BUTTON_OK)
 
     def click_browse_upload_button(self):
         """
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_FILE_UPLOAD_BUTTON*
+
         """
         self.click_element(self.ID_FILE_UPLOAD_BUTTON)
 
     def file_upload_ok(self):
         """
-        
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
+
         """
         self.click_element(self.BUTTON_OK)

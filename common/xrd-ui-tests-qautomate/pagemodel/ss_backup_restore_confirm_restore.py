@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = self.get_current_driver() e.g driver.current_url
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class Ss_backup_restore_confirm_restore(CommonUtils):
@@ -53,10 +52,6 @@ class Ss_backup_restore_confirm_restore(CommonUtils):
         Click button to confirm the dialog
 
         :param wait_for_jquery:  If true method waits for jquery
-        
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_CONFIRM*
-            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`, *timeout=60*
         """
         self.click_element(self.BUTTON_CONFIRM)
         if wait_for_jquery:

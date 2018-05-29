@@ -1,1 +1,0 @@
-Xroad_test_service.test_add_and_registering_new_subsystem_and_service_1=1

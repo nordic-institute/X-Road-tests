@@ -19,6 +19,8 @@ class XroadSecurityServerAuthCert(unittest.TestCase):
     Requires helper scenarios:
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_a_xroad_disable_auth_cert'):
+        unittest.TestCase.__init__(self, methodName)
 
     def test_a_xroad_disable_auth_cert(self):
         main = MainController(self)

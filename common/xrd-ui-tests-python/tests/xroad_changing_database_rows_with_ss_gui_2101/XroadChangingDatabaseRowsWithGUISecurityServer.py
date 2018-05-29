@@ -23,6 +23,8 @@ class XroadChangingDatabaseRowsWithGUISecurityServer(unittest.TestCase):
     Requires helper scenarios:
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_changing_database_rows_with_ss_gui_2_10_1'):
+        unittest.TestCase.__init__(self, methodName)
 
     def test_changing_database_rows_with_ss_gui_2_10_1(self):
         main = MainController(self)

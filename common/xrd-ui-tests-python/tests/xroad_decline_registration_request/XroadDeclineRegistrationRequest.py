@@ -18,6 +18,9 @@ class XroadDeclineRegistrationRequest(unittest.TestCase):
     Requires helper scenarios:
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_decline_registration_request'):
+        unittest.TestCase.__init__(self, methodName)
+
     def test_decline_registration_request(self):
         main = MainController(self)
         ss_host = main.config.get('ss1.host')

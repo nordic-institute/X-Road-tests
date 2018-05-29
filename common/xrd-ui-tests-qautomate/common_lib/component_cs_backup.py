@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 import os
 from variables import strings
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.parsers.parameter_parser import get_all_parameters
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 from common_lib import Common_lib
 from pagemodel.cs_backup_restore_dlg_restore_confirm import Cs_backup_restore_dlg_restore_confirm
@@ -40,14 +39,6 @@ class Component_cs_backup(CommonUtils):
         """
         Generate backup in central server
 
-        **Test steps:**
-            * **Step 1: generate backup file**
-                * :func:`~pagemodel.cs_backup_restore.Cs_backup_restore.click_button_id_backup`
-            * **Step 2: verify message and logs**
-                * :func:`~common_lib.component_common.Component_common.verify_notice_message`, *strings.backup_created*
-                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *u'cs_url'*, *strings.generate_backup_audit_log*
-            * **Step 3: close backup dialog**
-                * :func:`~pagemodel.cs_backup_restore_dlg_back_up_config.Cs_backup_restore_dlg_back_up_config.click_button_ok`
         """
         # Step generate backup file
         self.cs_backup_restore.click_button_id_backup()
@@ -63,16 +54,6 @@ class Component_cs_backup(CommonUtils):
         """
         Generate invalid backup in central server
 
-        **Test steps:**
-            * **Step 1: generate backup file**
-                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.change_file_permission`, *u'cs_url'*, *strings.devices_file*, *u'4'*
-                * :func:`~pagemodel.cs_backup_restore.Cs_backup_restore.click_button_id_backup`
-                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.change_file_permission`, *u'cs_url'*, *strings.devices_file*, *u'771'*
-            * **Step 2: verify message and logs**
-                * :func:`~common_lib.component_common.Component_common.verify_notice_message`, *strings.backup_created_error.format(u'1'*
-                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *u'cs_url'*, *strings.failed_generate_backup_audit_log*
-            * **Step 3: close backup dialog**
-                * :func:`~pagemodel.cs_backup_restore_dlg_back_up_config.Cs_backup_restore_dlg_back_up_config.click_button_ok`
         """
         # Step generate backup file
         self.common_lib_ssh.change_file_permission(u'cs_url', strings.devices_file, u'4')
@@ -90,14 +71,6 @@ class Component_cs_backup(CommonUtils):
         """
         Restore backup in central server
 
-        **Test steps:**
-            * **Step 1: restore newest backup file**
-                * :func:`~pagemodel.cs_backup_restore.Cs_backup_restore.click_element_newest_restore`
-                * :func:`~pagemodel.cs_backup_restore_dlg_restore_confirm.Cs_backup_restore_dlg_restore_confirm.click_button_ui_buttonset_confirm`
-            * **Step 2: verify message and logs**
-                * :func:`~common_lib.component_common.Component_common.verify_notice_message`, *strings.backup_restored.format(backup_file*
-                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *u'cs_url'*, *strings.restore_configuration_audit_log*
-                * :func:`~pagemodel.cs_backup_restore_dlg_back_up_config.Cs_backup_restore_dlg_back_up_config.click_button_ok`
         """
         # Step Restore newest backup file
         self.cs_backup_restore.click_element_newest_restore()
@@ -114,8 +87,6 @@ class Component_cs_backup(CommonUtils):
         """
         Download back up in central server
 
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_backup_restore.Cs_backup_restore.click_element_newest_download`
         """
         self.cs_backup_restore.click_element_newest_download()
 
@@ -123,13 +94,6 @@ class Component_cs_backup(CommonUtils):
         """
         Delete back up in central server
 
-        **Test steps:**
-            * **Step 1: delete newest backup**
-                * :func:`~pagemodel.cs_backup_restore.Cs_backup_restore.click_element_newest_delete`
-                * :func:`~pagemodel.cs_backup_restore_dlg_delete_confirm.Cs_backup_restore_dlg_delete_confirm.click_button_ui_buttonset_confirm`
-            * **Step 2: verify message and logs**
-                * :func:`~common_lib.component_common.Component_common.verify_notice_message`, *strings.backup_deleted*
-                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *u'cs_url'*, *event=strings.delete_backup_audit_log*
         """
         # Step delete newest backup
         self.cs_backup_restore.click_element_newest_delete()
@@ -143,9 +107,6 @@ class Component_cs_backup(CommonUtils):
         """
         Delete back up in central server
 
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_backup_restore.Cs_backup_restore.click_element_newest_delete`
-                * **Step 2:** :func:`~pagemodel.cs_backup_restore_dlg_delete_confirm.Cs_backup_restore_dlg_delete_confirm.click_button_cancel`
         """
         self.cs_backup_restore.click_element_newest_delete()
         self.cs_backup_restore_dlg_delete_confirm.click_button_cancel()
@@ -154,14 +115,6 @@ class Component_cs_backup(CommonUtils):
         """
         Upload back up in central server
 
-        **Test steps:**
-            * **Step 1: upload backup file**
-                * :func:`~pagemodel.cs_backup_restore.Cs_backup_restore.click_element_upload_backup_file`
-                * :func:`~pagemodel.cs_backup_restore_dlg_upload_backup.Cs_backup_restore_dlg_upload_backup.click_element_upload_button`
-                * :func:`~common_lib.common_lib.Common_lib.type_file_name_pyautogui`, *backup_file_path*
-                * :func:`~pagemodel.cs_backup_restore_dlg_upload_backup.Cs_backup_restore_dlg_upload_backup.click_dialog_confirm`
-            * **Step 2: verify message and logs**
-                * :func:`~common_lib.component_common.Component_common.verify_notice_message`, *strings.backup_file_uploaded*
         """
         # Step upload backup file
         self.cs_backup_restore.click_element_upload_backup_file()
@@ -172,11 +125,17 @@ class Component_cs_backup(CommonUtils):
         backup_file_path = os.path.join(download_folder, backup_file)
         self.common_lib.type_file_name_pyautogui(backup_file_path)
         self.cs_backup_restore_dlg_upload_backup.click_dialog_confirm()
+        
+        # TODO make verify message less error prone 
+        sleep(1)
+
+        # TODO make verify message less error prone
+        sleep(1)
 
         # Step Verify message and logs
         self.component_common.verify_notice_message(strings.backup_file_uploaded)
         # TODO Autologin audit log is activated same time sometimes
-        #self.common_lib_ssh.verify_audit_log(u'cs_url', event=strings.upload_backup_audit_log)
+        self.common_lib_ssh.verify_audit_log(u'cs_url', event=strings.upload_backup_audit_log)
 
         self.wait_until_jquery_ajax_loaded()
 
@@ -184,17 +143,6 @@ class Component_cs_backup(CommonUtils):
         """
         Upload backup file that already exist
 
-        **Test steps:**
-            * **Step 1: upload backup file**
-                * :func:`~pagemodel.cs_backup_restore.Cs_backup_restore.click_element_upload_backup_file`
-                * :func:`~pagemodel.cs_backup_restore_dlg_upload_backup.Cs_backup_restore_dlg_upload_backup.click_element_upload_button`
-                * :func:`~common_lib.common_lib.Common_lib.type_file_name_pyautogui`, *backup_file_path*
-                * :func:`~pagemodel.cs_backup_restore_dlg_upload_backup.Cs_backup_restore_dlg_upload_backup.click_dialog_confirm`
-            * **Step 2: confirm already exist dialog**
-                * :func:`~pagemodel.cs_backup_restore_dlg_up_back_conf_exist.Cs_backup_restore_dlg_up_back_conf_exist.click_button_confirm`
-            * **Step 3: verify message and logs**
-                * :func:`~common_lib.component_common.Component_common.verify_notice_message`, *strings.backup_file_uploaded*
-                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *u'cs_url'*, *event=strings.upload_backup_audit_log*
         """
         # Step upload backup file
         self.cs_backup_restore.click_element_upload_backup_file()
@@ -219,17 +167,6 @@ class Component_cs_backup(CommonUtils):
         """
         Upload backup file that contains invalid characters
 
-        **Test steps:**
-            * **Step 1: upload backup file**
-                * :func:`~pagemodel.cs_backup_restore.Cs_backup_restore.click_element_upload_backup_file`
-                * :func:`~pagemodel.cs_backup_restore_dlg_upload_backup.Cs_backup_restore_dlg_upload_backup.click_element_upload_button`
-                * :func:`~common_lib.common_lib.Common_lib.type_file_name_pyautogui`, *invalid_file_path*
-                * :func:`~pagemodel.cs_backup_restore_dlg_upload_backup.Cs_backup_restore_dlg_upload_backup.click_dialog_confirm`
-            * **Step 2: verify message and logs**
-                * :func:`~common_lib.component_common.Component_common.verify_notice_message`, *strings.backup_file_upload_invalid_char.format(invalid_file*
-                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *u'cs_url'*, *event=strings.upload_backup_failed_audit_log*
-            * **Step 3: cancel upload dialog**
-                * :func:`~pagemodel.cs_backup_restore_dlg_upload_backup.Cs_backup_restore_dlg_upload_backup.click_button_cancel`
         """
         # Step upload backup file
         self.cs_backup_restore.click_element_upload_backup_file()
@@ -259,17 +196,6 @@ class Component_cs_backup(CommonUtils):
         """
         Upload backup file that contains invalid extension
 
-        **Test steps:**
-            * **Step 1: upload backup file**
-                * :func:`~pagemodel.cs_backup_restore.Cs_backup_restore.click_element_upload_backup_file`
-                * :func:`~pagemodel.cs_backup_restore_dlg_upload_backup.Cs_backup_restore_dlg_upload_backup.click_element_upload_button`
-                * :func:`~common_lib.common_lib.Common_lib.type_file_name_pyautogui`, *invalid_file_path*
-                * :func:`~pagemodel.cs_backup_restore_dlg_upload_backup.Cs_backup_restore_dlg_upload_backup.click_dialog_confirm`
-            * **Step 2: verify message and logs**
-                * :func:`~common_lib.component_common.Component_common.verify_notice_message`, *strings.backup_file_uploaded_invalid_extension.format(invalid_file*
-                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *u'cs_url'*, *event=strings.upload_backup_failed_audit_log*
-            * **Step 3: cancel upload dialog**
-                * :func:`~pagemodel.cs_backup_restore_dlg_upload_backup.Cs_backup_restore_dlg_upload_backup.click_button_cancel`
         """
         # Step upload backup file
         self.cs_backup_restore.click_element_upload_backup_file()
@@ -299,17 +225,6 @@ class Component_cs_backup(CommonUtils):
         """
         Upload backup file that contains invalid format
 
-        **Test steps:**
-            * **Step 1: upload backup file**
-                * :func:`~pagemodel.cs_backup_restore.Cs_backup_restore.click_element_upload_backup_file`
-                * :func:`~pagemodel.cs_backup_restore_dlg_upload_backup.Cs_backup_restore_dlg_upload_backup.click_element_upload_button`
-                * :func:`~common_lib.common_lib.Common_lib.type_file_name_pyautogui`, *backup_file_path*
-                * :func:`~pagemodel.cs_backup_restore_dlg_upload_backup.Cs_backup_restore_dlg_upload_backup.click_dialog_confirm`
-            * **Step 2: verify message and logs**
-                * :func:`~common_lib.component_common.Component_common.verify_notice_message`, *strings.backup_file_uploaded_invalid_format*
-                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *u'cs_url'*, *event=strings.upload_backup_failed_audit_log*
-            * **Step 3: cancel upload dialog**
-                * :func:`~pagemodel.cs_backup_restore_dlg_upload_backup.Cs_backup_restore_dlg_upload_backup.click_button_cancel`
         """
         # Step upload backup file
         self.cs_backup_restore.click_element_upload_backup_file()
@@ -336,26 +251,13 @@ class Component_cs_backup(CommonUtils):
         """
         Cancel backup restoration in
 
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_backup_restore.Cs_backup_restore.click_element_newest_restore`
-                * **Step 2:** :func:`~pagemodel.cs_backup_restore_dlg_restore_confirm.Cs_backup_restore_dlg_restore_confirm.click_button_cancel`
         """
         self.cs_backup_restore.click_element_newest_restore()
         self.cs_backup_restore_dlg_restore_confirm.click_button_cancel()
 
     def restore_invalid_backup(self):
         """
-        **Test steps:**
-            * **Step 1: generate empty backup file to server**
-                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.generate_empty_file`, *u'cs_url'*, *strings.invalid_backup_file*
-            * **Step 2: restore newest backup**
-                * :func:`~pagemodel.cs_backup_restore.Cs_backup_restore.click_element_newest_restore`
-                * :func:`~pagemodel.cs_backup_restore_dlg_restore_confirm.Cs_backup_restore_dlg_restore_confirm.click_button_ui_buttonset_confirm`
-            * **Step 3:s verify message and logs**
-                * :func:`~common_lib.component_common.Component_common.verify_notice_message`, *strings.restore_failed.format(strings.invalid_backup_file_name*
-                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.verify_audit_log`, *u'cs_url'*, *event=strings.restore_backup_failed_audit_log*
-            * **Step 4: delete backups from server**
-                * :func:`~common_lib.common_lib_ssh.Common_lib_ssh.delete_files_from_directory`, *u'cs_url'*, *strings.backup_directory*
+
         """
         # Step generate empty backup file to server
         self.common_lib_ssh.generate_empty_file(u'cs_url', strings.invalid_backup_file)

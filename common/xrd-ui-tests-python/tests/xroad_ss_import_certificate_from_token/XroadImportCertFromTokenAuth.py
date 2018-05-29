@@ -20,6 +20,8 @@ class XroadImportCertFromTokenAuth(unittest.TestCase):
     Requires helper scenarios:
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_aimport_sign_cert_for_auth_key'):
+        unittest.TestCase.__init__(self, methodName)
 
     def test_aimport_sign_cert_for_auth_key(self):
         main = MainController(self)

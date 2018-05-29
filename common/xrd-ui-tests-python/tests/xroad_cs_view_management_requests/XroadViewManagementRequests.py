@@ -12,6 +12,8 @@ class XroadViewManagementRequests(unittest.TestCase):
     Requires helper scenarios:
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_view_management_requests'):
+        unittest.TestCase.__init__(self, methodName)
 
     def test_view_management_requests(self):
         main = MainController(self)

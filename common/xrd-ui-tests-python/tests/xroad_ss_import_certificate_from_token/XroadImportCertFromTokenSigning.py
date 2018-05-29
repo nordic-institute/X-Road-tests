@@ -27,6 +27,9 @@ class XroadImportCertFromTokenSigning(unittest.TestCase):
     Requires helper scenarios: MEMBER_47, TRUST_08, TRUST_10, TRUST_14
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_aimport_cert_from_token'):
+        unittest.TestCase.__init__(self, methodName)
+
     def test_aimport_cert_from_token(self):
         main = MainController(self)
 

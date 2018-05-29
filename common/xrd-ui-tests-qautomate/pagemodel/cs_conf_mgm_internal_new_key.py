@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = get_driver() e.g driver.current_url
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.util.webtimings import get_measurements
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class Cs_conf_mgm_internal_new_key(CommonUtils):
@@ -53,10 +51,7 @@ class Cs_conf_mgm_internal_new_key(CommonUtils):
     def click_button_ok(self):
         """
         Click button to ok the dialog
-        
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
-            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+
         """
         # AutoGen method
         self.click_element(self.BUTTON_OK)

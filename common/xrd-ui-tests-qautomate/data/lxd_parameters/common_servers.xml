@@ -15,7 +15,7 @@
 	<Section name="cs_url">
 		<parameter name="url" pagemodel="open_application" value="https://xroad-lxd-cs.lxd:4000/login"/>
 		<parameter name="internal_conf_url" value="http://xroad-lxd-cs.lxd/internalconf"/>
-		<parameter name="configuration_timeout" value="3"/>
+		<parameter name="configuration_timeout" value="20"/>
 		<parameter name="j_username" pagemodel="cs_login" value="xrd"/>
 		<parameter name="j_password" pagemodel="cs_login" value="secret"/>
 		<parameter name="pin" value="12345678a!"/>

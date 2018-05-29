@@ -16,6 +16,8 @@ class XroadUnregisterClient(unittest.TestCase):
     Requires helper scenarios: disable wsdl, enable wsdl
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_a_xroad_unregister_client_request_fail'):
+        unittest.TestCase.__init__(self, methodName)
 
     def test_a_xroad_unregister_client_request_fail(self):
         main = MainController(self)

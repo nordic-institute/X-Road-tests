@@ -12,8 +12,8 @@ class XroadBackupConfiguration(unittest.TestCase):
       Requires helper scenarios:
       X-Road version: 6.16.0
     """
-
-
+    def __init__(self, methodName='test_backup_configuration'):
+        unittest.TestCase.__init__(self, methodName)
 
     def test_backup_configuration(self):
         main = MainController(self)

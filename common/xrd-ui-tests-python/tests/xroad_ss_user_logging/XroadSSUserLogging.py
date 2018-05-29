@@ -12,6 +12,9 @@ class XroadSSUserLogging(unittest.TestCase):
     RIA URL: https://jira.ria.ee/browse/XT-314
     RIA URL: https://jira.ria.ee/browse/XT-315
     """
+    def __init__(self, methodName='test_ss_user_logging'):
+        unittest.TestCase.__init__(self, methodName)
+
     def test_ss_user_logging(self):
         main = MainController(self)
 

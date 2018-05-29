@@ -14,6 +14,8 @@ class XroadDownloadBackupFile(unittest.TestCase):
     Requires helper scenarios:
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_download_backupfile'):
+        unittest.TestCase.__init__(self, methodName)
 
     def test_download_backupfile(self):
         main = MainController(self)

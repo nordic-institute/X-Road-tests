@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = get_driver() e.g driver.current_url
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.util.webtimings import get_measurements
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class Cs_login(CommonUtils):
@@ -52,12 +50,6 @@ class Cs_login(CommonUtils):
         Login to central server
 
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.input_text`, *self.ID_J_USERNAME*, *parameters[u'j_username']*
-            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.input_text`, *self.ID_J_PASSWORD*, *parameters[u'j_password']*
-            * **Step 3:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.BTN_LOGIN*
-            * **Step 4:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         # AutoGen method submit form: login
         self.input_text(self.ID_J_USERNAME, parameters[u'j_username'])
@@ -68,6 +60,7 @@ class Cs_login(CommonUtils):
     def verify_is_login_page(self, parameters=None):
         """
         Verify page is login page
+
         :param parameters:  Test data section dictionary
         """
         return self.is_visible(self.ID_J_USERNAME)

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 from pagemodel.ss_sidebar import Ss_sidebar
 from pagemodel.dlg_change_language import Dlg_change_language
@@ -24,9 +24,6 @@ class Component_common(CommonUtils):
         """
         Open select language dialog
 
-        **Test steps:**
-                * **Step 1:** :func:`~common_lib.common_elements.Common_elements.click_user_info`
-                * **Step 2:** :func:`~common_lib.common_elements.Common_elements.click_change_language`
         """
         self.common_elements.click_user_info()
         self.common_elements.click_change_language()
@@ -35,8 +32,6 @@ class Component_common(CommonUtils):
         """
         Accept select languege dialog
 
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.dlg_change_language.Dlg_change_language.click_button_ok`
         """
         self.dlg_change_language.click_button_ok()
 
@@ -45,9 +40,6 @@ class Component_common(CommonUtils):
         Input text to change langueage dialog
 
         :param text:  String value for text
-        
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.dlg_change_language.Dlg_change_language.change_language`, *text*
         """
         self.dlg_change_language.change_language(text)
 
@@ -56,9 +48,6 @@ class Component_common(CommonUtils):
         Verify notice message
 
         :param message:  String value for message
-        
-        **Test steps:**
-                * **Step 2:** :func:`~common_lib.common_elements.Common_elements.verify_message_contains`, *message*
         """
         self.wait_until_jquery_ajax_loaded()
         self.common_elements.verify_message_contains(message)
@@ -68,9 +57,6 @@ class Component_common(CommonUtils):
         Verify notice message
 
         :param message:  String value for message
-        
-        **Test steps:**
-                * **Step 2:** :func:`~common_lib.common_elements.Common_elements.verify_error_contains`, *message*
         """
         self.wait_until_jquery_ajax_loaded()
         self.common_elements.verify_error_contains(message)
@@ -80,9 +66,6 @@ class Component_common(CommonUtils):
         Verify notice message
 
         :param message:  String value for message
-        
-        **Test steps:**
-                * **Step 2:** :func:`~common_lib.common_elements.Common_elements.verify_alert_message`, *message*
         """
         sleep(1)
         self.wait_until_jquery_ajax_loaded()

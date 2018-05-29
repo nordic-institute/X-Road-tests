@@ -14,6 +14,9 @@ class XroadCsDeleteMemberWithSS(unittest.TestCase):
     Requires helper scenarios:
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_xroad_cs_delete_member_with_security_server'):
+        unittest.TestCase.__init__(self, methodName)
+
     def test_xroad_cs_delete_member_with_security_server(self):
         main = MainController(self)
 

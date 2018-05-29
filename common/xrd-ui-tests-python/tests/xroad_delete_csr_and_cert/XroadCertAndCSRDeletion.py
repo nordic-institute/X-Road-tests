@@ -24,6 +24,8 @@ class XroadCertAndCSRDeletion(unittest.TestCase):
     Requires helper scenarios: SS_29, SS_30
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_cert_and_csr_deletion'):
+        unittest.TestCase.__init__(self, methodName)
 
     def test_cert_and_csr_deletion(self):
         main = MainController(self)

@@ -14,6 +14,8 @@ class XroadDeleteOcspResponder(unittest.TestCase):
     '''
     UC TRUST_11 Delete an OCSP Responder of a CA
     '''
+    def __init__(self, methodName='test_xroad_delete_ocsp_responder'):
+        unittest.TestCase.__init__(self, methodName)
 
     def test_xroad_delete_ocsp_responder(self):
         main = MainController(self)

@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = get_driver() e.g driver.current_url
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.util.webtimings import get_measurements
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from common_lib.common_lib import Common_lib
 from time import sleep
 
@@ -58,11 +56,6 @@ class Ss_initial_conf_import_anchor(CommonUtils):
         Upload anchor
         
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_ANCHOR_UPLOAD_FILE_BUTTON*
-            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.common_lib`, *type_string*
-            * **Step 3:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_ANCHOR_UPLOAD_SUBMIT*
         """
         js = self.execute_javascript("document.querySelector('section.container>table.details>tbody>tr>td>input.selected_file').removeAttribute('disabled');")
         self.click_element(self.ID_ANCHOR_UPLOAD_FILE_BUTTON)
@@ -86,8 +79,6 @@ class Ss_initial_conf_import_anchor(CommonUtils):
         """
         Wait until initial confiquration view is visible
 
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_element_is_visible`, *self.ID_HEADING*
         """
         self.wait_until_element_is_visible(self.ID_HEADING)
 

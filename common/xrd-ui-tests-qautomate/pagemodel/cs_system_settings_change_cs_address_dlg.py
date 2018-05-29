@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = self.get_current_driver() e.g driver.current_url
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from variables import strings
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class Cs_system_settings_change_cs_address_dlg(CommonUtils):
@@ -55,9 +54,6 @@ class Cs_system_settings_change_cs_address_dlg(CommonUtils):
         Input text to server address field. Parameter used is 'server_address'
         
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.input_text`, *self.ID_CENTRAL_SERVER_ADDRESS_NEW*, *parameters[u'server_address']*
         """
         server_address = parameters['server_address']
         if strings.server_environment_type() == strings.lxd_type_environment:
@@ -67,9 +63,7 @@ class Cs_system_settings_change_cs_address_dlg(CommonUtils):
     def click_confim(self):
         """
         Click button to confirm the dialog
-        
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
+
         """
         self.click_element(self.BUTTON_OK)
 
@@ -77,7 +71,5 @@ class Cs_system_settings_change_cs_address_dlg(CommonUtils):
         """
         Click button to cancel the dialog
 
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_CANCEL*
         """
         self.click_element(self.BUTTON_CANCEL)

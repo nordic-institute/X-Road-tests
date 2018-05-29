@@ -15,6 +15,9 @@ import ht_management
 
 
 class XroadLoginHardwareToken(unittest.TestCase):
+    def __init__(self, methodName='test_xroad_hardware_login_token'):
+        unittest.TestCase.__init__(self, methodName)
+
     def test_xroad_hardware_login_token(self):
         main = MainController(self)
 

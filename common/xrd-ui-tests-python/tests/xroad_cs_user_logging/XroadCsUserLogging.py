@@ -15,6 +15,9 @@ class XroadCsUserLogging(unittest.TestCase):
     Requires helper scenarios:
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_cs_user_logging'):
+        unittest.TestCase.__init__(self, methodName)
+
     def test_cs_user_logging(self):
         main = MainController(self)
         cs_host = main.config.get('cs.host')

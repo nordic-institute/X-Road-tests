@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 from variables import strings, errors
-from webframework import TESTDATA
-import subprocess
-import os
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.config import get_config_value
-from webframework.extension.util.file_utils import get_file_content
+from QAutoLibrary.extension import TESTDATA
+from QAutoLibrary.QAutoSelenium import *
+from QAutoLibrary.extension.config import get_config_value
+from QAutoLibrary.FileOperations import get_file_content
 from time import sleep
 
 class Common_lib_ssh(CommonUtils):
@@ -24,8 +22,6 @@ class Common_lib_ssh(CommonUtils):
         """
         Initilization method for moving test data to class
 
-        *Updated: 11.07.2017*
-
         """
         CommonUtils.__init__(self)
         self.log_file_output = ""
@@ -33,6 +29,7 @@ class Common_lib_ssh(CommonUtils):
 
     def curl_url(self, section="cs_url", url=""):
         """
+
         :param section:  Test data section name
         """
         server = TESTDATA[section][u'server_address']
@@ -51,14 +48,14 @@ class Common_lib_ssh(CommonUtils):
 
         return self.run_bash_command(command, True).strip()[:-1]
 
-    def get_time(self, section="cs_url", date_format='%Y%m%d%H%M'):
+    def get_newest_directory_age(self, section="cs_url"):
         """
+
         :param section:  Test data section name
         """
         server = TESTDATA[section][u'server_address']
-        command = 'ssh {} date "+{}"'.format(server, date_format)
-
-        return self.run_bash_command(command, True)
+        command = "ssh {} 'expr $(date +%s) - $(stat -c %Y $(ls -dt /var/lib/xroad/public/V2/*/ | head -1))'".format(server)
+        return self.run_bash_command(command, True).strip()
 
     def verify_if_server_contains_file(self, section="cs_url", path=""):
         """
@@ -87,8 +84,8 @@ class Common_lib_ssh(CommonUtils):
     def find_exception_from_logs_and_save(self, start_time, stop_time, name_prefix="", copy_location=""):
         """
         Find exceptions from logs and save them
-        """
 
+        """
         self.run_folder = get_config_value("reporting_folder_run")
         self.report_folder = get_config_value("reporting_folder")
         error_log_file = open(self.report_folder + os.sep + "error_logs.txt", "w")
@@ -134,8 +131,7 @@ class Common_lib_ssh(CommonUtils):
 
     def empty_server_log_files(self, server):
         """
-        **Test steps:**
-                * **Step 2:** :func:`~pagemodel.run_bash_command(formated_command.Run_bash_command(formated_command.format`, *formated_command.format(server*, *'service rsyslog rotate'*, *""*
+
         """
         shell_command = 'sudo truncate -c -s 0'
         formated_command = "ssh {} {} {} || true"
@@ -148,6 +144,7 @@ class Common_lib_ssh(CommonUtils):
 
     def collect_server_log_files(self, server="xroad-lxd-cs"):
         """
+
         """
         self.run_folder = get_config_value("reporting_folder_run")
         print(self.run_folder)
@@ -159,6 +156,7 @@ class Common_lib_ssh(CommonUtils):
 
     def delete_files_from_directory(self, section="cs_url", path=u'/var/lib/xroad/backup'):
         """
+
         :param section:  Test data section name
         """
         server = TESTDATA[section][u'server_address']
@@ -168,6 +166,7 @@ class Common_lib_ssh(CommonUtils):
 
     def delete_file(self, section="cs_url", path=u'/var/lib/xroad/backup/file.xml'):
         """
+
         :param section:  Test data section name
         """
         server = TESTDATA[section][u'server_address']
@@ -177,6 +176,7 @@ class Common_lib_ssh(CommonUtils):
 
     def generate_empty_file(self, section="cs_url", path=u'/var/lib/xroad/backup'):
         """
+
         :param section:  Test data section name
         """
         server = TESTDATA[section][u'server_address']
@@ -186,6 +186,7 @@ class Common_lib_ssh(CommonUtils):
 
     def generate_and_write_to_file_as_xroad(self, section="cs_url", path=u'/var/lib/xroad/backup', text=""):
         """
+
         :param section:  Test data section name
         :param text:  String value for text
         """
@@ -198,6 +199,7 @@ class Common_lib_ssh(CommonUtils):
 
     def delete_signing_key_from_signer_console(self, section="cs_url", key=""):
         """
+
         :param section:  Test data section name
         """
         server = TESTDATA[section][u'server_address']
@@ -207,6 +209,7 @@ class Common_lib_ssh(CommonUtils):
 
     def change_file_permission(self, section, path, permission):
         """
+
         :param section:  Test data section name
         """
         server = TESTDATA[section][u'server_address']
@@ -216,6 +219,7 @@ class Common_lib_ssh(CommonUtils):
 
     def move_file(self, section, move_from, move_to):
         """
+
         :param section:  Test data section name
         """
         server = TESTDATA[section][u'server_address']
@@ -242,8 +246,6 @@ class Common_lib_ssh(CommonUtils):
         """
         Read file from given path in server
 
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.log_file_output = self.Log_file_output = self.run_bash_command`, *command*
         """
         command = "ssh {} sudo tail -n {} {}".format(server, str(count), log_file_name)
         self.log_file_output = self.run_bash_command(command)
@@ -252,6 +254,7 @@ class Common_lib_ssh(CommonUtils):
     def parse_log_file_tail(self, log_output="", row_count=5):
         """
         Parse log file to show x number of rows
+
         """
         last_rows = [row for row in log_output.strip().split("\n") if row.strip()][-int(row_count):]
         return "\n".join(last_rows)
@@ -261,12 +264,6 @@ class Common_lib_ssh(CommonUtils):
         Verify audit log file in server.
 
         :param section:  Test data section name
-
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.fail(errors.Fail(errors.audit_log_is_empty)`, *errors.audit_log_is_empty*
-                * **Step 2:** :func:`~pagemodel.fail(errors.Fail(errors.string_is_not_dict + "\n" + self`, *errors.string_is_not_dict + "\n" + self.parse_log_file_tail(log_output*
-                * **Step 3:** :func:`~pagemodel.fail(errors.Fail(errors.log_event_fail`, *errors.log_event_fail(event*
-                * **Step 4:** :func:`~pagemodel.fail(errors.Fail(errors.log_user_fail`, *errors.log_user_fail(user*
         """
         # Sleep waiting log
         sleep(1)
@@ -288,17 +285,22 @@ class Common_lib_ssh(CommonUtils):
         if not isinstance(newest_log, dict):
             self.fail(errors.string_is_not_dict + "\n" + self.parse_log_file_tail(log_output))
         if not event == newest_log["event"]:
-            self.fail(errors.log_event_fail(event) + "\n" + self.parse_log_file_tail(log_output))
+            log_file_tail = self.parse_log_file_tail(log_output)
+            if event in log_file_tail:
+                self.warning("newest log event is not {}, but found in file\n".format(newest_log["event"]) + log_file_tail)
+            else:
+                self.fail(errors.log_event_fail(event) + "\n" + log_file_tail)
         if not user == newest_log["user"]:
-            self.fail(errors.log_user_fail(user) + "\n" + self.parse_log_file_tail(log_output))
+            log_file_tail = self.parse_log_file_tail(log_output)
+            if event in log_file_tail:
+                self.warning("newest log user is not {}, but found in file\n".format(newest_log["user"]) + log_file_tail)
+            else:
+                self.fail(errors.log_user_fail(user) + "\n" + log_file_tail)
 
     def verify_jetty_log(self, section=u'ss1_url', event="Log in user"):
         """
 
         :param section:  Test data section name
-
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.fail("Event: {} not found from jetty log".Fail("event: {} not found from jetty log".format`, *"Event: {} not found from jetty log".format(event*
         """
         server_log_address = TESTDATA[section][u'server_address']
         log_output = self.read_server_file(server_log_address, strings.jetty_log, 300)
@@ -308,6 +310,7 @@ class Common_lib_ssh(CommonUtils):
 
     def get_all_logs_from_server(self, section):
         """
+
         :param section:  Test data section name
         """
         server_log_address = TESTDATA[section][u'server_address']
@@ -319,6 +322,7 @@ class Common_lib_ssh(CommonUtils):
 
     def empty_all_logs_from_server(self, section):
         """
+
         :param section:  Test data section name
         """
         server_log_address = TESTDATA[section][u'server_address']

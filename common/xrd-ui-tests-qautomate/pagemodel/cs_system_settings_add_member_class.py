@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = get_driver() e.g driver.current_url
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.util.webtimings import get_measurements
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class Cs_system_settings_add_member_class(CommonUtils):
@@ -56,9 +54,6 @@ class Cs_system_settings_add_member_class(CommonUtils):
         Input text to member name field. Parameter used is 'member_class'
         
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.input_text`, *self.NAME_MEMBER_CLASS_FILL_TEXT*, *parameters['member_class']*
         """
         # AutoGen method
         self.input_text(self.NAME_MEMBER_CLASS_FILL_TEXT, parameters['member_class'])
@@ -66,9 +61,7 @@ class Cs_system_settings_add_member_class(CommonUtils):
     def click_button_ok(self):
         """
         Click button to ok the dialog
-        
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
+
         """
         # AutoGen method
         self.click_element(self.BUTTON_OK)
@@ -78,8 +71,5 @@ class Cs_system_settings_add_member_class(CommonUtils):
         Input text to member description field. Parameter used is 'member_class_description'
         
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.input_text`, *self.NAME_MEMBER_CLASS_DESCRIPTION*, *parameters[u'member_class_description']*
         """
         self.input_text(self.NAME_MEMBER_CLASS_DESCRIPTION, parameters[u'member_class_description'])

@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = get_driver() e.g driver.current_url
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.util.webtimings import get_measurements
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class Cs_sec_servers_new_client_req(CommonUtils):
@@ -67,9 +65,7 @@ class Cs_sec_servers_new_client_req(CommonUtils):
     def click_new_client_search(self):
         """
         Click new cliants search
-        
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_SECURITYSERVER_CLIENT_CLIENT_SEARCH*
+
         """
         self.click_element(self.ID_SECURITYSERVER_CLIENT_CLIENT_SEARCH)
 
@@ -78,9 +74,6 @@ class Cs_sec_servers_new_client_req(CommonUtils):
         Input subsystem code to dialog. Parameter used is 'subsystem_code'
         
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.input_text`, *self.ID_SECURITYSERVER_CLIENT_SUBSYSTEM_CODE*, *parameters[u'subsystem_code']*
         """
         self.input_text(self.ID_SECURITYSERVER_CLIENT_SUBSYSTEM_CODE, parameters[u'subsystem_code'])
 
@@ -88,7 +81,5 @@ class Cs_sec_servers_new_client_req(CommonUtils):
         """
         Click button to submit dialog
 
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_CONFIRM*
         """
         self.click_element(self.BUTTON_CONFIRM)

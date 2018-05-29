@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = get_driver() e.g driver.current_url
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.util.webtimings import get_measurements
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class Cs_sec_servers_details(CommonUtils):
@@ -59,8 +57,6 @@ class Cs_sec_servers_details(CommonUtils):
         """
         Verify that page contains security server edit table
 
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_element_is_visible`, *self.ID_SECURITYSERVER_EDIT_TABLE*
         """
         self.wait_until_element_is_visible(self.ID_SECURITYSERVER_EDIT_TABLE)
 
@@ -68,8 +64,6 @@ class Cs_sec_servers_details(CommonUtils):
         """
         Click tab to show clients view in dialog
 
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.CLIENTS*
         """
         self.click_element(self.CLIENTS)
 
@@ -77,8 +71,6 @@ class Cs_sec_servers_details(CommonUtils):
         """
         Click tab to show management request view in dialog
 
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.MANAGEMENT_REQUESTS*
         """
         self.click_element(self.MANAGEMENT_REQUESTS)
 
@@ -86,8 +78,6 @@ class Cs_sec_servers_details(CommonUtils):
         """
         Click tab to show auhtentication certificates view in dialog
 
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.AUTHENTICATION_CERTIFICATES*
         """
         self.click_element(self.AUTHENTICATION_CERTIFICATES)
 
@@ -95,8 +85,6 @@ class Cs_sec_servers_details(CommonUtils):
         """
         Wait until message shows that certificate has been submitted. Massage u'Request of adding auth'
 
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_element_contains`, *self.CLASS_MESSAGE*, *u'Request of adding auth'*
         """
         self.wait_until_element_contains(self.CLASS_MESSAGE, u'Request of adding auth')
 
@@ -104,8 +92,6 @@ class Cs_sec_servers_details(CommonUtils):
         """
         Click button to delete security server
 
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_SECURITYSERVER_DELETE*
         """
         self.click_element(self.ID_SECURITYSERVER_DELETE)
 
@@ -113,7 +99,5 @@ class Cs_sec_servers_details(CommonUtils):
         """
         Click tab to show security server details view in dialog
 
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.SECURITY_SERVER_DETAILS*
         """
         self.click_element(self.SECURITY_SERVER_DETAILS)

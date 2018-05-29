@@ -15,6 +15,9 @@ class XroadAddOwnedServer(unittest.TestCase):
     Requires helper scenarios: MEMBER_10
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_a_add_owned_server_inputs'):
+        unittest.TestCase.__init__(self, methodName)
+
     def test_a_add_owned_server_inputs(self):
         main = MainController(self, empty_downloads=False)
 

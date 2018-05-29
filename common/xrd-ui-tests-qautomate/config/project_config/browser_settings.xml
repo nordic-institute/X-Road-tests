@@ -3,7 +3,7 @@
         <browser name="Chrome">
             <add_extension if_case="enable_live_monitoring">GlobalUtils._CHROME_CACHE_CLEANER</add_extension>
       
-            <add_experimental_option option="prefs">{"intl.accept_languages": tue.get_country_key(get_config_value("browser_language"))}</add_experimental_option>
+            <add_experimental_option option="prefs">{"intl.accept_languages": get_country_key(get_config_value("browser_language"))}</add_experimental_option>
             
             <add_argument if_case="enable_precise_memory">"--enable-precise-memory-info"</add_argument>
             <add_argument>"--start-maximized"</add_argument>
@@ -36,7 +36,7 @@
             <set_preference option="browser.helperApps.alwaysAsk.force">False</set_preference>
             <set_preference option="browser.download.manager.alertOnEXEOpen">False</set_preference>
             <set_preference option="browser.download.manager.closeWhenDone">True</set_preference>
-            <set_preference option="intl.accept_languages">tue.get_country_key(get_config_value("browser_language"))</set_preference>
+            <set_preference option="intl.accept_languages">get_country_key(get_config_value("browser_language"))</set_preference>
 
             <set_capabilities option="marionette">True</set_capabilities>
         </browser>

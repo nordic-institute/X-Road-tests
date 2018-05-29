@@ -25,6 +25,8 @@ class XroadDeleteKeyFromConfiguration(unittest.TestCase):
     Requires helper scenarios: SS_28, SS_34, SERVICE_12, SERVICE_13
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_a_delete_key_from_configuration_canceling'):
+        unittest.TestCase.__init__(self, methodName)
 
     def test_a_delete_key_from_configuration_canceling(self):
         main = MainController(self)

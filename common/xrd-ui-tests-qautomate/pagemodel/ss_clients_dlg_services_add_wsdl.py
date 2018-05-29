@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = get_driver() e.g driver.current_url
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.util.webtimings import get_measurements
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class Ss_clients_dlg_services_add_wsdl(CommonUtils):
@@ -52,8 +50,6 @@ class Ss_clients_dlg_services_add_wsdl(CommonUtils):
         """
         Verify dialog is open
 
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_element_is_visible`, *self.MENUBAR_MAXIMIZE_2*
         """
         self.wait_until_element_is_visible(self.MENUBAR_MAXIMIZE_2)
 
@@ -62,10 +58,6 @@ class Ss_clients_dlg_services_add_wsdl(CommonUtils):
         Input text to wsdl url field with parameters 'wsdl_add_url' and click button to ok
         
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.input_text`, *self.ID_WSDL_ADD_URL*, *parameters[u'wsdl_add_url']*
-            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
         """
         self.input_text(self.ID_WSDL_ADD_URL, parameters[u'wsdl_add_url'])
         self.click_element(self.BUTTON_OK)

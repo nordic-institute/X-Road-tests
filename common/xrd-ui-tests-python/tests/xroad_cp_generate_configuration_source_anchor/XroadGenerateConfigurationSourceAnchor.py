@@ -18,6 +18,8 @@ class XroadGenerateConfigurationSourceAnchor(unittest.TestCase):
     Requires helper scenarios:
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_a_generate_configuration_source_anchor_no_instance'):
+        unittest.TestCase.__init__(self, methodName)
 
     def test_a_generate_configuration_source_anchor_no_instance(self):
         main = MainController(self)

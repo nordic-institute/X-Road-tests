@@ -1,5 +1,5 @@
 import os
-from webframework.extension.parsers.parameter_parser import get_parameter, get_all_parameters, set_parameter_file
+from QAutoLibrary.extension.parsers.parameter_parser import get_parameter, get_all_parameters
 
 # Jetty log events
 failed_to_generate_global_config = u'Processing internal configuration failed:'
@@ -148,11 +148,11 @@ def server_environment_approved_ca():
 
 
 def server_request_comment(section=u'member1_configuration'):
-        parameters = get_all_parameters()
-        instance_identifier = parameters[section][u'instance_identifier']
-        member_class = parameters[section][u'member_class']
-        member_code = parameters[section][u'member_code']
-        member_server = parameters[section][u'security_server_code']
-        request_comment = u'\'SERVER:{}/{}/{}/{}\' deletion'.format(instance_identifier, member_class,
-                                                                    member_code, member_server)
-        return request_comment
+    parameters = get_all_parameters()
+    instance_identifier = parameters[section][u'instance_identifier']
+    member_class = parameters[section][u'member_class']
+    member_code = parameters[section][u'member_code']
+    member_server = parameters[section][u'security_server_code']
+    request_comment = u'\'SERVER:{}/{}/{}/{}\' deletion'.format(instance_identifier, member_class,
+                                                                member_code, member_server)
+    return request_comment

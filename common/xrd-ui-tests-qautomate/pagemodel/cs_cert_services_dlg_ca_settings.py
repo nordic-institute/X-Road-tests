@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = get_driver() e.g driver.current_url
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.util.webtimings import get_measurements
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class Cs_cert_services_dlg_ca_settings(CommonUtils):
@@ -58,9 +56,6 @@ class Cs_cert_services_dlg_ca_settings(CommonUtils):
         Input cerificate profile text
 
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.input_text`, *self.CERT_PROFILE_INFO_TEXT*, *parameters['name_extractor_method']*
         """
         # AutoGen method
         self.input_text(self.CERT_PROFILE_INFO_TEXT, parameters['name_extractor_method'])
@@ -68,9 +63,7 @@ class Cs_cert_services_dlg_ca_settings(CommonUtils):
     def click_button_id_ca_settings_submit(self):
         """
         Click submit button
-        
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
+
         """
         # AutoGen method
         self.click_element(self.BUTTON_OK)

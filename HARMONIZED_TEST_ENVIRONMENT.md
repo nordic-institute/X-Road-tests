@@ -3,7 +3,7 @@ Harmonized X-Road test environment
 
 - LXD based common test development environment to Finland and Estonia
 	- Includes servers: CA, CENTRAL SERVER, MANAGEMENT SECURITY SERVER, SECURITY SERVERS
-	    - https://github.com/ria-ee/X-Road/tree/develop/ansible
+	    - https://github.com/nordic-institute/X-Road/tree/develop/ansible
 - Can be used for testing:
 	- UI and integrations, SOAP testing, service testing and Service mocks
 	- Not for performance testing!
@@ -17,11 +17,9 @@ Harmonized X-Road test environment
 X-Road test development repositories
 -------------
 X-Road test development master repository
-	- https://github.com/ria-ee/X-Road-tests
+	- https://github.com/nordic-institute/X-Road-tests
 - LXD environment Ansible scripts
-	- https://github.com/vrk-kpa/X-Road
-- X-Road LXD test environment configs and sensitive data repository
-	- https://github.com/vrk-kpa/xroad-utils
+	- https://github.com/nordic-institute/X-Road
 
 **X-Road shared repository folder structure**
 

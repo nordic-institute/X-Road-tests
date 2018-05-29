@@ -13,6 +13,9 @@ import view_management
 
 
 class XroadSsServiceLocalGroupsView(unittest.TestCase):
+    def __init__(self, methodName='test_xroad_logout_token'):
+        unittest.TestCase.__init__(self, methodName)
+
     def test_xroad_logout_token(self):
         main = MainController(self)
 

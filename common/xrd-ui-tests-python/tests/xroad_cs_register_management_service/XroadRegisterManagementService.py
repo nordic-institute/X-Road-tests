@@ -6,6 +6,9 @@ from tests.xroad_cs_register_management_service.register_management_service impo
 
 
 class XroadRegisterManagementService(unittest.TestCase):
+    def __init__(self, methodName='test_register_management_service'):
+        unittest.TestCase.__init__(self, methodName)
+
     def test_register_management_service(self):
         """
         MEMBER_57 Register the Management Service Provider as a Security Server Client

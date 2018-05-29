@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = self.get_current_driver() e.g driver.current_url
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class Cs_backup_restore_dlg_up_back_conf_exist(CommonUtils):
@@ -55,8 +54,5 @@ class Cs_backup_restore_dlg_up_back_conf_exist(CommonUtils):
         Click button confirm
         
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.UI_BUTTONSET_CONFIRM*
         """
         self.click_element(self.UI_BUTTONSET_CONFIRM)

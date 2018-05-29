@@ -10,6 +10,9 @@ from tests.xroad_tls_227 import XroadDeleteLocalTls
 class Test(unittest.TestCase):
     print('DELETE DATA')
 
+    def __init__(self, methodName='test_01_xroad_deactivate_wsdl'):
+        unittest.TestCase.__init__(self, methodName)
+
     # Deactivate and reactivate WSDL (2.2.6), no undo necessary (specification: end state is the same as start state)
     def test_01_xroad_deactivate_wsdl(self):
         from tests.xroad_deactivate_wsdl_226.XroadDeactivateWsdl import XroadDeactivateWsdl

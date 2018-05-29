@@ -4,6 +4,7 @@ from main.maincontroller import MainController
 from tests.xroad_ss_client_certification_213 import client_certification
 
 
+# TODO could this be named same as file?
 class XroadSecurityServerKeyGenerationSignerTimedOut(unittest.TestCase):
     """
     SS_28 5a Generate a key(fails)
@@ -12,6 +13,8 @@ class XroadSecurityServerKeyGenerationSignerTimedOut(unittest.TestCase):
     Requires helper scenarios:
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_securityServerSignerTimedOut'):
+        unittest.TestCase.__init__(self, methodName)
 
     def test_securityServerSignerTimedOut(self):
         main = MainController(self)

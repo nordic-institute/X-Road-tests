@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 from common_lib import Common_lib
 from pagemodel.ss_clients_dlg_services_add_wsdl import Ss_clients_dlg_services_add_wsdl
@@ -34,14 +34,7 @@ class Component_ss_services(CommonUtils):
         """
         Add new wsdl
 
-        *Updated: 11.07.2017*
-
         :param section:  Test data section name
-        
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.ss_clients_dlg_services.Ss_clients_dlg_services.click_wsdl_add`
-                * **Step 2:** :func:`~pagemodel.ss_clients_dlg_services_add_wsdl.Ss_clients_dlg_services_add_wsdl.verify_add_wsdl_dlg_open`
-                * **Step 3:** :func:`~pagemodel.ss_clients_dlg_services_add_wsdl.Ss_clients_dlg_services_add_wsdl.add_wsdl`, *TESTDATA[section]*
         """
         self.ss_clients_dlg_services.click_wsdl_add()
         self.ss_clients_dlg_services_add_wsdl.verify_add_wsdl_dlg_open()
@@ -51,19 +44,10 @@ class Component_ss_services(CommonUtils):
         """
         Edit wsdl service service parameters in security server
 
-        *Updated: 11.07.2017*
-
         :param section1:  Test data section name
         :param section2:  Test data section name
         :param section3:  Test data section name
         :param parameter:  Test data parameter name
-        
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.ss_clients_dlg_services.Ss_clients_dlg_services.click_and_open_wsdl_service`, *TESTDATA[section1]*
-                * **Step 2:** :func:`~pagemodel.ss_clients_dlg_services.Ss_clients_dlg_services.click_edit_service_params`
-                * **Step 3:** :func:`~pagemodel.ss_clients_dlg_services_edit_wsdl.Ss_clients_dlg_services_edit_wsdl.verify_edit_serv_param_dlg_open`
-                * **Step 5:** :func:`~pagemodel.ss_clients_dlg_services_edit_wsdl.Ss_clients_dlg_services_edit_wsdl.fill_service_parameters`, *TESTDATA[section2]*
-                * **Step 6:** :func:`~pagemodel.ss_clients_dlg_services_edit_wsdl.Ss_clients_dlg_services_edit_wsdl.click_ok_service_parameters`
         """
         sleep(2)
         self.ss_clients_dlg_services.click_and_open_wsdl_service(TESTDATA[section1])
@@ -78,17 +62,8 @@ class Component_ss_services(CommonUtils):
         """
         Edit wsdl default service parameters in security server
 
-        *Updated: 11.07.2017*
-
         :param section1:  Test data section name
         :param section2:  Test data section name
-        
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.ss_clients_dlg_services.Ss_clients_dlg_services.click_and_open_wsdl_service`, *TESTDATA[section1]*
-                * **Step 2:** :func:`~pagemodel.ss_clients_dlg_services.Ss_clients_dlg_services.click_edit_service_params`
-                * **Step 3:** :func:`~pagemodel.ss_clients_dlg_services_edit_wsdl.Ss_clients_dlg_services_edit_wsdl.verify_edit_serv_param_dlg_open`
-                * **Step 4:** :func:`~pagemodel.ss_clients_dlg_services_edit_wsdl.Ss_clients_dlg_services_edit_wsdl.fill_service_parameters`, *TESTDATA[section2]*
-                * **Step 5:** :func:`~pagemodel.ss_clients_dlg_services_edit_wsdl.Ss_clients_dlg_services_edit_wsdl.click_ok_service_parameters`
         """
         sleep(2)
         self.ss_clients_dlg_services.click_and_open_wsdl_service(TESTDATA[section1])
@@ -101,17 +76,6 @@ class Component_ss_services(CommonUtils):
         """
         Add service access rights to subjects in security server
 
-        *Updated: 11.07.2017*
-
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.ss_clients_dlg_services.Ss_clients_dlg_services.click_services_access_rights`
-                * **Step 2:** :func:`~pagemodel.ss_clients_dlg_services_acl_for_service.Ss_clients_dlg_services_acl_for_service.verify_acl_dlg_open`
-                * **Step 3:** :func:`~pagemodel.ss_clients_dlg_services_acl_for_service.Ss_clients_dlg_services_acl_for_service.click_acl_subjects_add`
-                * **Step 4:** :func:`~pagemodel.ss_clients_services_dlg_add_subjects.Ss_clients_services_dlg_add_subjects.verify_add_subjects_dlg_open`
-                * **Step 5:** :func:`~pagemodel.ss_clients_services_dlg_add_subjects.Ss_clients_services_dlg_add_subjects.click_search`
-                * **Step 6:** :func:`~pagemodel.ss_clients_services_dlg_add_subjects.Ss_clients_services_dlg_add_subjects.click_and_open_subject`
-                * **Step 7:** :func:`~pagemodel.ss_clients_services_dlg_add_subjects.Ss_clients_services_dlg_add_subjects.click_element_id_acl_subjects_search_add_selected`
-                * **Step 8:** :func:`~pagemodel.ss_clients_dlg_services_acl_for_service.Ss_clients_dlg_services_acl_for_service.click_close_dlg_acl`
         """
         self.ss_clients_dlg_services.click_services_access_rights()
         self.ss_clients_dlg_services_acl_for_service.verify_acl_dlg_open()
@@ -127,17 +91,6 @@ class Component_ss_services(CommonUtils):
         """
         Add service access rights to all in security server
 
-        *Updated: 11.07.2017*
-
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.ss_clients_dlg_services.Ss_clients_dlg_services.click_services_access_rights`
-                * **Step 2:** :func:`~pagemodel.ss_clients_dlg_services_acl_for_service.Ss_clients_dlg_services_acl_for_service.verify_acl_dlg_open`
-                * **Step 3:** :func:`~pagemodel.ss_clients_dlg_services_acl_for_service.Ss_clients_dlg_services_acl_for_service.click_acl_subjects_add`
-                * **Step 4:** :func:`~pagemodel.ss_clients_services_dlg_add_subjects.Ss_clients_services_dlg_add_subjects.verify_add_subjects_dlg_open`
-                * **Step 5:** :func:`~pagemodel.ss_clients_services_dlg_add_subjects.Ss_clients_services_dlg_add_subjects.click_search`
-                * **Step 6:** :func:`~pagemodel.ss_clients_services_dlg_add_subjects.Ss_clients_services_dlg_add_subjects.click_acl_subjects_add_to_acl`
-                * **Step 7:** :func:`~pagemodel.ss_clients_services_dlg_acl_confirm.Ss_clients_services_dlg_acl_confirm.click_confirm_acl_subject_add`
-                * **Step 8:** :func:`~pagemodel.ss_clients_dlg_services_acl_for_service.Ss_clients_dlg_services_acl_for_service.click_close_dlg_acl`
         """
         self.ss_clients_dlg_services.click_services_access_rights()
         self.ss_clients_dlg_services_acl_for_service.verify_acl_dlg_open()

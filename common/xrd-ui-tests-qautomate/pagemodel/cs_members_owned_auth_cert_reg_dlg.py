@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = get_driver() e.g driver.current_url
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.util.webtimings import get_measurements
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class Cs_members_owned_auth_cert_reg_dlg(CommonUtils):
@@ -63,12 +61,9 @@ class Cs_members_owned_auth_cert_reg_dlg(CommonUtils):
 
     def input_text_to_id_owned_server_add_servercode(self, parameters=None):
         """
-        Inpurt text to add owned server. Uses parameter 'security_server_code'
+        Input text to add owned server. Uses parameter 'security_server_code'
 
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.input_text`, *self.ID_OWNED_SERVER_ADD_SERVERCODE*, *parameters['security_server_code']*
         """
         # AutoGen method
         self.input_text(self.ID_OWNED_SERVER_ADD_SERVERCODE, parameters['security_server_code'])
@@ -77,8 +72,6 @@ class Cs_members_owned_auth_cert_reg_dlg(CommonUtils):
         """
         Click button to submit dialog
 
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_SUBMIT*
         """
         # AutoGen method
         self.click_element(self.BUTTON_SUBMIT)
@@ -87,7 +80,5 @@ class Cs_members_owned_auth_cert_reg_dlg(CommonUtils):
         """
         Click button to upload certificate
 
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.ID_OWNED_SERVER_CERT_UPLOAD_BUTTON*
         """
         self.click_element(self.ID_OWNED_SERVER_CERT_UPLOAD_BUTTON)

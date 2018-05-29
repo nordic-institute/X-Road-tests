@@ -7,6 +7,9 @@ from tests.xroad_tokens_keys_certs import tokens_keys_certs
 
 
 class XroadEditKeyName(unittest.TestCase):
+    def __init__(self, methodName='test_edit_key_name_SS_23'):
+        unittest.TestCase.__init__(self, methodName)
+
     def test_edit_key_name_SS_23(self):
         main = MainController(self)
 

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from variables import errors
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 from common_lib import Common_lib
 from pagemodel.ss_keys_and_cert_dlg_registration_req import Ss_keys_and_cert_dlg_registration_req
@@ -40,18 +40,8 @@ class Component_ss_keys_and_certs(CommonUtils):
     def generate_and_select_certificate_key_in_ss(self, text=u'ta_generated_key_sign'):
         """
         Generate and select certificate key in security server
-
-        *Updated: 11.07.2017*
         
         :param text:  String value for text
-        
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.ss_keys_and_cert.Ss_keys_and_cert.verify_keys_and_cert_title`
-                * **Step 2:** :func:`~pagemodel.ss_keys_and_cert.Ss_keys_and_cert.click_soft_token`
-                * **Step 3:** :func:`~pagemodel.ss_keys_and_cert.Ss_keys_and_cert.click_generate_key`
-                * **Step 4:** :func:`~pagemodel.ss_keys_cert_dlg_generate_key.Ss_keys_cert_dlg_generate_key.generate_key_label`, *text*
-                * **Step 5:** :func:`~pagemodel.ss_keys_and_cert.Ss_keys_and_cert.wait_until_cert_req_active`
-                * **Step 6:** :func:`~pagemodel.ss_keys_and_cert.Ss_keys_and_cert.click_generated_key_request`, *text*
         """
         self.ss_keys_and_cert.verify_keys_and_cert_title()
         self.ss_keys_and_cert.click_soft_token()
@@ -65,16 +55,7 @@ class Component_ss_keys_and_certs(CommonUtils):
         """
         Generate signing certificate request in security server
 
-        *Updated: 11.07.2017*
-
         :param section:  Test data section name
-        
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.ss_keys_and_cert.Ss_keys_and_cert.click_generate_certificate_request`
-                * **Step 2:** :func:`~pagemodel.ss_keys_and_cert_generate_csr.Ss_keys_and_cert_generate_csr.fill_input_values_keys_csr_sign`, *TESTDATA[section]*
-                * **Step 3:** :func:`~pagemodel.ss_keys_and_cert_generate_csr.Ss_keys_and_cert_generate_csr.click_button_id_generate_csr_submit`
-                * **Step 4:** :func:`~pagemodel.ss_keys_and_cert_dlg_subject_dname.Ss_keys_and_cert_dlg_subject_dname.fill_input_values_keys_dname_sign`, *TESTDATA[section]*
-                * **Step 5:** :func:`~pagemodel.ss_keys_and_cert_dlg_subject_dname.Ss_keys_and_cert_dlg_subject_dname.submit_keys_dname`
         """
         self.ss_keys_and_cert.click_generate_certificate_request()
         self.ss_keys_and_cert_generate_csr.fill_input_values_keys_csr_sign(TESTDATA[section])
@@ -86,16 +67,7 @@ class Component_ss_keys_and_certs(CommonUtils):
         """
         Generate authentication certificate request in security server
 
-        *Updated: 11.07.2017*
-
         :param section:  Test data section name
-        
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.ss_keys_and_cert.Ss_keys_and_cert.click_generate_certificate_request`
-                * **Step 2:** :func:`~pagemodel.ss_keys_and_cert_generate_csr.Ss_keys_and_cert_generate_csr.fill_input_values_keys_csr_auth`
-                * **Step 3:** :func:`~pagemodel.ss_keys_and_cert_generate_csr.Ss_keys_and_cert_generate_csr.click_button_id_generate_csr_submit`
-                * **Step 4:** :func:`~pagemodel.ss_keys_and_cert_dlg_subject_dname.Ss_keys_and_cert_dlg_subject_dname.fill_input_values_keys_dname_auth`, *TESTDATA[section]*
-                * **Step 5:** :func:`~pagemodel.ss_keys_and_cert_dlg_subject_dname.Ss_keys_and_cert_dlg_subject_dname.submit_keys_dname`
         """
         self.ss_keys_and_cert.click_generate_certificate_request()
         self.ss_keys_and_cert_generate_csr.fill_input_values_keys_csr_auth()
@@ -107,15 +79,7 @@ class Component_ss_keys_and_certs(CommonUtils):
         """
         Import and upload key certification
 
-        *Updated: 11.07.2017*
-
         :param value_string:  String value
-        
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.ss_keys_and_cert.Ss_keys_and_cert.click_import_cert`
-                * **Step 2:** :func:`~pagemodel.ss_keys_and_cert_dlg_import_cert.Ss_keys_and_cert_dlg_import_cert.verify_title_file_dlg`
-                * **Step 3:** :func:`~pagemodel.ss_keys_and_cert_dlg_import_cert.Ss_keys_and_cert_dlg_import_cert.click_browse_upload_button`
-                * **Step 5:** :func:`~pagemodel.ss_keys_and_cert_dlg_import_cert.Ss_keys_and_cert_dlg_import_cert.file_upload_ok`
         """
         self.ss_keys_and_cert.click_import_cert()
         self.ss_keys_and_cert_dlg_import_cert.verify_title_file_dlg()
@@ -129,16 +93,8 @@ class Component_ss_keys_and_certs(CommonUtils):
         """
         Register authentication certification in security server
 
-        *Updated: 11.07.2017*
-        '
-
         :param value_string:  String value
         :param section:  Test data section name
-        
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.ss_keys_and_cert.Ss_keys_and_cert.register_auth_cert`, *value_string*
-                * **Step 2:** :func:`~pagemodel.ss_keys_and_cert_dlg_registration_req.Ss_keys_and_cert_dlg_registration_req.input_text_to_server_address`, *TESTDATA[section]*
-                * **Step 3:** :func:`~pagemodel.ss_keys_and_cert_dlg_registration_req.Ss_keys_and_cert_dlg_registration_req.submit_register_request`
         """
         # step Send register request #Webpage: ss_keys_and_cert
         self.ss_keys_and_cert.register_auth_cert(value_string)
@@ -149,15 +105,7 @@ class Component_ss_keys_and_certs(CommonUtils):
         """
         Activate token and inster pin code if needed
 
-        *Updated: 11.07.2017*
-
         :param section:  Test data section name
-        
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.ss_softoken_enter_pin.Ss_softoken_enter_pin.click_button_activate_token_enter_pin`
-                * **Step 2:** :func:`~pagemodel.ss_enter_pin_dlg.Ss_enter_pin_dlg.input_text_to_id_activate_token_pin`, *TESTDATA[section]*
-                * **Step 3:** :func:`~pagemodel.ss_enter_pin_dlg.Ss_enter_pin_dlg.click_button_ok`
-                * **Step 4:** :func:`~pagemodel.ss_softoken_enter_pin.Ss_softoken_enter_pin.wait_until_softoken_pin_query_is_not_visible`
         """
         # Sometimes it will not ask pin code, recovery added
         try:
@@ -172,12 +120,7 @@ class Component_ss_keys_and_certs(CommonUtils):
         """
         Upload certification file
 
-        *Updated: 11.07.2017*
-
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-                * **Step 1:** :func:`~common_lib.common_lib.Common_lib.type_file_name_pyautogui`, *str(type_string*
         """
         sleep(6)
         path = os.getcwd() + "/scripts/" + parameters + "-cert_automation.der"
@@ -191,13 +134,7 @@ class Component_ss_keys_and_certs(CommonUtils):
         """
         Verify key and sign certificate sign
 
-        *Updated: 11.07.2017*
-
         :param section:  Test data section name
-        
-        **Test steps:**
-                * **Step 1:** :func:`~common_lib.common_lib.Common_lib.copy_and_sign_cert_request`, *TESTDATA[section]*
-                * **Step 2:** :func:`~pagemodel.fail(errors.Fail(errors.could_not_verify_certificate)`, *errors.could_not_verify_certificate*
         """
         if self.common_lib.verify_cert_request(TESTDATA[section]):
             print("cert sign ok")
@@ -209,13 +146,7 @@ class Component_ss_keys_and_certs(CommonUtils):
         """
         Verify key and sign certificate authentication
 
-        *Updated: 11.07.2017*
-
         :param section:  Test data section name
-        
-        **Test steps:**
-                * **Step 1:** :func:`~common_lib.common_lib.Common_lib.copy_and_auth_cert_request`, *TESTDATA[section]*
-                * **Step 2:** :func:`~pagemodel.fail(errors.Fail(errors.could_not_verify_certificate)`, *errors.could_not_verify_certificate*
         """
         if self.common_lib.verify_cert_request(TESTDATA[section]):
             print("cert auth ok")
@@ -227,12 +158,7 @@ class Component_ss_keys_and_certs(CommonUtils):
         """
         Verify key request
 
-        *Updated: 11.07.2017*
-
         :param section:  Test data section name
-        
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.fail(errors.Fail(errors.could_not_verify_certificate)`, *errors.could_not_verify_certificate*
         """
         if self.common_lib.verify_cert_request(TESTDATA[section]):
             print("cert ok")
@@ -243,7 +169,6 @@ class Component_ss_keys_and_certs(CommonUtils):
         """
         Verify uploaded certificate
 
-        *Updated: 11.07.2017*
         :param value_string:  String value
         """
         cert_number = self.common_lib.read_cert_number_request(value_string)
@@ -254,14 +179,7 @@ class Component_ss_keys_and_certs(CommonUtils):
         """
         Open details dialog and delete certificate by key label
 
-        *Updated: 11.07.2017*
-
         :param text:  String value for text
-        
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.ss_keys_and_cert.Ss_keys_and_cert.click_generated_key_request_to_signed_label`, *text*
-                * **Step 2:** :func:`~pagemodel.ss_keys_and_cert.Ss_keys_and_cert.click_delete_cert`
-                * **Step 3:** :func:`~pagemodel.ss_keys_and_cert_dlg_delete.Ss_keys_and_cert_dlg_delete.click_delete_cert_confirm`, *text*
         """
         self.ss_keys_and_cert.click_generated_key_request_to_signed_label(text)
         self.ss_keys_and_cert.click_delete_cert()
@@ -271,10 +189,6 @@ class Component_ss_keys_and_certs(CommonUtils):
         """
         Verify detail dialogs hash value
 
-        *Updated: 11.07.2017*
-
-        **Test steps:**
-                * **Step 2:** :func:`~pagemodel.ss_keys_and_cert_details.Ss_keys_and_cert_details.verify_hash`
         """
         self.wait_until_jquery_ajax_loaded()
         self.ss_keys_and_cert_details.verify_hash()

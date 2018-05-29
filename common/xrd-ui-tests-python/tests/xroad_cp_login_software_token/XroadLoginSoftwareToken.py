@@ -16,6 +16,9 @@ class XroadLoginSoftwareToken(unittest.TestCase):
     Requires helper scenarios:
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_a_login_to_software_token_wrong_pin'):
+        unittest.TestCase.__init__(self, methodName)
+
     def test_a_login_to_software_token_wrong_pin(self):
         main = MainController(self)
         cp_ssh_host = main.config.get('cp.ssh_host')

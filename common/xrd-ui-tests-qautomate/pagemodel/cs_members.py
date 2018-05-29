@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = get_driver() e.g driver.current_url
 from variables import errors
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.util.webtimings import get_measurements
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class  Cs_members(CommonUtils):
@@ -57,11 +55,6 @@ class  Cs_members(CommonUtils):
         """
         Click button to add group icon
 
-        **Arguments:**
-            :param parameters (dict):  Test data parameters list
-        
-        **Steps:**
-            | **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.GROUP_ADD_ICON*
         """
         # AutoGen method
         self.click_element(self.GROUP_ADD_ICON)
@@ -70,11 +63,6 @@ class  Cs_members(CommonUtils):
         """
         Click button member actions
 
-        **Arguments:**
-            :param parameters (dict):  Test data parameters list
-        
-        **Steps:**
-            | **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.MEMBER_ACTION*
         """
         # AutoGen method
         self.click_element(self.MEMBER_ACTION)
@@ -83,11 +71,6 @@ class  Cs_members(CommonUtils):
         """
         Search member form members table with member name
 
-        **Arguments:**
-            :param parameters (dict):  Test data parameters list
-        
-        **Steps:**
-            | **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_page_contains`, *parameters[u'member_name']*
         """
         # AutoGen method search_text_from_table_members
         self.wait_until_page_contains(parameters[u'member_name'])
@@ -102,8 +85,6 @@ class  Cs_members(CommonUtils):
         """
         Wait until page contains member name
 
-        **Steps:**
-            | **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_element_is_visible`, *self.MEMBER_NAME*
         """
         self.wait_until_element_is_visible(self.MEMBER_NAME)
 
@@ -111,12 +92,6 @@ class  Cs_members(CommonUtils):
         """
         Click member from members table with text
 
-        **Arguments:**
-            text(str): String value for text
-        
-        **Steps:**
-            | **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.wait_until_page_contains`, *value*
-            | **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *element*
         """
         # Element search
         locator = (By.ID, 'members')
@@ -140,11 +115,6 @@ class  Cs_members(CommonUtils):
         """
         Verify table contains member with given text
 
-        **Arguments:**
-            :param parameters (dict):  Test data parameters list
-        
-        **Steps:**
-            | **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.fail`, *errors.member_code_not_found*
         """
         locator =  (By.ID, 'members')
         if not self.table_contains_text(locator, text):
@@ -154,11 +124,6 @@ class  Cs_members(CommonUtils):
         """
         Verify table does not contain member with given text
 
-        **Arguments:**
-            :param parameters (dict):  Test data parameters list
-        
-        **Steps:**
-            | **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.fail`, *errors.member_code_found*
         """
         locator =  (By.ID, 'members')
         if self.table_contains_text(locator, text):

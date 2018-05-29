@@ -27,6 +27,8 @@ class XroadSecurityServerClientRegistration(unittest.TestCase):
     Requires helper scenarios: xroad_ss_client_certification_213
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_client_registration'):
+        unittest.TestCase.__init__(self, methodName)
 
     def test_client_registration(self):
         main = MainController(self)

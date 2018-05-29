@@ -12,6 +12,8 @@ class XroadViewGlobalGroups(unittest.TestCase):
     Requires helper scenarios:
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_view_global_groups'):
+        unittest.TestCase.__init__(self, methodName)
 
     def test_view_global_groups(self):
         main = MainController(self)

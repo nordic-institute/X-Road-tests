@@ -13,6 +13,8 @@ class XroadEditTokenFriendlyName(unittest.TestCase):
     Requires helper scenarios:
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_xroad_edit_token_friendly_name'):
+        unittest.TestCase.__init__(self, methodName)
 
     def test_xroad_edit_token_friendly_name(self):
         main = MainController(self)

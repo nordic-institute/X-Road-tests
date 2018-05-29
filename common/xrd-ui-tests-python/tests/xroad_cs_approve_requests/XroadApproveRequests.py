@@ -18,6 +18,8 @@ class XroadApproveRequests(unittest.TestCase):
     Requires helper scenarios:
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_approve_requests'):
+        unittest.TestCase.__init__(self, methodName)
 
     def test_approve_requests(self):
         main = MainController(self)

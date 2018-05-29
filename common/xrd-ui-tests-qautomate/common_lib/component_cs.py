@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 from common_lib import Common_lib
 from pagemodel.cs_login import Cs_login
@@ -28,15 +28,8 @@ class Component_cs(CommonUtils):
         """
         Login to central server
 
-        *Updated: 11.07.2017*
-
         :param section:  Test data section name
         :param initial_conf:  If true server is in configurations state
-        
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.open_application.Open_application.open_application_url`, *TESTDATA[section]*
-                * **Step 2:** :func:`~pagemodel.cs_login.Cs_login.login_dev_cs`, *TESTDATA[section]*
-                * **Step 3:** :func:`~pagemodel.cs_sidebar.Cs_sidebar.verify_central_server_title`
         """
         ## Login
         self.open_application.open_application_url(TESTDATA[section])
@@ -48,12 +41,7 @@ class Component_cs(CommonUtils):
         """
         Open central server url
 
-        *Updated: 11.07.2017*
-
         :param section:  Test data section name
-        
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.open_application.Open_application.open_application_url`, *TESTDATA[section]*
         """
         self.open_application.open_application_url(TESTDATA[section])
 

@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = get_driver() e.g driver.current_url
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.util.webtimings import get_measurements
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class Cs_add_member_dlg(CommonUtils):
@@ -57,8 +55,6 @@ class Cs_add_member_dlg(CommonUtils):
         """
         Click ok button
 
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
         """
         # AutoGen method
         self.click_element(self.BUTTON_OK)
@@ -68,11 +64,6 @@ class Cs_add_member_dlg(CommonUtils):
         Fill member values to add member
         
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.input_text`, *self.TEXT_0*, *parameters['member_name']*
-            * **Step 2:** :func:`~webframework.extension.util.common_utils.CommonUtils.select_from_list_by_label`, *self.NAME_MEMBER_ADD_CLASS_DETAIL_GOV*, *parameters['member_class']*
-            * **Step 3:** :func:`~webframework.extension.util.common_utils.CommonUtils.input_text`, *self.TEXT*, *parameters['member_code']*
         """
         self.input_text(self.TEXT_0, parameters['member_name'])
         self.select_from_list_by_label(self.NAME_MEMBER_ADD_CLASS_DETAIL_GOV, parameters['member_class'])

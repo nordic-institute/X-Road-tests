@@ -15,6 +15,8 @@ class XroadSecurityServerClientKeyDeletion(unittest.TestCase):
     Requires helper scenarios:
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_security_server_key_deletion'):
+        unittest.TestCase.__init__(self, methodName)
 
     def test_security_server_key_deletion(self):
         # Instantiate MainController

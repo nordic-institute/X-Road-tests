@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-from webframework import TESTDATA
 import subprocess
 import os
+from QAutoLibrary.extension import TESTDATA
 import glob
 from urlparse import urlparse
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 # Library file allows define common methods, which can be
@@ -27,9 +27,6 @@ class Common_lib(CommonUtils):
         """
 
         :param parameters:  Test data section dictionary
-
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.add_dynamic_content_to_parameters(parameters, "data_folder", WORKSPACE + os.Add_dynamic_content_to_parameters(parameters, "data_folder", workspace + os.sep + GIT_WORKING_DIR + os`, *parameters*, *"data_folder"*, *WORKSPACE + os.sep + GIT_WORKING_DIR + os.sep + "data" + os.sep*, *u'paths'*
         """
 
         # Read asennus file if exists
@@ -130,9 +127,6 @@ class Common_lib(CommonUtils):
         """
 
         :param parameters:  Test data section dictionary
-
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.add_dynamic_content_to_parameters(parameters, "data_folder", WORKSPACE + os.Add_dynamic_content_to_parameters(parameters, "data_folder", workspace + os.sep + GIT_WORKING_DIR + os`, *parameters*, *"data_folder"*, *WORKSPACE + os.sep + GIT_WORKING_DIR + os.sep + "data" + os.sep*, *u'paths'*
         """
         try:
             content = ""
@@ -236,6 +230,7 @@ class Common_lib(CommonUtils):
 
     def sync_global_conf(self, parameters=None):
         """
+
         :param parameters:  Test data section dictionary
         """
         print("Waiting global conf sync time: " + str(parameters))
@@ -243,6 +238,7 @@ class Common_lib(CommonUtils):
 
     def send_soap_api_request_hello(self, parameters=None):
         """
+
         :param parameters:  Test data section dictionary
         """
         print("Sending Soap request")
@@ -252,9 +248,7 @@ class Common_lib(CommonUtils):
 
     def log_out(self):
         """
-        **Test steps:**
-                * **Step 2:** :func:`~common_lib.common_elements.Common_elements.click_user_info`
-                * **Step 3:** :func:`~common_lib.common_elements.Common_elements.click_log_out`
+
         """
         print("waiting logout")
         sleep(2)
@@ -273,6 +267,7 @@ class Common_lib(CommonUtils):
 
     def verify_cert_request(self, parameters):
         """
+
         :param parameters:  Test data section dictionary
         """
         # Wait while for downloading der file
@@ -285,28 +280,16 @@ class Common_lib(CommonUtils):
             print(subprocess.check_output("ls " + parameters[u'downloads_folder'], shell=True))
             raise Exception("Certificate download failed")
 
-        try:
-            cert_string = subprocess.check_output("openssl req -in " +  newest_der + " -text -noout -inform DER", shell=True)
-            begin_index = str(cert_string).find("Subject:")
-            end_index = str(cert_string).find("Subject Public Key")
-            print(str(cert_string)[begin_index:end_index])
-            #os.system("sudo rm " + newest_p10)
-            return True
-        except Exception as e:
-            print("Certificate file cannot be read")
-            print(e)
-            return False
+        cert_string = subprocess.check_output("openssl req -in " +  newest_der + " -text -noout -inform DER", shell=True)
+        begin_index = str(cert_string).find("Subject:")
+        end_index = str(cert_string).find("Subject Public Key")
+        print(str(cert_string)[begin_index:end_index])
+        return True
 
     def remove_anchor_and_certs_from_downloads(self, parameters):
         """
 
         :param parameters:  Test data section dictionary
-
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.delete_files_with_extension(parameters[u'downloads_folder'], ".Delete_files_with_extension(parameters[u'downloads_folder'], ".p10")`, *parameters[u'downloads_folder']*, *".p10"*
-                * **Step 2:** :func:`~pagemodel.delete_files_with_extension(parameters[u'downloads_folder'], ".Delete_files_with_extension(parameters[u'downloads_folder'], ".der")`, *parameters[u'downloads_folder']*, *".der"*
-                * **Step 3:** :func:`~pagemodel.delete_files_with_extension(parameters[u'downloads_folder'], ".Delete_files_with_extension(parameters[u'downloads_folder'], ".pem")`, *parameters[u'downloads_folder']*, *".pem"*
-                * **Step 4:** :func:`~pagemodel.delete_files_with_extension(parameters[u'downloads_folder'], ".Delete_files_with_extension(parameters[u'downloads_folder'], ".xml")`, *parameters[u'downloads_folder']*, *".xml"*
         """
         self.delete_files_with_extension(parameters[u'downloads_folder'], ".p10")
         self.delete_files_with_extension(parameters[u'downloads_folder'], ".der")
@@ -317,14 +300,12 @@ class Common_lib(CommonUtils):
         """
 
         :param parameters:  Test data section dictionary
-
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.delete_files_with_extension(parameters[u'downloads_folder'], ".Delete_files_with_extension(parameters[u'downloads_folder'], ".der")`, *parameters[u'downloads_folder']*, *".der"*
         """
         self.delete_files_with_extension(parameters[u'downloads_folder'], ".der")
 
     def delete_files_with_extension(self, folder, extension):
         """
+
         """
         files = glob.iglob(folder + '*' + extension)
         for _file in files:
@@ -336,21 +317,18 @@ class Common_lib(CommonUtils):
 
     def read_cert_number_request(self, cert_type):
         """
+
         """
-        try:
-            cert_number = subprocess.check_output("openssl x509 -in " +  "scripts/" + cert_type + "-cert_automation.der" + " -serial -noout", shell=True)
-            print(cert_number)
-            cert_number = cert_number.split('=')
-            number_decimal = int("0x" + str(cert_number[1].lower()), 16)
-            print(number_decimal)
-            return str(number_decimal)
-        except Exception as e:
-            print("Certificate file cannot be read")
-            print(e)
-            return ""
+        cert_number = subprocess.check_output("openssl x509 -in " +  "scripts/" + cert_type + "-cert_automation.der" + " -serial -noout", shell=True)
+        print(cert_number)
+        cert_number = cert_number.split('=')
+        number_decimal = int("0x" + str(cert_number[1].lower()), 16)
+        print(number_decimal)
+        return str(number_decimal)
 
     def copy_and_sign_cert_request(self, parameters):
         """
+
         :param parameters:  Test data section dictionary
         """
         print("copy and sign start")
@@ -361,6 +339,7 @@ class Common_lib(CommonUtils):
 
     def copy_and_auth_cert_request(self, parameters):
         """
+
         :param parameters:  Test data section dictionary
         """
         print("copy and auth start")
@@ -371,6 +350,7 @@ class Common_lib(CommonUtils):
 
     def revoke_cert(self, parameters):
         """
+
         :param parameters:  Test data section dictionary
         """
         print("revoke start")
@@ -388,6 +368,7 @@ class Common_lib(CommonUtils):
 
     def get_ui_error_message(self):
         """
+
         """
         if self.is_visible((By.CLASS_NAME, u'alerts'), 2):
             msg = self.get_text((By.CLASS_NAME, u'alerts'))
@@ -398,6 +379,7 @@ class Common_lib(CommonUtils):
 
     def get_log_utc_time(self):
         """
+
         """
         from datetime import datetime
         log_time = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3]+"Z"
@@ -406,6 +388,7 @@ class Common_lib(CommonUtils):
 
     def type_file_name_pyautogui(self, type_string):
         """
+
         """
         sleep(3)
         import pyautogui

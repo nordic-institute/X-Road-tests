@@ -14,6 +14,9 @@ class XroadKeyDetails(unittest.TestCase):
     Requires helper scenarios: None
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_view_key_details_SS_21'):
+        unittest.TestCase.__init__(self, methodName)
+
     def test_view_key_details_SS_21(self):
         main = MainController(self)
 

@@ -14,6 +14,9 @@ class XroadAddClientToMemberExtensions(unittest.TestCase):
     Requires helper scenarios:
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_add_client_extensions'):
+        unittest.TestCase.__init__(self, methodName)
+
     def test_add_client_extensions(self):
         main = MainController(self)
         cs_host = main.config.get('cs.host')

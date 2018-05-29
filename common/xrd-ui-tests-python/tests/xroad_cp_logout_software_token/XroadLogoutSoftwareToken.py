@@ -12,6 +12,8 @@ class XroadLogoutSoftwareToken(unittest.TestCase):
     Requires helper scenarios:
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_log_out_from_software_token'):
+        unittest.TestCase.__init__(self, methodName)
 
     def test_log_out_from_software_token(self):
         main = MainController(self)

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 from common_lib import Common_lib
 from pagemodel.ss_clients import Ss_clients
@@ -36,14 +36,7 @@ class Component_ss_clients(CommonUtils):
         """
         Add new subsystem to security server
 
-        *Updated: 11.07.2017*
-
         :param section:  Test data section name
-        
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.ss_clients.Ss_clients.click_client_add_subsystem_server`
-                * **Step 2:** :func:`~pagemodel.ss_clients_add_client.Ss_clients_add_client.fill_and_submit_client_details`, *TESTDATA[section]*
-                * **Step 3:** :func:`~pagemodel.ss_clients_add_client_conf.Ss_clients_add_client_conf.click_confirm_client_registration_request`
         """
         self.ss_clients.click_client_add_subsystem_server()
         self.ss_clients_add_client.fill_and_submit_client_details(TESTDATA[section])
@@ -64,17 +57,7 @@ class Component_ss_clients(CommonUtils):
         """
         Add from search existing client in secuiryt server
 
-        *Updated: 11.07.2017*
-
         :param section:  Test data section name
-        
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.ss_clients.Ss_clients.click_client_add_subsystem_server`
-                * **Step 2:** :func:`~pagemodel.ss_clients_add_client.Ss_clients_add_client.click_element_id_client_select`
-                * **Step 3:** :func:`~pagemodel.ss_clients_add_search_client_dlg.Ss_clients_add_search_client_dlg.click_element_id_search_filter`
-                * **Step 4:** :func:`~pagemodel.ss_clients_add_search_client_dlg.Ss_clients_add_search_client_dlg.click_client_from_table_clientsglobal`, *TESTDATA[section]*
-                * **Step 5:** :func:`~pagemodel.ss_clients_add_search_client_dlg.Ss_clients_add_search_client_dlg.click_button_id_client_select_ok`
-                * **Step 6:** :func:`~pagemodel.ss_clients_add_client.Ss_clients_add_client.click_element_ok`
         """
         self.ss_clients.click_client_add_subsystem_server()
         self.ss_clients_add_client.click_element_id_client_select()
@@ -87,13 +70,7 @@ class Component_ss_clients(CommonUtils):
         """
         Open client services dialog with subsystem code
 
-        *Updated: 11.07.2017*
-
         :param section:  Test data section name
-        
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.ss_clients.Ss_clients.find_and_open_by_text_dlg_by_subsystem_code`, *TESTDATA[section]*
-                * **Step 2:** :func:`~pagemodel.ss_clients_dlg_services.Ss_clients_dlg_services.verify_client_dlg_open`
         """
         #step Open services dialog from dynamic list
         self.ss_clients.find_and_open_by_text_dlg_by_subsystem_code(TESTDATA[section])
@@ -103,13 +80,7 @@ class Component_ss_clients(CommonUtils):
         """
         Open client services dialog with full member id
 
-        *Updated: 11.07.2017*
-
         :param section:  Test data section name
-        
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.ss_clients.Ss_clients.click_and_open_details_of_client_in_table`, *TESTDATA[section]*
-                * **Step 2:** :func:`~pagemodel.ss_clients_dlg_services.Ss_clients_dlg_services.verify_client_dlg_open`
         """
         self.ss_clients.click_and_open_details_of_client_in_table(TESTDATA[section])
         self.ss_clients_dlg_services.verify_client_dlg_open()
@@ -118,13 +89,6 @@ class Component_ss_clients(CommonUtils):
         """
         Unregister and delete subsystem in subsystem details dialog
 
-        *Updated: 11.07.2017*
-
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.ss_clients_dlg_services.Ss_clients_dlg_services.click_element_details_tab`
-                * **Step 2:** :func:`~pagemodel.ss_client_dlg_details.Ss_client_dlg_details.click_unregister_client`
-                * **Step 3:** :func:`~pagemodel.ss_client_dlg_unregister.Ss_client_dlg_unregister.click_confirm_unregister`
-                * **Step 4:** :func:`~pagemodel.ss_client_dlg_delete_unregister.Ss_client_dlg_delete_unregister.click_client_delete`
         """
         self.ss_clients_dlg_services.click_element_details_tab()
         self.ss_client_dlg_details.click_unregister_client()

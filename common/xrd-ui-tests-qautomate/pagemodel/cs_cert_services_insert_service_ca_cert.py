@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Example for using WebDriver object: driver = get_driver() e.g driver.current_url
-from webframework import TESTDATA
+from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By
-from webframework.extension.util.common_utils import *
-from webframework.extension.util.webtimings import get_measurements
-from webframework.extension.parsers.parameter_parser import get_parameter
+from QAutoLibrary.QAutoSelenium import *
 from time import sleep
 
 class Cs_cert_services_insert_service_ca_cert(CommonUtils):
@@ -56,8 +54,6 @@ class Cs_cert_services_insert_service_ca_cert(CommonUtils):
         """
         Click browse button
 
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_BROWSE*
         """
         self.click_element(self.BUTTON_BROWSE)
 
@@ -65,7 +61,5 @@ class Cs_cert_services_insert_service_ca_cert(CommonUtils):
         """
         Click button next
 
-        **Test steps:**
-            * **Step 1:** :func:`~webframework.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_NEXT*
         """
         self.click_element(self.BUTTON_NEXT)

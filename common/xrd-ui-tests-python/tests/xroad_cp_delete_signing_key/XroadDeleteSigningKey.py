@@ -15,6 +15,8 @@ class XroadDeleteSigningKey(unittest.TestCase):
     Requires helper scenarios: get_all_signing_keys, get_active_key
     X-Road version: 6.16.0
     """
+    def __init__(self, methodName='test_delete_active_signing_key'):
+        unittest.TestCase.__init__(self, methodName)
 
     def test_delete_active_signing_key(self):
         main = MainController(self)

@@ -61,9 +61,7 @@ class Ss_softoken_enter_pin(CommonUtils):
     def click_button_activate_token_enter_pin(self):
         """
         Click button to activate token pin
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ACTIVATE_TOKEN_ENTER_PIN*
+
         """
         # AutoGen method
         self.click_element(self.ACTIVATE_TOKEN_ENTER_PIN)
@@ -71,8 +69,6 @@ class Ss_softoken_enter_pin(CommonUtils):
     def wait_until_softoken_pin_query_is_not_visible(self):
         """
         Wait until softoken pin query is visible
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_element_is_not_visible`, *self.PLEASE_ENTER_SOFTTOKEN_PIN*
+
         """
         self.wait_until_element_is_not_visible(self.PLEASE_ENTER_SOFTTOKEN_PIN)

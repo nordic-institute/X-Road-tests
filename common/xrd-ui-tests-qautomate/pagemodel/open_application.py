@@ -45,8 +45,5 @@ class Open_application(CommonUtils):
         Open url with parameter 'url'
 
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.open_url`, *url=parameters['url']*
         """
         self.open_url(url=parameters['url'])

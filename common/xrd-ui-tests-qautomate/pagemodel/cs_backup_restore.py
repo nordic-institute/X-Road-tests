@@ -58,9 +58,6 @@ class Cs_backup_restore(CommonUtils):
         """
         Click button to generate backup
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_BACKUP*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         # AutoGen method
         self.click_element(self.ID_BACKUP)
@@ -71,8 +68,6 @@ class Cs_backup_restore(CommonUtils):
         """
         Click restore button on backups tables first row
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.NEWEST_RESTORE*
         """
         self.click_element(self.NEWEST_RESTORE)
 
@@ -80,23 +75,13 @@ class Cs_backup_restore(CommonUtils):
         """
         Click delete button on backups tables first row
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.NEWEST_DELETE*
         """
         self.click_element(self.NEWEST_DELETE)
 
     def verify_contains_all_user_actions(self, parameters=None):
         """
-        
+
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.element_should_be_present`, *self.ID_BACKUP*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.element_should_be_present`, *self.ID_BACKUP_UPLOAD*
-            * **Step 3:** :func:`~extension.extension.util.common_utils.CommonUtils.fail`, *errors.backup_name_is_empty*
-            * **Step 4:** :func:`~extension.extension.util.common_utils.CommonUtils.element_should_be_present`, *self.NEWEST_RESTORE*
-            * **Step 5:** :func:`~extension.extension.util.common_utils.CommonUtils.element_should_be_present`, *self.NEWEST_DELETE*
-            * **Step 6:** :func:`~extension.extension.util.common_utils.CommonUtils.element_should_be_present`, *self.NEWEST_DOWNLOAD*
         """
         self.element_should_be_present(self.ID_BACKUP)
         self.element_should_be_present(self.ID_BACKUP_UPLOAD)
@@ -109,20 +94,14 @@ class Cs_backup_restore(CommonUtils):
 
     def click_element_newest_download(self, parameters=None):
         """
-        
+
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.NEWEST_DOWNLOAD*
         """
         self.click_element(self.NEWEST_DOWNLOAD)
 
     def click_element_upload_backup_file(self, parameters=None):
         """
-        
+
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_BACKUP_UPLOAD*
         """
         self.click_element(self.ID_BACKUP_UPLOAD)

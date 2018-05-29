@@ -54,9 +54,6 @@ class Cs_cert_services_ocsp_add_new_dlg(CommonUtils):
         Input oscp responder url value
 
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.ID_OCSP_RESPONDER_URL*, *parameters['ocsp_responder_url']*
         """
         # AutoGen method
         self.input_text(self.ID_OCSP_RESPONDER_URL, parameters['ocsp_responder_url'])
@@ -64,9 +61,7 @@ class Cs_cert_services_ocsp_add_new_dlg(CommonUtils):
     def click_button_ok(self):
         """
         Click ok button
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
+
         """
         # AutoGen method
         self.click_element(self.BUTTON_OK)

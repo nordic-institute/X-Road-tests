@@ -56,11 +56,6 @@ class Ss_initial_conf_import_anchor(CommonUtils):
         Upload anchor
         
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_ANCHOR_UPLOAD_FILE_BUTTON*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.common_lib`, *type_string*
-            * **Step 3:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_ANCHOR_UPLOAD_SUBMIT*
         """
         js = self.execute_javascript("document.querySelector('section.container>table.details>tbody>tr>td>input.selected_file').removeAttribute('disabled');")
         self.click_element(self.ID_ANCHOR_UPLOAD_FILE_BUTTON)
@@ -84,8 +79,6 @@ class Ss_initial_conf_import_anchor(CommonUtils):
         """
         Wait until initial confiquration view is visible
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_element_is_visible`, *self.ID_HEADING*
         """
         self.wait_until_element_is_visible(self.ID_HEADING)
 

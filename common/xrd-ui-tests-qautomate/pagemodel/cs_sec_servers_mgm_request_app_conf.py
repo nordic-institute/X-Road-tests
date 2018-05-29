@@ -48,8 +48,6 @@ class Cs_sec_servers_mgm_request_app_conf(CommonUtils):
     def click_confirm_approve_request(self):
         """
         Click confirm to approve request
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_CONFIRM*
+
         """
         self.click_element(self.BUTTON_CONFIRM)

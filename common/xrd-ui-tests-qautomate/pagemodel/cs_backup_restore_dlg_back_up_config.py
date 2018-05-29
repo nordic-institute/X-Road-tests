@@ -67,15 +67,12 @@ class Cs_backup_restore_dlg_back_up_config(CommonUtils):
         """
         Click ok button
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
         """
         self.click_element(self.BUTTON_OK)
 
     def click_button_cancel(self):
         """
         Click cancel button
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.MENUBAR_CLOSE*
+
         """
         self.click_element(self.MENUBAR_CLOSE)

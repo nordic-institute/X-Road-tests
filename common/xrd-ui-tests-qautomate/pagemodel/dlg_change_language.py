@@ -50,9 +50,7 @@ class Dlg_change_language(CommonUtils):
     def click_button_ok(self):
         """
         Click button to ok the dialog
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
+
         """
         self.click_element(self.BUTTON_OK)
 
@@ -60,10 +58,6 @@ class Dlg_change_language(CommonUtils):
         """
         
         :param text:  String value for text
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *element*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.fail`, *"Option not found"*
         """
         #TODO improve
         locator = self.ID_LOCALE
@@ -77,8 +71,6 @@ class Dlg_change_language(CommonUtils):
     def click_button_cancel(self):
         """
         Click button to cancel the dialog
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_CANCEL*
+
         """
         self.click_element(self.BUTTON_CANCEL)

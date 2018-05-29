@@ -47,7 +47,5 @@ class Ss_clients_add_client_conf(CommonUtils):
         """
         Click button to confirm client registeration
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_CONFRIM*
         """
         self.click_element(self.BUTTON_CONFRIM)

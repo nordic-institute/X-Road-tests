@@ -55,8 +55,6 @@ class Cs_add_member_dlg(CommonUtils):
         """
         Click ok button
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
         """
         # AutoGen method
         self.click_element(self.BUTTON_OK)
@@ -66,11 +64,6 @@ class Cs_add_member_dlg(CommonUtils):
         Fill member values to add member
         
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.TEXT_0*, *parameters['member_name']*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.select_from_list_by_label`, *self.NAME_MEMBER_ADD_CLASS_DETAIL_GOV*, *parameters['member_class']*
-            * **Step 3:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.TEXT*, *parameters['member_code']*
         """
         self.input_text(self.TEXT_0, parameters['member_name'])
         self.select_from_list_by_label(self.NAME_MEMBER_ADD_CLASS_DETAIL_GOV, parameters['member_class'])

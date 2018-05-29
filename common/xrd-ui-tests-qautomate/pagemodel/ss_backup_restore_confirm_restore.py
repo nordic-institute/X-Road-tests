@@ -52,10 +52,6 @@ class Ss_backup_restore_confirm_restore(CommonUtils):
         Click button to confirm the dialog
 
         :param wait_for_jquery:  If true method waits for jquery
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_CONFIRM*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`, *timeout=60*
         """
         self.click_element(self.BUTTON_CONFIRM)
         if wait_for_jquery:

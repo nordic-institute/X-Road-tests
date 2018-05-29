@@ -64,9 +64,7 @@ class Cs_members_details_dlg(CommonUtils):
     def click_button_delete(self):
         """
         Click button to delete member
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.DELETE*
+
         """
         # AutoGen method
         self.click_element(self.DELETE)
@@ -74,27 +72,21 @@ class Cs_members_details_dlg(CommonUtils):
     def click_member_detail_tab(self):
         """
         Click tab to open member details in dialog
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.MEMBER_DETAILS*
+
         """
         self.click_element(self.MEMBER_DETAILS)
 
     def click_subsystems_tab(self):
         """
         Click tab to open subsystems view in dialog
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.SUBSYSTEMS*
+
         """
         self.click_element(self.SUBSYSTEMS)
 
     def click_button_close(self):
         """
         Click button to close the dialog
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_CLOSE*
+
         """
         # AutoGen method
         self.click_element(self.BUTTON_CLOSE)
@@ -103,9 +95,6 @@ class Cs_members_details_dlg(CommonUtils):
         """
         Click tab to open owned servers view in dialog
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.OWNED_SERVERS*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         self.click_element(self.OWNED_SERVERS)
         self.wait_until_jquery_ajax_loaded()
@@ -113,9 +102,7 @@ class Cs_members_details_dlg(CommonUtils):
     def wait_until_submitted_certificate(self):
         """
         Wait until certificate is submitted. Waiting for text u'Request of adding auth'
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_element_contains`, *self.CLASS_MESSAGE*, *u'Request of adding auth'*
+
         """
         self.wait_until_element_contains(self.CLASS_MESSAGE, u'Request of adding auth')
 
@@ -123,7 +110,5 @@ class Cs_members_details_dlg(CommonUtils):
         """
         Click tab to show management requests view in dialog
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.MANAGEMENT_REQUESTS_TAB*
         """
         self.click_element(self.MANAGEMENT_REQUESTS_TAB)

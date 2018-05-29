@@ -22,10 +22,6 @@ class Component_ss_sidebar(CommonUtils):
         """
         Open security servers parameters view
 
-        *Updated: 11.07.2017*
-
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.ss_sidebar.Ss_sidebar.click_element_data_name_sysparams_system_parameters`
         """
         self.ss_sidebar.click_element_data_name_sysparams_system_parameters()
 
@@ -33,10 +29,6 @@ class Component_ss_sidebar(CommonUtils):
         """
         Open security servers keys and certifications view
 
-        *Updated: 11.07.2017*
-
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.ss_sidebar.Ss_sidebar.click_keys_and_certificates`
         """
         self.ss_sidebar.click_keys_and_certificates()
 
@@ -44,10 +36,6 @@ class Component_ss_sidebar(CommonUtils):
         """
         Open security servers restore backup view
 
-        *Updated: 11.07.2017*
-
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.ss_sidebar.Ss_sidebar.click_element_backup_and_restore`
         """
         self.ss_sidebar.click_element_backup_and_restore()
 
@@ -55,10 +43,6 @@ class Component_ss_sidebar(CommonUtils):
         """
         Open security servers diagnostics view
 
-        *Updated: 11.07.2017*
-
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.ss_sidebar.Ss_sidebar.click_element_diagnostics`
         """
         self.ss_sidebar.click_element_diagnostics()
 
@@ -66,10 +50,6 @@ class Component_ss_sidebar(CommonUtils):
         """
         Open security servers version view
 
-        *Updated: 11.07.2017*
-
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.ss_sidebar.Ss_sidebar.click_element_version`
         """
         self.ss_sidebar.click_element_version()
 
@@ -77,9 +57,5 @@ class Component_ss_sidebar(CommonUtils):
         """
         Open security servers client view
 
-        *Updated: 11.07.2017*
-        
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.ss_sidebar.Ss_sidebar.click_element_security_server_clients`
         """
         self.ss_sidebar.click_element_security_server_clients()

@@ -50,8 +50,6 @@ class Ss_keys_and_cert_details(CommonUtils):
     def verify_hash(self):
         """
         Verify that hash is present on page
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.element_should_be_present`, *self.ID_HASH*
+
         """
         self.element_should_be_present(self.ID_HASH)

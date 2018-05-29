@@ -63,15 +63,13 @@ class Cs_system_settings_mgm_sp_reg_req_dlg(CommonUtils):
 
     def click_button_id_used_server_server_search(self):
         """
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_USED_SERVER_SERVER_SEARCH*
+
         """
         # AutoGen method
         self.click_element(self.ID_USED_SERVER_SERVER_SEARCH)
 
     def click_button_submit(self):
         """
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_SUBMIT*
+
         """
         self.click_element(self.BUTTON_SUBMIT)

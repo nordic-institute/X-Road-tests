@@ -58,11 +58,6 @@ class Cs_system_settings_mgm_req_servers_dlg(CommonUtils):
         Click used server in used servers table with parameter 'member_name'.
 
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_page_contains`, *parameters[u'member_name']*
-            * **Step 3:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *table_element[0]*
         """
         self.wait_until_jquery_ajax_loaded()
         self.wait_until_page_contains(parameters[u'member_name'])
@@ -73,7 +68,5 @@ class Cs_system_settings_mgm_req_servers_dlg(CommonUtils):
         """
         Click button to select used server
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_SELECT*
         """
         self.click_element(self.BUTTON_SELECT)

@@ -54,8 +54,5 @@ class Cs_backup_restore_dlg_up_back_conf_exist(CommonUtils):
         Click button confirm
         
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.UI_BUTTONSET_CONFIRM*
         """
         self.click_element(self.UI_BUTTONSET_CONFIRM)

@@ -55,9 +55,6 @@ class Ss_keys_and_cert_dlg_subject_dname(CommonUtils):
         Input random text to dna name field
 
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.NAME_O_GOFORE_TEXT*, *parameters['member_name'] + rword*
         """
         import random, string
         rword = ''.join(random.choice(string.lowercase) for i in range(4))
@@ -66,10 +63,7 @@ class Ss_keys_and_cert_dlg_subject_dname(CommonUtils):
     def submit_keys_dname(self):
         """
         Click button to submit dnaname
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+
         """
         # AutoGen method submit form: keys
         self.click_element(self.BUTTON_OK)
@@ -80,10 +74,6 @@ class Ss_keys_and_cert_dlg_subject_dname(CommonUtils):
         Input random text to dna name field
         
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.NAME_O_GOFORE_TEXT*, *parameters['member_name'] + rword*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.NAME_CN_1234_TEXT*, *parameters['server_address']*
         """
         # AutoGen methods form: keys
         import random, string

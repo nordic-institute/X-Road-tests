@@ -61,10 +61,6 @@ class Cs_sec_servers_new_client_req_search(CommonUtils):
         Click member in member table with parameter 'member_code'
 
         :param text:  String value for text
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_page_contains`, *text*
         """
         self.wait_until_jquery_ajax_loaded()
         self.wait_until_page_contains(text)
@@ -74,8 +70,6 @@ class Cs_sec_servers_new_client_req_search(CommonUtils):
     def click_ok_search(self):
         """
         Click button ok
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
+
         """
         self.click_element(self.BUTTON_OK)

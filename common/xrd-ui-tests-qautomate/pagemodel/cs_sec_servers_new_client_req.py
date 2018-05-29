@@ -65,9 +65,7 @@ class Cs_sec_servers_new_client_req(CommonUtils):
     def click_new_client_search(self):
         """
         Click new cliants search
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_SECURITYSERVER_CLIENT_CLIENT_SEARCH*
+
         """
         self.click_element(self.ID_SECURITYSERVER_CLIENT_CLIENT_SEARCH)
 
@@ -76,9 +74,6 @@ class Cs_sec_servers_new_client_req(CommonUtils):
         Input subsystem code to dialog. Parameter used is 'subsystem_code'
         
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.ID_SECURITYSERVER_CLIENT_SUBSYSTEM_CODE*, *parameters[u'subsystem_code']*
         """
         self.input_text(self.ID_SECURITYSERVER_CLIENT_SUBSYSTEM_CODE, parameters[u'subsystem_code'])
 
@@ -86,7 +81,5 @@ class Cs_sec_servers_new_client_req(CommonUtils):
         """
         Click button to submit dialog
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_CONFIRM*
         """
         self.click_element(self.BUTTON_CONFIRM)

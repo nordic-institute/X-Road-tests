@@ -58,9 +58,7 @@ class Cs_sec_servers_details_clients(CommonUtils):
 
     def click_add_new_client_request(self):
         """
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_SECURITYSERVER_CLIENT_ADD*
+
         """
         self.click_element(self.ID_SECURITYSERVER_CLIENT_ADD)
 
@@ -68,10 +66,6 @@ class Cs_sec_servers_details_clients(CommonUtils):
         """
         
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *element*
         """
         self.wait_until_jquery_ajax_loaded()
 
@@ -93,21 +87,18 @@ class Cs_sec_servers_details_clients(CommonUtils):
 
     def click_element_id_securityserver_client_delete(self):
         """
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_SECURITYSERVER_CLIENT_DELETE*
+
         """
         self.click_element(self.ID_SECURITYSERVER_CLIENT_DELETE)
 
     def click_element_submit(self):
         """
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.SUBMIT*
+
         """
         self.click_element(self.SUBMIT)
 
     def click_element_auth_cert(self):
         """
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.AUTH_CERT*
+
         """
         self.click_element(self.AUTH_CERT)

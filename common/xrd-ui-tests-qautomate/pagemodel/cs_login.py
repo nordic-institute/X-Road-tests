@@ -50,12 +50,6 @@ class Cs_login(CommonUtils):
         Login to central server
 
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.ID_J_USERNAME*, *parameters[u'j_username']*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.ID_J_PASSWORD*, *parameters[u'j_password']*
-            * **Step 3:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BTN_LOGIN*
-            * **Step 4:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         # AutoGen method submit form: login
         self.input_text(self.ID_J_USERNAME, parameters[u'j_username'])
@@ -66,6 +60,7 @@ class Cs_login(CommonUtils):
     def verify_is_login_page(self, parameters=None):
         """
         Verify page is login page
+
         :param parameters:  Test data section dictionary
         """
         return self.is_visible(self.ID_J_USERNAME)

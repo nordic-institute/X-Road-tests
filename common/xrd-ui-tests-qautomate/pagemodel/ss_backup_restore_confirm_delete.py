@@ -51,7 +51,5 @@ class Ss_backup_restore_confirm_delete(CommonUtils):
         """
         Click button to confirm the dialog
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_CONFIRM*
         """
         self.click_element(self.BUTTON_CONFIRM)

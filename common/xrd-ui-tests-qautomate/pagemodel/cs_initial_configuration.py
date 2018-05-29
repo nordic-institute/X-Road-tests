@@ -55,12 +55,6 @@ class Cs_initial_configuration(CommonUtils):
         Fill input values to initilization fields
         
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.ID_INSTANCE_IDENTIFIER*, *parameters['instance_identifier']*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.ID_CENTRAL_SERVER_ADDRESS*, *parameters['server_address']*
-            * **Step 3:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.ID_PIN*, *parameters['pin']*
-            * **Step 4:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.ID_PIN_REPEAT*, *parameters['pin']*
         """
         # AutoGen methods form: init
         self.input_text(self.ID_INSTANCE_IDENTIFIER, parameters['instance_identifier'])
@@ -75,8 +69,6 @@ class Cs_initial_configuration(CommonUtils):
         """
         Submit the initilization values
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_SUBMIT*
         """
         # AutoGen method submit form: init
         self.click_element(self.ID_SUBMIT)

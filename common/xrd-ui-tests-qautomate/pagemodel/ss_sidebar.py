@@ -52,9 +52,7 @@ class Ss_sidebar(CommonUtils):
     def verify_sidebar_title(self):
         """
         Verify sidebar title is visible on the page
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_element_is_visible`, *self.SERVER_INFO_SECURITY*
+
         """
         self.wait_until_element_is_visible(self.SERVER_INFO_SECURITY)
 
@@ -62,8 +60,6 @@ class Ss_sidebar(CommonUtils):
         """
         Click sidebar link to open keys and certificates view
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_KEYS_AND_CERTIFICATES*
         """
         self.click_element(self.DATA_NAME_KEYS_AND_CERTIFICATES)
 
@@ -71,17 +67,13 @@ class Ss_sidebar(CommonUtils):
         """
         Click sidebar link to open system parameters view
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_SYSPARAMS_SYSTEM_PARAMETERS*
         """
         self.click_element(self.DATA_NAME_SYSPARAMS_SYSTEM_PARAMETERS)
 
     def click_element_security_server_clients(self):
         """
         Click sidebar link to open server clients view
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_CLIENTS_SECURITY_SERVER*
+
         """
         self.click_element(self.DATA_NAME_CLIENTS_SECURITY_SERVER)
 
@@ -89,25 +81,19 @@ class Ss_sidebar(CommonUtils):
         """
         Click sidebar link to open backups view
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_BACKUP_BACK_UP_AND_RESTORE*
         """
         self.click_element(self.DATA_NAME_BACKUP_BACK_UP_AND_RESTORE)
 
     def click_element_diagnostics(self):
         """
         Click sidebar link to open diagnostics view
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_DIAGNOSTICS*
+
         """
         self.click_element(self.DATA_NAME_DIAGNOSTICS)
 
     def click_element_version(self):
         """
         Click sidebar link to open version view
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_ABOUT_VERSION*
+
         """
         self.click_element(self.DATA_NAME_ABOUT_VERSION)

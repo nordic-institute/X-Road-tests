@@ -68,8 +68,6 @@ class Ss_backup_restore_back_up_config(CommonUtils):
         """
         Click button to ok the dialog
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
         """
         # AutoGen method
         self.click_element(self.BUTTON_OK)

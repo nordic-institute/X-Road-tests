@@ -55,9 +55,6 @@ class Cs_conf_mgm_enter_pin(CommonUtils):
         Input text to activate token pin
 
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.ID_ACTIVATE_TOKEN_PIN*, *parameters['pin']*
         """
         # AutoGen method
         self.input_text(self.ID_ACTIVATE_TOKEN_PIN, parameters['pin'])
@@ -66,8 +63,6 @@ class Cs_conf_mgm_enter_pin(CommonUtils):
         """
         Click button to ok the dialog
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.OK_BUTTON*
         """
         # AutoGen method
         self.click_element(self.OK_BUTTON)
@@ -76,16 +71,12 @@ class Cs_conf_mgm_enter_pin(CommonUtils):
         """
 
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.CLOSE_BUTTON*
         """
         self.click_element(self.CLOSE_BUTTON)
 
     def verify_pin_dialog_is_open(self):
         """
         Verify pin dialog
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.element_should_be_present`, *self.ID_ACTIVATE_TOKEN_PIN*
+
         """
         self.element_should_be_present(self.ID_ACTIVATE_TOKEN_PIN)

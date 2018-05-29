@@ -34,15 +34,9 @@ class Component_cs_sec_servers(CommonUtils):
     def open_server_details_dlg(self, section=u'member_mgm_configuration', parameter=u'member_name'):
         """
         Open server details dialog
-
-        *Updated: 11.07.2017*
         
         :param section:  Test data section name
         :param parameter:  Test data parameter name
-        
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_sec_servers.Cs_sec_servers.click_security_servers_row_with_text`, *TESTDATA[section][parameter]*
-                * **Step 2:** :func:`~pagemodel.cs_sec_servers.Cs_sec_servers.click_ss_details`
         """
         self.cs_sec_servers.click_security_servers_row_with_text(TESTDATA[section][parameter])
         self.cs_sec_servers.click_ss_details()
@@ -51,12 +45,6 @@ class Component_cs_sec_servers(CommonUtils):
         """
         Delete server in server details dialog
 
-        *Updated: 11.07.2017*
-
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_sec_servers_details.Cs_sec_servers_details.click_security_server_details_tab`
-                * **Step 2:** :func:`~pagemodel.cs_sec_servers_details.Cs_sec_servers_details.click_element_id_securityserver_delete`
-                * **Step 3:** :func:`~pagemodel.cs_sec_servers_details_del_confirm.Cs_sec_servers_details_del_confirm.click_link_confirm_ui_text`
         """
         self.cs_sec_servers_details.click_security_server_details_tab()
         self.cs_sec_servers_details.click_element_id_securityserver_delete()
@@ -66,15 +54,7 @@ class Component_cs_sec_servers(CommonUtils):
         """
         Delete client in server details in dialog
 
-        *Updated: 11.07.2017*
-
         :param section:  Test data section name
-        
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_sec_servers_details.Cs_sec_servers_details.click_clients_tab`
-                * **Step 2:** :func:`~pagemodel.cs_sec_servers_details_clients.Cs_sec_servers_details_clients.search_text_from_table_securityserver_clients_1`, *TESTDATA[section]*
-                * **Step 3:** :func:`~pagemodel.cs_sec_servers_details_clients.Cs_sec_servers_details_clients.click_element_id_securityserver_client_delete`
-                * **Step 4:** :func:`~pagemodel.cs_sec_servers_delete_clients.Cs_sec_servers_delete_clients.click_element_submit`
         """
         self.cs_sec_servers_details.click_clients_tab()
         self.cs_sec_servers_details_clients.search_text_from_table_securityserver_clients_1(TESTDATA[section])
@@ -85,10 +65,6 @@ class Component_cs_sec_servers(CommonUtils):
         """
         Close server details dialog
 
-        *Updated: 11.07.2017*
-
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_sec_servers_details_clients.Cs_sec_servers_details_clients.click_element_submit`
         """
         self.cs_sec_servers_details_clients.click_element_submit()
 
@@ -96,13 +72,6 @@ class Component_cs_sec_servers(CommonUtils):
         """
         Delete authentication certification in server details dialog
 
-        *Updated: 11.07.2017*
-
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_sec_servers_details_clients.Cs_sec_servers_details_clients.click_element_auth_cert`
-                * **Step 2:** :func:`~pagemodel.cs_sec_servers_details_auth.Cs_sec_servers_details_auth.click_element_from_table_securityserver_auth_certs`, *approved_ca*
-                * **Step 3:** :func:`~pagemodel.cs_sec_servers_details_auth.Cs_sec_servers_details_auth.click_button_id_securityserver_authcert_delete`
-                * **Step 4:** :func:`~pagemodel.cs_sec_servers_auth_dlg.Cs_sec_servers_auth_dlg.click_element_submit`
         """
         approved_ca = strings.server_environment_approved_ca()
         self.cs_sec_servers_details_clients.click_element_auth_cert()
@@ -114,13 +83,8 @@ class Component_cs_sec_servers(CommonUtils):
         """
         Verify servers does not contain server
 
-        *Updated: 11.07.2017*
-
         :param section:  Test data section name
         :param parameter:  Test data parameter name
-        
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_sec_servers.Cs_sec_servers.table_does_not_contain_server`, *TESTDATA[section][parameter]*
         """
         self.cs_sec_servers.table_does_not_contain_server(TESTDATA[section][parameter])
 
@@ -128,13 +92,8 @@ class Component_cs_sec_servers(CommonUtils):
         """
         Verify servers does contain server
 
-        *Updated: 11.07.2017*
-
         :param section:  Test data section name
         :param parameter:  Test data parameter name
-        
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_sec_servers.Cs_sec_servers.table_contains_server`, *TESTDATA[section][parameter]*
         """
         self.cs_sec_servers.table_contains_server(TESTDATA[section][parameter])
 
@@ -142,11 +101,6 @@ class Component_cs_sec_servers(CommonUtils):
         """
         Verify table contains subsystem
 
-        *Updated: 11.07.2017*
-
         :param section:  Test data section name
-        
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.ss_clients.Ss_clients.verify_table_contains_subsystem`, *TESTDATA[section]*
         """
         self.ss_clients.verify_table_contains_subsystem(TESTDATA[section])

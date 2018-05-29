@@ -52,8 +52,6 @@ class Ss_system_param_add_timestamp_dlg(CommonUtils):
         """
         Click button to confrim dialog
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
         """
         self.click_element(self.BUTTON_OK)
 
@@ -61,7 +59,5 @@ class Ss_system_param_add_timestamp_dlg(CommonUtils):
         """
         Click timestamping tables first row
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.TRUSTED_TSP_TABLE_FIRST_ROW*
         """
         self.click_element(self.TRUSTED_TSP_TABLE_FIRST_ROW)

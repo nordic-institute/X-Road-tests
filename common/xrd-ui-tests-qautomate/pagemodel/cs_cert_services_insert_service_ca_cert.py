@@ -54,8 +54,6 @@ class Cs_cert_services_insert_service_ca_cert(CommonUtils):
         """
         Click browse button
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_BROWSE*
         """
         self.click_element(self.BUTTON_BROWSE)
 
@@ -63,7 +61,5 @@ class Cs_cert_services_insert_service_ca_cert(CommonUtils):
         """
         Click button next
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_NEXT*
         """
         self.click_element(self.BUTTON_NEXT)

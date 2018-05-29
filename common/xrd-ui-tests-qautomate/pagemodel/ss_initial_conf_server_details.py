@@ -65,11 +65,6 @@ class Ss_initial_conf_server_details(CommonUtils):
         Fill input values server serverconfform
 
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.ID_OWNER_CODE*, *parameters['member_code']*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.ID_SERVER_CODE*, *parameters['security_server_code']*
-            * **Step 3:** :func:`~extension.extension.util.common_utils.CommonUtils.select_from_list_by_label`, *self.ID_OWNER_CLASS*, *parameters['member_class']*
         """
         # AutoGen methods form: serverconf_form
         sleep(2)
@@ -82,10 +77,6 @@ class Ss_initial_conf_server_details(CommonUtils):
         Fill pin code fields
         
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.ID_PIN*, *parameters['pin']*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.ID_PIN_REPEAT*, *parameters['pin']*
         """
         self.input_text(self.ID_PIN, parameters['pin'])
         self.input_text(self.ID_PIN_REPEAT, parameters['pin'])
@@ -94,8 +85,6 @@ class Ss_initial_conf_server_details(CommonUtils):
         """
         Click button to confirm the dialog
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_SUBMIT_SERVERCONF*
         """
         # AutoGen method submit form: serverconf_form
         self.click_element(self.ID_SUBMIT_SERVERCONF)
@@ -104,7 +93,5 @@ class Ss_initial_conf_server_details(CommonUtils):
         """
         Wait until views is visible
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_element_is_visible`, *self.SECURITY_SERVER_OWNER*
         """
         self.wait_until_element_is_visible(self.SECURITY_SERVER_OWNER)

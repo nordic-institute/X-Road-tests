@@ -52,21 +52,18 @@ class Cs_conf_upload_configuration_part(CommonUtils):
 
     def click_browse(self):
         """
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.FILE_UPLOAD_BUTTON*
+
         """
         self.click_element(self.FILE_UPLOAD_BUTTON)
 
     def click_ok(self):
         """
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_FILE_UPLOAD_SUBMIT*
+
         """
         self.click_element(self.ID_FILE_UPLOAD_SUBMIT)
 
     def click_close(self):
         """
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.CANCEL*
+
         """
         self.click_element(self.CANCEL)

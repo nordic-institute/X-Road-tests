@@ -59,8 +59,6 @@ class Cs_members_subsystems_dlg(CommonUtils):
         """
         Click button to submit dialog
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.MENUBAR_CLOSE*
         """
         # AutoGen method
         self.click_element(self.MENUBAR_CLOSE)
@@ -69,8 +67,6 @@ class Cs_members_subsystems_dlg(CommonUtils):
         """
         Click button to add
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_ADD*
         """
         # AutoGen method
         self.click_element(self.BUTTON_ADD)
@@ -80,11 +76,6 @@ class Cs_members_subsystems_dlg(CommonUtils):
         Click subsystem from subsystems table with text
 
         :param text:  String value for text
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
-            * **Step 3:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *element*
         """
         self.wait_until_jquery_ajax_loaded()
         # Element search
@@ -110,9 +101,6 @@ class Cs_members_subsystems_dlg(CommonUtils):
         Click and verify subsystem is red in subsystems dialog
 
         :param text:  String value for text
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.fail`, *errors.subsystem_not_red*
         """
         element = self.click_element_in_subsystems_table(text)
         if element.value_of_css_property("color") != "rgb(255, 0, 0)":
@@ -122,8 +110,6 @@ class Cs_members_subsystems_dlg(CommonUtils):
         """
         Verify subsystem delete button is enabled
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.fail`, *errors.subsystem_deletion_disabled*
         """
         if not self.is_enabled(self.BUTTON_DELETE_SUBSYSTEM):
             self.fail(errors.subsystem_deletion_disabled)

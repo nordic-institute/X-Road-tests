@@ -63,10 +63,6 @@ class Ss_client_dlg_details(CommonUtils):
         """
         Click button to unregister the client
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_CLIENT_DELETE*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.CLASS_UI_STATE_FOCUS*
-            * **Step 3:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_CLIENT_UNREGISTER*
         """
         sleep(1)
         #if self.is_visible(self.ID_CLIENT_DELETE,5):

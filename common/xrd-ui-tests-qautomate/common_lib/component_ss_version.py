@@ -20,12 +20,7 @@ class Component_ss_version(CommonUtils):
         """
         Verify version view contains right version
 
-        *Updated: 11.07.2017*
-
         :param text:  String value for text
-        
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.ss_version.Ss_version.verify_version_text`, *text*
         """
         self.ss_version.verify_version_text(text)
         print("Version text contains '{}'".format(text))

@@ -57,9 +57,7 @@ class Cs_mgm_requests(CommonUtils):
     def click_button_id_request_details(self):
         """
         Click button to open request details
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_REQUEST_DETAILS*
+
         """
         # AutoGen method
         self.click_element(self.ID_REQUEST_DETAILS)
@@ -68,8 +66,6 @@ class Cs_mgm_requests(CommonUtils):
         """
         Wait until records count element is visible on the page
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_element_is_visible`, *self.ID_RECORDS_COUNT*
         """
         self.wait_until_element_is_visible(self.ID_RECORDS_COUNT)
 
@@ -78,9 +74,6 @@ class Cs_mgm_requests(CommonUtils):
         Click management request in the management requests tab with given text
         
         :param text:  String value for text
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *element*
         """
         # Element search
         locator = (By.ID, u'management_requests_all')

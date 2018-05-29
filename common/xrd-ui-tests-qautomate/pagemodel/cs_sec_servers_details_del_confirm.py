@@ -44,9 +44,7 @@ class Cs_sec_servers_details_del_confirm(CommonUtils):
     def click_link_confirm_ui_text(self):
         """
         Click link to confirm dialog
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_CONFIRM*
+
         """
         # AutoGen method click_link: None
         self.click_element(self.BUTTON_CONFIRM)

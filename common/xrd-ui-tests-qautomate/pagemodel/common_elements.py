@@ -54,9 +54,6 @@ Pagemodel
         Verify bottom message text
 
         :param message:  String value for message
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.element_should_contain`, *self.ERROR_MESSAGE*, *message*
         """
         self.element_should_contain(self.ERROR_MESSAGE, message)
 
@@ -65,9 +62,6 @@ Pagemodel
         Verify bottom message text
 
         :param message:  String value for message
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.element_should_contain`, *self.MESSAGE*, *message*
         """
         self.element_should_contain(self.MESSAGE, message)
 
@@ -75,8 +69,6 @@ Pagemodel
         """
         Click user info menu button
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.mouse_over`, *self.USER_INFO*
         """
         self.mouse_over(self.USER_INFO)
 
@@ -84,16 +76,12 @@ Pagemodel
         """
         Click log out from user info menu
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.LOG_OUT*
         """
         self.click_element(self.LOG_OUT)
 
     def click_change_language(self):
         """
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.LANGUAGE_CHANGE*
         """
         self.click_element(self.LANGUAGE_CHANGE)
 
@@ -102,8 +90,5 @@ Pagemodel
         Verify top message text
 
         :param message:  String value for message
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.element_should_contain`, *self.ALERT_MESSAGE*, *message*
         """
         self.element_should_contain(self.ALERT_MESSAGE, message)

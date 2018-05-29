@@ -69,9 +69,7 @@ class Ss_system_parameters(CommonUtils):
     def click_button_id_tsp_delete(self):
         """
         Click button to delete timestamping
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_TSP_DELETE*
+
         """
         # AutoGen method
         self.click_element(self.ID_TSP_DELETE)
@@ -79,9 +77,7 @@ class Ss_system_parameters(CommonUtils):
     def click_button_id_tsp_add(self):
         """
         Click button to add timestamping
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_TSP_ADD*
+
         """
         # AutoGen method
         self.click_element(self.ID_TSP_ADD)
@@ -91,10 +87,6 @@ class Ss_system_parameters(CommonUtils):
         Veriyf timestamping url value
         
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_element_is_visible`, *self.HTTP_DEV_IS_PALVELUVAYLA_COM_8899*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.element_text_should_be`, *self.HTTP_DEV_IS_PALVELUVAYLA_COM_8899*, *parameters[u'tsp_url']*
         """
         self.wait_until_element_is_visible(self.HTTP_DEV_IS_PALVELUVAYLA_COM_8899)
         self.element_text_should_be(self.HTTP_DEV_IS_PALVELUVAYLA_COM_8899, parameters[u'tsp_url'])
@@ -104,9 +96,6 @@ class Ss_system_parameters(CommonUtils):
         Click timestamping from timestampings table with text
 
         :param text:  String value for text
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *element*
         """
         # Element search
         locator = self.TSPS

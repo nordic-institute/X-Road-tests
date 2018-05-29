@@ -59,8 +59,6 @@ class Ss_clients_add_search_client_dlg(CommonUtils):
         """
         Click button to select
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_CLIENT_SELECT*
         """
         # AutoGen method
         self.click_element(self.ID_CLIENT_SELECT)
@@ -68,9 +66,7 @@ class Ss_clients_add_search_client_dlg(CommonUtils):
     def click_button_id_client_select_ok(self):
         """
         Click button to ok
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
+
         """
         # AutoGen method
         self.click_element(self.BUTTON_OK)
@@ -80,10 +76,6 @@ class Ss_clients_add_search_client_dlg(CommonUtils):
         Click client from clients table with parameter 'subsystem_code'
         
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_page_contains`, *parameters[u'subsystem_code']*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *table_element[0]*
         """
         # AutoGen method search_text_from_table_clientsglobal
         self.wait_until_page_contains(parameters[u'subsystem_code'])
@@ -94,7 +86,5 @@ class Ss_clients_add_search_client_dlg(CommonUtils):
         """
         Click button to filter
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_SEARCH_FILTER*
         """
         self.click_element(self.ID_SEARCH_FILTER)

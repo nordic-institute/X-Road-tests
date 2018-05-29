@@ -60,9 +60,6 @@ class Cs_sidebar(CommonUtils):
         """
         Verify that page contains central server title
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_element_is_visible`, *self.SERVER_INFO_CENTRAL*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.element_should_contain`, *self.SERVER_INFO_CENTRAL*, *u'CENTRAL SERVER'*
         """
         self.wait_until_element_is_visible(self.SERVER_INFO_CENTRAL)
         self.element_should_contain(self.SERVER_INFO_CENTRAL, u'CENTRAL SERVER')
@@ -70,11 +67,7 @@ class Cs_sidebar(CommonUtils):
     def click_link_data_name_securityservers_security_servers(self):
         """
         Click sidebar link to open security server view
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_element_is_enabled`, *self.DATA_NAME_SECURITYSERVERS_SECURITY_SERVERS*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_SECURITYSERVERS_SECURITY_SERVERS*
-            * **Step 3:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+
         """
         self.wait_until_element_is_enabled(self.DATA_NAME_SECURITYSERVERS_SECURITY_SERVERS)
         self.click_element(self.DATA_NAME_SECURITYSERVERS_SECURITY_SERVERS)
@@ -84,10 +77,6 @@ class Cs_sidebar(CommonUtils):
         """
         Click sidebar link to open
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_element_is_enabled`, *self.DATA_NAME_GROUPS*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_GROUPS*
-            * **Step 3:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         self.wait_until_element_is_enabled(self.DATA_NAME_GROUPS)
         self.click_element(self.DATA_NAME_GROUPS)
@@ -97,10 +86,6 @@ class Cs_sidebar(CommonUtils):
         """
         Click sidebar link to open central services view
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_element_is_enabled`, *self.DATA_NAME_CENTRAL_SERVICES*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_CENTRAL_SERVICES*
-            * **Step 3:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         self.wait_until_element_is_enabled(self.DATA_NAME_CENTRAL_SERVICES)
         self.click_element(self.DATA_NAME_CENTRAL_SERVICES)
@@ -109,11 +94,7 @@ class Cs_sidebar(CommonUtils):
     def click_link_data_name_approved_cas_certification_services(self):
         """
         Click sidebar link to open certificate services view
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_element_is_enabled`, *self.DATA_NAME_APPROVED_CAS_CERTIFICATION_SERVICES*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_APPROVED_CAS_CERTIFICATION_SERVICES*
-            * **Step 3:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+
         """
         self.wait_until_element_is_enabled(self.DATA_NAME_APPROVED_CAS_CERTIFICATION_SERVICES)
         self.click_element(self.DATA_NAME_APPROVED_CAS_CERTIFICATION_SERVICES)
@@ -123,10 +104,6 @@ class Cs_sidebar(CommonUtils):
         """
         Click sidebar link to open requests management view
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_element_is_enabled`, *self.DATA_NAME_REQUESTS_MANAGEMENT*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_REQUESTS_MANAGEMENT*
-            * **Step 3:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         self.wait_until_element_is_enabled(self.DATA_NAME_REQUESTS_MANAGEMENT)
         self.click_element(self.DATA_NAME_REQUESTS_MANAGEMENT)
@@ -135,11 +112,7 @@ class Cs_sidebar(CommonUtils):
     def click_link_data_name_configuration_management(self):
         """
         Click sidebar link to open configuration management view
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_element_is_enabled`, *self.DATA_NAME_CONFIGURATION_MANAGEMENT_GLOBAL*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_CONFIGURATION_MANAGEMENT_GLOBAL*
-            * **Step 3:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+
         """
         self.wait_until_element_is_enabled(self.DATA_NAME_CONFIGURATION_MANAGEMENT_GLOBAL)
         self.click_element(self.DATA_NAME_CONFIGURATION_MANAGEMENT_GLOBAL)
@@ -148,11 +121,7 @@ class Cs_sidebar(CommonUtils):
     def click_link_data_name_system_settings(self):
         """
         Click sidebar link to open system settings view
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_element_is_enabled`, *self.DATA_NAME_SYSTEM_SETTINGS*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_SYSTEM_SETTINGS*
-            * **Step 3:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+
         """
         self.wait_until_element_is_enabled(self.DATA_NAME_SYSTEM_SETTINGS)
         self.click_element(self.DATA_NAME_SYSTEM_SETTINGS)
@@ -162,10 +131,6 @@ class Cs_sidebar(CommonUtils):
         """
         Click sidebar link to open backups view
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_element_is_enabled`, *self.DATA_NAME_BACKUP_BACK_UP_AND_RESTORE*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_BACKUP_BACK_UP_AND_RESTORE*
-            * **Step 3:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         self.wait_until_element_is_enabled(self.DATA_NAME_BACKUP_BACK_UP_AND_RESTORE)
         self.click_element(self.DATA_NAME_BACKUP_BACK_UP_AND_RESTORE)
@@ -174,10 +139,7 @@ class Cs_sidebar(CommonUtils):
     def click_link_data_name_about_version(self):
         """
         Click sidebar link to open version view
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_ABOUT_VERSION*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+
         """
         self.click_element(self.DATA_NAME_ABOUT_VERSION)
         self.wait_until_jquery_ajax_loaded()
@@ -186,10 +148,6 @@ class Cs_sidebar(CommonUtils):
         """
         Click sidebar link to open members view
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_element_is_enabled`, *self.MEMBERS*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.MEMBERS*
-            * **Step 3:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         self.wait_until_element_is_enabled(self.MEMBERS)
         self.click_element(self.MEMBERS)
@@ -199,10 +157,6 @@ class Cs_sidebar(CommonUtils):
         """
         Click sidebar link to open timestamping services view
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_element_is_enabled`, *self.DATA_NAME_TSPS_TIMESTAMPING_SERVICES*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_TSPS_TIMESTAMPING_SERVICES*
-            * **Step 3:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         self.wait_until_element_is_enabled(self.DATA_NAME_TSPS_TIMESTAMPING_SERVICES)
         self.click_element(self.DATA_NAME_TSPS_TIMESTAMPING_SERVICES)

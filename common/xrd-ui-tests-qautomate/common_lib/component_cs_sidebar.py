@@ -22,10 +22,6 @@ class Component_cs_sidebar(CommonUtils):
         """
         Open members view in central server
 
-        *Updated: 11.07.2017*
-
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_sidebar.Cs_sidebar.click_element_members`
         """
         self.cs_sidebar.click_element_members()
 
@@ -33,10 +29,6 @@ class Component_cs_sidebar(CommonUtils):
         """
         Open security servers view in central server
 
-        *Updated: 11.07.2017*
-
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_sidebar.Cs_sidebar.click_link_data_name_securityservers_security_servers`
         """
         self.cs_sidebar.click_link_data_name_securityservers_security_servers()
 
@@ -44,10 +36,6 @@ class Component_cs_sidebar(CommonUtils):
         """
         Open global groups view in central server
 
-        *Updated: 11.07.2017*
-
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_sidebar.Cs_sidebar.click_link_data_name_groups`
         """
         self.cs_sidebar.click_link_data_name_groups()
 
@@ -55,10 +43,6 @@ class Component_cs_sidebar(CommonUtils):
         """
         Open central services view in central server
 
-        *Updated: 11.07.2017*
-
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_sidebar.Cs_sidebar.click_link_data_name_central_services`
         """
         self.cs_sidebar.click_link_data_name_central_services()
 
@@ -66,10 +50,6 @@ class Component_cs_sidebar(CommonUtils):
         """
         Open certificate services view in central server
 
-        *Updated: 11.07.2017*
-
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_sidebar.Cs_sidebar.click_link_data_name_approved_cas_certification_services`
         """
         self.cs_sidebar.click_link_data_name_approved_cas_certification_services()
 
@@ -77,10 +57,6 @@ class Component_cs_sidebar(CommonUtils):
         """
         Open timestamping services view in central server
 
-        *Updated: 11.07.2017*
-
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_sidebar.Cs_sidebar.click_link_data_name_tsps_stamping_services`
         """
         self.cs_sidebar.click_link_data_name_tsps_stamping_services()
 
@@ -88,10 +64,6 @@ class Component_cs_sidebar(CommonUtils):
         """
         Open management request view in central server
 
-        *Updated: 11.07.2017*
-
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_sidebar.Cs_sidebar.click_link_data_name_requests_management`
         """
         self.cs_sidebar.click_link_data_name_requests_management()
 
@@ -99,10 +71,6 @@ class Component_cs_sidebar(CommonUtils):
         """
         Open global configuration view in central server
 
-        *Updated: 11.07.2017*
-
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_sidebar.Cs_sidebar.click_link_data_name_configuration_management`
         """
         self.cs_sidebar.click_link_data_name_configuration_management()
 
@@ -110,10 +78,6 @@ class Component_cs_sidebar(CommonUtils):
         """
         Open system settings view in central server
 
-        *Updated: 11.07.2017*
-
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_sidebar.Cs_sidebar.click_link_data_name_system_settings`
         """
         self.cs_sidebar.click_link_data_name_system_settings()
 
@@ -121,10 +85,6 @@ class Component_cs_sidebar(CommonUtils):
         """
         Open backup restore view in central server
 
-        *Updated: 11.07.2017*
-
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_sidebar.Cs_sidebar.click_link_data_name_backup_back_up_and_restore`
         """
         self.cs_sidebar.click_link_data_name_backup_back_up_and_restore()
 
@@ -132,9 +92,5 @@ class Component_cs_sidebar(CommonUtils):
         """
         Open version view in central server
 
-        *Updated: 11.07.2017*
-
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_sidebar.Cs_sidebar.click_link_data_name_about_version`
         """
         self.cs_sidebar.click_link_data_name_about_version()

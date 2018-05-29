@@ -53,30 +53,21 @@ class Cs_backup_restore_dlg_upload_backup(CommonUtils):
 
     def click_element_upload_button(self, parameters=None):
         """
-        
+
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.FILE_UPLOAD_BUTTON*
         """
         self.click_element(self.FILE_UPLOAD_BUTTON)
 
     def click_dialog_confirm(self, parameters=None):
         """
-        
+
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_FILE_UPLOAD_SUBMIT*
         """
         self.click_element(self.ID_FILE_UPLOAD_SUBMIT)
 
     def click_button_cancel(self, parameters=None):
         """
-        
+
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.CANCEL_0*
         """
         self.click_element(self.CANCEL_0)

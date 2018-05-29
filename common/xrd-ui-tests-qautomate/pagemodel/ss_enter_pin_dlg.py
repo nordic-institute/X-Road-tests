@@ -52,9 +52,6 @@ class Ss_enter_pin_dlg(CommonUtils):
         Input pin to pin field
         
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.ID_ACTIVATE_TOKEN_PIN*, *parameters['pin']*
         """
         # AutoGen method
         self.input_text(self.ID_ACTIVATE_TOKEN_PIN, parameters['pin'])
@@ -62,9 +59,7 @@ class Ss_enter_pin_dlg(CommonUtils):
     def click_button_ok(self):
         """
         Click button to ok the dialog
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
+
         """
         # AutoGen method
         self.click_element(self.BUTTON_OK)

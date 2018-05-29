@@ -28,17 +28,10 @@ class Component_ss(CommonUtils):
         """
         Login to security server
 
-        *Updated: 11.07.2017*
-
         :param section:  Test data section name
         :param initial_conf:  If true server is in configurations state
         :param wait_for_jquery:  If true method waits for jquery
-        
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.open_application.Open_application.open_application_url`, *TESTDATA[section]*
-                * **Step 2:** :func:`~pagemodel.ss_login.Ss_login.login`, *TESTDATA[section]*, *wait_for_jquery*
-                * **Step 3:** :func:`~pagemodel.ss_sidebar.Ss_sidebar.verify_sidebar_title`
-        """
+       """
         ## Go to security server
         self.open_application.open_application_url(TESTDATA[section])
         self.ss_login.login(TESTDATA[section], wait_for_jquery)
@@ -49,15 +42,7 @@ class Component_ss(CommonUtils):
         """
         Add timestamping url to security server
 
-        *Updated: 11.07.2017*
-
         :param section:  Test data section name
-        
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.ss_system_parameters.Ss_system_parameters.click_button_id_tsp_add`
-                * **Step 2:** :func:`~pagemodel.ss_system_param_add_timestamp_dlg.Ss_system_param_add_timestamp_dlg.click_trusted_tsp_first_row`
-                * **Step 3:** :func:`~pagemodel.ss_system_param_add_timestamp_dlg.Ss_system_param_add_timestamp_dlg.click_button_ok`
-                * **Step 4:** :func:`~pagemodel.ss_system_parameters.Ss_system_parameters.verify_time_stamping_url`, *TESTDATA[section]*
         """
         self.ss_system_parameters.click_button_id_tsp_add()
         sleep(3)
@@ -70,12 +55,7 @@ class Component_ss(CommonUtils):
         """
         Verify that login to security server fails
 
-        *Updated: 11.07.2017*
-
         :param text:  String value for text
-        
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.ss_login.Ss_login.verify_contains_text`, *text*
         """
         self.ss_login.verify_contains_text(text)
 
@@ -83,13 +63,7 @@ class Component_ss(CommonUtils):
         """
         Delete timestamping url from security server
 
-        *Updated: 11.07.2017*
-
         :param section:  Test data section name
-        
-        **Test steps:**
-                * **Step 2:** :func:`~pagemodel.ss_system_parameters.Ss_system_parameters.click_element_from_table_tsps_1`, *TESTDATA[section][u'tsp_url']*
-                * **Step 3:** :func:`~pagemodel.ss_system_parameters.Ss_system_parameters.click_button_id_tsp_delete`
         """
         self.wait_until_page_contains(TESTDATA[section][u'tsp_url'])
         self.ss_system_parameters.click_element_from_table_tsps_1(TESTDATA[section][u'tsp_url'])

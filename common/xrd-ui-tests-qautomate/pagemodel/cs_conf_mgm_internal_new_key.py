@@ -51,10 +51,7 @@ class Cs_conf_mgm_internal_new_key(CommonUtils):
     def click_button_ok(self):
         """
         Click button to ok the dialog
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+
         """
         # AutoGen method
         self.click_element(self.BUTTON_OK)

@@ -64,7 +64,6 @@ class Cs_sec_servers_delete_clients(CommonUtils):
     def click_element_submit(self):
         """
         Click button to submit the dialog
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_SUBMIT*
+
         """
         self.click_element(self.BUTTON_SUBMIT)

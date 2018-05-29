@@ -52,7 +52,5 @@ class Ss_clients_add_warning(CommonUtils):
         """
         Click button to continue
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.CONTINUE*
         """
         self.click_element(self.CONTINUE)

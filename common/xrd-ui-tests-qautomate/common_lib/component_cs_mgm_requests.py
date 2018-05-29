@@ -22,12 +22,7 @@ class Component_cs_mgm_requests(CommonUtils):
         """
         Verify comment in request details dialog
 
-        *Updated: 11.07.2017*
-
         :param text:  String value for text
-        
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_mgm_requests_dlg_reg_details.Cs_mgm_requests_dlg_reg_details.verify_comment_text`, *text*
         """
         self.cs_mgm_requests_dlg_reg_details.verify_comment_text(text)
 
@@ -35,10 +30,6 @@ class Component_cs_mgm_requests(CommonUtils):
         """
         Close request details dialog
 
-        *Updated: 11.07.2017*
-
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_mgm_requests_dlg_reg_details.Cs_mgm_requests_dlg_reg_details.click_button_close`
         """
         self.cs_mgm_requests_dlg_reg_details.click_button_close()
 
@@ -46,13 +37,7 @@ class Component_cs_mgm_requests(CommonUtils):
         """
         Open request details dialog
 
-        *Updated: 11.07.2017*
-
         :param text:  String value for text
-        
-        **Test steps:**
-                * **Step 1:** :func:`~pagemodel.cs_mgm_requests.Cs_mgm_requests.search_text_from_table_management_requests_all`, *text*
-                * **Step 2:** :func:`~pagemodel.cs_mgm_requests.Cs_mgm_requests.click_button_id_request_details`
         """
         self.cs_mgm_requests.search_text_from_table_management_requests_all(text)
         self.cs_mgm_requests.click_button_id_request_details()

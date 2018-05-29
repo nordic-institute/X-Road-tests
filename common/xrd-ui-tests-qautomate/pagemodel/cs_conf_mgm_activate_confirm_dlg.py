@@ -50,8 +50,6 @@ class Cs_conf_mgm_activate_confirm_dlg(CommonUtils):
     def click_confirm(self):
         """
         Click button to confirm the dialog
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_CONFIRM*
+
         """
         self.click_element(self.BUTTON_CONFIRM)

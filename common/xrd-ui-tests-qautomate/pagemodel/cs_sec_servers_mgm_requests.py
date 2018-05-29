@@ -57,9 +57,7 @@ class Cs_sec_servers_mgm_requests(CommonUtils):
     def find_and_click_mgm_request(self):
         """
         Click management request in table with value "SUBMITTED FOR APPROVAL"
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+
         """
         self.wait_until_jquery_ajax_loaded()
         element_rowtable = self.get_table_column_and_row_by_text(self.ID_SECURITYSERVER_MANAGEMENT_REQUESTS,"SUBMITTED FOR APPROVAL","TBODY/TR","TD")
@@ -72,7 +70,5 @@ class Cs_sec_servers_mgm_requests(CommonUtils):
         """
         Click button to close the dialog
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_CLOSE*
         """
         self.click_element(self.BUTTON_CLOSE)

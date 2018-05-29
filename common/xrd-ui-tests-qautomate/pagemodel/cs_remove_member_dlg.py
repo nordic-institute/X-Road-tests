@@ -51,9 +51,6 @@ class Cs_remove_member_dlg(CommonUtils):
         """
         Click button to confirm the dialog
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_CONFIRM*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         # AutoGen method click_link: None
         self.click_element(self.BUTTON_CONFIRM)

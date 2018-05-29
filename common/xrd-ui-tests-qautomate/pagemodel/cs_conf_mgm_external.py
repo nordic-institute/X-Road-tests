@@ -69,9 +69,7 @@ class Cs_conf_mgm_external(CommonUtils):
     def click_button_id_generate_signing_key(self):
         """
         Click button to generate signing key
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_GENERATE_SIGNING_KEY*
+
         """
         # AutoGen method
         self.click_element(self.ID_GENERATE_SIGNING_KEY)

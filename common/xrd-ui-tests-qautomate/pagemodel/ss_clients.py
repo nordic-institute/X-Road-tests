@@ -48,8 +48,6 @@ class Ss_clients(CommonUtils):
         """
         Click button to add subsystem
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_CLIENT_ADD*
         """
         self.click_element(self.ID_CLIENT_ADD)
 
@@ -58,13 +56,6 @@ class Ss_clients(CommonUtils):
         Verify service registeration is complete
 
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_page_contains`, *parameters[u'subsystem_code']*
-            * **Step 3:** :func:`~extension.extension.util.common_utils.CommonUtils.element_attribute_should_contains`, *element_circle*, *u'title'*, *u'registration in progress'*
-            * **Step 4:** :func:`~extension.extension.util.common_utils.CommonUtils.reload_page`
-            * **Step 5:** :func:`~extension.extension.util.common_utils.CommonUtils.element_attribute_should_contains`, *element_circle*, *u'title'*, *u'registered'*
         """
         self.wait_until_jquery_ajax_loaded()
         self.wait_until_page_contains(parameters[u'subsystem_code'])
@@ -86,10 +77,6 @@ class Ss_clients(CommonUtils):
         Click client in clients table with parameter 'subsystem_code'
 
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_page_contains`, *parameters[u'subsystem_code']*
         """
         self.wait_until_jquery_ajax_loaded()
         self.wait_until_page_contains(parameters[u'subsystem_code'])
@@ -103,12 +90,6 @@ class Ss_clients(CommonUtils):
         Click client in clients table. Parameters used 'instance_identifier', 'member_class', 'member_code' and 'subsystem_code'
 
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_page_contains`, *parameters[u'subsystem_code']*
-            * **Step 3:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
-            * **Step 4:** :func:`~extension.extension.util.common_utils.CommonUtils.fail`, *errors.subsystem_status_error*
         """
         self.wait_until_jquery_ajax_loaded()
         self.wait_until_page_contains(parameters[u'subsystem_code'])
@@ -134,10 +115,6 @@ class Ss_clients(CommonUtils):
         Verify clients table contains subsystem. Parameters used 'instance_identifier', 'member_class', 'member_code' and 'subsystem_code'
 
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.fail`, *errors.subsystem_not_found*
         """
         self.wait_until_jquery_ajax_loaded()
         subsystem_row = "SUBSYSTEM : " + parameters[u'instance_identifier'] + " : " + parameters['member_class'] + " : " + parameters['member_code'] + " : " + parameters[u'subsystem_code']

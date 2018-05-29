@@ -58,8 +58,6 @@ class Ss_clients_services_dlg_add_subjects(CommonUtils):
         """
         Verify dialog is open
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_element_is_visible`, *self.ID_ACL_SUBJECTS_SEARCH_ADD_ALL*
         """
         self.wait_until_element_is_visible(self.ID_ACL_SUBJECTS_SEARCH_ADD_ALL)
 
@@ -67,17 +65,13 @@ class Ss_clients_services_dlg_add_subjects(CommonUtils):
         """
         Click button to add subject to acl
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_ACL_SUBJECTS_SEARCH_ADD_ALL*
         """
         self.click_element(self.ID_ACL_SUBJECTS_SEARCH_ADD_ALL)
 
     def click_search(self):
         """
         Click tab to search view
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ACL_SUBJECTS_SEARCH_SIMPLE_TAB*
+
         """
         self.click_element(self.ACL_SUBJECTS_SEARCH_SIMPLE_TAB)
         sleep(2)
@@ -86,9 +80,6 @@ class Ss_clients_services_dlg_add_subjects(CommonUtils):
         """
         Click subject from table with "Security server owners" text
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *element_rowtable[0]*
         """
         self.wait_until_jquery_ajax_loaded()
         element_rowtable = self.get_table_column_and_row_by_text_contains(self.ID_ACL_SUBJECTS_SEARCH, "Security server owners","TBODY/TR","TD")
@@ -97,7 +88,5 @@ class Ss_clients_services_dlg_add_subjects(CommonUtils):
     def click_element_id_acl_subjects_search_add_selected(self):
         """
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_ACL_SUBJECTS_SEARCH_ADD_SELECTED*
         """
         self.click_element(self.ID_ACL_SUBJECTS_SEARCH_ADD_SELECTED)

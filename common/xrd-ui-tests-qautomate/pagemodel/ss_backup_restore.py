@@ -55,10 +55,6 @@ class Ss_backup_restore(CommonUtils):
         Click button to generate backup
 
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_BACKUP*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         # AutoGen method
         self.click_element(self.ID_BACKUP)
@@ -68,9 +64,6 @@ class Ss_backup_restore(CommonUtils):
         """
         Click restore button on first row in backups table
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.FIRST_ROW_RESTORE*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         self.click_element(self.FIRST_ROW_RESTORE)
         self.wait_until_jquery_ajax_loaded()
@@ -79,9 +72,6 @@ class Ss_backup_restore(CommonUtils):
         """
         Click delete button on first row in backups table
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.FIRST_ROW_DELETE*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         self.click_element(self.FIRST_ROW_DELETE)
         self.wait_until_jquery_ajax_loaded()

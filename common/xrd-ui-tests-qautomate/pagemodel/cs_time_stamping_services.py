@@ -53,9 +53,7 @@ class Cs_time_stamping_services(CommonUtils):
     def click_button_id_tsp_add(self):
         """
         Click button to add timestamping
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_TSP_ADD*
+
         """
         # AutoGen method
         self.click_element(self.ID_TSP_ADD)

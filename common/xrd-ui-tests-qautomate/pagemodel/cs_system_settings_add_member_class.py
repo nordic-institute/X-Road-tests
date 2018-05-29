@@ -54,9 +54,6 @@ class Cs_system_settings_add_member_class(CommonUtils):
         Input text to member name field. Parameter used is 'member_class'
         
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.NAME_MEMBER_CLASS_FILL_TEXT*, *parameters['member_class']*
         """
         # AutoGen method
         self.input_text(self.NAME_MEMBER_CLASS_FILL_TEXT, parameters['member_class'])
@@ -64,9 +61,7 @@ class Cs_system_settings_add_member_class(CommonUtils):
     def click_button_ok(self):
         """
         Click button to ok the dialog
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
+
         """
         # AutoGen method
         self.click_element(self.BUTTON_OK)
@@ -76,8 +71,5 @@ class Cs_system_settings_add_member_class(CommonUtils):
         Input text to member description field. Parameter used is 'member_class_description'
         
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.NAME_MEMBER_CLASS_DESCRIPTION*, *parameters[u'member_class_description']*
         """
         self.input_text(self.NAME_MEMBER_CLASS_DESCRIPTION, parameters[u'member_class_description'])

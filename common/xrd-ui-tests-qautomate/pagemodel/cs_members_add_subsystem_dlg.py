@@ -53,9 +53,6 @@ class Cs_members_add_subsystem_dlg(CommonUtils):
         Input text to subsystem code field. Using parameter 'subsystem_code'
 
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.ID_SUBSYSTEM_ADD_CODE*, *parameters['subsystem_code']*
         """
         # AutoGen method
         self.input_text(self.ID_SUBSYSTEM_ADD_CODE, parameters['subsystem_code'])
@@ -64,9 +61,6 @@ class Cs_members_add_subsystem_dlg(CommonUtils):
         """
         Click button to submit dialog
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         # AutoGen method
         self.click_element(self.BUTTON_OK)

@@ -57,8 +57,6 @@ class Ss_clients_dlg_services_acl_for_service(CommonUtils):
         """
         Verify acl dialog is open
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_element_is_visible`, *self.MENUBAR_MAXIMIZE*
         """
         self.wait_until_element_is_visible(self.MENUBAR_MAXIMIZE)
 
@@ -66,8 +64,6 @@ class Ss_clients_dlg_services_acl_for_service(CommonUtils):
         """
         Click button to add scl subject
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_SERVICE_ACL_SUBJECTS_ADD*
         """
         self.click_element(self.ID_SERVICE_ACL_SUBJECTS_ADD)
 
@@ -75,7 +71,5 @@ class Ss_clients_dlg_services_acl_for_service(CommonUtils):
         """
         Click button to close the dialog
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_SERVICE_ACL_UI_BUTTONPANE_BUTTONSET_CLOSE*
         """
         self.click_element(self.DATA_NAME_SERVICE_ACL_UI_BUTTONPANE_BUTTONSET_CLOSE)

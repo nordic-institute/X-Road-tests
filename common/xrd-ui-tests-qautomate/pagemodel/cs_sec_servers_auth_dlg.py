@@ -61,10 +61,7 @@ class Cs_sec_servers_auth_dlg(CommonUtils):
     def click_button_id_auth_cert_add_submit(self):
         """
         Click button to submit authentication certificate
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_SUBMIT*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+
         """
         # AutoGen method
         self.click_element(self.BUTTON_SUBMIT)
@@ -73,9 +70,7 @@ class Cs_sec_servers_auth_dlg(CommonUtils):
     def click_upload_auth_cert(self):
         """
         Click button to upload authentication certificate
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_SECURITYSERVER_AUTH_CERT_UPLOAD_BUTTON*
+
         """
         self.click_element(self.ID_SECURITYSERVER_AUTH_CERT_UPLOAD_BUTTON)
 
@@ -83,7 +78,5 @@ class Cs_sec_servers_auth_dlg(CommonUtils):
         """
         Click button to close the dialog
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.MENUBAR_CLOSE*
         """
         self.click_element(self.MENUBAR_CLOSE)

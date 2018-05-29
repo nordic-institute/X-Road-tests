@@ -56,9 +56,6 @@ class Cs_cert_services_dlg_ca_settings(CommonUtils):
         Input cerificate profile text
 
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.CERT_PROFILE_INFO_TEXT*, *parameters['name_extractor_method']*
         """
         # AutoGen method
         self.input_text(self.CERT_PROFILE_INFO_TEXT, parameters['name_extractor_method'])
@@ -66,9 +63,7 @@ class Cs_cert_services_dlg_ca_settings(CommonUtils):
     def click_button_id_ca_settings_submit(self):
         """
         Click submit button
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
+
         """
         # AutoGen method
         self.click_element(self.BUTTON_OK)

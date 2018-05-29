@@ -45,8 +45,5 @@ class Cs_version(CommonUtils):
         Verify version text with text
 
         :param text:  String value for text
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.element_should_contain`, *self.VERSION_TEXT*, *text*
         """
         self.element_should_contain(self.VERSION_TEXT, text)

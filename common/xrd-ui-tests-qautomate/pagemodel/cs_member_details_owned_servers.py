@@ -58,9 +58,7 @@ class Cs_member_details_owned_servers(CommonUtils):
     def click_button_ui_titlebar_widget_corner_all_helper_clearfix_draggable_handle_tabs(self):
         """
         Click button to add owned server
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_ADD*
+
         """
         # AutoGen method
         self.click_element(self.BUTTON_ADD)
@@ -70,8 +68,5 @@ class Cs_member_details_owned_servers(CommonUtils):
         Click owned server link with parameters u'security_server_code'
         
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *(By.LINK_TEXT*, *parameters[u'security_server_code']*
         """
         self.click_element((By.LINK_TEXT, parameters[u'security_server_code']))

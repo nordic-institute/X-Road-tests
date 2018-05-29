@@ -56,8 +56,6 @@ class Cs_sec_servers(CommonUtils):
         """
         Click button to show security server details dialog
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_SECURITYSERVER_EDIT*
         """
         self.click_element(self.ID_SECURITYSERVER_EDIT)
 
@@ -66,10 +64,6 @@ class Cs_sec_servers(CommonUtils):
         Click security server in security servers table with given text
         
         :param text:  String value for text
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_page_contains`, *text*
         """
         self.wait_until_jquery_ajax_loaded()
         self.wait_until_page_contains(text)
@@ -81,10 +75,6 @@ class Cs_sec_servers(CommonUtils):
         Verify security servers table contains server with given text
 
         :param text:  String value for text
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.fail`, *errors.member_code_not_found*
         """
         self.wait_until_jquery_ajax_loaded()
         if not self.table_contains_text(self.ID_SECURITYSERVERS, text):
@@ -95,10 +85,6 @@ class Cs_sec_servers(CommonUtils):
         Verify security servers table does not contain server with given text
         
         :param text:  String value for text
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.fail`, *errors.member_code_found*
         """
         self.wait_until_jquery_ajax_loaded()
         if self.table_contains_text(self.ID_SECURITYSERVERS, text):

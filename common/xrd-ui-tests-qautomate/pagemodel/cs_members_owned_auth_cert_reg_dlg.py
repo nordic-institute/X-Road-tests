@@ -61,12 +61,9 @@ class Cs_members_owned_auth_cert_reg_dlg(CommonUtils):
 
     def input_text_to_id_owned_server_add_servercode(self, parameters=None):
         """
-        Inpurt text to add owned server. Uses parameter 'security_server_code'
+        Input text to add owned server. Uses parameter 'security_server_code'
 
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.ID_OWNED_SERVER_ADD_SERVERCODE*, *parameters['security_server_code']*
         """
         # AutoGen method
         self.input_text(self.ID_OWNED_SERVER_ADD_SERVERCODE, parameters['security_server_code'])
@@ -75,8 +72,6 @@ class Cs_members_owned_auth_cert_reg_dlg(CommonUtils):
         """
         Click button to submit dialog
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_SUBMIT*
         """
         # AutoGen method
         self.click_element(self.BUTTON_SUBMIT)
@@ -85,7 +80,5 @@ class Cs_members_owned_auth_cert_reg_dlg(CommonUtils):
         """
         Click button to upload certificate
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_OWNED_SERVER_CERT_UPLOAD_BUTTON*
         """
         self.click_element(self.ID_OWNED_SERVER_CERT_UPLOAD_BUTTON)

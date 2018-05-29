@@ -48,7 +48,5 @@ class Ss_client_dlg_unregister(CommonUtils):
         """
         Click button to confirm unregistering the client
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_CONFIRM*
         """
         self.click_element(self.BUTTON_CONFIRM)

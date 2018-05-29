@@ -65,7 +65,5 @@ class Cs_sec_serves_mgm_request_approve(CommonUtils):
         """
         Click button to approve requests
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_APPROVE*
         """
         self.click_element(self.BUTTON_APPROVE)

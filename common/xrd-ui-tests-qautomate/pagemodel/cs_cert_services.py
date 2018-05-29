@@ -54,8 +54,6 @@ class Cs_cert_services(CommonUtils):
         """
         Click details button
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_CA_DETAILS*
         """
         # AutoGen method
         self.click_element(self.ID_CA_DETAILS)
@@ -64,8 +62,6 @@ class Cs_cert_services(CommonUtils):
         """
         Click add ca button
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_CA_ADD*
         """
         # AutoGen method
         self.click_element(self.ID_CA_ADD)
@@ -74,7 +70,5 @@ class Cs_cert_services(CommonUtils):
         """
         Click certificates tables first row
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.TRUSTED_CERT_FIRST_ROW*
         """
         self.click_element(self.TRUSTED_CERT_FIRST_ROW)

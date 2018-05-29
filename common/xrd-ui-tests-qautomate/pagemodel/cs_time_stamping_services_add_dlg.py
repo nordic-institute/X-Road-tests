@@ -57,9 +57,6 @@ class Cs_time_stamping_services_add_dlg(CommonUtils):
         Input text to timestamping url field using parameter 'tsp_url'
 
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.INPUT_TSP_URL*, *parameters['tsp_url']*
         """
         # AutoGen method
         self.input_text(self.INPUT_TSP_URL, parameters['tsp_url'])
@@ -67,9 +64,7 @@ class Cs_time_stamping_services_add_dlg(CommonUtils):
     def click_button_ok(self):
         """
         Click button to ok the dialog
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
+
         """
         # AutoGen method
         self.click_element(self.BUTTON_OK)
@@ -78,7 +73,5 @@ class Cs_time_stamping_services_add_dlg(CommonUtils):
         """
         Click button to upload timestamping
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_UPLOAD*
         """
         self.click_element(self.BUTTON_UPLOAD)

@@ -73,9 +73,7 @@ class Cs_mgm_requests_dlg_reg_details(CommonUtils):
     def click_button_close(self):
         """
         Click button to close the dialog
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_CLOSE*
+
         """
         # AutoGen method click_link: None
         self.click_element(self.BUTTON_CLOSE)
@@ -85,8 +83,5 @@ class Cs_mgm_requests_dlg_reg_details(CommonUtils):
         Verify comment with given text
 
         :param text:  String value for text
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.element_text_should_be`, *self.COMMENT*, *text*
         """
         self.element_text_should_be(self.COMMENT, text)

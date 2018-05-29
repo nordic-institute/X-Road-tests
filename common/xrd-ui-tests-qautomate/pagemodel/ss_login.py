@@ -49,12 +49,6 @@ class Ss_login(CommonUtils):
 
         :param parameters:  Test data section dictionary
         :param wait_for_jquery:  If true method waits for jquery
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.ID_J_USERNAME*, *parameters[u'j_username']*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.ID_J_PASSWORD*, *parameters[u'j_password']*
-            * **Step 3:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.LOGIN*
-            * **Step 4:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         self.input_text(self.ID_J_USERNAME, parameters[u'j_username'])
         self.input_text(self.ID_J_PASSWORD, parameters[u'j_password'])
@@ -67,14 +61,12 @@ class Ss_login(CommonUtils):
         Verify page contains text
 
         :param text:  String value for text
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_page_contains`, *text*
         """
         self.wait_until_page_contains(text)
 
     def verify_is_login_page(self):
         """
         Verify page is login page
+
         """
         return self.is_visible(self.ID_J_USERNAME)

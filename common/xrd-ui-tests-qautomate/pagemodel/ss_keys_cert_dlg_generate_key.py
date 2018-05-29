@@ -50,10 +50,6 @@ class Ss_keys_cert_dlg_generate_key(CommonUtils):
         Input text to cert field and click button to confirm dialog
 
         :param text:  String value for text
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.ID_LABEL*, *text*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
         """
         self.input_text(self.ID_LABEL, text)
         self.click_element(self.BUTTON_OK)

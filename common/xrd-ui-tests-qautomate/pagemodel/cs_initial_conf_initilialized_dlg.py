@@ -50,8 +50,6 @@ class Cs_initial_conf_initilialized_dlg(CommonUtils):
         """
         Click button to ok the dialog
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
         """
         # AutoGen method submit form: init
         self.click_element(self.BUTTON_OK)

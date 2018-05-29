@@ -51,11 +51,8 @@ class Ss_keys_and_cert_dlg_registration_req(CommonUtils):
     def input_text_to_server_address(self, parameters=None):
         """
         Input text to server address field
-        
+
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.ID_ADDRESS*, *parameters['server_address']*
         """
         # AutoGen methods form: keys
         server_address = parameters['server_address']
@@ -66,10 +63,7 @@ class Ss_keys_and_cert_dlg_registration_req(CommonUtils):
     def submit_register_request(self):
         """
         Click button to confirm request
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
+
         """
         # AutoGen method submit form: keys
         self.click_element(self.BUTTON_OK)

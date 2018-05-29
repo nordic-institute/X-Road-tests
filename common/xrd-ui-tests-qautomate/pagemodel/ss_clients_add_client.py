@@ -57,13 +57,6 @@ class Ss_clients_add_client(CommonUtils):
         Fill fields for generating new client. Paramters used are 'member_code', 'subsystem_code' and 'member_class'
 
         :param parameters:  Test data section dictionary
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.ID_ADD_MEMBER_CODE*, *parameters[u'member_code']*
-            * **Step 2:** :func:`~extension.extension.util.common_utils.CommonUtils.input_text`, *self.ID_ADD_SUBSYSTEM_CODE*, *parameters[u'subsystem_code']*
-            * **Step 3:** :func:`~extension.extension.util.common_utils.CommonUtils.select_from_list_by_label`, *self.ID_ADD_MEMBER_CLASS*, *parameters[u'member_class']*
-            * **Step 4:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.CONTAINSDATANAMEOK3*
-            * **Step 5:** :func:`~extension.extension.util.common_utils.CommonUtils.wait_until_jquery_ajax_loaded`
         """
         # TODO FIX
         self.input_text(self.ID_ADD_MEMBER_CODE, parameters[u'member_code'])
@@ -76,9 +69,7 @@ class Ss_clients_add_client(CommonUtils):
     def cancel_client_adding(self):
         """
         Click button to cancel the client generation
-        
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.DATA_NAME_CANCEL*
+
         """
         if self.is_visible(self.DATA_NAME_CANCEL, 5):
             self.click_element(self.DATA_NAME_CANCEL)
@@ -87,8 +78,6 @@ class Ss_clients_add_client(CommonUtils):
         """
         Click button to select
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.ID_CLIENT_SELECT*
         """
         self.click_element(self.ID_CLIENT_SELECT)
 
@@ -96,8 +85,6 @@ class Ss_clients_add_client(CommonUtils):
         """
         Click element to ok
 
-        **Test steps:**
-            * **Step 1:** :func:`~extension.extension.util.common_utils.CommonUtils.click_element`, *self.BUTTON_OK*
         """
         # TODO FIX
         self.click_element(self.BUTTON_OK)

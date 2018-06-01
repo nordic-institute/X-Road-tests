@@ -6,7 +6,7 @@ This repository contains [X-Road](https://github.com/nordic-institute/X-Road) te
 
 ## X-Road source code
 
-[Source code](https://github.com/nordic-institute/X-Road-tests/tree/develop/src) of X-Road tests is open for all and it is licenced under MIT licence.
+Source code of the X-Road tests is open for all and it is licenced under MIT licence.
 
 ## Overview
 

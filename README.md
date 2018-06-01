@@ -1,4 +1,4 @@
-![X-Road logo](https://raw.githubusercontent.com/nordic-institute/X-Road/develop/xroad_logo_small.png) ![European Regional Development Fund](https://github.com/e-gov/RIHA-Frontend/raw/master/logo/EU/EU.png "European Regional Development Fund - DO NOT REMOVE THIS IMAGE BEFORE 01.11.2022")
+![X-Road logo](xroad_logo_small.png) ![European Regional Development Fund](eu_logo.png "European Regional Development Fund - DO NOT REMOVE THIS IMAGE BEFORE 01.11.2022")
 
 ## About the repository
 
@@ -14,4 +14,4 @@ Currently there are 3 main sections:
 
 - [common](common) - Common tests
 - [EE-national](EE-national) - Tests specific to Estonia X-Road instance (X-tee)
-- [FI-national](FI-national) - Tests specific to Finland X-Road instance (Palveluväylä)
+- [FI-national](FI-national) - Tests specific to Finland X-Road instance (Suomi.fi-palveluväylä)

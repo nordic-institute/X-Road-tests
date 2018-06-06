@@ -37,7 +37,7 @@ class Component_cs(CommonUtils):
         if not initial_conf:
             self.cs_sidebar.verify_central_server_title()
 
-    def open_central_server_url(self, section=u'cs_static_url'):
+    def open_central_server_url(self, section=u'cs_url'):
         """
         Open central server url
 

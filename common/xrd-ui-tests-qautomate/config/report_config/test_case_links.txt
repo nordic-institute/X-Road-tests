@@ -1,1 +1,0 @@
-Documentation = https://qautomate-tests.palveluvayla.com/code_documentation/tests/{TestSet}.html#{SphinxTestCase}

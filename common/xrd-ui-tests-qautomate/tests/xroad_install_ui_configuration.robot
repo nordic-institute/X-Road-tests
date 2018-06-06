@@ -36,10 +36,6 @@ ${wsdl_service_client_reg}=  wsdl_service_client_reg
 *** Test Cases ***
 
 Test configure cs and ss mgm servers 1
-    # Step Read liityntapalvelin konfiguraatio parameters
-    ${testdata}=  Get testdata
-    Read keskuspalvelin konfiguraatio parameters  ${testdata}
-
     # Step Initialize server and add new member in central server
     Cs login  ${cs_url}  initial_conf=True
     Cs system settings initialize cs server config  ${cs_url}
@@ -177,10 +173,6 @@ Test configure cs and ss mgm servers 1
     Sleep  2
 
 Test configure ss server with new member add to existing cs 3
-    # Step Read liityntapalvelin konfiguraatio parameters
-    ${testdata}=  Get testdata
-    Read liityntapalvelin konfiguraatio parameters  ${testdata}
-
     # Step Add new member to central server
     Cs login  ${cs_url}
     Cs sidebar open members view
@@ -280,10 +272,6 @@ Test configure ss server with new member add to existing cs 3
     Log out
 
 Test configure ss server with new member add to existing cs 4
-    # Step Read liityntapalvelin konfiguraatio parameters
-    ${testdata}=  Get testdata
-    Read liityntapalvelin konfiguraatio parameters  ${testdata}
-
     # Step Add new member to central server
     Cs login  ${cs_url}
     Cs sidebar open members view

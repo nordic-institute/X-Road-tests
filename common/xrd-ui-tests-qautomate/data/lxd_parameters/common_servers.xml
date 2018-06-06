@@ -55,21 +55,6 @@
 		<parameter name="sync_timeout" value="65"/>
 		<parameter name="tsp_url" value="http://xroad-lxd-ca.lxd:8899"/>
 	</Section>
-	<Section name="cs_static_url">
-		<parameter name="url" pagemodel="open_application" value="https://xroad-lxd-cs.lxd:4000/login"/>
-		<parameter name="j_username" value="xrd"/>
-		<parameter name="j_password" value="secret"/>
-	</Section>
-	<Section name="ss1_static_url">
-		<parameter name="url" pagemodel="open_application" value="https://xroad-lxd-ss2.lxd:4000/login"/>
-		<parameter name="j_username" value="xrd"/>
-		<parameter name="j_password" value="secret"/>
-	</Section>
-	<Section name="ss2_static_url">
-		<parameter name="url" pagemodel="open_application" validation="" value="" verify=""/>
-		<parameter name="j_username" value="xrd"/>
-		<parameter name="j_password" value="secret"/>
-	</Section>
     <Section name="service_wsdl_client_deletion">
 		<parameter name="params_url" pagemodel="clients_dlg_services_edit_wsdl" value="http://xroad-lxd-cs.lxd:4400/managementservice/"/>
 	</Section>

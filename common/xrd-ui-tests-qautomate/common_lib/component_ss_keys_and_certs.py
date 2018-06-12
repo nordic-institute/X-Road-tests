@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 from variables import errors
 from QAutoLibrary.extension import TESTDATA
 from selenium.webdriver.common.by import By

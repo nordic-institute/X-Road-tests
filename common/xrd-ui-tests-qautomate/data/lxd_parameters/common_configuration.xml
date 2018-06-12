@@ -2,14 +2,14 @@
 <TestData>
 	<Section name="member_mgm_configuration">
 		<parameter name="security_server_code" value="xroad-lxd-ss0"/>
-		<parameter name="server_address" pagemodel="" validation="" value="xroad-lxd-ss0.lxd" verify=""/>
+		<parameter name="server_address" value="xroad-lxd-ss0.lxd"/>
 	</Section>
 	<Section name="member1_configuration">
 		<parameter name="security_server_code" value="xroad-lxd-ss1"/>
-		<parameter name="server_address" pagemodel="" validation="" value="xroad-lxd-ss1.lxd" verify=""/>
+		<parameter name="server_address" value="xroad-lxd-ss1.lxd"/>
 	</Section>
 	<Section name="member2_configuration">
 		<parameter name="security_server_code" value="xroad-lxd-ss2"/>
-		<parameter name="server_address" pagemodel="" validation="" value="xroad-lxd-ss2.lxd" verify=""/>
+		<parameter name="server_address" value="xroad-lxd-ss2.lxd"/>
 	</Section>
 </TestData>

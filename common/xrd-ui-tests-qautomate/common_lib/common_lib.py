@@ -96,7 +96,7 @@ class Common_lib(CommonUtils):
         for _file in files:
             print ("delete file: ", _file)
             try:
-                os.system("sudo rm " + _file)
+                os.system("rm " + _file)
             except:
                 print("Could not delete", _file, "file from Downloads")
 
@@ -141,7 +141,7 @@ class Common_lib(CommonUtils):
         print("revoke start")
         print("./scripts/revoke.sh " + parameters[u'sign_cert_format'] + " " + parameters[u'sign_cert_server_connect_parameters'])
         subprocess.call("./scripts/revoke.sh " + parameters[u'sign_cert_format'] + " '" + parameters[u'sign_cert_server_connect_parameters'] + "'",shell=True)
-        os.system("sudo mv " + "scripts/sign-cert_automation.der old.der" )
+        os.system("mv " + "scripts/sign-cert_automation.der old.der" )
 
     def revoke_cert_auth(self, parameters):
         """
@@ -149,7 +149,7 @@ class Common_lib(CommonUtils):
         """
         print("revoke auth start")
         subprocess.call("./scripts/revoke_auth.sh " + parameters[u'sign_cert_format'] + " '" + parameters[u'sign_cert_server_connect_parameters'] + "'",shell=True)
-        os.system("sudo mv " + "scripts/auth-cert_automation.der old.der" )
+        os.system("mv " + "scripts/auth-cert_automation.der old.der" )
 
     def get_ui_error_message(self):
         """

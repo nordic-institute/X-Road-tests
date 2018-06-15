@@ -76,6 +76,7 @@ class Component_cs_members(CommonUtils):
         :param section:  Test data section name
         :param parameter:  Test data parameter name
         """
+        sleep(1)
         self.cs_members.click_element_from_table_members(TESTDATA[section][parameter])
         self.cs_members.click_button_member_action()
 

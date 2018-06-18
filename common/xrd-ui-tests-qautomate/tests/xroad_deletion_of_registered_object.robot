@@ -185,6 +185,8 @@ setup
     Empty all logs from server  ${ss1_url}
 
 teardown
+    Stop recording
+
     ${documentation}=  Generate failure documentation  ${TEST_DOCUMENTATION}  ${TEST NAME}
     Run Keyword If Test Failed  Set test documentation  ${documentation}
 
@@ -219,8 +221,6 @@ teardown
     # Step Return server to defaults
     Ssh delete files from directory  ${cs_url}  ${backup_directory}
     Ssh delete files from directory  ${ss1_url}  ${backup_directory}
-
-    Stop recording
 
 Test suite setup
     ${DefaultBrowser}=  Open browser  ${BROWSER}

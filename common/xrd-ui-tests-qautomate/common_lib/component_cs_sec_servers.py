@@ -49,6 +49,7 @@ class Component_cs_sec_servers(CommonUtils):
         self.cs_sec_servers_details.click_security_server_details_tab()
         self.cs_sec_servers_details.click_element_id_securityserver_delete()
         self.cs_sec_servers_details_del_confirm.click_link_confirm_ui_text()
+        self.wait_until_jquery_ajax_loaded()
 
     def delete_client_in_server_details_dlg(self, section=u'member_mgm_configuration'):
         """

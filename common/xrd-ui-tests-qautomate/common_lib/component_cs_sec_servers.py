@@ -68,6 +68,7 @@ class Component_cs_sec_servers(CommonUtils):
 
         """
         self.cs_sec_servers_details_clients.click_element_submit()
+        self.wait_until_jquery_ajax_loaded()
 
     def delete_auth_cert_in_server_details_dlg(self):
         """

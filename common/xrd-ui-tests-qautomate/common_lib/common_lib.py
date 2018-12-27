@@ -7,7 +7,7 @@ from urlparse import urlparse
 from selenium.webdriver.common.by import By
 from QAutoLibrary.QAutoSelenium import *
 from time import sleep
-from common_lib.common_lib_ssh import Common_lib_ssh
+from common_lib_ssh import Common_lib_ssh
 
 # Library file allows define common methods, which can be
 # added to test cases or page models

@@ -186,7 +186,8 @@ Test configure ss server with new member add to existing cs 3
     Cs conf mgm download source anchor from cs
     Log out
 
-    Sleep  41
+    ${sync_timeout_value}=  Get parameter  ${cs_url}  ${sync_timeout}
+    Sync global conf  ${sync_timeout_value}
 
     # Step Import configuration anchor to security server
     Ss login  ${ss1_url}  initial_conf=True
@@ -232,12 +233,7 @@ Test configure ss server with new member add to existing cs 3
     Cs sidebar open members view
     Cs members accept auth certificate request in cs  ${member1_configuration}
 
-    # Step Get WSDL address
-    Cs sidebar open system settings view
-    # Step Get wsdl and services address #Webpage: cs_system_settings
-    ${cs_url_section}=  Get section  ${cs_url}
-    Cs system settings get wsdl and services address  ${cs_url_section}
-    Log out
+    Sync global conf  ${sync_timeout_value}
 
     # Step Add subsystem to central server
     Cs login  ${cs_url}
@@ -247,15 +243,12 @@ Test configure ss server with new member add to existing cs 3
     Cs members close member details dlg
     Log out
 
-    ${sync_timeout_value}=  Get parameter  ${cs_url}  ${sync_timeout}
     Sync global conf  ${sync_timeout_value}
 
     # Step Add subsystem to security server
     Ss login  ${ss1_url}
     Ss clients add new subsystem to ss  ${member1_configuration}
     Log out
-
-    Sleep   10
 
     # Step Accept subsystem in in central server
     Cs login  ${cs_url}
@@ -333,13 +326,9 @@ Test configure ss server with new member add to existing cs 4
     Cs login  ${cs_url}
     Cs sidebar open members view
     Cs members accept auth certificate request in cs  ${member2_configuration}
-
-    # Step Get WSDL address
-    Cs sidebar open system settings view
-    # Step Get wsdl and services address #Webpage: cs_system_settings
-    ${cs_url_section}=  Get section  ${cs_url}
-    Cs system settings get wsdl and services address  ${cs_url_section}
     Log out
+
+    Sync global conf  ${sync_timeout_value}
 
     # Step Add subsystem to central server
     Cs login  ${cs_url}
@@ -355,8 +344,6 @@ Test configure ss server with new member add to existing cs 4
     Ss login  ${ss2_url}
     Ss clients add new subsystem to ss  ${member2_configuration}
     Log out
-
-    Sleep   10
 
     # Step Accept subsystem in in central server
     Cs login  ${cs_url}

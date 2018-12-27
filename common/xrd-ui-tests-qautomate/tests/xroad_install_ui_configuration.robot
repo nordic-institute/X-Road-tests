@@ -255,13 +255,15 @@ Test configure ss server with new member add to existing cs 3
     Ss clients add new subsystem to ss  ${member1_configuration}
     Log out
 
-    Sync global conf  ${sync_timeout_value}
+    Sleep   10
 
     # Step Accept subsystem in in central server
     Cs login  ${cs_url}
     Cs sidebar open members view
     Cs members accept mgm requests in cs  ${member1_configuration}
     Log out
+
+    Sync global conf  ${sync_timeout_value}
 
     # Step Check registration complete
     Ss login  ${ss1_url}
@@ -285,7 +287,8 @@ Test configure ss server with new member add to existing cs 4
     Cs conf mgm download source anchor from cs
     Log out
 
-    Sleep  41
+    ${sync_timeout_value}=  Get parameter  ${cs_url}  ${sync_timeout}
+    Sync global conf  ${sync_timeout_value}
 
     # Step Import configuration anchor to security server
     Ss login  ${ss2_url}  initial_conf=True
@@ -346,7 +349,6 @@ Test configure ss server with new member add to existing cs 4
     Cs members close member details dlg
     Log out
 
-    ${sync_timeout_value}=  Get parameter  ${cs_url}  ${sync_timeout}
     Sync global conf  ${sync_timeout_value}
 
     # Step Add subsystem to security server
@@ -354,13 +356,15 @@ Test configure ss server with new member add to existing cs 4
     Ss clients add new subsystem to ss  ${member2_configuration}
     Log out
 
-    Sync global conf  ${sync_timeout_value}
+    Sleep   10
 
     # Step Accept subsystem in in central server
     Cs login  ${cs_url}
     Cs sidebar open members view
     Cs members accept mgm requests in cs  ${member2_configuration}
     Log out
+
+    Sync global conf  ${sync_timeout_value}
 
     # Step Check registration complete
     Ss login  ${ss2_url}

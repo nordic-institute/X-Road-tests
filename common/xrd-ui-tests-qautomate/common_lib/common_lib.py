@@ -7,6 +7,7 @@ from urlparse import urlparse
 from selenium.webdriver.common.by import By
 from QAutoLibrary.QAutoSelenium import *
 from time import sleep
+from common_lib.common_lib_ssh import Common_lib_ssh
 
 # Library file allows define common methods, which can be
 # added to test cases or page models
@@ -22,12 +23,16 @@ class Common_lib(CommonUtils):
         | Documentation updated
     """
     common_elements = Common_elements()
+    common_ssh = Common_lib_ssh()
 
     def sync_global_conf(self, parameters=None):
         """
 
         :param parameters:  Test data section dictionary
         """
+        print "Forcing global configuration generation"
+        self.common_ssh.curl_url(section='cs_url', url='http://127.0.0.1:8084/managementservice/gen_conf')
+
         print("Waiting global conf sync time: " + str(parameters))
         sleep(float(parameters))
 

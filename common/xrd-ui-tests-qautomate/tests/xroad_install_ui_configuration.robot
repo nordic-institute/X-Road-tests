@@ -236,7 +236,6 @@ Test configure ss server with new member add to existing cs 3
     Sync global conf  ${sync_timeout_value}
 
     # Step Add subsystem to central server
-    Cs login  ${cs_url}
     Cs sidebar open members view
     Cs members new client registration request in cs  ${member1_configuration}
     Cs sec servers mgm requests click close mgm req dlg
@@ -326,12 +325,10 @@ Test configure ss server with new member add to existing cs 4
     Cs login  ${cs_url}
     Cs sidebar open members view
     Cs members accept auth certificate request in cs  ${member2_configuration}
-    Log out
 
     Sync global conf  ${sync_timeout_value}
 
     # Step Add subsystem to central server
-    Cs login  ${cs_url}
     Cs sidebar open members view
     Cs members new client registration request in cs  ${member2_configuration}
     Cs sec servers mgm requests click close mgm req dlg

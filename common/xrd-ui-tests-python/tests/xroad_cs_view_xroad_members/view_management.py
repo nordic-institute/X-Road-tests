@@ -225,6 +225,8 @@ def test_view_member_subystems(case, ss1_server_name=None, ss1_subsystem=None, s
         self.wait_until_visible(type=By.XPATH, element=members_table.SUBSYSTEM_POPUP_OK_BTN_XPATH).click()
         self.wait_jquery()
 
+        time.sleep(2)
+
         '''Find test row'''
         subsys_row = self.wait_until_visible(type=By.XPATH, element=members_table.SUBSYSTEM_TR_BY_CODE_XPATH.format('test'))
         '''Click on test row'''

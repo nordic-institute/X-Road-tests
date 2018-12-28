@@ -77,7 +77,7 @@ Test login restore back up in process
     # 3a.2. System logs the event “Log out user” to the audit log.
     Ssh verify audit log  ${ss1_url}  ${logout_user}
     # TODO add verification that back up is done
-    Sleep  10
+    Sleep  120
 
 Test change language
     # Step Open security server for login add user name password
@@ -177,3 +177,4 @@ Test suite setup
 Test suite teardown
     Close all browsers
     Ssh delete files from directory  ${cs_url}  ${backup_directory}
+

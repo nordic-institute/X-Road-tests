@@ -65,7 +65,7 @@ class Ss_clients_dlg_services_edit_wsdl(CommonUtils):
         changed_https_in_url = ""
         try:
             changed_port_in_url = string.replace(parameters[u'params_url'], "4400", parameters[u'mgm_services_port'])
-            changed_http_in_url = string.replace(changed_port_in_url, "http", parameters[u'mgm_services_protocol'])
+            changed_http_in_url = string.replace(changed_port_in_url, "http://", parameters[u'mgm_services_protocol'] + u'://')
         except:
             changed_http_in_url = parameters[u'params_url']
         self.input_text(self.ID_PARAMS_URL, changed_http_in_url)

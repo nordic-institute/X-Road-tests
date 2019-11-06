@@ -47,7 +47,7 @@ class Cs_members_mgm_requests_dlg(CommonUtils):
     GLOBAL_GROUP_MEMBERSHIP = (By.ID, u'ui-id-30') # x: 791 y: 301 width: 202 height: 29, tag: a, type: , name: None, form_id: , checkbox: , table_id: , href: None
     SUBSYSTEMS = (By.ID, u'ui-id-31') # x: 994 y: 301 width: 101 height: 29, tag: a, type: , name: None, form_id: , checkbox: , table_id: , href: None
     USED_SERVERS = (By.ID, u'ui-id-32') # x: 1096 y: 301 width: 110 height: 29, tag: a, type: , name: None, form_id: , checkbox: , table_id: , href: None
-    MANAGEMENT_REQUESTS = (By.ID, u'ui-id-32') # x: 1207 y: 301 width: 177 height: 29, tag: a, type: , name: None, form_id: , checkbox: , table_id: , href: None
+    MANAGEMENT_REQUESTS = (By.ID, u'ui-id-33') # x: 1207 y: 301 width: 177 height: 29, tag: a, type: , name: None, form_id: , checkbox: , table_id: , href: None
     REQUEST_ID = (By.XPATH, u'//div[6]/div[1]/div[1]/div[1]/div[1]/table[1]/thead[1]/tr[1]/th[1]') # x: 476 y: 347 width: 242 height: 37, tag: th, type: , name: None, form_id: , checkbox: , table_id: DataTables_Table_4, href:
     REQUEST_TYPE = (By.XPATH, u'//div[6]/div[1]/div[1]/div[1]/div[1]/table[1]/thead[1]/tr[1]/th[2]') # x: 718 y: 347 width: 242 height: 37, tag: th, type: , name: None, form_id: , checkbox: , table_id: DataTables_Table_4, href:
     CREATED = (By.XPATH, u'//div[6]/div[1]/div[1]/div[1]/div[1]/table[1]/thead[1]/tr[1]/th[3]') # x: 960 y: 347 width: 242 height: 37, tag: th, type: , name: None, form_id: , checkbox: , table_id: DataTables_Table_4, href:

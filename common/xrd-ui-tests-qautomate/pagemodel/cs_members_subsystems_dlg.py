@@ -50,7 +50,7 @@ class Cs_members_subsystems_dlg(CommonUtils):
     OWNED_SERVERS = (By.ID, u'ui-id-29') # x: 666 y: 302 width: 124 height: 29, tag: a, type: , name: None, form_id: , checkbox: , table_id: , href: None
     GLOBAL_GROUP_MEMBERSHIP = (By.ID, u'ui-id-30') # x: 791 y: 302 width: 202 height: 29, tag: a, type: , name: None, form_id: , checkbox: , table_id: , href: None
     SUBSYSTEMS = (By.ID, u'ui-id-31') # x: 994 y: 302 width: 101 height: 29, tag: a, type: , name: None, form_id: , checkbox: , table_id: , href: None
-    MANAGEMENT_REQUESTS = (By.ID, u'ui-id-32') # x: 1207 y: 302 width: 177 height: 29, tag: a, type: , name: None, form_id: , checkbox: , table_id: , href: None
+    MANAGEMENT_REQUESTS = (By.ID, u'ui-id-33') # x: 1207 y: 302 width: 177 height: 29, tag: a, type: , name: None, form_id: , checkbox: , table_id: , href: None
     BUTTON_CLOSE = (By.XPATH, u'//div[21]/div[3]/div[1]/button[1]') # x: 1388 y: 694 width: 67 height: 37, tag: button, type: button, name: None, form_id: , checkbox: , table_id: DataTables_Table_2, href:
 
 

@@ -61,7 +61,8 @@ class Cs_sec_servers_delete_clients(CommonUtils):
     # Dynamic objects:
 #    BUTTON_SUBMIT = (By.ID, u'reg_request_post_submit') # x: 1110 y: 717 width: 75 height: 36, tag: button, type: button, name: None, form_id: , checkbox: , table_id: , href: # Dynamic object
 #    BUTTON_SUBMIT = (By.XPATH, u'//div[18]/div[3]/div[1]/button[1]') # x: 1110 y: 717 width: 75 height: 36, tag: button, type: button, name: None, form_id: , checkbox: , table_id: , href: # Dynamic object
-    BUTTON_SUBMIT = (By.CLASS_NAME, u'reg_request_post_submit') # x: 1110 y: 717 width: 75 height: 36, tag: button, type: button, name: None, form_id: , checkbox: , table_id: , href: # Dynamic object
+#    BUTTON_SUBMIT = (By.CLASS_NAME, u'reg_request_post_submit') # x: 1110 y: 717 width: 75 height: 36, tag: button, type: button, name: None, form_id: , checkbox: , table_id: , href: # Dynamic object
+    BUTTON_SUBMIT = (By.XPATH, u'//div[19]/div[3]/div[1]/button[1]') # x: 1110 y: 717 width: 75 height: 36, tag: button, type: button, name: None, form_id: , checkbox: , table_id: , href: # Dynamic object
 
     def click_element_submit(self):
         """

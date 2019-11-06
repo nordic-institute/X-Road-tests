@@ -41,7 +41,9 @@ class Cs_members_details_dlg(CommonUtils):
     # Links found: 0
     # Page model constants:
     MENUBAR_MAXIMIZE = (By.XPATH, u'//div[21]/div[1]/div[1]/button[1]') # x: 1358 y: 235 width: 51 height: 49, tag: button, type: submit, name: None, form_id: , checkbox: , table_id: 3, href:
-    DELETE = (By.ID, u'member_edit_delete') # x: 1270 y: 243 width: 74 height: 33, tag: button, type: submit, name: None, form_id: , checkbox: , table_id: 3, href:
+    DELETE = (By.XPATH, u'//div[22]/div[1]/div[2]/button[1]') # x: 1270 y: 243 width: 74 height: 33, tag: button, type: submit, name: None, form_id: , checkbox: , table_id: 3, href:
+#    DELETE = (By.XPATH, u'//div[21]/div[1]/div[2]/button[1]') # x: 1270 y: 243 width: 74 height: 33, tag: button, type: submit, name: None, form_id: , checkbox: , table_id: 3, href:
+#    DELETE = (By.ID, u'member_edit_delete') # x: 1270 y: 243 width: 74 height: 33, tag: button, type: submit, name: None, form_id: , checkbox: , table_id: 3, href:
     MEMBER_DETAILS = (By.ID, u'ui-id-28') # x: 536 y: 301 width: 129 height: 29, tag: a, type: , name: None, form_id: , checkbox: , table_id: , href: None
     OWNED_SERVERS = (By.ID, u'ui-id-29') # x: 666 y: 301 width: 124 height: 29, tag: a, type: , name: None, form_id: , checkbox: , table_id: , href: None
     GLOBAL_GROUP_MEMBERSHIP = (By.ID, u'ui-id-30') # x: 791 y: 301 width: 202 height: 29, tag: a, type: , name: None, form_id: , checkbox: , table_id: , href: None
